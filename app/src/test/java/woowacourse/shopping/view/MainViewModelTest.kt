@@ -87,7 +87,7 @@ class MainViewModelTest {
         productWithCartLoader = ProductWithCartLoader(productRepository, cartRepository)
         historyLoader = HistoryLoader(productRepository, historyRepository)
 
-        viewModel = MainViewModel(cartRepository, historyRepository, productWithCartLoader, historyLoader)
+        viewModel = MainViewModel(cartRepository, productWithCartLoader, historyLoader)
     }
 
     @Test
