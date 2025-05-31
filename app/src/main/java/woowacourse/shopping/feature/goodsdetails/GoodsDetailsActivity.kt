@@ -41,6 +41,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
             viewModel.updateLastViewedVisibility()
         }
 
+        sendRecentHistory()
         observeCartInsertResult()
         setOnClickListener()
         navigateToLastViewed()
@@ -84,10 +85,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
         viewModel.isFail.observe(this) {
             Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun sendRecentHistory() {
         setResult(
             ResultCode.GOODS_DETAIL_INSERT.code,
             Intent().apply {
-                putExtra("HISTORY_ID", cart.id)
+                putExtra(HISTORY_ID, cart.id)
             },
         )
     }
