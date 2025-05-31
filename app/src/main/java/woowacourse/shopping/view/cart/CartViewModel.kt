@@ -14,13 +14,13 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
-import woowacourse.shopping.view.QuantityController
+import woowacourse.shopping.view.QuantityListener
 import woowacourse.shopping.view.ToastMessageHandler
 
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel(),
-    QuantityController,
+    QuantityListener,
     ToastMessageHandler {
     private val _currentPageNumber = MutableLiveData(INITIAL_PAGE)
     val currentPageNumber: LiveData<Int> = _currentPageNumber

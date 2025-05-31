@@ -13,7 +13,7 @@ import woowacourse.shopping.data.recentProducts.RecentProductsRepository
 import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
-import woowacourse.shopping.view.QuantityController
+import woowacourse.shopping.view.QuantityListener
 import woowacourse.shopping.view.ToastMessageHandler
 
 class ProductDetailViewModel(
@@ -21,7 +21,7 @@ class ProductDetailViewModel(
     private val recentProductsRepository: RecentProductsRepository,
     val cartItem: CartItem,
 ) : ViewModel(),
-    QuantityController,
+    QuantityListener,
     ToastMessageHandler {
     private val _addToCart = MutableLiveData<Event<Unit>>()
     val addToCart: LiveData<Event<Unit>> = _addToCart

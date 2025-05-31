@@ -1,6 +1,6 @@
 package woowacourse.shopping.view
 
-interface QuantityController {
+interface QuantityListener {
     fun increaseQuantity(
         productId: Long,
         quantityIncrease: Int = 1,
