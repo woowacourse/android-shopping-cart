@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         val container = (application as App).container
         MainViewModelFactory(
             container.cartRepository,
-            container.historyRepository,
             container.productWithCartLoader,
             container.historyLoader,
         )

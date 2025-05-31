@@ -50,6 +50,7 @@ class DetailViewModel(
                 )
             }
         }
+        saveHistory(productId)
     }
 
     fun increaseCartQuantity() {
@@ -93,9 +94,11 @@ class DetailViewModel(
     }
 
     fun loadLastSeenProduct(lastSeenProductId: Long) {
-        historyRepository.saveHistory(lastSeenProductId) {
-            _event.postValue(DetailUiEvent.MoveToLastSeenProduct(lastSeenProductId))
-        }
+        _event.setValue(DetailUiEvent.MoveToLastSeenProduct(lastSeenProductId))
+    }
+
+    fun saveHistory(productId: Long) {
+        historyRepository.saveHistory(productId)
     }
 
     private fun sendEvent(event: DetailUiEvent) {

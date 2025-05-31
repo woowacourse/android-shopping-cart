@@ -14,13 +14,9 @@ class HistoryRepositoryImpl(
         }
     }
 
-    override fun saveHistory(
-        productId: Long,
-        onResult: () -> Unit,
-    ) {
+    override fun saveHistory(productId: Long) {
         thread {
             historyDataSource.insertHistory(HistoryEntity(productId))
-            onResult()
         }
     }
 }

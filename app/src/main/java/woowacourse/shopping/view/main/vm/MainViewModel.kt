@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
@@ -23,7 +22,6 @@ import woowacourse.shopping.view.main.state.ProductUiState
 
 class MainViewModel(
     private val cartRepository: CartRepository,
-    private val historyRepository: HistoryRepository,
     private val productWithCartLoader: ProductWithCartLoader,
     private val historyLoader: HistoryLoader,
 ) : ViewModel() {
@@ -101,11 +99,9 @@ class MainViewModel(
         }
     }
 
-    fun saveHistory(productId: Long) {
+    fun handleMoveToDetailEvent(productId: Long) {
         withState(_uiState.value) { state ->
-            historyRepository.saveHistory(productId) {
-                _uiEvent.postValue(MainUiEvent.NavigateToDetail(productId, state.lastSeenProductId))
-            }
+            _uiEvent.postValue(MainUiEvent.NavigateToDetail(productId, state.lastSeenProductId))
         }
     }
 
@@ -163,7 +159,7 @@ class MainViewModel(
             }
 
             override fun onSelectProduct(productId: Long) {
-                saveHistory(productId)
+                handleMoveToDetailEvent(productId)
             }
 
             override fun showQuantity(productId: Long) {
@@ -171,7 +167,7 @@ class MainViewModel(
             }
 
             override fun onClickHistory(productId: Long) {
-                saveHistory(productId)
+                handleMoveToDetailEvent(productId)
             }
 
             override fun onClickIncrease(productId: Long) {
