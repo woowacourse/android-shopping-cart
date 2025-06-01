@@ -9,5 +9,6 @@ data class RecentProductEntity(
     val title: String,
     val imageUrl: String,
     val price: Int,
+    val quantity: Int,
     val viewedTime: Long = System.currentTimeMillis(),
 )

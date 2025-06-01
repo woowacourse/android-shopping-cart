@@ -28,6 +28,12 @@ interface RecentProductDao {
         newTime: Long = System.currentTimeMillis(),
     )
 
+    @Query("UPDATE recent_product SET quantity = :newQuantity WHERE id = :productId")
+    fun updateQuantity(
+        productId: Long,
+        newQuantity: Int,
+    )
+
     @Query("SELECT * FROM recent_product ORDER BY viewedTime DESC LIMIT 1 OFFSET 1")
     fun getSecondMostRecentProduct(): RecentProductEntity?
 

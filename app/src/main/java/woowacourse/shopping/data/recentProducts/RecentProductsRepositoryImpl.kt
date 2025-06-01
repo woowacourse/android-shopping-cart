@@ -1,32 +1,36 @@
 package woowacourse.shopping.data.recentProducts
 
-import woowacourse.shopping.data.cart.toEntity
-import woowacourse.shopping.data.cart.toProduct
+import woowacourse.shopping.data.cart.toCartItem
+import woowacourse.shopping.data.cart.toRecentProductEntity
 import woowacourse.shopping.data.runAsyncResult
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 class RecentProductsRepositoryImpl(
     private val recentProductDao: RecentProductDao,
 ) : RecentProductsRepository {
-    override fun getAll(callback: (Result<List<Product>>) -> Unit) {
+    override fun getAll(callback: (Result<List<CartItem>>) -> Unit) {
         runAsyncResult(
-            function = { recentProductDao.getAll().map { it.toProduct() } },
+            function = {
+                recentProductDao.getAll().map { it.toCartItem() }
+            },
             callback,
         )
     }
 
     override fun add(
-        product: Product,
+        cartItem: CartItem,
         callback: (Result<Unit>) -> Unit,
     ) {
         runAsyncResult(function = {
-            val existing: RecentProductEntity? = recentProductDao.findRecentProductById(product.id)
+            val existing: RecentProductEntity? =
+                recentProductDao.findRecentProductById(cartItem.product.id)
             if (existing == null) {
                 val allProductsSize: Int = recentProductDao.getAllSize()
                 deleteOldestProduct(allProductsSize)
-                recentProductDao.insert(product.toEntity())
+                recentProductDao.insert(cartItem.toRecentProductEntity())
             } else {
-                recentProductDao.updateViewedTime(product.id)
+                recentProductDao.updateViewedTime(cartItem.product.id)
+                recentProductDao.updateQuantity(cartItem.product.id, cartItem.quantity)
             }
         }, callback)
     }
@@ -38,9 +42,9 @@ class RecentProductsRepositoryImpl(
         runAsyncResult(function = { recentProductDao.delete(productId) }, callback)
     }
 
-    override fun getSecondMostRecentProduct(callback: (Result<Product>) -> Unit) {
+    override fun getSecondMostRecentProduct(callback: (Result<CartItem>) -> Unit) {
         runAsyncResult(
-            function = { recentProductDao.getSecondMostRecentProduct()?.toProduct() },
+            function = { recentProductDao.getSecondMostRecentProduct()?.toCartItem() },
             callback,
         )
     }
@@ -54,10 +58,10 @@ class RecentProductsRepositoryImpl(
 
     override fun findRecentProductById(
         productId: Long,
-        callback: (Result<Product>) -> Unit,
+        callback: (Result<CartItem>) -> Unit,
     ) {
         runAsyncResult(function = {
-            recentProductDao.findRecentProductById(productId)?.toProduct()
+            recentProductDao.findRecentProductById(productId)?.toCartItem()
         }, callback)
     }
 

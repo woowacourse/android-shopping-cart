@@ -6,7 +6,7 @@ import woowacourse.shopping.model.product.Product
 
 fun CartItemEntity.toCartItem(): CartItem = CartItem(Product(id, title, imageUrl, price), quantity = this.quantity)
 
-fun CartItem.toEntity(): CartItemEntity =
+fun CartItem.toCartItemEntity(): CartItemEntity =
     CartItemEntity(
         product.id,
         product.title,
@@ -15,6 +15,13 @@ fun CartItem.toEntity(): CartItemEntity =
         quantity = this.quantity,
     )
 
-fun RecentProductEntity.toProduct(): Product = Product(id, title, imageUrl, price)
+fun RecentProductEntity.toCartItem(): CartItem = CartItem(Product(id, title, imageUrl, price), quantity)
 
-fun Product.toEntity(): RecentProductEntity = RecentProductEntity(id, title, imageUrl, price)
+fun CartItem.toRecentProductEntity(): RecentProductEntity =
+    RecentProductEntity(
+        id = product.id,
+        title = product.title,
+        imageUrl = product.imageUrl,
+        price = product.price,
+        quantity = quantity,
+    )

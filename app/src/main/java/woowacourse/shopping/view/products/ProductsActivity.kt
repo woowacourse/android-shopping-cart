@@ -68,7 +68,7 @@ class ProductsActivity : AppCompatActivity() {
                     object : ProductEventListener {
                         override fun onProductClick(item: CartItem) {
                             navigateToProductDetail(item)
-                            productsViewModel.addRecentProduct(item)
+                            productsViewModel.addOrUpdateRecentProduct(item)
                         }
 
                         override fun onOpenQuantitySelectClick(item: CartItem) {
@@ -105,9 +105,6 @@ class ProductsActivity : AppCompatActivity() {
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
             productsAdapter.notifyProductsChanged(list)
-//            list.forEach {
-//                productsAdapter.notifyQuantityChanged(it.product.id)
-//            }
         }
     }
 

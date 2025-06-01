@@ -20,7 +20,7 @@ class CartRepositoryImpl(
         runAsyncResult(function = {
             val existing = cartDao.findItemById(cartItem.product.id)
             if (existing == null) {
-                cartDao.insert(cartItem.toEntity())
+                cartDao.insert(cartItem.toCartItemEntity())
             } else {
                 cartDao.update(cartItem.product.id, cartItem.quantity)
             }

@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -67,6 +68,7 @@ class ProductDetailViewModel(
                 .onSuccess {
                     return@update
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -80,6 +82,7 @@ class ProductDetailViewModel(
                 .onSuccess {
                     return@add
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -89,8 +92,9 @@ class ProductDetailViewModel(
         recentProductsRepository.getSecondMostRecentProduct { result ->
             result
                 .onSuccess {
-                    _lastProductTitle.postValue(it.title)
+                    _lastProductTitle.postValue(it.product.title)
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }

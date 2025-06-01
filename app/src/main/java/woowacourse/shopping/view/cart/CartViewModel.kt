@@ -2,6 +2,7 @@ package woowacourse.shopping.view.cart
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,6 +54,7 @@ class CartViewModel(
                     cachedItems = allItems
                     action()
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -101,7 +103,8 @@ class CartViewModel(
                 result
                     .onSuccess {
                         return@update
-                    }.onFailure {
+                    }.onFailure { error ->
+                        Log.d("TAG", "fail: $error")
                         _toastMessage.postValue(Event(Unit))
                     }
             }
@@ -117,6 +120,7 @@ class CartViewModel(
                         loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
                     }
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }

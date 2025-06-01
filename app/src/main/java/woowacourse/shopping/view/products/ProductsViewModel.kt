@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.products
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,7 +57,9 @@ class ProductsViewModel(
             _productsInShop.value?.map {
                 if (it.product.id == productId) {
                     val newQuantity = it.quantity + quantityIncrease
-                    it.copy(quantity = newQuantity)
+                    val increasedProduct = it.copy(quantity = newQuantity)
+                    updateRecentProduct(increasedProduct)
+                    increasedProduct
                 } else {
                     it
                 }
@@ -72,7 +75,9 @@ class ProductsViewModel(
             _productsInShop.value?.map {
                 if (it.product.id == productId && it.quantity > minQuantity) {
                     val newQuantity = it.quantity - quantityDecrease
-                    it.copy(quantity = newQuantity)
+                    val decreasedProduct = it.copy(quantity = newQuantity)
+                    updateRecentProduct(decreasedProduct)
+                    decreasedProduct
                 } else {
                     it
                 }
@@ -101,6 +106,7 @@ class ProductsViewModel(
                         }
                     }
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -144,17 +150,19 @@ class ProductsViewModel(
                 .onSuccess {
                     updateCartItemCount()
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
     }
 
-    fun addRecentProduct(cartItem: CartItem) {
-        recentProductsRepository.add(cartItem.product) { result ->
+    fun addOrUpdateRecentProduct(cartItem: CartItem) {
+        recentProductsRepository.add(cartItem) { result ->
             result
                 .onSuccess {
                     _recentProducts.postValue(_recentProducts.value?.plus(cartItem))
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -164,11 +172,26 @@ class ProductsViewModel(
         recentProductsRepository.getAll { result ->
             result
                 .onSuccess { recentProducts ->
-                    _recentProducts.postValue(recentProducts.map { CartItem(it) })
+                    _recentProducts.postValue(recentProducts)
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
+    }
+
+    private fun updateRecentProduct(cartItem: CartItem) {
+        val currentList = _recentProducts.value?.toMutableList() ?: mutableListOf()
+        val index = currentList.indexOfFirst { it.product.id == cartItem.product.id }
+
+        if (index != -1) {
+            val updatedItem = currentList[index].copy(quantity = cartItem.quantity)
+            currentList[index] = updatedItem
+        } else {
+            currentList.add(cartItem)
+        }
+
+        _recentProducts.value = currentList
     }
 
     private fun updateCartItemCount() {
@@ -177,6 +200,7 @@ class ProductsViewModel(
                 .onSuccess {
                     _cartItemCount.postValue(it.size)
                 }.onFailure {
+                    Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
         }
@@ -206,6 +230,7 @@ class ProductsViewModel(
                             }
                         }
                     }.onFailure {
+                        Log.d("TAG", "fail: $it")
                         _toastMessage.postValue(Event(Unit))
                     }
             }
