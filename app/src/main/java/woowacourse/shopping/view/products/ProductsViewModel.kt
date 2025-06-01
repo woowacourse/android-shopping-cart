@@ -181,17 +181,17 @@ class ProductsViewModel(
     }
 
     private fun updateRecentProduct(cartItem: CartItem) {
-        val currentList = _recentProducts.value?.toMutableList() ?: mutableListOf()
-        val index = currentList.indexOfFirst { it.product.id == cartItem.product.id }
+        val currentProducts = _recentProducts.value?.toMutableList() ?: mutableListOf()
+        val index = currentProducts.indexOfFirst { it.product.id == cartItem.product.id }
 
         if (index != -1) {
-            val updatedItem = currentList[index].copy(quantity = cartItem.quantity)
-            currentList[index] = updatedItem
+            val updatedProduct = currentProducts[index].copy(quantity = cartItem.quantity)
+            currentProducts[index] = updatedProduct
         } else {
-            currentList.add(cartItem)
+            currentProducts.add(cartItem)
         }
 
-        _recentProducts.value = currentList
+        _recentProducts.value = currentProducts
     }
 
     private fun updateCartItemCount() {
