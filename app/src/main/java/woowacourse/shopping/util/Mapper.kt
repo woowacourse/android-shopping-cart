@@ -3,6 +3,7 @@ package woowacourse.shopping.util
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.model.CartUiModel
+import woowacourse.shopping.feature.model.GoodsItem
 
 fun Cart.toUi(): CartUiModel =
     CartUiModel(
@@ -25,13 +26,13 @@ fun CartUiModel.toDomain(): Cart =
             ),
     )
 
-fun List<Any>.updateCartQuantity(
+fun List<GoodsItem.Product>.updateCartQuantity(
     id: Long,
     newQuantity: Int,
-): List<Any> =
+): List<GoodsItem.Product> =
     this.map { item ->
-        if (item is Cart && item.goods.id == id) {
-            item.copy(quantity = newQuantity)
+        if (item.cart.goods.id == id) {
+            GoodsItem.Product(item.cart.copy(quantity = newQuantity))
         } else {
             item
         }

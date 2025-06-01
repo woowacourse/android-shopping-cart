@@ -2,66 +2,64 @@ package woowacourse.shopping.feature.goods.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemGoodsBinding
 import woowacourse.shopping.databinding.ItemHistoryContainerBinding
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
-import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.goods.adapter.history.HistoryContainerViewHolder
+import woowacourse.shopping.feature.model.GoodsItem
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items: MutableList<Any> = mutableListOf()
+) : ListAdapter<GoodsItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     private var hasNextPage: Boolean = true
 
-    fun setItems(newItems: List<Any>) {
-        val oldHistory = items.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is Cart } } as? List<*>
-        val newHistory = newItems.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is Cart } } as? List<*>
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<GoodsItem>() {
+                override fun areItemsTheSame(
+                    oldItem: GoodsItem,
+                    newItem: GoodsItem,
+                ): Boolean =
+                    when {
+                        oldItem is GoodsItem.History && newItem is GoodsItem.History ->
+                            oldItem.histories == newItem.histories
+                        oldItem is GoodsItem.Product && newItem is GoodsItem.Product ->
+                            oldItem.cart.goods.id == newItem.cart.goods.id
+                        oldItem is GoodsItem.LoadMore && newItem is GoodsItem.LoadMore -> true
+                        else -> false
+                    }
 
-        if (oldHistory != null && newHistory != null && oldHistory != newHistory) {
-            items[0] = newHistory
-            notifyItemChanged(0)
-        }
-
-        newItems.forEachIndexed { index, newItem ->
-            val oldItem = items.getOrNull(index)
-            if (
-                oldItem is Cart &&
-                newItem is Cart &&
-                oldItem.goods.id == newItem.goods.id &&
-                oldItem.quantity != newItem.quantity
-            ) {
-                items[index] = newItem
-                notifyItemChanged(index)
+                override fun areContentsTheSame(
+                    oldItem: GoodsItem,
+                    newItem: GoodsItem,
+                ): Boolean = oldItem == newItem
             }
-        }
+    }
 
-        if (items.size != newItems.size) {
-            items.clear()
-            items.addAll(newItems)
-            notifyItemInserted(items.size - 1)
-        }
+    fun setItems(newItems: List<GoodsItem>) {
+        val finalItems = if (hasNextPage) newItems + GoodsItem.LoadMore else newItems
+        submitList(finalItems)
     }
 
     fun setHasNextPage(value: Boolean) {
         if (hasNextPage != value) {
             hasNextPage = value
-            notifyItemInserted(items.size)
+            submitList(
+                currentList.filter { it !is GoodsItem.LoadMore }.let {
+                    if (hasNextPage) it + GoodsItem.LoadMore else it
+                },
+            )
         }
     }
 
     override fun getItemViewType(position: Int): Int =
-        when {
-            position < items.size -> {
-                val item = items[position]
-                when {
-                    item is List<*> && item.all { it is Cart } -> ItemViewType.HISTORY.type
-                    item is Cart -> ItemViewType.GOODS.type
-                    else -> ItemViewType.LOAD_MORE.type
-                }
-            }
-            else -> ItemViewType.LOAD_MORE.type
+        when (getItem(position)) {
+            is GoodsItem.History -> ItemViewType.HISTORY.type
+            is GoodsItem.Product -> ItemViewType.GOODS.type
+            is GoodsItem.LoadMore -> ItemViewType.LOAD_MORE.type
         }
 
     override fun onCreateViewHolder(
@@ -89,24 +87,22 @@ class GoodsAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (holder) {
-            is HistoryContainerViewHolder -> {
-                val item = items[position]
-                if (item is List<*> && item.all { it is Cart }) {
-                    holder.bind(item as List<Cart>)
+        when (val item = getItem(position)) {
+            is GoodsItem.History -> {
+                if (holder is HistoryContainerViewHolder) {
+                    holder.bind(item.histories)
                 }
             }
-            is GoodsViewHolder -> {
-                val item = items[position]
-                if (item is Cart) {
-                    holder.bind(item)
+            is GoodsItem.Product -> {
+                if (holder is GoodsViewHolder) {
+                    holder.bind(item.cart)
                 }
             }
-            is LoadMoreViewHolder -> {
-                holder.bind()
+            is GoodsItem.LoadMore -> {
+                if (holder is LoadMoreViewHolder) {
+                    holder.bind()
+                }
             }
         }
     }
-
-    override fun getItemCount(): Int = items.size + if (hasNextPage) 1 else 0
 }

@@ -11,6 +11,7 @@ import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.feature.model.GoodsItem
 import woowacourse.shopping.feature.model.State
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.util.MutableSingleLiveData
@@ -22,8 +23,8 @@ class GoodsViewModel(
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
 ) : ViewModel() {
-    private val _items = MediatorLiveData<List<Any>>()
-    val items: LiveData<List<Any>> get() = _items
+    private val _items = MediatorLiveData<List<GoodsItem>>()
+    val items: LiveData<List<GoodsItem>> get() = _items
 
     private val histories = MutableLiveData<List<Cart>>()
 
@@ -47,7 +48,6 @@ class GoodsViewModel(
         loadHistories()
         loadCarts()
         _items.addSource(histories) { updateCombinedItems() }
-        _items.addSource(carts) { updateCombinedItems() }
     }
 
     fun addPage() {
@@ -75,17 +75,14 @@ class GoodsViewModel(
     }
 
     fun refreshHistoryOnly() {
-        historyRepository.getAll { histories ->
+        historyRepository.getAll { historiesList ->
             val currentItems = _items.value.orEmpty().toMutableList()
-
-            val updatedItems =
-                if (currentItems.firstOrNull() is List<*>) {
-                    val cartsOnly = currentItems.drop(1)
-                    listOf(histories) + cartsOnly
-                } else {
-                    listOf(histories) + currentItems
-                }
-
+            val cartsOnly = currentItems.filterIsInstance<GoodsItem.Product>()
+            val updatedItems = mutableListOf<GoodsItem>()
+            if (historiesList.isNotEmpty()) {
+                updatedItems.add(GoodsItem.History(historiesList))
+            }
+            updatedItems.addAll(cartsOnly)
             _items.postValue(updatedItems)
         }
     }
@@ -106,16 +103,16 @@ class GoodsViewModel(
     ) {
         val currentItems = _items.value.orEmpty().toMutableList()
 
-        val index = currentItems.indexOfFirst { it is Cart && it.goods.id == id }
+        val index = currentItems.indexOfFirst { it is GoodsItem.Product && it.cart.goods.id == id }
 
         if (index != -1) {
-            val oldItem = currentItems[index] as Cart
-            val updatedItem = oldItem.copy(quantity = quantity)
+            val oldItem = currentItems[index] as GoodsItem.Product
+            val updatedItem = oldItem.copy(cart = oldItem.cart.copy(quantity = quantity))
 
             currentItems[index] = updatedItem
             _items.value = currentItems
 
-            val total = currentItems.filterIsInstance<Cart>().sumOf { it.quantity }
+            val total = currentItems.filterIsInstance<GoodsItem.Product>().sumOf { it.cart.quantity }
             _totalQuantity.value = total
         }
     }
@@ -124,10 +121,19 @@ class GoodsViewModel(
         updatedCart: Cart,
         newQuantity: Int,
     ) {
-        val updatedItems = _items.value?.updateCartQuantity(updatedCart.goods.id, newQuantity) ?: listOf(updatedCart)
+        val updatedItems =
+            _items.value
+                ?.filterIsInstance<GoodsItem.History>()
+                ?.plus(
+                    _items.value
+                        ?.filterIsInstance<GoodsItem.Product>()
+                        ?.updateCartQuantity(updatedCart.goods.id, newQuantity)
+                        ?: emptyList(),
+                )
+                ?: listOf(GoodsItem.Product(updatedCart.copy(quantity = newQuantity)))
+
         _items.value = updatedItems
-        val total = updatedItems.filterIsInstance<Cart>().sumOf { it.quantity }
-        _totalQuantity.value = total
+        _totalQuantity.value = updatedItems.filterIsInstance<GoodsItem.Product>().sumOf { it.cart.quantity }
     }
 
     private fun getProducts(
@@ -140,26 +146,30 @@ class GoodsViewModel(
     }
 
     private fun updateCombinedItems() {
-        val currentItems = _items.value.orEmpty()
-        val newGoods = getProducts(page)
+        val previousItems = _items.value.orEmpty()
+        val existingHistory = previousItems.find { it is GoodsItem.History } as? GoodsItem.History
+        val existingProducts = previousItems.filterIsInstance<GoodsItem.Product>()
 
-        val updatedCarts =
-            newGoods.map { goods ->
+        val newProducts =
+            getProducts(page).map { goods ->
                 val quantity = carts.value?.find { it.goods.id == goods.id }?.quantity ?: 0
-                Cart(goods = goods, quantity = quantity)
+                GoodsItem.Product(Cart(goods = goods, quantity = quantity))
             }
 
-        val combined = mutableListOf<Any>()
-        if (page == INITIAL_PAGE) combined.add(histories.value.orEmpty())
-        combined.addAll(updatedCarts)
+        val combinedItems =
+            buildList {
+                if (existingHistory != null) {
+                    add(existingHistory)
+                } else if (page == INITIAL_PAGE) {
+                    histories.value?.let { if (it.isNotEmpty()) add(GoodsItem.History(it)) }
+                }
+                addAll(existingProducts)
+                addAll(newProducts)
+            }
 
-        _items.postValue(currentItems + combined)
-
-        val total = combined.filterIsInstance<Cart>().sumOf { it.quantity }
-        _totalQuantity.postValue(total)
-
-        val hasMore = (page + 1) * PAGE_SIZE < dummyGoods.size
-        _hasNextPage.postValue(hasMore)
+        _items.value = combinedItems
+        _totalQuantity.postValue(combinedItems.filterIsInstance<GoodsItem.Product>().sumOf { it.cart.quantity })
+        _hasNextPage.postValue((page + 1) * PAGE_SIZE < dummyGoods.size)
     }
 
     private fun loadCarts() {
