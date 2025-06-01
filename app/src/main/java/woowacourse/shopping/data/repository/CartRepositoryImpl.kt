@@ -51,11 +51,11 @@ class CartRepositoryImpl(
 
     override fun upsertCartProduct(product: Product, count: Int) {
         Thread {
-            val existing = cartDao.getAll().find { it.productId == product.id.toLong() }
+            val existing = cartDao.getAll().find { it.productId == product.id }
             val newCount = (existing?.count ?: 0) + count
             cartDao.deleteById(product.id)
             if (newCount >= 1) {
-                cartDao.upsert(CartEntity(productId = product.id.toLong(), count = newCount))
+                cartDao.upsert(CartEntity(productId = product.id, count = newCount))
             }
         }.start()
     }

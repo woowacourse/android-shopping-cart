@@ -13,7 +13,7 @@ interface LastProductDao {
     fun getRecent(count : Int): List<LastProductEntity>
 
     @Query("SELECT * FROM lastProduct WHERE productId = :productId LIMIT 1")
-    fun findByProductId(productId: Long): LastProductEntity?
+    fun findByProductId(productId: Int): LastProductEntity?
 
     @Insert
     fun insert(cart: LastProductEntity)

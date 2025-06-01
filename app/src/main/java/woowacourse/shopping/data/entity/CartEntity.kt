@@ -20,18 +20,18 @@ import woowacourse.shopping.domain.model.CartProduct
     tableName = "cart"
 )
 data class CartEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val productId: Long,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val productId: Int,
     val count : Int = 1
 )
 
 fun CartEntity.toDomain(productDao: ProductDao): CartProduct? {
-    val productEntity = productDao.getById(this.productId.toInt()) ?: return null
+    val productEntity = productDao.getById(this.productId) ?: return null
     val product = productEntity.toDomain()
     return CartProduct(product, count)
 }
 
 fun CartProduct.toEntity(): CartEntity {
-    return CartEntity(productId = product.id.toLong(), count = count)
+    return CartEntity(productId = product.id, count = count)
 }
 

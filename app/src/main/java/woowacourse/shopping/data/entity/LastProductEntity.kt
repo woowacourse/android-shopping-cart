@@ -23,9 +23,9 @@ import java.time.ZoneId
     tableName = "lastProduct"
 )
 data class LastProductEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val viewedAt: Long = System.currentTimeMillis(),
-    val productId: Long,
+    val productId: Int,
 )
 
 fun LastProductEntity.toDomain(product: Product): LastProduct {
@@ -39,7 +39,7 @@ fun LastProductEntity.toDomain(product: Product): LastProduct {
 
 fun LastProduct.toEntity(): LastProductEntity {
     return LastProductEntity(
-        productId = product.id.toLong(),
+        productId = product.id,
         viewedAt = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     )
 }

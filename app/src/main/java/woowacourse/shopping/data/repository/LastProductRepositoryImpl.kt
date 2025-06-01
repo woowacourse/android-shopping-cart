@@ -33,15 +33,15 @@ class LastProductRepositoryImpl(
 
     override fun insertProduct(product: Product) {
         Thread {
-            val existing = lastDao.findByProductId(product.id.toLong())
+            val existing = lastDao.findByProductId(product.id)
             if (existing != null) {
                 lastDao.delete(existing)
             }
 
             lastDao.insert(
                 LastProductEntity(
-                    productId = product.id.toLong(),
-                    viewedAt = System.currentTimeMillis()
+                    productId = product.id,
+                    viewedAt = System.currentTimeMillis().toInt()
                 )
             )
             lastDao.deleteOldExceptRecent10()
