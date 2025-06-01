@@ -27,7 +27,6 @@ class CartActivity : AppCompatActivity() {
         setupAdapter()
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.rvGoods.adapter = adapter
 
         updatePageButton()
     }
@@ -66,6 +65,7 @@ class CartActivity : AppCompatActivity() {
                     }
                 },
             )
+        binding.rvGoods.adapter = adapter
     }
 
     private fun sendCartResult(cart: Cart) {
