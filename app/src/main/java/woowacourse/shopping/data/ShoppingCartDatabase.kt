@@ -15,13 +15,15 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
 
         fun getDataBase(context: Context): ShoppingCartDatabase =
             instance ?: synchronized(this) {
-                Room
-                    .databaseBuilder(
-                        context.applicationContext,
-                        ShoppingCartDatabase::class.java,
-                        DATABASE_NAME,
-                    ).build()
-                    .also { instance = it }
+                val newInstance =
+                    Room
+                        .databaseBuilder(
+                            context.applicationContext,
+                            ShoppingCartDatabase::class.java,
+                            DATABASE_NAME,
+                        ).build()
+                instance = newInstance
+                newInstance
             }
     }
 }
