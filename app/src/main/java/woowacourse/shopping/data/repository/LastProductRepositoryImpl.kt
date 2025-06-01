@@ -19,7 +19,7 @@ class LastProductRepositoryImpl(
 
     override fun fetchProducts(callback: (List<LastProduct>) -> Unit) {
         Thread {
-            val result = lastDao.getRecent10().mapNotNull { entity ->
+            val result = lastDao.getRecent(RECENT_PRODUCT_COUNT).mapNotNull { entity ->
                 val productEntity: ProductEntity? = productDao.getById(entity.productId.toInt())
                 productEntity?.productToDomain()?.let { product ->
                     entity.toDomain(product)
@@ -50,7 +50,7 @@ class LastProductRepositoryImpl(
 
     override fun deleteLastProduct() {
         Thread {
-            lastDao.getRecent10().lastOrNull()?.let {
+            lastDao.getRecent(RECENT_PRODUCT_COUNT).lastOrNull()?.let {
                 lastDao.delete(it)
             }
         }.start()
@@ -58,12 +58,17 @@ class LastProductRepositoryImpl(
 
     override fun fetchLatestProduct(callback: (Product?) -> Unit) {
         Thread {
-            val lastEntity = lastDao.getLatest()
-            val productEntity = lastEntity?.let { productDao.getById(it.productId.toInt()) }
+            val lastEntity = lastDao.getRecent(LAST_PRODUCT_COUNT)
+            val productEntity = lastEntity.first().let { productDao.getById(it.productId.toInt()) }
             val product = productEntity?.toDomain()
             Handler(Looper.getMainLooper()).post {
                 callback(product)
             }
         }.start()
+    }
+
+    companion object{
+        const val RECENT_PRODUCT_COUNT = 10
+        const val LAST_PRODUCT_COUNT = 1
     }
 }
