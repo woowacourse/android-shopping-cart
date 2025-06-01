@@ -3,8 +3,11 @@ package woowacourse.shopping.presentation.product
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,21 +15,29 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.databinding.ViewCartActionBinding
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.cart.CartCounterClickListener
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
-class ProductActivity : AppCompatActivity() {
+class ProductActivity :
+    AppCompatActivity(),
+    CartCounterClickListener,
+    ItemClickListener {
     private lateinit var binding: ActivityProductBinding
-    private val viewModel: ProductViewModel by viewModels {
-        ProductViewModelFactory(
-            applicationContext,
-        )
+    private var _toolbarBinding: ViewCartActionBinding? = null
+    private val toolbarBinding get() = _toolbarBinding!!
+    private val viewModel: ProductViewModel by viewModels { ProductViewModelFactory() }
+    private val recentAdapter: RecentAdapter by lazy {
+        RecentAdapter(this)
     }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
-            onClick = { product -> navigateToProductDetail(product) },
-            onClickLoadMore = { viewModel.loadMore() },
+            onClickLoadMore = ::handleLoadMoreClick,
+            cartCounterClickListener = this,
+            itemClickListener = this,
         )
     }
 
@@ -42,8 +53,25 @@ class ProductActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.fetchData()
+        viewModel.fetchCartItemCount()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product, menu)
+
+        val menuItem = menu?.findItem(R.id.action_cart)
+        _toolbarBinding = ViewCartActionBinding.inflate(layoutInflater)
+        menuItem?.actionView = toolbarBinding.root
+
+        toolbarBinding.ivCart.setOnClickListener {
+            navigateToCart()
+        }
+
+        viewModel.fetchCartItemCount()
+
         return true
     }
 
@@ -78,6 +106,10 @@ class ProductActivity : AppCompatActivity() {
             itemAnimator = null
             adapter = productAdapter
         }
+        binding.rvRecentProducts.apply {
+            itemAnimator = null
+            adapter = recentAdapter
+        }
     }
 
     private fun createSpanSizeLookup(): GridLayoutManager.SpanSizeLookup {
@@ -91,24 +123,90 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { products ->
-            val showLoadMore = viewModel.showLoadMore.value == true
-            productAdapter.setData(products, showLoadMore)
+        viewModel.recentProducts.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    recentAdapter.submitList(result.data)
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.product_toast_load_failure)
+                }
+            }
+        }
+
+        viewModel.products.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    val showLoadMore = viewModel.showLoadMore.value == true
+                    val list = result.data.toProductListItems(showLoadMore)
+                    productAdapter.submitList(list)
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.product_toast_load_failure)
+                }
+            }
         }
 
         viewModel.showLoadMore.observe(this) { showLoadMore ->
-            val products = viewModel.products.value.orEmpty()
-            productAdapter.setData(products, showLoadMore)
+            val productsState = viewModel.products.value
+            if (productsState is ResultState.Success) {
+                val list = productsState.data.toProductListItems(showLoadMore)
+                productAdapter.submitList(list)
+            }
+        }
+
+        viewModel.cartItemCount.observe(this) { count ->
+            _toolbarBinding?.tvCartCount?.apply {
+                text = count.toString()
+                visibility = if (count > 0) View.VISIBLE else View.GONE
+            }
+        }
+
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
         }
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.newIntent(this, product)
-        startActivity(intent)
+    private fun showToast(
+        @StringRes messageResId: Int,
+    ) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleLoadMoreClick() {
+        viewModel.loadMore()
     }
 
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
     }
+
+    override fun onClickProductItem(productId: Long) {
+        val intent = ProductDetailActivity.newIntent(this, productId)
+        startActivity(intent)
+    }
+
+    override fun onClickAddToCart(cartItem: CartItem) {
+        viewModel.addToCart(cartItem)
+    }
+
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _toolbarBinding = null
+    }
+
+    private fun List<CartItem>.toProductListItems(showLoadMore: Boolean): List<ProductListItem> =
+        this.map { ProductListItem.Product(it) } +
+            if (showLoadMore) listOf(ProductListItem.LoadMore) else emptyList()
 }

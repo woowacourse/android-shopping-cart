@@ -1,0 +1,60 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="id"
+            type="Long" />
+
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.product.ItemClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_recent_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_cart_item"
+        android:onClick="@{() -> clickListener.onClickProductItem(id)}">
+
+        <TextView
+            android:id="@+id/tv_recent_product_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/layout_recent_product_text"
+            android:textColor="@color/cyan"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_recent_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{name}"
+            android:textColor="@color/gray5"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_recent_product_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_product_text"
+            tools:text="상품의 길이가 길어지면 어떻게 될까??? 두근두근두근두근" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

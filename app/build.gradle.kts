@@ -59,15 +59,23 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.espresso.intents)
     implementation(libs.androidx.espresso.contrib)
+
+    // db
+    implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
+
+    // remote
+    implementation(libs.converter.gson)
+    implementation(libs.mockwebserver)
+    implementation(libs.logging.interceptor)
 
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)

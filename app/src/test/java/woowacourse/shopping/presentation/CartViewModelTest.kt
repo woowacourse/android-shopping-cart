@@ -1,40 +1,43 @@
 package woowacourse.shopping.presentation
 
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
+import androidx.lifecycle.MutableLiveData
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.presentation.cart.CartViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
-    private lateinit var repository: ProductRepository
+    private lateinit var cartRepository: CartRepository
+    private lateinit var productRepository: ProductRepository
     private lateinit var viewModel: CartViewModel
 
     @BeforeEach
     fun setUp() {
-        repository = mockk<ProductRepository>(relaxed = true)
+        cartRepository = FakeCartRepository()
+        productRepository = mockk<ProductRepository>(relaxed = true)
+        viewModel = CartViewModel(cartRepository)
+        (viewModel.totalPages as MutableLiveData).value = 5
+    }
 
-        every { repository.getPagedCartProducts(any(), any(), any()) } just Runs
+    @Test
+    fun `장바구니_상품을_불러온다`() {
+        viewModel.loadItems(0)
 
-        every {
-            repository.getCartProductCount(any())
-        } answers {
-            val callback = firstArg<(Result<Int>) -> Unit>()
-            callback(Result.success(10))
-        }
-
-        viewModel = CartViewModel(repository)
+        val result = viewModel.products.getOrAwaitValue()
+        assertThat(result).isInstanceOf(ResultState.Success::class.java)
+        val cartItems = (result as ResultState.Success).data
+        assertThat(cartItems).hasSize(10)
     }
 
     @Test
     fun `다음_페이지_버튼을_누르면_페이지_값이_1_증가한다`() {
-        viewModel.changePage(next = true)
+        viewModel.changeNextPage()
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         assertThat(currentPage).isEqualTo(1)
@@ -42,8 +45,8 @@ class CartViewModelTest {
 
     @Test
     fun `이전_페이지_버튼을_누르면_페이지_값이_1_감소한다`() {
-        viewModel.changePage(next = true)
-        viewModel.changePage(next = false)
+        viewModel.changeNextPage()
+        viewModel.changePreviousPage()
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         assertThat(currentPage).isEqualTo(0)
@@ -51,7 +54,7 @@ class CartViewModelTest {
 
     @Test
     fun `페이지가_0일_때_이전_페이지_버튼을_누르면_페이지_값이_0으로_유지된다`() {
-        viewModel.changePage(next = false)
+        viewModel.changePreviousPage()
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         assertThat(currentPage).isEqualTo(0)
