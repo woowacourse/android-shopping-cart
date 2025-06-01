@@ -51,9 +51,13 @@ class RecentProductsRepositoryImpl(
 
     override fun update(
         productId: Long,
+        quantity: Int,
         callback: (Result<Unit>) -> Unit,
     ) {
-        runAsyncResult(function = { recentProductDao.updateViewedTime(productId) }, callback)
+        runAsyncResult(function = {
+            recentProductDao.updateViewedTime(productId)
+            recentProductDao.updateQuantity(productId, quantity)
+        }, callback)
     }
 
     override fun findRecentProductById(

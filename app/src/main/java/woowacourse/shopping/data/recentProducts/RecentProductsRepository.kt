@@ -19,6 +19,7 @@ interface RecentProductsRepository {
 
     fun update(
         productId: Long,
+        quantity: Int,
         callback: (Result<Unit>) -> Unit,
     )
 
