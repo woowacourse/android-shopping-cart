@@ -129,9 +129,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             android:background="@drawable/bg_product_detail_gray_4_border"
-            android:visibility="@{lastProduct == null ? View.GONE : (viewModel.product.id == lastProduct.id ? View.GONE : View.VISIBLE)}" />
-
-        <TextView
+            app:isGone="@{lastProduct != null &amp;&amp; viewModel.product.id == lastProduct.id}"/>        <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -140,8 +138,7 @@
             android:textColor="@color/mint_1"
             app:layout_constraintStart_toStartOf="@+id/view"
             app:layout_constraintTop_toTopOf="@+id/view"
-            android:visibility="@{lastProduct == null ? View.GONE : (viewModel.product.id == lastProduct.id ? View.GONE : View.VISIBLE)}" />
-
+            app:isGone="@{lastProduct != null &amp;&amp; viewModel.product.id == lastProduct.id}" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -151,8 +148,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textView5"
             android:textSize="20sp"
             tools:text="상품이름이 들어갑니다"
-            android:visibility="@{lastProduct == null ? View.GONE : (viewModel.product.id == lastProduct.id ? View.GONE : View.VISIBLE)}" />
-
-
+        app:isGone="@{lastProduct != null &amp;&amp; viewModel.product.id == lastProduct.id}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
