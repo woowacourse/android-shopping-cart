@@ -93,7 +93,10 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun initRecentProductsRecyclerView() {
-        recentProductsAdapter = RecentProductsAdapter()
+        recentProductsAdapter =
+            RecentProductsAdapter(recentProductClickListener = {
+                navigateToProductDetail(it)
+            })
         binding.rvRecentProduct.adapter = recentProductsAdapter
         binding.rvRecentProduct.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)

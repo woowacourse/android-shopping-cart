@@ -15,7 +15,6 @@ import woowacourse.shopping.data.products.ProductRepositoryImpl
 import woowacourse.shopping.data.recentProducts.RecentProductsRepository
 import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
-import woowacourse.shopping.model.product.Product
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityListener
 import woowacourse.shopping.view.ToastMessageHandler
@@ -39,8 +38,8 @@ class ProductsViewModel(
     private val _cartItemCount = MutableLiveData(INITIAL_CART_ITEM_COUNT)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
-    private val _recentProducts = MutableLiveData<List<Product>>()
-    val recentProducts: LiveData<List<Product>> = _recentProducts
+    private val _recentProducts = MutableLiveData<List<CartItem>>()
+    val recentProducts: LiveData<List<CartItem>> = _recentProducts
 
     private val _toastMessage = MutableLiveData<Event<Unit>>()
     override val toastMessage: LiveData<Event<Unit>> = _toastMessage
@@ -82,23 +81,23 @@ class ProductsViewModel(
 
     override fun updateQuantity() {
         cartRepository.getAll { result ->
-            val allProducts = _productsInShop.value?.toMutableList() ?: return@getAll
+            val allProducts = productRepository.getAll().toMutableList()
             result
                 .onSuccess { cartItems ->
                     cartItems.forEach { cartItem ->
                         val index =
-                            allProducts.indexOfFirst { it.product.id == cartItem.product.id }
-                        val product = allProducts[index]
-                        if (cartItem.quantity != product.quantity) {
-                            allProducts[index] = product.copy(quantity = cartItem.quantity)
-                        }
+                            allProducts.indexOfFirst { cartItem.product.id == it.product.id }
+                        allProducts[index] = cartItem
                     }
                     _productsInShop.postValue(allProducts)
                     _productsInShop.value?.forEach {
                         cartRepository.update(it.product.id, it.quantity) { result ->
-                            result.onSuccess {
-                                return@update
-                            }
+                            result
+                                .onSuccess {
+                                    return@update
+                                }.onFailure {
+                                    _toastMessage.postValue(Event(Unit))
+                                }
                         }
                     }
                 }.onFailure {
@@ -151,11 +150,10 @@ class ProductsViewModel(
     }
 
     fun addRecentProduct(cartItem: CartItem) {
-        val recentProduct = cartItem.product
-        recentProductsRepository.add(recentProduct) { result ->
+        recentProductsRepository.add(cartItem.product) { result ->
             result
                 .onSuccess {
-                    _recentProducts.postValue(_recentProducts.value?.plus(cartItem.product))
+                    _recentProducts.postValue(_recentProducts.value?.plus(cartItem))
                 }.onFailure {
                     _toastMessage.postValue(Event(Unit))
                 }
@@ -166,7 +164,7 @@ class ProductsViewModel(
         recentProductsRepository.getAll { result ->
             result
                 .onSuccess { recentProducts ->
-                    _recentProducts.postValue(recentProducts)
+                    _recentProducts.postValue(recentProducts.map { CartItem(it) })
                 }.onFailure {
                     _toastMessage.postValue(Event(Unit))
                 }
