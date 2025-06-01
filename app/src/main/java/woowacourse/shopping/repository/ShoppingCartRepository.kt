@@ -1,13 +1,16 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.products.CartState
-import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.model.products.ShoppingCartItem
 
-interface CartRepository {
-    fun addProduct(product: Product): CartState
+interface ShoppingCartRepository {
+//    fun addProduct(product: Product): CartState
+//
+//    fun addProduct2(cart: ShoppingCartItem)
 
-    fun addProduct2(cart: ShoppingCartItem)
+    fun addCart(
+        productId: Int,
+        quantity: Int,
+    )
 
     fun getProductQuantity(productId: Int): Int
 
