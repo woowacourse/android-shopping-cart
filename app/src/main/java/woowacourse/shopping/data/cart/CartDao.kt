@@ -17,12 +17,6 @@ interface CartDao {
     fun insertAll(vararg cartEntities: CartEntity)
 
     @Transaction
-    fun insertAndUpdateQuantity(cartEntity: CartEntity) {
-        insertAll(cartEntity)
-        update(cartEntity.copy(quantity = 1))
-    }
-
-    @Transaction
     fun updateQuantity(cartEntity: CartEntity) {
         val existing = findById(cartEntity.id)
         if (existing != null) {
