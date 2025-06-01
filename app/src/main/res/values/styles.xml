@@ -12,4 +12,17 @@
         <item name="android:textSize">@dimen/text_size_button</item>
     </style>
 
+    <style name="ProductCountMinusButton">
+        <item name="android:background">@drawable/cart_product_minus_background</item>
+        <item name="android:textColor">@color/gray_5</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+    </style>
+
+    <style name="ProductCountPlusButton">
+        <item name="android:background">@drawable/cart_product_plus_background</item>
+        <item name="android:textColor">@color/gray_5</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+    </style>
+
+
 </resources>

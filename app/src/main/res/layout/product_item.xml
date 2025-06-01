@@ -4,14 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
         <variable
             name="product"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
+            name="catalogHandler"
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
+
+        <variable
             name="handler"
-            type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
+            type="woowacourse.shopping.product.ProductQuantityHandler" />
 
     </data>
 
@@ -19,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> handler.onProductClick(product)}"
+        android:onClick="@{() -> catalogHandler.onProductClick(product)}"
         >
 
         <ImageView
@@ -33,6 +38,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            app:product="@{product}"
+            app:handler="@{handler}"
+            android:visibility="@{product.isExpanded ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_product"
+            android:id="@+id/layout_quantity_selector"
+            layout="@layout/product_count_item" />
+
+        <include
+            app:product="@{product}"
+            app:handler="@{catalogHandler}"
+            android:visibility="@{product.isExpanded ? View.GONE : View.VISIBLE}"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_product"
+            android:layout_marginEnd="13dp"
+            android:id="@+id/layout_button_open_quantity_selector"
+            layout="@layout/product_count_open_item"/>
+
 
         <TextView
             android:id="@+id/textView_product_name"

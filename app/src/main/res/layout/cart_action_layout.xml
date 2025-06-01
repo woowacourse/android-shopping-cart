@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.product.catalog.CatalogViewModel" />
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/imageView_cart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_cart"
+            android:contentDescription="@string/text_cart" />
+
+        <TextView
+            android:text='@{String.valueOf(viewModel.cartCount)}'
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/imageView_cart"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_cart"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="-10dp"
+            android:id="@+id/textView_cart_badge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/cart_badge_background"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:visibility="@{viewModel.cartCount > 0 ? View.VISIBLE : View.GONE}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

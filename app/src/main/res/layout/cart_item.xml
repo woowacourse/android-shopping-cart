@@ -6,12 +6,15 @@
     <data>
 
         <variable
-            name="cartProduct"
+            name="product"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
             name="handler"
-            type="woowacourse.shopping.cart.CartEventHandler" />
+            type="woowacourse.shopping.product.ProductQuantityHandler" />
+        <variable
+            name="cartHandler"
+            type="woowacourse.shopping.cart.event.CartEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
-            android:text="@{cartProduct.name}"
+            android:text="@{product.name}"
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -37,7 +40,7 @@
 
         <ImageView
             android:contentDescription="@string/cart_product_image_description"
-            app:loadImage="@{cartProduct.imageUrl}"
+            app:loadImage="@{product.imageUrl}"
             android:id="@+id/imageView_cart_product"
             android:layout_width="136dp"
             android:layout_height="72dp"
@@ -56,16 +59,28 @@
             android:layout_margin="8dp"
             android:background="@drawable/icon_delete"
             android:contentDescription="@string/cart_product_delete_button_description"
-            android:onClick="@{() -> handler.onDeleteProduct(cartProduct)}"
+            android:onClick="@{() -> cartHandler.onDeleteProduct(product)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+            <include
+                app:product="@{product}"
+                app:handler="@{handler}"
+                app:layout_constraintEnd_toEndOf="@id/textView_cart_product_price"
+                app:layout_constraintBottom_toTopOf="@id/textView_cart_product_price"
+                android:layout_marginBottom="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_quantity_selector"
+                layout="@layout/product_count_item"/>
+
         <TextView
+            android:id="@+id/textView_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
-            android:text="@{@string/format_price(cartProduct.price)}"
+            android:text="@{@string/format_price(product.price * product.quantity)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

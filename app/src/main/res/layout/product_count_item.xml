@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.product.catalog.ProductUiModel" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.ProductQuantityHandler" />
+    </data>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/cart_product_count_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> handler.onMinusQuantity(product)}"
+                android:id="@+id/button_product_minus"
+                android:layout_width="@dimen/size_button_square"
+                android:elevation="0dp"
+                android:layout_height="@dimen/size_button_square"
+                style="@style/ProductCountMinusButton"
+                android:text="@string/text_product_minus"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:text="@{String.valueOf(product.quantity)}"
+                android:backgroundTint="@color/white"
+                android:id="@+id/textView_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/gray_5"
+                android:textSize="22sp"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_product_plus"
+                app:layout_constraintStart_toEndOf="@id/button_product_minus"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> handler.onPlusQuantity(product)}"
+                android:elevation="0dp"
+                android:id="@+id/button_product_plus"
+                android:layout_width="@dimen/size_button_square"
+                android:layout_height="@dimen/size_button_square"
+                style="@style/ProductCountPlusButton"
+                android:text="@string/text_product_plus"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

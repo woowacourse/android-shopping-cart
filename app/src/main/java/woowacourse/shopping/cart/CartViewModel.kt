@@ -4,106 +4,117 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.CartProductDataSource
+import woowacourse.shopping.cart.event.CartEventHandler
+import woowacourse.shopping.data.cart.CartItemRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.model.PagingData
 
 class CartViewModel(
-    private val dataSource: CartProductDataSource,
+    private val repository: CartItemRepository,
 ) : ViewModel(),
     CartEventHandler {
-    private val allCartProducts get() = dataSource.cartProducts()
-    private val allCartProductsSize get() = dataSource.getCartProductsSize()
-
-    private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
-    val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
-
     private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
 
     private val _isPrevButtonEnabled = MutableLiveData<Boolean>(false)
     val isPrevButtonEnabled: LiveData<Boolean> = _isPrevButtonEnabled
 
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> = _product
+
     private var currentPage: Int = INITIAL_PAGE
 
-    private val _pageEvent = SingleLiveEvent<Int>()
-    val pageEvent: LiveData<Int> = _pageEvent
+    private val _pagingData = MutableLiveData<PagingData>()
+    val pagingData: LiveData<PagingData> = _pagingData
 
     init {
         loadCartProducts()
     }
 
     override fun onDeleteProduct(cartProduct: ProductUiModel) {
-        dataSource.deleteCartProduct(cartProduct)
-        loadCartProducts()
+        repository.deleteCartItemById(cartProduct.id) {
+            loadCartProducts()
+        }
     }
 
     override fun onNextPage() {
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
-        if (currentPage < lastPage) {
-            increasePage()
-            loadCartProducts()
+        repository.getAllCartItemSize { size ->
+            val lastPage = (size - 1) / PAGE_SIZE
+            if (currentPage < lastPage) {
+                currentPage++
+                loadCartProducts()
+            }
         }
     }
 
     override fun onPrevPage() {
         if (currentPage > 0) {
-            decreasePage()
+            currentPage--
             loadCartProducts()
         }
     }
 
-    override fun isNextButtonEnabled(): Boolean {
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
-        return currentPage < lastPage
+    fun increaseQuantity(product: ProductUiModel) {
+        val newProduct = product.copy(quantity = product.quantity + 1)
+        repository.updateCartItem(newProduct) {
+            _product.postValue(newProduct)
+        }
     }
 
-    override fun isPrevButtonEnabled(): Boolean = currentPage > 0
+    fun decreaseQuantity(product: ProductUiModel) {
+        val newQuantity = if (product.quantity > 1) product.quantity - 1 else 1
+        val newProduct = product.copy(quantity = newQuantity)
+        repository.updateCartItem(newProduct) {
+            _product.postValue(newProduct)
+        }
+    }
 
-    override fun isPaginationEnabled(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
+    override fun isNextButtonEnabled(): Boolean = pagingData.value?.hasNext == true
+
+    override fun isPrevButtonEnabled(): Boolean = pagingData.value?.hasPrevious == true
+
+    override fun isPaginationEnabled(): Boolean = (pagingData.value?.hasNext == true) || (pagingData.value?.hasPrevious == true)
 
     override fun getPage(): Int = currentPage
 
-    private fun increasePage() {
-        currentPage += 1
-        _pageEvent.value = currentPage
-    }
-
-    private fun decreasePage() {
-        currentPage -= 1
-        _pageEvent.value = currentPage
-    }
-
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        var current = currentPage
-        val totalSize = allCartProductsSize
+        repository.getAllCartItemSize { totalSize ->
+            var current = currentPage
+            if (current > 0 && current * pageSize >= totalSize) {
+                current--
+            }
+            val startIndex = current * pageSize
+            val endIndex = minOf(startIndex + pageSize, totalSize)
 
-        while (current > 0 && current * pageSize >= totalSize) {
-            current--
+            repository.subListCartItems(startIndex, endIndex) { products ->
+                val hasNext = current < (totalSize - 1) / pageSize
+                val hasPrevious = current > 0
+
+                val newPagingData =
+                    PagingData(
+                        products = products,
+                        page = current,
+                        hasNext = hasNext,
+                        hasPrevious = hasPrevious,
+                    )
+
+                _pagingData.postValue(newPagingData)
+            }
         }
-
-        currentPage = current
-        _pageEvent.value = current
-
-        val startIndex = current * pageSize
-        val endIndex = minOf(startIndex + pageSize, totalSize)
-
-        _cartProducts.value = allCartProducts.subList(startIndex, endIndex)
-        _isNextButtonEnabled.value = current < (totalSize - 1) / pageSize
-        _isPrevButtonEnabled.value = current > 0
     }
 
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 0
 
-        fun factory(dataSource: CartProductDataSource): ViewModelProvider.Factory =
+        fun factory(repository: CartItemRepository): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
-                        return CartViewModel(dataSource) as T
+                        return CartViewModel(repository) as T
                     }
-                    throw IllegalArgumentException("Unknown ViewModel class")
+                    throw IllegalArgumentException("알 수 없는 ViewModel 클래스입니다.$modelClass")
                 }
             }
     }

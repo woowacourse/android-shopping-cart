@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <data>
+                <variable
+                    name="product"
+                    type="woowacourse.shopping.product.catalog.ProductUiModel" />
+
+                <variable
+                    name="handler"
+                    type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
+        </data>
+
+        <FrameLayout
+            android:layout_width="53dp"
+            android:layout_height="53dp">
+        <ImageButton
+            android:clickable="true"
+            android:onClick="@{() -> handler.onOpenProductQuantitySelector(product)}"
+            android:id="@+id/button_open_quantity_layout"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/text_product_count_open_button"
+            android:elevation="5dp"
+            android:background="@drawable/cart_product_open_button_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/icon_product_count"
+            app:tint="@color/black" />
+        </FrameLayout>
+</layout>

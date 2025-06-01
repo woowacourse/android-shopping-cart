@@ -9,64 +9,82 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartViewModel.Companion.factory
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.cart.event.CartEventHandlerImpl
+import woowacourse.shopping.data.cart.CartItemDatabase
+import woowacourse.shopping.data.cart.CartItemRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            factory(CartDatabase),
-        )[CartViewModel::class.java]
-    }
+    private val viewModel: CartViewModel by lazy { createViewModel() }
+    private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        applyWindowInsets()
 
-        setSupportActionBar()
-        setCartProductAdapter()
-        observeCartProducts()
-        observePageChanges()
+        setupWindowInsets()
+        setupToolbar()
+        initBinding()
+        initRecyclerView()
+        observeCartViewModel()
     }
 
-    private fun setSupportActionBar() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.text_cart_action_bar)
+    private fun createViewModel(): CartViewModel {
+        val db = CartItemDatabase.getInstance(this)
+        val repository = CartItemRepositoryImpl(db.cartItemDao())
+        return ViewModelProvider(this, factory(repository))[CartViewModel::class.java]
     }
 
-    private fun setCartProductAdapter() {
-        val handler = CartEventHandlerImpl(viewModel)
-        binding.recyclerViewCart.adapter =
-            CartAdapter(
-                cartProducts = emptyList(),
-                handler = handler,
-            )
-    }
-
-    private fun observeCartProducts() {
-        viewModel.cartProducts.observe(this) { value ->
-            (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
-        }
+    private fun initBinding() {
         binding.lifecycleOwner = this
     }
 
-    private fun observePageChanges() {
-        viewModel.pageEvent.observe(this) {
-            (binding.recyclerViewCart.adapter as? CartAdapter)?.let { adapter ->
-                val paginationPos = adapter.itemCount - 1
-                adapter.notifyItemChanged(paginationPos)
-            }
+    private fun setupToolbar() {
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.text_cart_action_bar)
         }
     }
 
-    private fun applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+    private fun initRecyclerView() {
+        val handler = CartEventHandlerImpl(viewModel)
+        cartAdapter =
+            CartAdapter(
+                cartHandler = handler,
+                handler = handler,
+            )
+        binding.recyclerViewCart.adapter = cartAdapter
+    }
+
+    private fun observeCartViewModel() {
+        viewModel.pagingData.observe(this) { pagingData ->
+            val items = mutableListOf<CartAdapterItem>()
+
+            items.addAll(pagingData.products.map { CartAdapterItem.Product(it) })
+
+            if (pagingData.hasNext || pagingData.hasPrevious) {
+                items.add(
+                    CartAdapterItem.PaginationButton(
+                        hasPrevious = pagingData.hasPrevious,
+                        hasNext = pagingData.hasNext,
+                    ),
+                )
+            }
+
+            cartAdapter.submitList(items)
+        }
+
+        viewModel.product.observe(this) { productUiModel ->
+            cartAdapter.updateProduct(CartAdapterItem.Product(productUiModel))
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
     }

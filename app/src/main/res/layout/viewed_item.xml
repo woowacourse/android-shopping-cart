@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.product.catalog.ProductUiModel" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{()-> handler.onProductClick(product)}"
+        android:layout_width="wrap_content"
+        android:paddingHorizontal="4dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            app:loadImage="@{product.imageUrl}"
+            android:id="@+id/imageView_recent_product"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:contentDescription="@string/text_product_image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/iced_americano"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            app:layout_constraintEnd_toEndOf="@id/imageView_recent_product"
+            android:layout_marginTop="7dp"
+            app:layout_constraintTop_toBottomOf="@id/imageView_recent_product"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/textView_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="90dp"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="아이스 카페 아메리카노" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
