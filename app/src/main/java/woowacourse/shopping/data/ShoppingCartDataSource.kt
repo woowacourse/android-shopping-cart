@@ -10,4 +10,9 @@ class ShoppingCartDataSource(
     fun deleteCartItem(productId: Int) {
         cartDao.deleteCartItem(productId)
     }
+
+    fun cartSinglePage(
+        page: Int,
+        size: Int,
+    ): List<ShoppingCartEntity> = cartDao.cartSinglePage(page, size)
 }

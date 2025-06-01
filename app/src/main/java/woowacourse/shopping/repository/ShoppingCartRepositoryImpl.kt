@@ -2,6 +2,7 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.data.ShoppingCartDataSource
 import woowacourse.shopping.data.ShoppingCartEntity
+import woowacourse.shopping.model.products.ShoppingCart
 
 class ShoppingCartRepositoryImpl(
     private val shoppingCartDataSource: ShoppingCartDataSource,
@@ -23,4 +24,14 @@ class ShoppingCartRepositoryImpl(
             productId,
         )
     }
+
+    override fun singlePage(
+        page: Int,
+        size: Int,
+    ): List<ShoppingCart> =
+        shoppingCartDataSource
+            .cartSinglePage(
+                page,
+                size,
+            ).map { it.toDomain() }
 }

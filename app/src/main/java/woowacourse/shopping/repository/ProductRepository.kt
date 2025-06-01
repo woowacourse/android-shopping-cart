@@ -11,4 +11,6 @@ interface ProductRepository {
         start: Int,
         end: Int,
     ): List<Product>
+
+    fun getProductsById(productId: Int): List<Product>
 }

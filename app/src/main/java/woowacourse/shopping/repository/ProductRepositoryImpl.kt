@@ -14,4 +14,6 @@ class ProductRepositoryImpl(
         start: Int,
         end: Int,
     ): List<Product> = storage.dummyProducts.subList(start, end)
+
+    override fun getProductsById(productId: Int): List<Product> = storage.dummyProducts.filter { it.id == productId }
 }
