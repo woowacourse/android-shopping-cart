@@ -41,7 +41,7 @@ class LastProductRepositoryImpl(
             lastDao.insert(
                 LastProductEntity(
                     productId = product.id,
-                    viewedAt = System.currentTimeMillis().toInt()
+                    viewedAt = System.currentTimeMillis()
                 )
             )
             lastDao.deleteOldExceptRecent10()
@@ -59,7 +59,7 @@ class LastProductRepositoryImpl(
     override fun fetchLatestProduct(callback: (Product?) -> Unit) {
         Thread {
             val lastEntity = lastDao.getRecent(LAST_PRODUCT_COUNT)
-            val productEntity = lastEntity.first().let { productDao.getById(it.productId.toInt()) }
+            val productEntity = lastEntity.first().let { productDao.getById(it.productId) }
             val product = productEntity?.toDomain()
             Handler(Looper.getMainLooper()).post {
                 callback(product)

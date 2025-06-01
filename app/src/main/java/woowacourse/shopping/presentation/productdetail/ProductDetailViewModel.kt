@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.util.SingleLiveEvent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import woowacourse.shopping.data.repository.LastProductRepository
 
 class ProductDetailViewModel(
@@ -31,9 +32,17 @@ class ProductDetailViewModel(
     private val _latestProduct = MutableLiveData<Product?>()
     val latestProduct: LiveData<Product?> get() = _latestProduct
 
+    private val _isEqualProduct = MutableLiveData<Boolean>(false)
+    val isEqualProduct: LiveData<Boolean> get() = _isEqualProduct
+
     fun loadLatestViewedProduct() {
         lastProductRepository.fetchLatestProduct { product ->
-            _latestProduct.postValue(product)
+            _latestProduct.value = product
+            _isEqualProduct.value = (_product.value?.id == _latestProduct.value?.id)
+            Log.d("test","${_product.value?.id}  ${_latestProduct.value?.id}")
+
+            Log.d("test",isEqualProduct.value.toString())
+
         }
     }
 
@@ -48,9 +57,7 @@ class ProductDetailViewModel(
 
     fun updateProductDetail(id: Int) {
         productsRepository.fetchProductDetail(id) { result ->
-            mainHandler.post {
-                _product.value = result ?: Product.DEFAULT_PRODUCT
-            }
+            _product.value = result ?: Product.DEFAULT_PRODUCT
         }
     }
 
