@@ -1,9 +1,8 @@
 package woowacourse.shopping.view.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,33 +13,54 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.adapter.ProductRvItems
-import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
-import kotlin.getValue
 
-class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
+class MainActivity : AppCompatActivity() {
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.syncHistory()
+                viewModel.syncCartQuantities()
+            }
+        }
+
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as App).container.productRepository)
+        val container = (application as App).container
+        MainViewModelFactory(
+            container.cartRepository,
+            container.productWithCartLoader,
+            container.historyLoader,
+        )
     }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), this)
+        ProductAdapter(viewModel.productEventHandler)
     }
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        with(binding) {
-            lifecycleOwner = this@MainActivity
-            adapter = productsAdapter
-        }
+
+        setUpBinding()
         setUpSystemBar()
         setupRecyclerView()
         observeViewModel()
+        setUpListener()
+    }
+
+    private fun setUpBinding() {
+        with(binding) {
+            lifecycleOwner = this@MainActivity
+            adapter = productsAdapter
+            vm = viewModel
+        }
     }
 
     private fun setUpSystemBar() {
@@ -68,7 +88,11 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
             override fun getSpanSize(position: Int): Int {
                 return when (productsAdapter.getItemViewType(position)) {
                     ProductRvItems.ViewType.VIEW_TYPE_PRODUCT.ordinal -> 1
-                    ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal -> 2
+                    ProductRvItems.ViewType.VIEW_TYPE_RECENT_PRODUCT.ordinal,
+                    ProductRvItems.ViewType.VIEW_TYPE_DIVIDER.ordinal,
+                    ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal,
+                    -> 2
+
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -78,31 +102,35 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         viewModel.uiState.observe(this) { value ->
             productsAdapter.submitList(value)
         }
-    }
 
-    override fun onSelectProduct(productId: Long) {
-        val intent = DetailActivity.newIntent(this, productId)
-        startActivity(intent)
-    }
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is MainUiEvent.ShowCannotIncrease -> {
+                    showToast(
+                        getString(R.string.text_over_quantity).format(event.quantity),
+                    )
+                }
 
-    override fun onLoadMoreItems() {
-        viewModel.loadProducts()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bar_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-                true
+                is MainUiEvent.NavigateToDetail ->
+                    moveToDetailActivity(
+                        event.productId,
+                        event.lastSeenProductId,
+                    )
             }
-
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_action_bar_menu, menu)
-        return true
+    private fun setUpListener() {
+        binding.cartContainer.setOnClickListener {
+            startActivity(CartActivity.newIntent(this))
+        }
+    }
+
+    private fun moveToDetailActivity(
+        productId: Long,
+        lastSeenProductId: Long?,
+    ) {
+        val intent = DetailActivity.newIntent(this, productId, lastSeenProductId)
+        activityResultLauncher.launch(intent)
     }
 }

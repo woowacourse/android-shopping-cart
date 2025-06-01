@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="model"
+            type="woowacourse.shopping.view.main.state.HistoryState" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.main.adapter.HistoryViewHolder.Handler" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:onClick="@{() -> eventHandler.onClickHistory(model.productId)}"
+        android:layout_marginStart="10dp"
+        android:layout_width="98dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:scaleType="centerCrop"
+            setImage="@{model.imageUrl}"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:text="@{model.productName}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            tools:text="[태우한우] 1+ 한우 안심 스테이크 200g (냉장)" />
+    </LinearLayout>
+</layout>

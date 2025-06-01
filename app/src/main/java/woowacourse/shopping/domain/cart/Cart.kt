@@ -1,8 +1,8 @@
 package woowacourse.shopping.domain.cart
 
-import java.util.UUID
+import woowacourse.shopping.domain.Quantity
 
 data class Cart(
-    val id: Long = UUID.randomUUID().mostSignificantBits,
+    val quantity: Quantity,
     val productId: Long,
 )

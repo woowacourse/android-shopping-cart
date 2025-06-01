@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.vm
+package woowacourse.shopping.view.main.state
 
 sealed interface LoadState {
     object CanLoad : LoadState

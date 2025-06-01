@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart.vm
+package woowacourse.shopping.view.cart.state
 
 data class PageState(
     val page: Int = 1,

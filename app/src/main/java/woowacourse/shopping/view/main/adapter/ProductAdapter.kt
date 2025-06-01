@@ -1,26 +1,17 @@
 package woowacourse.shopping.view.main.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.viewbinding.ViewBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.core.base.BaseViewHolder
-import woowacourse.shopping.view.main.vm.LoadState
-import woowacourse.shopping.view.main.vm.ProductUiState
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
+import woowacourse.shopping.view.main.adapter.recent.RecentProductViewHolder
+import woowacourse.shopping.view.main.state.LoadState
+import woowacourse.shopping.view.main.state.ProductUiState
 
 class ProductAdapter(
-    items: List<ProductRvItems>,
-    private val handler: ProductsAdapterEventHandler,
-) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
-    private val items: MutableList<ProductRvItems> = items.toMutableList()
-    private val productCount get() = items.count { it is ProductRvItems.ProductItem }
-
-    fun submitList(newItems: ProductUiState) {
-        removeLoadItem()
-        addProductItems(newItems.items)
-        generateLoad(newItems.load)
-    }
-
+    private val handler: ProductAdapterEventHandler,
+) : ListAdapter<ProductRvItems, BaseViewHolder<ViewBinding>>(ProductAdapterDiffer()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -29,14 +20,18 @@ class ProductAdapter(
             ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
                 ProductViewHolder(
                     parent,
-                    handler,
+                    handler as ProductViewHolder.Handler,
+                    handler as CartQuantityHandler,
                 )
 
             ProductRvItems.ViewType.VIEW_TYPE_LOAD ->
-                LoadViewHolder(
-                    parent,
-                    handler,
-                )
+                LoadViewHolder(parent, handler)
+
+            ProductRvItems.ViewType.VIEW_TYPE_RECENT_PRODUCT ->
+                RecentProductViewHolder(parent, handler)
+
+            ProductRvItems.ViewType.VIEW_TYPE_DIVIDER ->
+                DividerViewHolder(parent)
         }
     }
 
@@ -44,43 +39,34 @@ class ProductAdapter(
         holder: BaseViewHolder<ViewBinding>,
         position: Int,
     ) {
-        when (val item = items[position]) {
+        when (val item = getItem(position)) {
             is ProductRvItems.ProductItem -> (holder as ProductViewHolder).bind(item)
             is ProductRvItems.LoadItem -> (holder as LoadViewHolder).bind(item)
+            is ProductRvItems.RecentProductItem -> (holder as RecentProductViewHolder).bind(item)
+            ProductRvItems.DividerItem -> Unit
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    fun submitList(newUiState: ProductUiState) {
+        val newItems = mutableListOf<ProductRvItems>()
 
-    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
-
-    private fun addProductItems(newItems: List<Product>) {
-        val subsList = subtractItems(newItems)
-
-        items.addAll(subsList)
-        notifyItemRangeInserted(items.size - subsList.size, subsList.size)
-    }
-
-    private fun subtractItems(items: List<Product>): List<ProductRvItems.ProductItem> {
-        return items
-            .drop(productCount)
-            .map(ProductRvItems::ProductItem)
-    }
-
-    private fun generateLoad(load: LoadState) {
-        if (load is LoadState.CanLoad) addLoadItem()
-    }
-
-    private fun addLoadItem() {
-        items.add(ProductRvItems.LoadItem)
-        notifyItemInserted(items.size - 1)
-    }
-
-    private fun removeLoadItem() {
-        val index = items.indexOfFirst { it is ProductRvItems.LoadItem }
-        if (index != -1) {
-            items.removeAt(index)
-            notifyItemRemoved(index)
+        if (newUiState.historyItems.isNotEmpty()) {
+            newItems += ProductRvItems.RecentProductItem(newUiState.historyItems)
         }
+
+        newItems += newUiState.productItems.map { ProductRvItems.ProductItem(it) }
+
+        if (newUiState.load is LoadState.CanLoad) {
+            newItems += ProductRvItems.LoadItem
+        }
+
+        this.submitList(newItems)
     }
+
+    override fun getItemViewType(position: Int): Int = getItem(position).viewType.ordinal
+
+    interface Handler :
+        LoadViewHolder.Handler,
+        ProductViewHolder.Handler,
+        HistoryViewHolder.Handler
 }

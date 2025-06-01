@@ -1,21 +1,44 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.data.datasource.ProductsDataSource
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductResult
+import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.concurrent.thread
 
 class ProductRepositoryImpl(
-    private val productStorage: ProductStorage,
+    private val datasource: ProductsDataSource,
 ) : ProductRepository {
-    override fun get(id: Long): Product = productStorage[id]
+    override fun getProduct(
+        productId: Long,
+        onResult: (Product) -> Unit,
+    ) {
+        thread {
+            onResult(datasource.getProduct(productId).toDomain())
+        }
+    }
+
+    override fun getProducts(
+        productIds: List<Long>,
+        onResult: (List<Product>) -> Unit,
+    ) {
+        thread {
+            val products = datasource.getProducts(productIds).map { it.toDomain() }
+            onResult(products)
+        }
+    }
 
     override fun loadSinglePage(
         page: Int,
         pageSize: Int,
-    ): ProductResult {
+        onResult: (ProductSinglePage) -> Unit,
+    ) {
         val fromIndex = page * pageSize
         val toIndex = fromIndex + pageSize
-        return productStorage.singlePage(fromIndex, toIndex)
+
+        thread {
+            val productSinglePage = datasource.singlePage(fromIndex, toIndex).toDomain()
+            onResult(productSinglePage)
+        }
     }
 }

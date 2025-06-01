@@ -4,26 +4,61 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.cart.CartUiEvent
+import woowacourse.shopping.view.cart.adapter.CartAdapter
+import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
+import woowacourse.shopping.view.core.common.withState
+import woowacourse.shopping.view.core.event.MutableSingleLiveData
+import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
+import woowacourse.shopping.view.loader.CartLoader
+import woowacourse.shopping.view.main.state.IncreaseState
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
+    private val cartLoader: CartLoader,
 ) : ViewModel() {
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
 
     private val _uiState = MutableLiveData<CartUiState>()
-    val uiState: LiveData<CartUiState> = _uiState
+    val uiState: LiveData<CartUiState> get() = _uiState
 
-    fun deleteProduct(cardId: Long) {
-        cartRepository.delete(cardId)
-        loadCarts()
+    private val _event = MutableSingleLiveData<CartUiEvent>()
+    val event: SingleLiveData<CartUiEvent> get() = _event
 
-        val currentCarts = _uiState.value?.carts
-        if (paging.resetToLastPageIfEmpty(currentCarts)) {
-            loadCarts()
+    fun decreaseCartQuantity(productId: Long) {
+        withState(_uiState.value) { state ->
+            val result = state.decreaseCartQuantity(productId)
+
+            _uiState.value = state.modifyUiState(result)
+            cartRepository.upsert(productId, result.cartQuantity)
+        }
+    }
+
+    fun increaseCartQuantity(productId: Long) {
+        withState(_uiState.value) { state ->
+            when (val result = state.canIncreaseCartQuantity(productId)) {
+                is IncreaseState.CanIncrease -> {
+                    val newState = result.value
+                    _uiState.value = state.modifyUiState(newState)
+                    cartRepository.upsert(productId, newState.cartQuantity)
+                }
+
+                is IncreaseState.CannotIncrease -> sendEvent(CartUiEvent.ShowCannotIncrease(result.quantity))
+            }
+        }
+    }
+
+    fun loadCarts() {
+        val nextPage = paging.getPageNo() - 1
+        cartLoader.invoke(
+            nextPage,
+            PAGE_SIZE,
+        ) { carts, hasNextPage ->
+            val pageState = paging.createPageState(hasNextPage)
+            _uiState.postValue(CartUiState(items = carts, pageState = pageState))
         }
     }
 
@@ -37,18 +72,43 @@ class CartViewModel(
         loadCarts()
     }
 
-    fun loadCarts() {
-        val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
-
-        val carts =
-            result
-                .carts
-                .map {
-                    val product = productRepository[it.productId]
-                    CartState(it.id, product)
-                }
-        val pageState = paging.createPageState(result.hasNextPage)
-
-        _uiState.value = CartUiState(carts = carts, pageState = pageState)
+    fun deleteProduct(productId: Long) {
+        cartRepository.delete(productId) {
+            refresh()
+        }
     }
+
+    private fun refresh() {
+        cartLoader.invoke(paging.getPageNo() - 1, PAGE_SIZE) { carts, hasNextPage ->
+            if (paging.resetToLastPageIfEmpty(carts)) {
+                refresh()
+                return@invoke
+            }
+
+            val pageState = paging.createPageState(hasNextPage)
+            _uiState.postValue(CartUiState(items = carts, pageState = pageState))
+        }
+    }
+
+    private fun sendEvent(event: CartUiEvent) {
+        _event.setValue(event)
+    }
+
+    val cartQuantityHandler =
+        object : CartQuantityHandler {
+            override fun onClickIncrease(productId: Long) {
+                increaseCartQuantity(productId)
+            }
+
+            override fun onClickDecrease(productId: Long) {
+                decreaseCartQuantity(productId)
+            }
+        }
+
+    val cartEventHandler =
+        object : CartAdapter.Handler {
+            override fun onClickDeleteItem(productId: Long) {
+                deleteProduct(productId)
+            }
+        }
 }

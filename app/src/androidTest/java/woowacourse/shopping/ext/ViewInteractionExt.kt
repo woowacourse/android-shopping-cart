@@ -8,6 +8,15 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 
 fun ViewInteraction.isDisplayed(): ViewInteraction = check(matches(ViewMatchers.isDisplayed()))
 
+fun ViewInteraction.isVisibilityGone(): ViewInteraction =
+    check(
+        matches(
+            ViewMatchers.withEffectiveVisibility(
+                ViewMatchers.Visibility.GONE,
+            ),
+        ),
+    )
+
 fun ViewInteraction.performClick(): ViewInteraction = this.perform(click())
 
 fun ViewInteraction.isTextMatches(other: String): ViewInteraction = check(matches(withText(other)))

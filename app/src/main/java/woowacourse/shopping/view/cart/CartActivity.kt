@@ -14,35 +14,43 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adapter.CartAdapter
-import woowacourse.shopping.view.cart.adapter.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
+import woowacourse.shopping.view.core.ext.showToast
 
-class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         val container = (application as App).container
         CartViewModelFactory(
             container.cartRepository,
-            container.productRepository,
+            container.cartLoader,
         )
     }
     private val cartAdapter by lazy {
-        CartAdapter(items = emptyList(), handler = this)
+        CartAdapter(
+            handler = viewModel.cartEventHandler,
+            cartQuantityHandler = viewModel.cartQuantityHandler,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        viewModel.loadCarts()
+
+        setUpBinding()
+        setUpSystemBars()
+        initView()
+        observeViewModel()
+    }
+
+    private fun setUpBinding() {
         with(binding) {
             lifecycleOwner = this@CartActivity
             adapter = cartAdapter
             vm = viewModel
         }
-        viewModel.loadCarts()
-        setUpSystemBars()
-        initView()
-        observeViewModel()
     }
 
     private fun setUpSystemBars() {
@@ -65,12 +73,18 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
 
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { value ->
-            cartAdapter.submitList(value.carts)
+            cartAdapter.submitList(value.items)
         }
-    }
 
-    override fun onClickDeleteItem(cardId: Long) {
-        viewModel.deleteProduct(cardId)
+        viewModel.event.observe(this) { value ->
+            when (value) {
+                is CartUiEvent.ShowCannotIncrease ->
+                    showToast(
+                        getString(R.string.text_over_quantity)
+                            .format(value.quantity),
+                    )
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

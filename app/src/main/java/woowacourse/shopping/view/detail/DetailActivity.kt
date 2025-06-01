@@ -15,29 +15,45 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels {
+        val container = (application as App).container
+
         DetailViewModelFactory(
-            (application as App).container.productRepository,
-            (application as App).container.cartRepository,
+            container.productRepository,
+            container.cartRepository,
+            container.historyRepository,
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        binding.lifecycleOwner = this@DetailActivity
-        binding.vm = viewModel
-
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
-        viewModel.load(productId)
+        val lastSeenProductId =
+            intent.getLongExtra(
+                EXTRA_LAST_SEEN_PRODUCT_ID,
+                NO_LAST_SEEN_PRODUCT,
+            )
 
+        viewModel.load(productId, lastSeenProductId)
+
+        setUpBinding()
         setUpSystemBars()
         observeViewModel()
+    }
+
+    private fun setUpBinding() {
+        with(binding) {
+            lifecycleOwner = this@DetailActivity
+            vm = viewModel
+            cartQuantityEventHandler = viewModel.cartQuantityHandler
+        }
     }
 
     private fun setUpSystemBars() {
@@ -51,13 +67,26 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.product.observe(this) {
-            binding.model = it
-        }
-
         viewModel.event.observe(this) {
             when (it) {
-                DetailScreenEvent.MoveToCart -> navigateToCart()
+                DetailUiEvent.MoveToCart -> navigateToCart()
+                is DetailUiEvent.ShowCannotIncrease -> {
+                    showToast(
+                        getString(R.string.text_over_quantity).format(it.quantity),
+                    )
+                }
+
+                DetailUiEvent.ShowCannotDecrease -> {
+                    showToast(
+                        getString(R.string.text_minimum_quantity),
+                    )
+                }
+
+                is DetailUiEvent.MoveToLastSeenProduct -> {
+                    val intent = newIntent(this, it.productId)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -74,6 +103,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_bar_close -> {
+                setResult(RESULT_OK, Intent())
                 finish()
                 true
             }
@@ -83,14 +113,20 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val NO_LAST_SEEN_PRODUCT = 0L
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
+        private const val EXTRA_LAST_SEEN_PRODUCT_ID = "extra_last_watched_product_id"
 
         fun newIntent(
             context: Context,
             productId: Long,
+            lastSeenProductId: Long? = null,
         ): Intent {
             return Intent(context, DetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
+                lastSeenProductId?.let {
+                    putExtra(EXTRA_LAST_SEEN_PRODUCT_ID, it)
+                }
             }
         }
     }
