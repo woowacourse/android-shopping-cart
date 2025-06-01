@@ -27,7 +27,7 @@ class GoodsDetailsViewModel(
     val isLastViewedVisible: LiveData<Boolean> get() = _isLastViewedVisible
 
     private val _cartResultEvent = MutableLiveData<Event<State>>()
-    val cartResultEvent: LiveData<Event<State>> get() = _cartResultEvent
+    val cartInsertEvent: LiveData<Event<State>> get() = _cartResultEvent
 
     private val _navigateToLastViewedCart = MutableSingleLiveData<Cart>()
     val navigateToLastViewedCart: SingleLiveData<Cart> get() = _navigateToLastViewedCart
