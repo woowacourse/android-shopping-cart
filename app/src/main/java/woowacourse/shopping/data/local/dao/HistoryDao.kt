@@ -1,8 +1,9 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import woowacourse.shopping.data.local.entity.HistoryEntity
 
 @Dao
 interface HistoryDao {

@@ -1,10 +1,12 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
+import woowacourse.shopping.data.local.entity.CartItemEntity
 
 @Dao
 interface CartItemDao {
@@ -12,10 +14,19 @@ interface CartItemDao {
     fun getAll(): List<CartItemEntity>
 
     @Query("SELECT * FROM cart_item WHERE id =:id")
-    fun findById(id: Long): CartItemEntity
+    fun findById(id: Long): CartItemEntity?
 
-    @Insert
-    fun insert(cartItem: CartItemEntity)
+    @Query("SELECT * FROM cart_item LIMIT :limit OFFSET :offset")
+    fun findPagedItems(
+        limit: Int,
+        offset: Int,
+    ): List<CartItemEntity>
+
+    @Query("SELECT COUNT(*) FROM cart_item ")
+    fun size(): Int
+
+    @Upsert
+    fun upsert(cartItem: CartItemEntity)
 
     @Insert
     fun insertAll(vararg cartItem: CartItemEntity)
