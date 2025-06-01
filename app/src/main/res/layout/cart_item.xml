@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -12,6 +13,10 @@
         <variable
             name="clickListener"
             type="woowacourse.shopping.cart.DeleteProductClickListener" />
+
+        <variable
+            name="productActionListener"
+            type="woowacourse.shopping.product.catalog.ProductActionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +47,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{cartProduct}"
+            app:imageUrl="@{cartProduct.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/textView_cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/textView_cart_product_name"
@@ -58,7 +63,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <include
+            android:id="@+id/layout_quantity_control_bar"
+            layout="@layout/quantity_control_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@id/textView_price_info"
+            app:layout_constraintEnd_toEndOf="@id/textView_price_info"
+            bind:product="@{cartProduct}"
+            bind:quantity="@{String.valueOf(cartProduct.quantity)}" />
+
         <TextView
+            android:id="@+id/textView_price_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"

@@ -1,26 +1,41 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.cart.CartItem.ProductItem
+import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.QuantityControlListener
 
 class CartAdapter(
     cartItems: List<CartItem>,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
+    private val onQuantityControl: QuantityControlListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val cartItems: MutableList<CartItem> = cartItems.toMutableList()
 
     fun setCartItems(cartProducts: List<CartItem>) {
-        Log.d("CART_ADAPTER", "cartProductsSize: ${cartProducts.size}")
-        Log.d("CART_ADAPTER", "cartItemsSize: ${cartItems.size}")
-
         notifyItemRangeRemoved(0, cartItems.size)
         cartItems.clear()
         cartItems.addAll(cartProducts)
         notifyItemRangeInserted(0, cartItems.size)
+    }
+
+    fun setCartItem(product: ProductUiModel) {
+        val index =
+            cartItems
+                .filterIsInstance<ProductItem>()
+                .indexOfFirst { it.productItem.id == product.id }
+        cartItems[index] = ProductItem(product)
+        notifyItemChanged(index)
+    }
+
+    fun setButton(buttonItem: PaginationButtonItem) {
+        if (cartItems.isNotEmpty()) {
+            cartItems[cartItems.lastIndex] = buttonItem
+            notifyItemChanged(cartItems.lastIndex)
+        }
     }
 
     override fun onCreateViewHolder(
@@ -28,7 +43,7 @@ class CartAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == CART_PRODUCT) {
-            CartViewHolder.from(parent, onDeleteProductClick)
+            CartViewHolder.from(parent, onDeleteProductClick, onQuantityControl)
         } else {
             PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
         }

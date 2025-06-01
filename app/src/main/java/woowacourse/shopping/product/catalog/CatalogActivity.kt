@@ -2,8 +2,8 @@ package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +12,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.cart.ButtonEvent
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.databinding.MenuCartLayoutBinding
 import woowacourse.shopping.product.detail.DetailActivity
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
-    private val viewModel: CatalogViewModel by viewModels()
+    private val viewModel: CatalogViewModel by viewModels {
+        CatalogViewModelFactory(application as ShoppingApplication)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,51 +33,115 @@ class CatalogActivity : AppCompatActivity() {
         applyWindowInsets()
 
         setProductAdapter()
+        setProductsRecyclerViewLayoutManager()
+        setRecentlyViewedProductAdapter()
         observeCatalogProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (binding.recyclerViewProducts.adapter as ProductAdapter).clearItems()
+        viewModel.loadCatalogUntilCurrentPage()
+        viewModel.loadCartItemSize()
+        viewModel.loadRecentlyViewedProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu_item, menu)
-        return super.onCreateOptionsMenu(menu)
+        setupCartMenuItem(menu)
+        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.menu_cart -> {
-                startActivity(CartActivity.newIntent(this))
-                true
-            }
+    private fun setupCartMenuItem(menu: Menu?) {
+        val menuItem = menu?.findItem(R.id.action_cart) ?: return
 
-            else -> super.onOptionsItemSelected(item)
-        }
+        val binding =
+            DataBindingUtil
+                .inflate<MenuCartLayoutBinding>(
+                    LayoutInflater.from(this),
+                    R.layout.menu_cart_layout,
+                    null,
+                    false,
+                ).apply {
+                    layoutCartMenu.setOnClickListener {
+                        startActivity(CartActivity.newIntent(this@CatalogActivity))
+                    }
+                    vm = viewModel
+                    lifecycleOwner = this@CatalogActivity
+                }
+
+        menuItem.actionView = binding.root
+    }
 
     private fun setProductAdapter() {
         val adapter =
             ProductAdapter(
                 products = emptyList(),
-                totalDataSize = viewModel.allProductsSize,
-                onProductClick =
-                    ProductClickListener { product ->
-                        val intent = DetailActivity.newIntent(this, product)
-                        startActivity(intent)
+                productActionListener =
+                    object : ProductActionListener {
+                        override fun onProductClick(product: ProductUiModel) {
+                            val intent = DetailActivity.newIntent(this@CatalogActivity, product)
+                            startActivity(intent)
+                        }
+
+                        override fun onLoadButtonClick() = viewModel.loadNextCatalogProducts()
                     },
-                onLoadButtonClick = viewModel::loadNextCatalogProducts,
+                quantityControlListener =
+                    object : QuantityControlListener {
+                        override fun onQuantityChanged(
+                            buttonEvent: ButtonEvent,
+                            product: ProductUiModel,
+                        ) {
+                            when (buttonEvent) {
+                                ButtonEvent.INCREASE -> viewModel.increaseQuantity(product.id)
+                                ButtonEvent.DECREASE -> viewModel.decreaseQuantity(product.id)
+                            }
+                        }
+
+                        override fun onAdd(product: ProductUiModel) = viewModel.addToCart(product)
+                    },
             )
 
         binding.recyclerViewProducts.adapter = adapter
+    }
+
+    private fun setProductsRecyclerViewLayoutManager() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = spanSizeByPosition(position, adapter.itemCount)
+                override fun getSpanSize(position: Int): Int =
+                    spanSizeByPosition(
+                        position,
+                        binding.recyclerViewProducts.adapter?.itemCount ?: 0,
+                    )
             }
         binding.recyclerViewProducts.layoutManager = gridLayoutManager
     }
 
+    private fun setRecentlyViewedProductAdapter() {
+        val adapter =
+            RecentlyViewedProductAdapter(
+                products = emptyList(),
+            ) {
+                val intent = DetailActivity.newIntent(this@CatalogActivity, it)
+                startActivity(intent)
+            }
+        binding.recyclerViewRecentlyViewedProducts.adapter = adapter
+    }
+
     private fun observeCatalogProducts() {
-        viewModel.catalogProducts.observe(this) { value ->
-            Log.d("CatalogViewModel", "OBSERVED")
-            (binding.recyclerViewProducts.adapter as ProductAdapter).setData(value)
+        val productsAdapter: ProductAdapter = binding.recyclerViewProducts.adapter as ProductAdapter
+        val recentProductsAdapter: RecentlyViewedProductAdapter =
+            binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter
+
+//        viewModel.catalogItems.observe(this, productsAdapter::setItems)
+        viewModel.loadedCatalogItems.observe(this, productsAdapter::addLoadedItems)
+        viewModel.updatedItem.observe(this) {
+            productsAdapter.updateItem(it)
+            Log.d("updatedItem", "show $it")
         }
+        viewModel.recentlyViewedProducts.observe(this, recentProductsAdapter::setItems)
+
         binding.lifecycleOwner = this
     }
 

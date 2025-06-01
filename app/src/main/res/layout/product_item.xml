@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -10,8 +11,9 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.product.catalog.ProductClickListener" />
+            name="productActionListener"
+            type="woowacourse.shopping.product.catalog.ProductActionListener" />
+
 
     </data>
 
@@ -19,8 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> clickListener.onClick(product)}"
-        >
+        android:onClick="@{() -> productActionListener.onProductClick(product)}">
 
         <ImageView
             android:id="@+id/imageView_product"
@@ -29,10 +30,23 @@
             android:contentDescription="@string/text_product_image"
             android:scaleType="centerCrop"
             android:src="@drawable/iced_americano"
-            app:imageUrl="@{product}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/layout_quantity_control_bar"
+            layout="@layout/quantity_control_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_product"
+            app:layout_constraintEnd_toEndOf="@id/imageView_product"
+            app:layout_constraintStart_toStartOf="@id/imageView_product"
+            bind:product="@{product}"
+            bind:quantity="@{String.valueOf(product.quantity)}" />
 
         <TextView
             android:id="@+id/textView_product_name"
