@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.model.products.ShoppingCartItem
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.CartRepositoryImpl
+import woowacourse.shopping.repository.ShoppingCartRepository
+import woowacourse.shopping.repository.ShoppingCartRepositoryImpl
 
 class ProductDetailViewModel(
-    private val cartRepository: CartRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _shoppingCartItem = MutableLiveData<ShoppingCartItem>()
     val shoppingCartItem: LiveData<ShoppingCartItem> get() = _shoppingCartItem
@@ -37,7 +37,7 @@ class ProductDetailViewModel(
 
     fun addToCart() {
         val cart = _shoppingCartItem.value ?: return
-        cartRepository.addProduct2(cart)
+        shoppingCartRepository.addProduct2(cart)
     }
 
     companion object {
@@ -49,7 +49,7 @@ class ProductDetailViewModel(
                     extras: CreationExtras,
                 ): T =
                     ProductDetailViewModel(
-                        CartRepositoryImpl.getInstance(),
+                        ShoppingCartRepositoryImpl.getInstance(),
                     ) as T
             }
     }

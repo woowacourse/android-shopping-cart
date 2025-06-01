@@ -8,11 +8,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.CartState
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.model.products.ShoppingCartItem
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.CartRepositoryImpl
+import woowacourse.shopping.repository.ShoppingCartRepository
+import woowacourse.shopping.repository.ShoppingCartRepositoryImpl
 
 class CartViewModel(
-    private val cartRepository: CartRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _cartState = MutableLiveData<CartState>()
     val cartState: LiveData<CartState> get() = _cartState
@@ -30,7 +30,7 @@ class CartViewModel(
     }
 
     fun addToCart(product: Product) {
-        val newState = cartRepository.addProduct(product)
+        val newState = shoppingCartRepository.addProduct(product)
         _cartState.value = newState
     }
 
@@ -38,14 +38,14 @@ class CartViewModel(
         productId: Int,
         quantity: Int,
     ) {
-        val newState = cartRepository.updateQuantity(productId, quantity)
+        val newState = shoppingCartRepository.updateQuantity(productId, quantity)
         _cartState.value = newState
         val currentPage = _pageCount.value ?: 1
         loadPage(currentPage)
     }
 
     fun removeFromCart(productId: Int) {
-        val newState = cartRepository.removeProduct(productId)
+        val newState = shoppingCartRepository.removeProduct(productId)
         _cartState.value = newState
         val currentPage = _pageCount.value ?: 1
         loadPage(currentPage)
@@ -107,7 +107,7 @@ class CartViewModel(
     }
 
     fun refreshCartState() {
-        _cartState.value = cartRepository.getCurrentState()
+        _cartState.value = shoppingCartRepository.getCurrentState()
         loadPage(1)
     }
 
@@ -118,7 +118,7 @@ class CartViewModel(
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T = CartViewModel(CartRepositoryImpl.getInstance()) as T
+                ): T = CartViewModel(ShoppingCartRepositoryImpl.getInstance()) as T
             }
     }
 }
