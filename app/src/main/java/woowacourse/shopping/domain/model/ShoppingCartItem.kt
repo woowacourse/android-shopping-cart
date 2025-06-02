@@ -9,13 +9,11 @@ data class ShoppingCartItem(
 
     fun increaseQuantity(): ShoppingCartItem = copy(quantity = quantity + 1)
 
-    fun decreaseQuantity(): ShoppingCartItem {
-        return if (quantity > 0) {
-            copy(quantity = quantity - 1)
-        } else {
-            this
-        }
-    }
+    fun decreaseQuantity(): ShoppingCartItem = copy(
+        quantity = (quantity - 1).coerceAtLeast(
+            DEFAULT_QUANTITY
+        )
+    )
 
     companion object {
         private const val DEFAULT_QUANTITY = 0
