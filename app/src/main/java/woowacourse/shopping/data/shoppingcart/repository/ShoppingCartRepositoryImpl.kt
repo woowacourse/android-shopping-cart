@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 class ShoppingCartRepositoryImpl(
     private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
-    override fun upsertItem(
+    override fun saveItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {
@@ -27,7 +27,7 @@ class ShoppingCartRepositoryImpl(
         )
     }
 
-    override fun addOrIncreaseItem(
+    override fun addOrIncreaseQuantity(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {

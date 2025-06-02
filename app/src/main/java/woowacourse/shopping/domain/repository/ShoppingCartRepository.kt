@@ -3,12 +3,12 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun upsertItem(
+    fun saveItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun addOrIncreaseItem(
+    fun addOrIncreaseQuantity(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )

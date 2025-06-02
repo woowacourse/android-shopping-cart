@@ -90,7 +90,7 @@ class ShoppingCartViewModel(
     }
 
     private fun updateQuantity(item: ShoppingCartItem) {
-        shoppingCartRepository.upsertItem(item) { result ->
+        shoppingCartRepository.saveItem(item) { result ->
             result.onFailure {
                 postEvent(ShoppingCartEvent.FAILURE)
             }
