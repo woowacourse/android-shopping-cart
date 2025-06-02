@@ -73,7 +73,7 @@ class ProductsActivity : AppCompatActivity() {
 
                         override fun onOpenQuantitySelectClick(item: CartItem) {
                             productsViewModel.openQuantitySelectAndAddToCart(item)
-                            productsAdapter.notifyQuantityChanged(item.product.id)
+                            productsAdapter.notifyQuantitySelectViewChanged(item.product.id)
                         }
                     },
                 quantitySelectButtonListener =

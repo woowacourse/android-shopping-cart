@@ -36,7 +36,7 @@ class ProductsAdapter(
         notifyItemRangeChanged(0, list.size)
     }
 
-    fun notifyQuantityChanged(productId: Long) {
+    fun notifyQuantitySelectViewChanged(productId: Long) {
         if (openSelectorIds.contains(productId)) {
             openSelectorIds.remove(productId)
         } else {
