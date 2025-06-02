@@ -89,11 +89,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="18dp"
                     android:layout_marginTop="24dp"
-                    android:onClick="@{() -> handler.onLastProductClick()}"
                     android:background="@drawable/style_product_edge"
+                    android:onClick="@{() -> handler.onLastProductClick()}"
                     android:paddingHorizontal="18dp"
                     android:paddingVertical="16dp"
-                    android:visibility="@{viewmodel.lastViewedProduct == null || viewmodel.lastViewedProduct.product.id == viewmodel.product.id ? View.GONE : View.VISIBLE}"
+                    app:currentProductId="@{viewmodel.product.id}"
+                    app:lastViewedProduct="@{viewmodel.lastViewedProduct}"
                     app:layout_constraintTop_toBottomOf="@id/item_quantity_control">
 
                     <TextView
