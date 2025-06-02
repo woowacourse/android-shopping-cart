@@ -77,27 +77,27 @@ class ProductsViewModel(
         }
     }
 
-    fun update(id: Int, count: Int) {
-        val currentMap = _cart.value.orEmpty().toMutableMap()
-        val currentCount = currentMap[id]
+    private fun updateCountOrRemoveIfZero (id: Int, count: Int) {
+        val currentCart = _cart.value.orEmpty().toMutableMap()
+        val currentCount = currentCart[id]
 
         if (currentCount == null) {
-            currentMap[id] = count
+            currentCart[id] = count
         } else {
-            currentMap[id] = currentCount + count
+            currentCart[id] = currentCount + count
         }
 
-        if ((currentMap[id] ?: 0) <= 0) {
-            currentMap.remove(id)
+        if ((currentCart[id] ?: 0) <= 0) {
+            currentCart.remove(id)
         }
 
-        _cart.value = currentMap
+        _cart.value = currentCart
     }
 
     fun upCount(id: Int) {
         val product = _products.value?.find { it.id == id } ?: return
 
-        update(id, 1)
+        updateCountOrRemoveIfZero(id, 1)
 
         Thread {
             cartRepository.upsertCartProduct(product, 1)
@@ -107,7 +107,7 @@ class ProductsViewModel(
     fun downCount(id: Int) {
         val product = _products.value?.find { it.id == id } ?: return
 
-        update(id, -1)
+        updateCountOrRemoveIfZero(id, -1)
 
         Thread {
             cartRepository.upsertCartProduct(product, -1)
