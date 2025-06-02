@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
@@ -24,6 +23,9 @@ class CatalogViewModel(
 
     private val _itemUpdateEvent = MutableLiveData<ProductUiModel>()
     val itemUpdateEvent: LiveData<ProductUiModel> = _itemUpdateEvent
+
+    private val _deleteState = MutableLiveData<Long>()
+    val deleteState: LiveData<Long> = _deleteState
 
     private val _totalCartCount = MutableLiveData<Int>()
     val totalCartCount: LiveData<Int> = _totalCartCount
@@ -130,26 +132,26 @@ class CatalogViewModel(
 
     fun increaseCartItem(productId: Long) {
         cartRepository.increaseCartItem(productId) { updatedCartItem ->
-            handleUpdatedCartItem(updatedCartItem)
+            updatedCartItem?.let {
+                _itemUpdateEvent.postValue(it.toUiModel())
+                calculateTotalCartCount()
+            }
         }
     }
 
     fun decreaseCartItem(productId: Long) {
         cartRepository.decreaseCartItem(productId) { updatedCartItem ->
-            handleUpdatedCartItem(updatedCartItem)
+            updatedCartItem?.let {
+                _itemUpdateEvent.postValue(it.toUiModel())
+                calculateTotalCartCount()
+            } ?: _deleteState.postValue(productId)
+            calculateTotalCartCount()
         }
     }
 
     fun addRecentProduct(product: ProductUiModel) {
         productRepository.addRecentProduct(product.toProduct())
         updateRecentProducts()
-    }
-
-    private fun handleUpdatedCartItem(updatedCartItem: CartItem?) {
-        updatedCartItem?.let {
-            _itemUpdateEvent.postValue(it.toUiModel())
-            calculateTotalCartCount()
-        }
     }
 
     private fun calculateTotalCartCount() {

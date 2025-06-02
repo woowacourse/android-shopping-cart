@@ -21,7 +21,13 @@ class CatalogFragment :
     BaseFragment<FragmentCatalogBinding>(R.layout.fragment_catalog),
     CatalogAdapter.CatalogEventListener,
     ItemCounterListener {
-    private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
+    private val catalogAdapter: CatalogAdapter by lazy {
+        CatalogAdapter(
+            eventListener = this,
+            itemCounterListener = this,
+        )
+    }
+
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
 
     override fun onViewCreated(
@@ -29,15 +35,33 @@ class CatalogFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
         initObserver()
         initListener()
-        setCatalogAdapter()
+        setupRecyclerView()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.refreshCartState()
+    }
+
+    private fun initObserver() {
+        viewModel.items.observe(viewLifecycleOwner) { products ->
+            catalogAdapter.submitList(products)
+        }
+        viewModel.deleteState.observe(viewLifecycleOwner) {
+            catalogAdapter.removeItemAmount(it)
+        }
+        viewModel.itemUpdateEvent.observe(viewLifecycleOwner) { updatedProduct ->
+            catalogAdapter.updateItem(updatedProduct)
+        }
+
+        viewModel.totalCartCount.observe(viewLifecycleOwner) { count ->
+            binding.textViewCartTotalAmount.apply {
+                visibility = if (count == 0) View.GONE else View.VISIBLE
+                text = count.toString()
+            }
+        }
     }
 
     override fun onProductClicked(product: ProductUiModel) {
@@ -61,51 +85,36 @@ class CatalogFragment :
         viewModel.decreaseCartItem(productId)
     }
 
-    private fun setCatalogAdapter() {
-        binding.recyclerViewProducts.layoutManager =
-            GridLayoutManager(requireContext(), SPAN_COUNT).apply {
-                spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            val viewType = catalogAdapter.getItemViewType(position)
-                            return when (CatalogItem.CatalogType.entries[viewType]) {
-                                CatalogItem.CatalogType.RECENT -> SPAN_COUNT
-                                CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN_COUNT
-                                CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
-                            }
-                        }
-                    }
-            }
-
-        binding.recyclerViewProducts.addItemDecoration(
-            GridSpacingItemDecoration(
-                SPAN_COUNT,
-                ITEM_SPACING,
-            ),
-        )
-        binding.recyclerViewProducts.adapter = catalogAdapter
-    }
-
-    private fun initObserver() {
-        viewModel.items.observe(viewLifecycleOwner) { products ->
-            catalogAdapter.updateProducts(products)
-        }
-        viewModel.itemUpdateEvent.observe(viewLifecycleOwner) {
-            catalogAdapter.updateItem(it)
-        }
-        viewModel.totalCartCount.observe(viewLifecycleOwner) {
-            if (it == 0) {
-                binding.textViewCartTotalAmount.visibility = View.GONE
-            } else {
-                binding.textViewCartTotalAmount.visibility = View.VISIBLE
-            }
-            binding.textViewCartTotalAmount.text = it.toString()
-        }
-    }
-
     private fun initListener() {
         binding.btnNavigateCart.setOnClickListener {
             navigateToScreen(CartFragment::class.java)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerViewProducts.apply {
+            layoutManager =
+                GridLayoutManager(requireContext(), SPAN_COUNT).apply {
+                    spanSizeLookup =
+                        object : GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int): Int =
+                                when (
+                                    CatalogItem.CatalogType.entries[
+                                        catalogAdapter.getItemViewType(
+                                            position,
+                                        ),
+                                    ]
+                                ) {
+                                    CatalogItem.CatalogType.RECENT,
+                                    CatalogItem.CatalogType.LOAD_MORE,
+                                    -> SPAN_COUNT
+
+                                    CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN_COUNT
+                                }
+                        }
+                }
+            addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING))
+            adapter = catalogAdapter
         }
     }
 
