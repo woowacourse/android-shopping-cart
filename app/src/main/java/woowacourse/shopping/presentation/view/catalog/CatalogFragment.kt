@@ -46,6 +46,9 @@ class CatalogFragment :
     }
 
     private fun initObserver() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         viewModel.items.observe(viewLifecycleOwner) { products ->
             catalogAdapter.submitList(products)
         }
@@ -54,13 +57,6 @@ class CatalogFragment :
         }
         viewModel.itemUpdateEvent.observe(viewLifecycleOwner) { updatedProduct ->
             catalogAdapter.updateItem(updatedProduct)
-        }
-
-        viewModel.totalCartCount.observe(viewLifecycleOwner) { count ->
-            binding.textViewCartTotalAmount.apply {
-                visibility = if (count == 0) View.GONE else View.VISIBLE
-                text = count.toString()
-            }
         }
     }
 
