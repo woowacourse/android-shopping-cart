@@ -3,6 +3,7 @@ package woowacourse.shopping.data.local.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import woowacourse.shopping.data.local.entity.HistoryEntity
 
 @Dao
@@ -19,8 +20,8 @@ interface HistoryDao {
     @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT :limit")
     fun findRecentProduct(limit: Int): List<HistoryEntity>
 
-    @Insert
-    fun insert(historyEntity: HistoryEntity)
+    @Upsert
+    fun upsert(historyEntity: HistoryEntity)
 
     @Insert
     fun insertAll(vararg historyEntity: HistoryEntity)

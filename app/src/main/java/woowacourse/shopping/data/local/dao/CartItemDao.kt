@@ -34,7 +34,7 @@ interface CartItemDao {
     @Delete
     fun delete(cartItem: CartItemEntity)
 
-    @Query("DELETE FROM cart WHERE id = :id")
+    @Query("DELETE FROM cart_item WHERE id = :id")
     fun deleteById(id: Long)
 
     @Update

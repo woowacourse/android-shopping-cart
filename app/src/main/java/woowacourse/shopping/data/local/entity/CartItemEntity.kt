@@ -4,15 +4,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 
 @Entity(tableName = "cart_item")
 data class CartItemEntity(
     @PrimaryKey val id: Long,
     @ColumnInfo("quantity") val quantity: Int,
 ) {
-    fun toDomain(productEntity: ProductEntity): CartItem = CartItem(
+    fun toDomain(product: Product): CartItem = CartItem(
         id = id,
-        product = productEntity.toDomain(),
+        product = product,
         quantity = quantity
     )
 }

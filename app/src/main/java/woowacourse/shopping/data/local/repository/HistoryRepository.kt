@@ -7,7 +7,7 @@ import kotlin.concurrent.thread
 class HistoryRepository(private val dao: HistoryDao) {
     fun insert(id: Long, callback: (Long) -> Unit) {
         thread {
-            dao.insert(HistoryEntity(id))
+            dao.upsert(HistoryEntity(id))
             callback(id)
         }
     }
