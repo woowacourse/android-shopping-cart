@@ -8,12 +8,16 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.ShoppingCartEvent
 import woowacourse.shopping.presentation.util.SingleLiveData
 
-class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : ViewModel() {
+class ShoppingCartViewModel(
+    private val shoppingCartRepository: ShoppingCartRepository,
+    private val goodsRepository: GoodsRepository,
+) : ViewModel() {
     private val _items: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val items: LiveData<List<ShoppingCartItem>>
         get() = _items
@@ -30,7 +34,8 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     val hasPreviousPage: LiveData<Boolean>
         get() = _hasPreviousPage
 
-    private val _shoppingCartEvent: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
+    private val _shoppingCartEvent: MutableSingleLiveData<ShoppingCartEvent> =
+        MutableSingleLiveData()
     val shoppingCartEvent: SingleLiveData<ShoppingCartEvent>
         get() = _shoppingCartEvent
 
@@ -38,107 +43,105 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         updateState()
     }
 
-    fun increaseQuantity(item: ShoppingCartItem) {
-        _items.value =
-            _items.value?.map {
-                if (it.goods.id == item.goods.id) {
-                    val updated = it.increaseQuantity()
-                    updateQuantity(updated)
-                    updated
-                } else {
-                    it
-                }
-            }
+    fun increaseQuantity(target: ShoppingCartItem) {
+        updateItems(target) { it.increaseQuantity() }
     }
 
-    fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value =
-            _items.value?.mapNotNull {
-                if (it.goods.id == item.goods.id) {
-                    val updated = it.decreaseQuantity()
-                    if (updated.quantity > MINIMUM_VALUE) {
-                        updateQuantity(updated)
-                        updated
-                    } else {
-                        deleteItem(it)
-                        null
-                    }
-                } else {
-                    it
-                }
-            }
+    fun decreaseQuantity(target: ShoppingCartItem) {
+        updateItems(target) {
+            val decreased = it.decreaseQuantity()
+            if (decreased.quantity <= MINIMUM_VALUE) {
+                deleteItem(it)
+                null
+            } else decreased
+        }
     }
 
     fun deleteItem(item: ShoppingCartItem) {
-        repository.removeItem(item) { result ->
-            result.onSuccess {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
-                updateState()
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
+        shoppingCartRepository.removeItem(item) { result ->
+            result
+                .onSuccess {
+                    postEvent(ShoppingCartEvent.SUCCESS)
+                    updateState()
+                }
+                .onFailure { postEvent(ShoppingCartEvent.FAILURE) }
         }
     }
 
     fun increasePage() {
-        _page.value = _page.value?.plus(PAGE_CHANGE_AMOUNT)
-        updateState()
+        updatePage { it + PAGE_CHANGE_AMOUNT }
     }
 
     fun decreasePage() {
-        _page.value = _page.value?.minus(PAGE_CHANGE_AMOUNT)
+        updatePage { it - PAGE_CHANGE_AMOUNT }
+    }
+
+    private fun updateItems(
+        target: ShoppingCartItem,
+        transform: (ShoppingCartItem) -> ShoppingCartItem?,
+    ) {
+        _items.value = _items.value?.mapNotNull { item ->
+            if (item.goods.id == target.goods.id) {
+                transform(item)?.also {
+                    updateQuantity(it)
+                }
+            } else item
+        }
+    }
+
+    private fun updateQuantity(item: ShoppingCartItem) {
+        shoppingCartRepository.upsertItem(item) { result ->
+            result.onFailure {
+                postEvent(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
+    private fun updatePage(transform: (Int) -> Int) {
+        _page.value = transform(_page.value ?: DEFAULT_PAGE_VALUE)
         updateState()
     }
 
     private fun updateState() {
         val currentPage = _page.value ?: DEFAULT_PAGE_VALUE
-        repository.getPagedItems(currentPage, ITEM_COUNT) { result ->
-            result.onSuccess { items ->
-                if (items.isEmpty() && currentPage > DEFAULT_PAGE_VALUE) {
-                    _page.postValue(currentPage - PAGE_CHANGE_AMOUNT)
-                    updateState()
-                    return@onSuccess
+
+        shoppingCartRepository.getPagedItems(currentPage, ITEM_COUNT) { result ->
+            result
+                .onSuccess { items ->
+                    if (items.isEmpty() && currentPage > DEFAULT_PAGE_VALUE) {
+                        _page.postValue(currentPage - PAGE_CHANGE_AMOUNT)
+                        updateState()
+                        return@onSuccess
+                    }
+
+                    val enrichedItems = items.map {
+                        val latestGoods = goodsRepository.getGoodsById(it.goods.id)
+                        it.copy(goods = latestGoods)
+                    }
+
+                    _items.postValue(enrichedItems)
+                    updatePaginationStates()
                 }
-                _items.postValue(items)
-                updateNextPage()
-                updatePreviousPage()
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
+                .onFailure { postEvent(ShoppingCartEvent.FAILURE) }
         }
     }
 
-    private fun updatePreviousPage() {
-        _hasPreviousPage.postValue(_page.value != DEFAULT_PAGE_VALUE)
-    }
+    private fun updatePaginationStates() {
+        val currentPage = _page.value ?: DEFAULT_PAGE_VALUE
+        _hasPreviousPage.postValue(currentPage != DEFAULT_PAGE_VALUE)
 
-    private fun updateNextPage() {
-        repository.getPagedItems(
-            _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
-            ITEM_COUNT,
+        shoppingCartRepository.getPagedItems(
+            currentPage + PAGE_CHANGE_AMOUNT,
+            ITEM_COUNT
         ) { result ->
-            result.onSuccess { items ->
-                _hasNextPage.postValue(items.isNotEmpty())
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
+            result
+                .onSuccess { _hasNextPage.postValue(it.isNotEmpty()) }
+                .onFailure { postEvent(ShoppingCartEvent.FAILURE) }
         }
     }
 
-    private fun updateQuantity(item: ShoppingCartItem) {
-        repository.upsertItem(item) { result ->
-            result.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
-        }
-    }
-
-    private fun removeItem(item: ShoppingCartItem) {
-        repository.removeItem(item) { result ->
-            result.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
-        }
+    private fun postEvent(event: ShoppingCartEvent) {
+        _shoppingCartEvent.postValue(event)
     }
 
     companion object {
@@ -150,7 +153,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         val FACTORY: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    ShoppingCartViewModel(RepositoryProvider.shoppingCartRepository)
+                    ShoppingCartViewModel(
+                        shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
+                        goodsRepository = RepositoryProvider.goodsRepository,
+                    )
                 }
             }
     }
