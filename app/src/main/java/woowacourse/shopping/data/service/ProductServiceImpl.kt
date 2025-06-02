@@ -1,19 +1,15 @@
 package woowacourse.shopping.data.service
 
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import woowacourse.shopping.data.model.PagedResult
-import woowacourse.shopping.domain.model.Product
+import okhttp3.Response
 
 class ProductServiceImpl : ProductService {
     private val client = OkHttpClient()
-    private val gson = Gson()
 
-    override fun getProductById(id: Long): Product? {
+    override fun getProductById(id: Long): Response {
         val url =
             BASE_URL
                 .toHttpUrl()
@@ -21,39 +17,25 @@ class ProductServiceImpl : ProductService {
                 .addPathSegment("product")
                 .addQueryParameter(PARAM_ID, id.toString())
                 .build()
-
-        val body = executeRequest(url)
-        return try {
-            gson.fromJson(body, Product::class.java)
-        } catch (e: JsonSyntaxException) {
-            null
-        }
+        return executeRequest(url)
     }
 
-    override fun getProductsByIds(ids: List<Long>): List<Product>? {
+    override fun getProductsByIds(ids: List<Long>): Response {
         val url =
             BASE_URL
                 .toHttpUrl()
                 .newBuilder()
                 .addPathSegment("products")
-
         for (id in ids) {
             url.addQueryParameter(PARAM_ID, id.toString())
         }
-
-        val body = executeRequest(url.build())
-        return try {
-            val type = object : TypeToken<List<Product>>() {}.type
-            gson.fromJson<List<Product>>(body, type)
-        } catch (e: JsonSyntaxException) {
-            null
-        }
+        return executeRequest(url.build())
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product>? {
+    ): Response {
         val url =
             BASE_URL
                 .toHttpUrl()
@@ -63,29 +45,12 @@ class ProductServiceImpl : ProductService {
                 .addQueryParameter(PARAM_LIMIT, limit.toString())
                 .addQueryParameter(PARAM_OFFSET, offset.toString())
                 .build()
-
-        val body = executeRequest(url)
-        return try {
-            val type = object : TypeToken<PagedResult<Product>>() {}.type
-            gson.fromJson<PagedResult<Product>>(body, type)
-        } catch (e: JsonSyntaxException) {
-            null
-        }
+        return executeRequest(url)
     }
 
-    private fun executeRequest(url: okhttp3.HttpUrl): String? {
+    private fun executeRequest(url: HttpUrl): Response {
         val request = Request.Builder().url(url).build()
-        return try {
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    null
-                } else {
-                    response.body?.string()?.trim()
-                }
-            }
-        } catch (e: Exception) {
-            null
-        }
+        return client.newCall(request).execute()
     }
 
     companion object {

@@ -1,15 +1,14 @@
 package woowacourse.shopping.data.service
 
-import woowacourse.shopping.data.model.PagedResult
-import woowacourse.shopping.domain.model.Product
+import okhttp3.Response
 
 interface ProductService {
-    fun getProductById(id: Long): Product?
+    fun getProductById(id: Long): Response
 
-    fun getProductsByIds(ids: List<Long>): List<Product>?
+    fun getProductsByIds(ids: List<Long>): Response
 
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product>?
+    ): Response
 }
