@@ -37,8 +37,20 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.viewModel = productDetailViewModel
         binding.lifecycleOwner = this
         productDetailViewModel.setLastProductTitle()
-        binding.quantitySelector.productId = intentCartItemData.product.id
+        setQuantitySelector()
+        setCloseButtonClickListener()
+        observeRecentProductVisibility()
+        productDetailViewModel.observeToastMessage(this)
+        observeAddToCart()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
 
+    private fun setQuantitySelector() {
+        binding.quantitySelector.productId = intentCartItemData.product.id
         binding.quantitySelector.quantitySelectButtonListener =
             object : QuantitySelectButtonListener {
                 override fun increase(productId: Long) {
@@ -49,17 +61,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     productDetailViewModel.decreaseQuantity(productId)
                 }
             }
-
-        setCloseButtonClickListener()
-        observeRecentProductVisibility()
         observeSelectedProductQuantity()
-        productDetailViewModel.observeToastMessage(this)
-        observeAddToCart()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun observeAddToCart() {
