@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.model.Goods
 
 interface RecentGoodsRepository {
     fun addRecentGoods(
+        time: Long,
         goods: Goods,
         onResult: (Result<Unit>) -> Unit,
     )

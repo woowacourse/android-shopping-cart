@@ -72,10 +72,9 @@ class GoodsDetailViewModel(
 
     private fun addRecentGoods() {
         val currentItem = _item.value ?: return
-        recentGoodsRepository.addRecentGoods(currentItem.goods) { result ->
-            result.onFailure {
-            }
-        }
+        val currentTime = System.currentTimeMillis()
+
+        recentGoodsRepository.addRecentGoods(currentTime, currentItem.goods) {}
     }
 
     companion object {

@@ -10,12 +10,13 @@ class RecentGoodsRepositoryImpl(
     private val dao: RecentGoodsDao,
 ) : RecentGoodsRepository {
     override fun addRecentGoods(
+        time: Long,
         goods: Goods,
         onResult: (Result<Unit>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
-                dao.insertGoods(goods.toEntity())
+                dao.insertGoods(goods.toEntity(time))
                 dao.trimGoods(MAX_RECENT_GOODS)
             },
             onResult = onResult,
