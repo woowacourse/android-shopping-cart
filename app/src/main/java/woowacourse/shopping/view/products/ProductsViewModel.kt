@@ -116,6 +116,7 @@ class ProductsViewModel(
                     _toastMessage.postValue(Event(Unit))
                 }
         }
+        updateQuantityByRecentProducts()
     }
 
     fun loadPage() {
@@ -137,6 +138,7 @@ class ProductsViewModel(
     fun reloadPage() {
         updateQuantity()
         updateCartItemCount()
+        updateQuantityByRecentProducts()
         setRecentProducts()
         if (_productsInShop.value?.isNotEmpty() == true) return
         loadPage()
@@ -247,6 +249,20 @@ class ProductsViewModel(
                                 _productsInShop.postValue(updatedList)
                             }
                         }
+                    }.onFailure {
+                        Log.d("TAG", "fail: $it")
+                        _toastMessage.postValue(Event(Unit))
+                    }
+            }
+        }
+    }
+
+    private fun updateQuantityByRecentProducts() {
+        _recentProducts.value?.forEach { cartItem ->
+            recentProductsRepository.update(cartItem.product.id, cartItem.quantity) { result ->
+                result
+                    .onSuccess {
+                        return@update
                     }.onFailure {
                         Log.d("TAG", "fail: $it")
                         _toastMessage.postValue(Event(Unit))
