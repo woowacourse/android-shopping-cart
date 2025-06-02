@@ -72,16 +72,22 @@ class ProductsViewModel(
         minQuantity: Int,
     ) {
         _productsInShop.value =
-            _productsInShop.value?.map {
-                if (it.product.id == productId && it.quantity > minQuantity) {
-                    val newQuantity = it.quantity - quantityDecrease
-                    val decreasedProduct = it.copy(quantity = newQuantity)
-                    updateRecentProduct(decreasedProduct)
-                    decreasedProduct
-                } else {
-                    it
+            _productsInShop.value
+                ?.map { item ->
+                    if (item.product.id == productId) {
+                        if (item.quantity > minQuantity) {
+                            val newQuantity = item.quantity - quantityDecrease
+                            val decreasedProduct = item.copy(quantity = newQuantity)
+                            updateRecentProduct(decreasedProduct)
+                            decreasedProduct
+                        } else {
+                            deleteCartItem(productId)
+                            item
+                        }
+                    } else {
+                        item
+                    }
                 }
-            }
     }
 
     override fun updateQuantity() {
@@ -165,6 +171,18 @@ class ProductsViewModel(
                     Log.d("TAG", "fail: $it")
                     _toastMessage.postValue(Event(Unit))
                 }
+        }
+    }
+
+    private fun deleteCartItem(productId: Long) {
+        cartRepository.remove(productId) { result ->
+            result.onSuccess {
+                _cartItemCount.postValue(_cartItemCount.value?.minus(1))
+            }
+            result.onFailure {
+                Log.d("TAG", "fail: $it")
+                _toastMessage.postValue(Event(Unit))
+            }
         }
     }
 

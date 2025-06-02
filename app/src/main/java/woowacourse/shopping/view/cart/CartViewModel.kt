@@ -88,9 +88,14 @@ class CartViewModel(
     ) {
         _cartItems.value =
             _cartItems.value?.map {
-                if (it.product.id == productId && it.quantity > minQuantity) {
-                    val newQuantity = it.quantity - quantityDecrease
-                    it.copy(quantity = newQuantity)
+                if (it.product.id == productId) {
+                    if (it.quantity > minQuantity) {
+                        val newQuantity = it.quantity - quantityDecrease
+                        it.copy(quantity = newQuantity)
+                    } else {
+                        removeFromCart(it)
+                        it
+                    }
                 } else {
                     it
                 }
