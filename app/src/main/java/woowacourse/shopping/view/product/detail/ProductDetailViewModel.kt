@@ -78,8 +78,10 @@ class ProductDetailViewModel(
     }
 
     private fun loadLastViewedProduct() {
-        recentProductRepository.getLastViewedProduct {
-            _lastViewedProduct.postValue(it)
+        recentProductRepository.getLastViewedProduct { result ->
+            result.onSuccess {
+                _lastViewedProduct.postValue(it)
+            }
         }
     }
 

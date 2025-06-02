@@ -12,7 +12,7 @@ class RecentProductRepositoryImpl(
     private val localDataSource: RecentProductLocalDataSource,
     private val productRepository: ProductRepository,
 ) : RecentProductRepository {
-    override fun getLastViewedProduct(onSuccess: (RecentProduct?) -> Unit) {
+    override fun getLastViewedProduct(onResult: (Result<RecentProduct?>) -> Unit) {
         thread {
             val entity = localDataSource.getLastViewedProduct()
             if (entity != null) {
@@ -20,11 +20,11 @@ class RecentProductRepositoryImpl(
                     result.onSuccess { product ->
                         val recentProduct =
                             product?.let { RecentProduct(it, entity.viewedAt.toLocalDateTime()) }
-                        onSuccess(recentProduct)
+                        onResult(Result.success(recentProduct))
                     }
                 }
             } else {
-                onSuccess(null)
+                onResult(Result.success(null))
             }
         }
     }
@@ -32,7 +32,7 @@ class RecentProductRepositoryImpl(
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (List<RecentProduct>) -> Unit,
+        onResult: (Result<List<RecentProduct>>) -> Unit,
     ) {
         thread {
             val entities = localDataSource.getPagedProducts(limit, offset)
@@ -40,7 +40,7 @@ class RecentProductRepositoryImpl(
             productRepository.getProductsByIds(productIds) { result ->
                 result.onSuccess { products ->
                     if (products.isEmpty()) {
-                        onSuccess(emptyList())
+                        onResult(Result.success(emptyList()))
                         return@getProductsByIds
                     }
 
@@ -51,7 +51,7 @@ class RecentProductRepositoryImpl(
                                 RecentProduct(product, entity.viewedAt.toLocalDateTime())
                             }
                         }
-                    onSuccess(recentProducts)
+                    onResult(Result.success(recentProducts))
                 }
             }
         }
@@ -59,11 +59,11 @@ class RecentProductRepositoryImpl(
 
     override fun replaceRecentProduct(
         recentProduct: RecentProduct,
-        onSuccess: () -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
             localDataSource.replaceRecentProduct(recentProduct.toEntity())
-            onSuccess()
+            onResult(Result.success(Unit))
         }
     }
 }
