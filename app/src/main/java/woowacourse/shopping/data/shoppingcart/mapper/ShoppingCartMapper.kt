@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.shoppingcart.mapper
 
-import woowacourse.shopping.data.shoppingcart.database.ShoppingCartEntity
+import woowacourse.shopping.data.shoppingcart.database.ShoppingCartItemEntity
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.ShoppingCartItem
 
-fun ShoppingCartEntity.toDomain(): ShoppingCartItem {
+fun ShoppingCartItemEntity.toDomain(): ShoppingCartItem {
     return ShoppingCartItem(
         goods =
             Goods.of(
@@ -17,9 +17,9 @@ fun ShoppingCartEntity.toDomain(): ShoppingCartItem {
     )
 }
 
-fun ShoppingCartItem.toEntity(): ShoppingCartEntity {
+fun ShoppingCartItem.toEntity(): ShoppingCartItemEntity {
     val goods = this.goods
-    return ShoppingCartEntity(
+    return ShoppingCartItemEntity(
         id = goods.id,
         name = goods.name.value,
         price = goods.price.value,

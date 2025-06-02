@@ -9,19 +9,19 @@ import androidx.room.Query
 @Dao
 interface ShoppingCartDao {
     @Query("SELECT * FROM shopping_cart")
-    fun getAll(): List<ShoppingCartEntity>
+    fun getAll(): List<ShoppingCartItemEntity>
 
     @Query("SELECT * FROM shopping_cart WHERE id = :id LIMIT 1")
-    fun getItemById(id: Long): ShoppingCartEntity?
+    fun getItemById(id: Long): ShoppingCartItemEntity?
 
     @Query("SELECT * FROM shopping_cart LIMIT :limit OFFSET :offset")
     fun getPage(
         offset: Int,
         limit: Int,
-    ): List<ShoppingCartEntity>
+    ): List<ShoppingCartItemEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(item: ShoppingCartEntity)
+    fun insert(item: ShoppingCartItemEntity)
 
     @Query("UPDATE shopping_cart SET quantity = :quantity WHERE id = :id")
     fun update(
@@ -30,5 +30,5 @@ interface ShoppingCartDao {
     )
 
     @Delete
-    fun delete(item: ShoppingCartEntity)
+    fun delete(item: ShoppingCartItemEntity)
 }
