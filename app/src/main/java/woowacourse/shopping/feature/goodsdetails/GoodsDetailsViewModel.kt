@@ -26,8 +26,8 @@ class GoodsDetailsViewModel(
     private val _isLastViewedVisible = MutableLiveData<Boolean>()
     val isLastViewedVisible: LiveData<Boolean> get() = _isLastViewedVisible
 
-    private val _cartResultEvent = MutableLiveData<Event<State>>()
-    val cartInsertEvent: LiveData<Event<State>> get() = _cartResultEvent
+    private val _cartInsertEvent = MutableLiveData<Event<State>>()
+    val cartInsertEvent: LiveData<Event<State>> get() = _cartInsertEvent
 
     private val _navigateToLastViewedCart = MutableSingleLiveData<Cart>()
     val navigateToLastViewedCart: SingleLiveData<Cart> get() = _navigateToLastViewedCart
@@ -60,9 +60,9 @@ class GoodsDetailsViewModel(
                 cartRepository.insertAll(it)
             }
         }.onSuccess {
-            _cartResultEvent.value = Event(State.Success)
+            _cartInsertEvent.value = Event(State.Success)
         }.onFailure {
-            _cartResultEvent.value = Event(State.Failure)
+            _cartInsertEvent.value = Event(State.Failure)
         }
     }
 
