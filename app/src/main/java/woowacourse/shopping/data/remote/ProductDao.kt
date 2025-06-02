@@ -1,7 +1,9 @@
 package woowacourse.shopping.data.remote
 
+import androidx.room.Dao
 import woowacourse.shopping.data.local.entity.ProductEntity
 
+@Dao
 interface ProductDao {
     fun findById(id: Long): ProductEntity?
 

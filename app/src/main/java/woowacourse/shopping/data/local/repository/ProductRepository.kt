@@ -1,26 +1,21 @@
 package woowacourse.shopping.data.local.repository
 
-import woowacourse.shopping.data.remote.ProductDao
+import woowacourse.shopping.data.local.dummy.ProductDummy
 import woowacourse.shopping.domain.product.Product
 
-class ProductRepository(private val productDao: ProductDao) {
+class ProductRepository(private val productDao: ProductDummy) {
     fun getProductPagedItems(
         pageNumber: Int,
         loadSize: Int,
     ): List<Product> {
-        val fromIndex = pageNumber * loadSize
-        val toIndex = (fromIndex + loadSize).coerceAtMost(productDao.size())
-        val products = productDao.findPagedItems(fromIndex, toIndex)
-        return products.map { it.toDomain() }
+        return productDao.findPagedItems(pageNumber, loadSize)
     }
 
     fun fetchById(id: Long): Product {
-        val product = productDao.findById(id) ?: throw IllegalArgumentException("")
-        return product.toDomain()
+        return productDao.findById(id) ?: throw IllegalArgumentException("")
     }
 
     fun size(): Int {
-        val totalSize = productDao.size()
-        return totalSize
+        return productDao.size()
     }
 }

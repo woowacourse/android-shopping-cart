@@ -6,9 +6,11 @@ import woowacourse.shopping.domain.product.CartItem
 
 class FashionProductItemViewHolder(
     private val binding: ProductItemBinding,
+    viewModel: ProductListViewModel,
     productClickListener: ProductClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
+        binding.viewModel = viewModel
         binding.productClickListener = productClickListener
     }
 
@@ -24,6 +26,5 @@ class FashionProductItemViewHolder(
             )
         binding.product = item.product
         binding.cartItem = bindingCartItem
-        binding.isButtonVisible = item.isButtonVisible
     }
 }

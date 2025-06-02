@@ -2,14 +2,27 @@ package woowacourse.shopping
 
 import android.app.Application
 import woowacourse.shopping.data.local.DatabaseProvider
+import woowacourse.shopping.data.local.ShoppingCartDatabase
+import woowacourse.shopping.data.local.dummy.ProductDummy
 import woowacourse.shopping.data.local.repository.CartRepository
 import woowacourse.shopping.data.local.repository.HistoryRepository
 import woowacourse.shopping.data.local.repository.ProductRepository
 
 class ShoppingCartApplication : Application() {
-    private val database = DatabaseProvider.provideDatabase(this)
+    private lateinit var database : ShoppingCartDatabase
+    private lateinit var productDummy : ProductDummy
 
-    val cartRepository : CartRepository by lazy { CartRepository(database.cartItemDao(), database.cartDao()) }
-    val productRepository : ProductRepository by lazy { ProductRepository(database.cartDao()) }
-    val historyRepository : HistoryRepository by lazy { HistoryRepository(database.historyDao()) }
+    lateinit var cartRepository : CartRepository
+    lateinit var  productRepository : ProductRepository
+    lateinit var  historyRepository : HistoryRepository
+
+    override fun onCreate() {
+        super.onCreate()
+        database = DatabaseProvider.provideDatabase(this)
+        productDummy = ProductDummy
+
+        cartRepository = CartRepository(database.cartItemDao(), productDummy)
+        productRepository = ProductRepository(productDummy)
+        historyRepository = HistoryRepository(database.historyDao())
+    }
 }

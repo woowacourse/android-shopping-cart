@@ -14,9 +14,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.databinding.ActivityProductListBinding
-import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -25,8 +24,11 @@ import woowacourse.shopping.utils.ViewModelFactory
 class FashionProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
     private val viewModel: ProductListViewModel by viewModels {
-        ViewModelFactory.createProductViewModelFactory(
-            ProductRepositoryImpl(),
+        val app = application as ShoppingCartApplication
+        ViewModelFactory.createCartViewModelFactory(
+            app.productRepository,
+            app.cartRepository,
+            app.historyRepository
         )
     }
     private lateinit var fashionProductListAdapter: FashionProductListAdapter
@@ -57,7 +59,8 @@ class FashionProductListActivity : AppCompatActivity() {
                 spanSizeLookup =
                     object : SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
+                            val viewType =
+                                binding.productsRecyclerView.adapter?.getItemViewType(position)
                             return when (viewType) {
                                 R.layout.product_item -> 1
                                 else -> 2
@@ -68,33 +71,18 @@ class FashionProductListActivity : AppCompatActivity() {
 
         fashionProductListAdapter =
             FashionProductListAdapter(
-                items = emptyList(),
-                productClickListener =
+                viewModel, productClickListener =
                     object : ProductClickListener {
                         override fun onClick(product: Product) {
                             viewModel.addRecentProduct(product.id)
                             val intent =
-                                ProductDetailActivity.newIntent(this@FashionProductListActivity, product)
+                                ProductDetailActivity.newIntent(
+                                    this@FashionProductListActivity,
+                                    product
+                                )
                             startActivity(intent)
                         }
-
-                        override fun onFloatingClick(product: Product) {
-                            viewModel.onFloatingButtonClick(product.id)
-                            viewModel.add(product)
-                        }
-
-                        override fun onIncreaseClick(cartItem: CartItem) {
-                            viewModel.increaseQuantity(cartItem.id)
-                        }
-
-                        override fun onDecreaseClick(cartItem: CartItem) {
-                            viewModel.decreaseQuantity(cartItem.id)
-                        }
-                    },
-                loadMoreClickListener = {
-                    viewModel.loadProducts()
-                },
-            )
+                    })
 
         binding.productsRecyclerView.apply {
             adapter = fashionProductListAdapter
@@ -103,8 +91,16 @@ class FashionProductListActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.products.observe(this) {
-            fashionProductListAdapter.update(it)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.products.observe(this) { products ->
+            fashionProductListAdapter.update(products)
+        }
+
+        viewModel.cartItems.observe(this) { cartItems ->
+            val cartMap = cartItems.associateBy { it.id }
+            fashionProductListAdapter.updateCartItems(cartMap)
         }
     }
 
