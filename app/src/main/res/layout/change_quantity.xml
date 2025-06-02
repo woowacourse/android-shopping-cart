@@ -24,7 +24,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:gravity="center"
-            android:onClick="@{() -> quantityClickListener.onDecreaseClick(item)}"
+            android:onClick="@{() -> quantityClickListener.onClickDecrease(item)}"
             android:text="@string/decrease_symbol"
             android:textColor="@color/deep_gray"
             android:textSize="18sp"
@@ -59,7 +59,7 @@
             android:textColor="@color/deep_gray"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:onClick="@{() -> quantityClickListener.onIncreaseClick(item)}"
+            android:onClick="@{() -> quantityClickListener.onClickIncrease(item)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
