@@ -39,7 +39,7 @@
             android:layout_height="360dp"
             android:scaleType="centerCrop"
             android:contentDescription="@null"
-            app:imageUrl="@{viewModel.cartItem.product.imageUrl}"
+            app:imageUrl="@{viewModel.selectedProduct.product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/product_detail_toolbar" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@{viewModel.cartItem.product.title}"
+            android:text="@{viewModel.selectedProduct.product.title}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -74,7 +74,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{String.format(@string/product_price_format,viewModel.cartItem.product.price)}"
+                android:text="@{String.format(@string/product_price_format,viewModel.selectedProduct.product.price)}"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20sp"

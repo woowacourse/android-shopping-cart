@@ -26,7 +26,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private val productDetailViewModel: ProductDetailViewModel by lazy {
         ViewModelProvider(
             this,
-            ProductDetailViewModel.Companion.Factory(intentCartItemData),
+            ProductDetailViewModel.Companion.Factory(intentCartItemData.product.id),
         )[ProductDetailViewModel::class.java]
     }
 
@@ -34,15 +34,11 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        binding.lifecycleOwner = this
         binding.viewModel = productDetailViewModel
+        binding.lifecycleOwner = this
         productDetailViewModel.setLastProductTitle()
         binding.quantitySelector.productId = intentCartItemData.product.id
-        binding.quantitySelector.tvProductQuantity.text = intentCartItemData.quantity.toString()
 
-        productDetailViewModel.quantity.observe(this) {
-            binding.quantitySelector.tvProductQuantity.text = it.toString()
-        }
         binding.quantitySelector.quantitySelectButtonListener =
             object : QuantitySelectButtonListener {
                 override fun increase(productId: Long) {
@@ -56,6 +52,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         setCloseButtonClickListener()
         observeRecentProductVisibility()
+        observeSelectedProductQuantity()
         productDetailViewModel.observeToastMessage(this)
         observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -87,6 +84,12 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun observeRecentProductVisibility() {
         productDetailViewModel.lastProductVisibility.observe(this) { visible ->
             binding.recentProductInfo.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
+    private fun observeSelectedProductQuantity() {
+        productDetailViewModel.selectedProduct.observe(this) { selectedProduct ->
+            binding.quantitySelector.quantity = selectedProduct.quantity
         }
     }
 

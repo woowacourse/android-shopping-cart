@@ -13,6 +13,7 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.recentProducts.RecentProductsRepository
 import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
+import woowacourse.shopping.model.product.Product
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityListener
 import woowacourse.shopping.view.ToastMessageHandler
@@ -20,15 +21,27 @@ import woowacourse.shopping.view.ToastMessageHandler
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val recentProductsRepository: RecentProductsRepository,
-    val cartItem: CartItem,
+    productId: Long,
 ) : ViewModel(),
     QuantityListener,
     ToastMessageHandler {
+    private val _selectedProduct = MutableLiveData(EMPTY_ITEM)
+    val selectedProduct: LiveData<CartItem> = _selectedProduct
+
+    init {
+        recentProductsRepository.findRecentProductById(productId) { result ->
+            result
+                .onSuccess {
+                    _selectedProduct.postValue(it)
+                }.onFailure {
+                    Log.d("TAG", "fail: $it")
+                    _toastMessage.postValue(Event(Unit))
+                }
+        }
+    }
+
     private val _addToCart = MutableLiveData<Event<Unit>>()
     val addToCart: LiveData<Event<Unit>> = _addToCart
-
-    private val _quantity = MutableLiveData(cartItem.quantity)
-    val quantity: LiveData<Int> = _quantity
 
     private val _lastProductTitle = MutableLiveData<String>()
     val lastProductTitle: LiveData<String> = _lastProductTitle
@@ -43,9 +56,9 @@ class ProductDetailViewModel(
         productId: Long,
         quantityIncrease: Int,
     ) {
-        val current = _quantity.value ?: INIT_QUANTITY
-        val newQuantity = current + quantityIncrease
-        _quantity.postValue(newQuantity)
+        val currentQuantity = _selectedProduct.value?.quantity ?: INIT_QUANTITY
+        val newQuantity = currentQuantity + quantityIncrease
+        _selectedProduct.value = _selectedProduct.value?.copy(quantity = newQuantity)
     }
 
     override fun decreaseQuantity(
@@ -53,16 +66,16 @@ class ProductDetailViewModel(
         quantityDecrease: Int,
         minQuantity: Int,
     ) {
-        val current = _quantity.value ?: INIT_QUANTITY
-        if (current > minQuantity) {
-            val newQuantity = current - quantityDecrease
-            _quantity.postValue(newQuantity)
+        val currentQuantity = _selectedProduct.value?.quantity ?: INIT_QUANTITY
+        if (currentQuantity > minQuantity) {
+            val newQuantity = currentQuantity - quantityDecrease
+            _selectedProduct.value = _selectedProduct.value?.copy(quantity = newQuantity)
         }
     }
 
     override fun updateQuantity() {
-        val productId = cartItem.product.id
-        val quantity = _quantity.value ?: INIT_QUANTITY
+        val productId = _selectedProduct.value?.product?.id ?: return
+        val quantity = _selectedProduct.value?.quantity ?: INIT_QUANTITY
         cartRepository.update(productId, quantity) { result ->
             result
                 .onSuccess {
@@ -75,7 +88,10 @@ class ProductDetailViewModel(
     }
 
     fun onAddToCartClicked() {
-        val newCartItem = cartItem.copy(quantity = _quantity.value ?: INIT_QUANTITY)
+        val newCartItem =
+            _selectedProduct.value?.copy(
+                quantity = _selectedProduct.value?.quantity ?: INIT_QUANTITY,
+            ) ?: return
         _addToCart.value = Event(Unit)
         cartRepository.add(newCartItem) { result ->
             result
@@ -102,9 +118,11 @@ class ProductDetailViewModel(
 
     companion object {
         private const val INIT_QUANTITY = 1
+        private val EMPTY_ITEM =
+            CartItem(Product(1, "", "", 0), 0)
 
         class Factory(
-            private val cartItem: CartItem,
+            private val productId: Long,
         ) : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(
@@ -121,7 +139,7 @@ class ProductDetailViewModel(
                 return ProductDetailViewModel(
                     CartRepositoryImpl(cartDao),
                     RecentProductsRepositoryImpl(recentProductDao),
-                    cartItem,
+                    productId,
                 ) as T
             }
         }
