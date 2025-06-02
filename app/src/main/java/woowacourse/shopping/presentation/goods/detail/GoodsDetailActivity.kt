@@ -51,14 +51,20 @@ class GoodsDetailActivity : BaseActivity() {
 
     private fun observeEvent() {
         viewModel.shoppingCartEvent.observe(this) { event ->
-            val message =
-                when (event) {
-                    ShoppingCartEvent.SUCCESS -> R.string.text_save_success
-                    ShoppingCartEvent.FAILURE -> R.string.text_save_failure
+            when (event) {
+                ShoppingCartEvent.SUCCESS -> {
+                    showToast(R.string.text_save_success)
+                    finish()
                 }
-            Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
-            finish()
+                ShoppingCartEvent.FAILURE -> {
+                    showToast(R.string.text_save_failure)
+                }
+            }
         }
+    }
+
+    private fun showToast(stringRes: Int) {
+        Toast.makeText(this, getString(stringRes), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
