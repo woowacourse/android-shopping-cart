@@ -79,7 +79,7 @@
             app:layout_constraintDimensionRatio="3:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.9"
-            app:isGone="@{(vm.cart[product.id] != null)}"
+            app:isGone="@{(vm.cart[product.id] == null)}"
             >
 
             <TextView
@@ -129,7 +129,7 @@
             android:text="@string/plus"
             android:textColor="@color/black"
             android:textSize="30sp"
-            app:isGone="@{(vm.cart[product.id] == null)}"
+            app:isGone="@{(vm.cart[product.id] != null)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_preview"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@+id/iv_product_preview"
