@@ -2,7 +2,7 @@ package woowacourse.shopping.domain.model
 
 data class Cart(
     val goods: Goods,
-    var quantity: Int,
+    val quantity: Int,
 ) {
-    val totalPrice: Int get() = goods.price * quantity
+    val totalPrice: Int = goods.price * quantity
 }
