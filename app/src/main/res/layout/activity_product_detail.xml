@@ -6,20 +6,8 @@
     <data>
 
         <variable
-            name="detailClickListener"
-            type="woowacourse.shopping.ui.productdetail.DetailClickListener" />
-
-        <variable
-            name="quantityClickListener"
-            type="woowacourse.shopping.utils.QuantityClickListener" />
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
-
-        <variable
-            name="recentProduct"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="viewModel"
+            type="woowacourse.shopping.ui.productdetail.DetailViewModel" />
 
         <variable
             name="cartItem"
@@ -51,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
-            app:setImageWithGlide="@{product.imageUrl}" />
+            app:setImageWithGlide="@{viewModel.product.imageUrl}" />
 
         <TextView
             android:id="@+id/tv_detail_product_title"
@@ -59,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{product.name}"
+            android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -87,7 +75,7 @@
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:setFormattedPrice="@{product.price}"
+            app:setFormattedPrice="@{viewModel.product.price}"
             tools:text="99,000원" />
 
         <include
@@ -96,8 +84,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"
-            app:quantityClickListener="@{quantityClickListener}"
-            app:item="@{cartItem}"
+            app:quantityClickListener="@{viewModel}"
+            app:item="@{viewModel.cartItem}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_detail_product_price" />
 
@@ -108,8 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginBottom="30dp"
-            android:onClick="@{() -> detailClickListener.onRecentProductClick()}"
-            app:item="@{recentProduct}"
+            app:item="@{viewModel.recentProduct}"
             app:layout_constraintBottom_toTopOf="@id/btn_detail_add_cart"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -119,7 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_active"
-            android:onClick="@{() -> detailClickListener.onAddToCartClick(cartItem)}"
+            android:onClick="@{() -> viewModel.onClickAddCart()}"
             android:text="@string/add_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

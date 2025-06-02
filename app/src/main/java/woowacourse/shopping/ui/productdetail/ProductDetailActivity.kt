@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,11 +12,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.utils.QuantityClickListener
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
+import woowacourse.shopping.utils.ViewModelFactory
 import woowacourse.shopping.utils.intentSerializable
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -29,37 +28,20 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        val product = intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java) ?: throw IllegalArgumentException("알 수 없는 값입니다.")
-        viewModel = ViewModelProvider(this, DetailViewModelFactory(product))[DetailViewModel::class.java]
+        val product = intent?.intentSerializable(EXTRA_PRODUCT_ID, Product::class.java) ?: throw IllegalArgumentException("알 수 없는 값입니다.")
+        val app = application as ShoppingCartApplication
+        val factory = ViewModelFactory.createDetailViewModelFactory(
+            app.productRepository,
+            app.cartRepository,
+            app.historyRepository,
+            product
+        )
+        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         applyWindowInsets()
         initObserver()
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        binding.product = product
-        binding.detailClickListener =
-            object : DetailClickListener {
-                override fun onAddToCartClick(cartItem: CartItem) {
-                    viewModel.insertCartItem(cartItem)
-                    Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onRecentProductClick() {
-                    val intent =
-                        newIntent(this@ProductDetailActivity, viewModel.lastItem.value ?: product)
-                    startActivity(intent)
-                    finish()
-                }
-            }
-        binding.quantityClickListener =
-            object : QuantityClickListener {
-                override fun onIncreaseClick(cartItem: CartItem) {
-                    viewModel.increaseQuantity()
-                }
-
-                override fun onDecreaseClick(cartItem: CartItem) {
-                    viewModel.decreaseQuantity()
-                }
-            }
+        binding.viewModel = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,12 +60,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.cartItem.observe(this) {
-            binding.cartItem = it
-        }
-        viewModel.lastItem.observe(this) {
-            binding.recentProduct = it
-        }
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun applyWindowInsets() {
@@ -95,16 +73,16 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT = "product"
+        private const val EXTRA_PRODUCT_ID = "product"
 
         fun newIntent(
             context: Context,
-            product: Product,
+            productId: Product,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(
-                    EXTRA_PRODUCT,
-                    product,
+                    EXTRA_PRODUCT_ID,
+                    productId,
                 )
             }
         }
