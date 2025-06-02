@@ -2,6 +2,7 @@ package woowacourse.shopping.feature
 
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,7 +32,7 @@ fun RecyclerView.bindItems(items: List<GoodsItem>?) {
 
 @BindingAdapter("visible")
 fun View.setVisible(visible: Boolean) {
-    visibility = if (visible) View.VISIBLE else View.GONE
+    isVisible = visible
 }
 
 @BindingAdapter("count")
