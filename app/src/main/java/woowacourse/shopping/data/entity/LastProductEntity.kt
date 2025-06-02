@@ -29,17 +29,6 @@ data class LastProductEntity(
 )
 
 fun LastProductEntity.toDomain(product: Product): LastProduct {
-    val time = LocalDateTime.ofInstant(
-        Instant.ofEpochMilli(viewedAt),
-        ZoneId.systemDefault()
-    )
+    val time = this.viewedAt
     return LastProduct(product, time)
-}
-
-
-fun LastProduct.toEntity(): LastProductEntity {
-    return LastProductEntity(
-        productId = product.id,
-        viewedAt = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    )
 }
