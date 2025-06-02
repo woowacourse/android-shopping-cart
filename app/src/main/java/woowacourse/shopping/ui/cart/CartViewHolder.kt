@@ -6,10 +6,10 @@ import woowacourse.shopping.domain.product.CartItem
 
 class CartViewHolder(
     private val binding: CartItemBinding,
-    cartClickListener: CartClickListener,
+    viewModel: CartViewModel,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.cartClickListener = cartClickListener
+        binding.viewModel = viewModel
     }
 
     fun bind(cartItem: CartItem) {

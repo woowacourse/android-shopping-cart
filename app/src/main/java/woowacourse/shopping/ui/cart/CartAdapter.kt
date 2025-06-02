@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.CartItemBinding
 import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.ui.fashionlist.ProductListViewModel
 
 class CartAdapter(
     private var items: List<CartItem>,
-    private val cartClickListener: CartClickListener,
+    private val viewModel: CartViewModel,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -20,7 +21,7 @@ class CartAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding: CartItemBinding =
             DataBindingUtil.inflate(inflater, R.layout.cart_item, parent, false)
-        return CartViewHolder(binding, cartClickListener)
+        return CartViewHolder(binding, viewModel)
     }
 
     override fun getItemCount(): Int = items.size

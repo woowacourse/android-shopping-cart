@@ -1,14 +1,14 @@
 package woowacourse.shopping.data.local.repository
 
 import woowacourse.shopping.data.local.dao.CartItemDao
-import woowacourse.shopping.data.remote.ProductDao
+import woowacourse.shopping.data.local.dummy.ProductDummy
 import woowacourse.shopping.data.local.entity.CartItemEntity
 import woowacourse.shopping.domain.product.CartItem
 import kotlin.concurrent.thread
 
 class CartRepository(
     private val cartDao: CartItemDao,
-    private val productDao: ProductDao,
+    private val productDao: ProductDummy,
 ) {
     fun getCartItemById(id: Long, callback: (CartItem) -> Unit) {
         thread {

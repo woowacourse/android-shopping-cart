@@ -3,16 +3,14 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.repository.CartItemRepositoryImpl
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.local.repository.CartRepository
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
-import kotlin.concurrent.thread
+import woowacourse.shopping.utils.QuantityClickListener
 
-class CartViewModel : ViewModel() {
-    private val cartRepository = CartRepositoryImpl.get()
-    private val cartItemRepository = CartItemRepositoryImpl.get()
-
+class CartViewModel(
+    private val cartRepository: CartRepository,
+) : ViewModel(), QuantityClickListener {
     private val _cartItems = MutableLiveData<List<CartItem>>(emptyList())
     val cartItems: LiveData<List<CartItem>> = _cartItems
 
@@ -22,10 +20,7 @@ class CartViewModel : ViewModel() {
     private var size: Int = 0
 
     init {
-        thread {
-            size = cartRepository.getSize()
-        }
-        update()
+        cartRepository.getSize { size = it }
     }
 
     fun isLastPage(): Boolean {
@@ -36,10 +31,7 @@ class CartViewModel : ViewModel() {
 
     private fun update() {
         val pageNumber = pageNumber.value ?: 1
-        thread {
-            val items = cartItemRepository.getPagedCartItems(5, (pageNumber - 1) * 5)
-            _cartItems.postValue(items)
-        }
+        cartRepository.getPagedItems(5, (pageNumber - 1 ) * 5) { _cartItems.postValue(it) }
     }
 
     fun moveToPrevious() {
@@ -57,54 +49,36 @@ class CartViewModel : ViewModel() {
     }
 
     fun deleteProduct(product: Product) {
-        thread {
-            cartRepository.deleteById(product.id)
-            cartItemRepository.deleteById(product.id)
+        cartRepository.removeById(product.id) {
+            _cartItems.value = _cartItems.value?.filter { it.id != product.id }
         }
-        _cartItems.value = _cartItems.value?.filter { it.id != product.id }
     }
 
-    fun increaseQuantity(cartItem: CartItem) {
+    override fun onClickIncrease(cartItem: CartItem) {
         val newItem = cartItem.copy(quantity = cartItem.quantity + 1)
-        val updatedList =
-            _cartItems.value?.map {
-                if (it.id == cartItem.id) {
-                    newItem
-                } else {
-                    it
-                }
-            } ?: return
-
-        _cartItems.value = updatedList
-
-        thread {
-            cartItemRepository.update(newItem)
-        }
+        updateQuantity(cartItem, newItem)
     }
 
-    fun decreaseQuantity(cartItem: CartItem) {
-        val target = _cartItems.value?.find { it.id == cartItem.id } ?: return
-        val newCartItem = cartItem.copy(quantity = target.quantity.minus(1).coerceAtLeast(1))
-        if (target.quantity > 1) {
-            val newCartItem = cartItem.copy(quantity = target.quantity - 1)
-            val updatedList =
-                _cartItems.value?.map {
-                    if (it.id == cartItem.id) newCartItem else it
-                } ?: return
-
-            _cartItems.value = updatedList
-
-            thread {
-                cartItemRepository.update(newCartItem)
+    override fun onClickDecrease(cartItem: CartItem) {
+        if (cartItem.quantity == 1) {
+            cartRepository.removeById(cartItem.id) {
+                val oldItems = _cartItems.value?.toMutableList()
+                oldItems?.remove(cartItem)
+                _cartItems.value = oldItems?.toList()
             }
-        } else {
-            val updatedList = _cartItems.value?.filter { it.id != cartItem.id } ?: return
-            _cartItems.value = updatedList
+            return
+        }
 
-            thread {
-                cartRepository.deleteById(cartItem.id)
-                cartItemRepository.deleteById(cartItem.id)
-            }
+        val newItem = cartItem.copy(quantity = (cartItem.quantity - 1).coerceAtLeast(1))
+        updateQuantity(cartItem, newItem)
+    }
+
+    private fun updateQuantity(cartItem: CartItem, newItem: CartItem) {
+        cartRepository.upsert(newItem) {
+            val oldItems = _cartItems.value?.toMutableList()
+            val index = oldItems?.indexOf(cartItem) ?: throw IllegalArgumentException("")
+            oldItems[index] = newItem
+            _cartItems.value = oldItems.toList()
         }
     }
 }
