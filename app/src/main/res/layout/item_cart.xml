@@ -5,17 +5,11 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="woowacourse.shopping.presentation.cart.CartViewModel" />
 
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.CartProduct" />
 
-        <variable
-            name="onClickHandler"
-            type="woowacourse.shopping.presentation.cart.ui.CartViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +52,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(product.product.id)}"
             android:padding="12dp"
             android:src="@drawable/ic_cart_remove"
             app:layout_constraintEnd_toEndOf="parent"
@@ -86,9 +79,7 @@
             android:textColor="@color/black"
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> viewModel.increaseCount(product)}"/>
-
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_cart_count"
@@ -113,7 +104,6 @@
             android:textColor="@color/black"
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tv_cart_count"
-            android:onClick="@{() -> viewModel.decreaseCount(product)}"/>
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_count" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

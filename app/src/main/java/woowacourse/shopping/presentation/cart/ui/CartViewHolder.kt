@@ -7,19 +7,29 @@ import woowacourse.shopping.presentation.cart.CartViewModel
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
-    onClickHandler: OnClickHandler,
-    viewModel: CartViewModel,
+    private val onClickHandler: OnClickHandler
 ) : RecyclerView.ViewHolder(binding.root) {
-    init {
-        binding.onClickHandler = onClickHandler
-        binding.viewModel = viewModel
-    }
 
     fun bind(product: CartProduct) {
         binding.product = product
+        binding.executePendingBindings()
+
+        binding.ivCartProductRemove.setOnClickListener {
+            onClickHandler.onRemoveCartProductClick(product.product.id)
+        }
+
+        binding.tvCartPlus.setOnClickListener {
+            onClickHandler.onIncreaseCount(product)
+        }
+
+        binding.tvCartMinus.setOnClickListener {
+            onClickHandler.onDecreaseCount(product)
+        }
     }
 
     interface OnClickHandler {
         fun onRemoveCartProductClick(id: Int)
+        fun onIncreaseCount(product: CartProduct)
+        fun onDecreaseCount(product: CartProduct)
     }
 }

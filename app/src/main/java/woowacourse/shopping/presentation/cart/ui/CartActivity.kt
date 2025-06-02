@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.util.DatabaseProvider
@@ -23,10 +24,26 @@ class CartActivity : BindingActivity<ActivityCartBinding>(R.layout.activity_cart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cartAdapter = CartAdapter(createAdapterOnClickHandler(), viewModel)
+
+        cartAdapter = CartAdapter(createAdapterOnClickHandler())
+
         initSupportActionBar()
         initViewBinding()
         initObservers()
+    }
+
+    private fun createAdapterOnClickHandler() = object : CartViewHolder.OnClickHandler {
+        override fun onRemoveCartProductClick(id: Int) {
+            viewModel.removeCartProduct(id)
+        }
+
+        override fun onIncreaseCount(product: CartProduct) {
+            viewModel.increaseCount(product)
+        }
+
+        override fun onDecreaseCount(product: CartProduct) {
+            viewModel.decreaseCount(product)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -51,12 +68,6 @@ class CartActivity : BindingActivity<ActivityCartBinding>(R.layout.activity_cart
         }
     }
 
-    private fun createAdapterOnClickHandler() =
-        object : CartViewHolder.OnClickHandler {
-            override fun onRemoveCartProductClick(id: Int) {
-                viewModel.removeCartProduct(id)
-            }
-        }
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
