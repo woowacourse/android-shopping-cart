@@ -22,7 +22,7 @@ class RecentGoodsRepositoryImpl(
         )
     }
 
-    override fun getLatestRecentGoods(onResult: (Result<Long?>) -> Unit) {
+    override fun getLatestRecentGoodsId(onResult: (Result<Long?>) -> Unit) {
         doAsyncCatching(
             block = {
                 dao.getLatestRecentGoods()?.id
@@ -31,7 +31,7 @@ class RecentGoodsRepositoryImpl(
         )
     }
 
-    override fun getRecentGoods(onResult: (Result<List<Long>?>) -> Unit) {
+    override fun getRecentGoodsIds(onResult: (Result<List<Long>?>) -> Unit) {
         doAsyncCatching(
             block = {
                 dao.getRecentGoods(MAX_RECENT_GOODS)?.map { it.id }

@@ -34,7 +34,7 @@ class GoodsDetailViewModel(
         get() = _shoppingCartEvent
 
     init {
-        recentGoodsRepository.getLatestRecentGoods { result ->
+        recentGoodsRepository.getLatestRecentGoodsId { result ->
             result.onSuccess { id ->
                 if (id == null) {
                     _recentGoods.postValue(null)

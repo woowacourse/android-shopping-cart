@@ -105,7 +105,7 @@ class GoodsViewModel(
     }
 
     private fun fetchRecentGoods() {
-        recentGoodsRepository.getRecentGoods { result ->
+        recentGoodsRepository.getRecentGoodsIds { result ->
             result.onSuccess { ids ->
                 if (ids.isNullOrEmpty()) {
                     _recentGoods.postValue(emptyList())
