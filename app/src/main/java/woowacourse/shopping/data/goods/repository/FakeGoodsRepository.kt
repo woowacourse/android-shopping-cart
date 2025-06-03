@@ -5,6 +5,6 @@ import woowacourse.shopping.domain.model.Goods
 interface FakeGoodsRepository {
     fun getGoodsById(
         id: Long,
-        callback: (Goods?) -> Unit,
+        onSuccess: (Goods?) -> Unit,
     )
 }

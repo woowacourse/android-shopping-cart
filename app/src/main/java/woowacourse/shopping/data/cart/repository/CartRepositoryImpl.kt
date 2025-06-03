@@ -12,21 +12,21 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(
     private val dao: CartDao,
 ) : CartRepository {
-    override fun getAll(callback: (Carts) -> Unit) {
+    override fun getAll(onSuccess: (Carts) -> Unit) {
         thread {
             val cartList = dao.getAll().map { it.toDomain() }
             val totalQuantity = cartList.sumOf { it.quantity }
-            callback(Carts(carts = cartList, totalQuantity = totalQuantity))
+            onSuccess(Carts(carts = cartList, totalQuantity = totalQuantity))
         }
     }
 
     override fun getCartById(
         cartId: Int,
-        callback: (Cart?) -> Unit,
+        onSuccess: (Cart?) -> Unit,
     ) {
         thread {
             val cart = dao.getCartById(cartId)?.toDomain()
-            callback(cart)
+            onSuccess(cart)
         }
     }
 
@@ -84,17 +84,17 @@ class CartRepositoryImpl(
             Carts(carts = cartList, totalQuantity = totalQuantity)
         }
 
-    override fun getAllItemsSize(callback: (Int) -> Unit) {
+    override fun getAllItemsSize(onSuccess: (Int) -> Unit) {
         thread {
             val itemsSize = dao.getAllItemsSize()
-            callback(itemsSize)
+            onSuccess(itemsSize)
         }
     }
 
-    override fun getTotalQuantity(callback: (Int) -> Unit) {
+    override fun getTotalQuantity(onSuccess: (Int) -> Unit) {
         thread {
             val totalQuantity = dao.getTotalQuantity()
-            callback(totalQuantity)
+            onSuccess(totalQuantity)
         }
     }
 }

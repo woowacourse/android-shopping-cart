@@ -6,8 +6,8 @@ import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
 class FakeGoodsRepositoryImpl : FakeGoodsRepository {
     override fun getGoodsById(
         id: Long,
-        callback: (Goods?) -> Unit,
+        onSuccess: (Goods?) -> Unit,
     ) {
-        callback(dummyGoods.find { it.id == id })
+        onSuccess(dummyGoods.find { it.id == id })
     }
 }

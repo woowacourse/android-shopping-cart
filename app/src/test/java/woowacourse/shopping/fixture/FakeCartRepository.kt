@@ -42,9 +42,9 @@ class FakeCartRepository : CartRepository {
         TODO("Not yet implemented")
     }
 
-    override fun getAll(callback: (Carts) -> Unit) {
+    override fun getAll(onSuccess: (Carts) -> Unit) {
         val totalQuantity = cartList.sumOf { it.quantity }
-        callback(Carts(cartList.toList(), totalQuantity))
+        onSuccess(Carts(cartList.toList(), totalQuantity))
     }
 
     override fun getPage(
@@ -56,12 +56,12 @@ class FakeCartRepository : CartRepository {
         return MutableLiveData(Carts(page, totalQuantity))
     }
 
-    override fun getAllItemsSize(callback: (Int) -> Unit) {
-        callback(sizeLiveData)
+    override fun getAllItemsSize(onSuccess: (Int) -> Unit) {
+        onSuccess(sizeLiveData)
     }
 
-    override fun getTotalQuantity(callback: (Int) -> Unit) {
+    override fun getTotalQuantity(onSuccess: (Int) -> Unit) {
         val total = cartList.sumOf { it.quantity }
-        callback(total)
+        onSuccess(total)
     }
 }

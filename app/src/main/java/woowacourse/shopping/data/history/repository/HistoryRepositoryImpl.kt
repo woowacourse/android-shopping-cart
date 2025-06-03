@@ -9,10 +9,10 @@ import kotlin.concurrent.thread
 class HistoryRepositoryImpl(
     private val dao: HistoryDao,
 ) : HistoryRepository {
-    override fun getAll(callback: (List<History>) -> Unit) {
+    override fun getAll(onSuccess: (List<History>) -> Unit) {
         thread {
             val history = dao.getAll().map { it.toDomain() }
-            callback(history)
+            onSuccess(history)
         }
     }
 
@@ -26,10 +26,10 @@ class HistoryRepositoryImpl(
         }
     }
 
-    override fun findLatest(callback: (History?) -> Unit) {
+    override fun findLatest(onSuccess: (History?) -> Unit) {
         thread {
             val lastViewed = dao.findLatest()
-            callback(lastViewed?.toDomain())
+            onSuccess(lastViewed?.toDomain())
         }
     }
 }

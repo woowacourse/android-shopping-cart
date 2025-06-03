@@ -5,11 +5,11 @@ import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
 
 interface CartRepository {
-    fun getAll(callback: (Carts) -> Unit)
+    fun getAll(onSuccess: (Carts) -> Unit)
 
     fun getCartById(
         cartId: Int,
-        callback: (Cart?) -> Unit,
+        onSuccess: (Cart?) -> Unit,
     )
 
     fun insert(cart: Cart)
@@ -25,7 +25,7 @@ interface CartRepository {
         offset: Int,
     ): LiveData<Carts>
 
-    fun getAllItemsSize(callback: (Int) -> Unit)
+    fun getAllItemsSize(onSuccess: (Int) -> Unit)
 
-    fun getTotalQuantity(callback: (Int) -> Unit)
+    fun getTotalQuantity(onSuccess: (Int) -> Unit)
 }
