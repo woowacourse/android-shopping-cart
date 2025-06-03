@@ -14,19 +14,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.viewmodel.ProductListViewModel
 import woowacourse.shopping.utils.ViewModelFactory
 
 class FashionProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
     private val viewModel: ProductListViewModel by viewModels {
-        ViewModelFactory.createProductViewModelFactory(
-            ProductRepositoryImpl(),
+        val app = application as ShoppingCartApplication
+        ViewModelFactory.createCartViewModelFactory(
+            app.productRepository,
+            app.cartRepository,
+            app.historyRepository
         )
     }
     private lateinit var fashionProductListAdapter: FashionProductListAdapter
@@ -36,9 +38,13 @@ class FashionProductListActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
-
         initViews()
         initObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProducts()
     }
 
     private fun applyWindowInsets() {
@@ -57,7 +63,8 @@ class FashionProductListActivity : AppCompatActivity() {
                 spanSizeLookup =
                     object : SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
+                            val viewType =
+                                binding.productsRecyclerView.adapter?.getItemViewType(position)
                             return when (viewType) {
                                 R.layout.product_item -> 1
                                 else -> 2
@@ -68,19 +75,17 @@ class FashionProductListActivity : AppCompatActivity() {
 
         fashionProductListAdapter =
             FashionProductListAdapter(
-                items = emptyList(),
-                productClickListener =
+                viewModel, productClickListener =
                     object : ProductClickListener {
                         override fun onClick(product: Product) {
                             val intent =
-                                ProductDetailActivity.newIntent(this@FashionProductListActivity, product)
+                                ProductDetailActivity.newIntent(
+                                    this@FashionProductListActivity,
+                                    product
+                                )
                             startActivity(intent)
                         }
-                    },
-                loadMoreClickListener = {
-                    viewModel.loadProducts()
-                },
-            )
+                    })
 
         binding.productsRecyclerView.apply {
             adapter = fashionProductListAdapter
@@ -89,8 +94,11 @@ class FashionProductListActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.products.observe(this) {
-            fashionProductListAdapter.update(it)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.productsUiState.observe(this) { uiStates ->
+            fashionProductListAdapter.update(uiStates)
         }
     }
 

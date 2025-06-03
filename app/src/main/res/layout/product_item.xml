@@ -5,21 +5,27 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.fashionlist.ProductListViewModel" />
+        <variable
+            name="fashionProductItem"
+            type="woowacourse.shopping.ui.fashionlist.ProductListViewType.FashionProductItem" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.product.CartItem" />
         <variable
             name="productClickListener"
             type="woowacourse.shopping.ui.fashionlist.ProductClickListener" />
 
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/product_item"
-        android:onClick="@{() -> productClickListener.onClick(product)}"
+        android:onClick="@{() -> productClickListener.onClick(fashionProductItem.product)}"
         android:paddingVertical="10dp">
 
         <ImageView
@@ -32,7 +38,7 @@
             app:layout_constraintHeight_percent="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setImageWithGlide="@{product.imageUrl}"
+            app:setImageWithGlide="@{fashionProductItem.product.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -45,7 +51,7 @@
             android:ellipsize="end"
             android:maxEms="10"
             android:singleLine="true"
-            android:text="@{product.name}"
+            android:text="@{fashionProductItem.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -55,15 +61,42 @@
 
         <TextView
             android:id="@+id/tv_product_price"
+            setFormattedPrice="@{fashionProductItem.product.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            setFormattedPrice="@{product.price}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:text="10,000원" />
+
+        <ImageButton
+            android:id="@+id/ib_item_floating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/floating_button_background"
+            android:contentDescription="@string/add_cart"
+            android:src="@drawable/ic_add"
+            android:onClick="@{() -> viewModel.onFloatingButtonClick(fashionProductItem.product)}"
+            android:visibility="@{fashionProductItem.isButtonVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <include
+            android:id="@+id/included_layout"
+            layout="@layout/change_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="@{fashionProductItem.isButtonVisible ? View.GONE : View.VISIBLE}"
+            app:quantityClickListener="@{viewModel}"
+            app:item="@{cartItem}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

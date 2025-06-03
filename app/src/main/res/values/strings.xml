@@ -10,5 +10,9 @@
     <string name="close">닫기</string>
     <string name="back">뒤로가기</string>
     <string name="load_more">더 보기</string>
+    <string name="decrease_symbol">-</string>
+    <string name="increase_symbol">+</string>
+    <string name="recent_product_label">최근 본 상품</string>
+    <string name="latest_product">마지막으로 본 상품</string>
 
 </resources>

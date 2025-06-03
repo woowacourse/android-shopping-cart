@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui
 
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 
 class FashionProductListActivityTest {

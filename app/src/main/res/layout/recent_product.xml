@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="item"
+            type="woowacourse.shopping.domain.product.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_recent_product"
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="16dp"
+        android:visibility="@{item == null ? View.GONE : View.VISIBLE}">
+
+        <TextView
+            android:id="@+id/tv_recent_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/latest_product"
+            android:textColor="@color/button_active"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_recent_product_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_recent_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{item.name}"
+            android:textColor="@color/deep_gray"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_recent_product"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_product"
+            tools:text="PET보틀-정사각형(500ml)))))))))))))))))))))))))))" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

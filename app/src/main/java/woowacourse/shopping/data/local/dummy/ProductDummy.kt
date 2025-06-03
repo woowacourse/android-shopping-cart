@@ -1,9 +1,10 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.local.dummy
 
+import woowacourse.shopping.data.local.dao.ProductDao
 import woowacourse.shopping.domain.product.Money
 import woowacourse.shopping.domain.product.Product
 
-object ProductDummy {
+object ProductDummy: ProductDao {
     val products =
         listOf(
             Product(
@@ -211,4 +212,14 @@ object ProductDummy {
                 _price = Money(89_890),
             ),
         )
+
+    override fun findById(id: Long): Product? {
+        return products.find { it.id == id }
+    }
+
+    override fun findPagedItems(limit: Int, offset: Int): List<Product> {
+        return products.subList(limit, offset)
+    }
+
+    override fun size(): Int = products.size
 }

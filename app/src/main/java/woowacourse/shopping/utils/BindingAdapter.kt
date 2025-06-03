@@ -5,6 +5,8 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ChangeQuantityBinding
+import woowacourse.shopping.ui.productdetail.DetailViewModel
 
 object BindingAdapter {
     @JvmStatic
@@ -21,3 +23,5 @@ object BindingAdapter {
         this.text = this.context.getString(R.string.price, PriceFormatter.format(price))
     }
 }
+
+

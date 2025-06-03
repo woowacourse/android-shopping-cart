@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="woowacourse.shopping.domain.product.CartItem" />
+
+        <variable
+            name="quantityClickListener"
+            type="woowacourse.shopping.utils.QuantityClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@drawable/quantity_selector_background">
+
+        <TextView
+            android:id="@+id/tv_cart_decrease"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:onClick="@{() -> quantityClickListener.onClickDecrease(item)}"
+            android:text="@string/decrease_symbol"
+            android:textColor="@color/deep_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_cart_count"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/deep_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(item.quantity)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_increase"
+            app:layout_constraintStart_toEndOf="@+id/tv_cart_decrease"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10" />
+
+        <TextView
+            android:id="@+id/tv_cart_increase"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/increase_symbol"
+            android:textColor="@color/deep_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:onClick="@{() -> quantityClickListener.onClickIncrease(item)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

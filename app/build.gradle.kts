@@ -48,6 +48,9 @@ android {
 }
 
 dependencies {
+    androidTestImplementation(libs.mockwebserver)
+    testImplementation(libs.mockwebserver)
+    implementation(libs.okhttp)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

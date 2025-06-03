@@ -12,15 +12,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
-import woowacourse.shopping.ui.viewmodel.CartViewModel
+import woowacourse.shopping.utils.ViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
 
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels {
+        val app = application as ShoppingCartApplication
+        ViewModelFactory.createCartViewModelFactory(
+            app.cartRepository,
+        )
+    }
 
     private lateinit var cartAdapter: CartAdapter
 
@@ -44,15 +49,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         cartAdapter =
-            CartAdapter(
-                items = emptyList(),
-                cartClickListener =
-                    object : CartClickListener {
-                        override fun onClick(product: Product) {
-                            viewModel.deleteProduct(product)
-                        }
-                    },
-            )
+            CartAdapter(viewModel)
 
         binding.rvCart.adapter = cartAdapter
         binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }
@@ -60,12 +57,14 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initObserve() {
-        viewModel.products.observe(this) {
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.cartItems.observe(this) {
             cartAdapter.updateItem(it)
         }
 
         viewModel.pageNumber.observe(this) {
-            binding.tvPageNumber.text = it.toString()
             updateButtonTint(it)
         }
     }
@@ -87,7 +86,6 @@ class CartActivity : AppCompatActivity() {
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
