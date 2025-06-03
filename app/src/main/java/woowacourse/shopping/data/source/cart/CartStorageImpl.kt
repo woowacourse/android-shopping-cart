@@ -7,6 +7,13 @@ import kotlin.concurrent.thread
 class CartStorageImpl private constructor(
     private val cartDao: CartDao,
 ) : CartStorage {
+    override fun getAllProducts(onResult: (List<CartStorageItem>) -> Unit) {
+        thread {
+            val cartItems = cartDao.getAllProducts().map { CartStorageItem(it.productId, it.count) }
+            onResult(cartItems)
+        }
+    }
+
     override fun getAllProductsSize(onResult: (Int) -> Unit) {
         thread {
             onResult(cartDao.getAllProductsSize())

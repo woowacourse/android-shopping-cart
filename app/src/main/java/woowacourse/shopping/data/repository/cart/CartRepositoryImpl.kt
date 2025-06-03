@@ -9,6 +9,18 @@ class CartRepositoryImpl private constructor(
     private val cartStorage: CartStorage,
     private val productStorage: ProductStorage,
 ) : CartRepository {
+    override fun getAllProducts(onResult: (List<CartItem>) -> Unit) =
+        cartStorage.getAllProducts { CartStorageItems ->
+            val products =
+                CartStorageItems.map {
+                    CartItem(
+                        productStorage.getProduct(it.productId),
+                        it.count,
+                    )
+                }
+            onResult(products)
+        }
+
     override fun getAllProductsSize(onResult: (Int) -> Unit) = cartStorage.getAllProductsSize(onResult)
 
     override fun getProducts(

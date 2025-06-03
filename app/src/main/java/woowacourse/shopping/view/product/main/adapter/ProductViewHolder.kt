@@ -3,7 +3,6 @@ package woowacourse.shopping.view.product.main.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -15,7 +14,6 @@ class ProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onAddCart = onAddCart
-        binding.lifecycleOwner = binding.root.findViewTreeLifecycleOwner()
         binding.onSelectedProduct = navigateToProductDetail
     }
 

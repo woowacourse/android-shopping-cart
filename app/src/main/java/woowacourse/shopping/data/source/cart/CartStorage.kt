@@ -4,6 +4,8 @@ import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 
 interface CartStorage {
+    fun getAllProducts(onResult: (List<CartStorageItem>) -> Unit)
+
     fun getAllProductsSize(onResult: (Int) -> Unit)
 
     fun getProducts(
