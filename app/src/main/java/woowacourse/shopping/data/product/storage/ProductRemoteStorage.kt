@@ -3,10 +3,10 @@ package woowacourse.shopping.data.product.storage
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.data.common.convertJsonToList
-import woowacourse.shopping.data.product.local.entity.ProductEntity
 import woowacourse.shopping.data.product.remote.MockProductServer
+import woowacourse.shopping.data.product.remote.dto.ProductResponseDto
 
-class ProductRemoteStorage : ProductsStorage {
+class ProductRemoteStorage : ProductRemoteDataStorage {
     private val mockProductServer = MockProductServer()
     private val client = OkHttpClient()
 
@@ -17,7 +17,7 @@ class ProductRemoteStorage : ProductsStorage {
     override fun load(
         lastProductId: Long?,
         size: Int,
-    ): List<ProductEntity> {
+    ): List<ProductResponseDto> {
         val request =
             Request
                 .Builder()
@@ -31,7 +31,7 @@ class ProductRemoteStorage : ProductsStorage {
                 ?.string()
         return convertJsonToList(
             result ?: "",
-            ProductEntity::class.java,
+            ProductResponseDto::class.java,
         )
     }
 

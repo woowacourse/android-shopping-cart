@@ -5,7 +5,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.common.convertToJson
-import woowacourse.shopping.data.product.storage.VolatileProductsStorage.load
+import woowacourse.shopping.data.product.storage.VolatileProductRemoteDataStorage.load
 import java.net.URI
 import kotlin.concurrent.thread
 
