@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.model.products.CartState
@@ -19,6 +20,7 @@ import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.viewmodel.cart.CartViewModel
+import woowacourse.shopping.viewmodel.cart.CartViewModelFactory
 import woowacourse.shopping.viewmodel.products.ProductsViewModel
 
 class ProductsActivity : AppCompatActivity() {
@@ -26,14 +28,19 @@ class ProductsActivity : AppCompatActivity() {
     private lateinit var adapter: ProductsAdapter
 
     private val productsViewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
-    private val cartViewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val cartViewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            (application as App).shoppingCartRepository,
+            (application as App).productRepository,
+        )
+    }
 
     private val cartLauncher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                cartViewModel.refreshCartState()
+//                cartViewModel.refreshCartState()
             }
         }
 
@@ -61,9 +68,9 @@ class ProductsActivity : AppCompatActivity() {
                         quantity: Int,
                     ) {
                         if (quantity > 0) {
-                            cartViewModel.addToCart(product)
+                            cartViewModel.updateQuantity(product.id, quantity)
                         } else {
-                            val currentQuantity = cartViewModel.getQuantity(product.id)
+                            val currentQuantity = cartViewModel.updateQuantity(product.id, quantity)
                             cartViewModel.updateQuantity(product.id, currentQuantity - 1)
                         }
                     }

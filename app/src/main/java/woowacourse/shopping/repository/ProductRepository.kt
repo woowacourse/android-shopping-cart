@@ -12,5 +12,5 @@ interface ProductRepository {
         end: Int,
     ): List<Product>
 
-    fun getProductsById(productId: Int): List<Product>
+    fun getProductsById(productIds: List<Int>): List<Product>
 }
