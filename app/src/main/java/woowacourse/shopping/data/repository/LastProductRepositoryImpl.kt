@@ -1,5 +1,6 @@
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import woowacourse.shopping.data.dao.LastProductDao
 import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.entity.LastProductEntity
@@ -17,7 +18,7 @@ class LastProductRepositoryImpl(
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    override fun fetchProducts(callback: (List<LastProduct>) -> Unit) {
+    override fun fetchProducts(onSuccess: (List<LastProduct>) -> Unit) {
         Thread {
             val result = lastDao.getRecent(RECENT_PRODUCT_COUNT).mapNotNull { entity ->
                 val productEntity: ProductEntity? = productDao.getById(entity.productId.toInt())
@@ -25,9 +26,9 @@ class LastProductRepositoryImpl(
                     entity.toDomain(product)
                 }
             }
-            mainHandler.post {
-                callback(result)
-            }
+
+            onSuccess(result)
+
         }.start()
     }
 
@@ -37,7 +38,6 @@ class LastProductRepositoryImpl(
             if (existing != null) {
                 lastDao.delete(existing)
             }
-
             lastDao.insert(
                 LastProductEntity(
                     productId = product.id,
@@ -56,18 +56,16 @@ class LastProductRepositoryImpl(
         }.start()
     }
 
-    override fun fetchLatestProduct(callback: (Product?) -> Unit) {
+    override fun fetchLatestProduct(onSuccess: (Product?) -> Unit) {
         Thread {
             val lastEntity = lastDao.getRecent(LAST_PRODUCT_COUNT)
             val productEntity = lastEntity.first().let { productDao.getById(it.productId) }
             val product = productEntity?.toDomain()
-            Handler(Looper.getMainLooper()).post {
-                callback(product)
-            }
+            onSuccess(product)
         }.start()
     }
 
-    companion object{
+    companion object {
         const val RECENT_PRODUCT_COUNT = 10
         const val LAST_PRODUCT_COUNT = 1
     }

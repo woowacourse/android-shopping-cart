@@ -15,19 +15,19 @@ object CartDummyRepositoryImpl : CartRepository {
     val cart: List<CartProduct>
         get() = _cart.toList()
 
-    override fun fetchCartProducts(page: Int, callback: (List<CartProduct>) -> Unit) {
+    override fun fetchCartProducts(page: Int, onSuccess: (List<CartProduct>) -> Unit) {
         val products = _cart
             .drop(((page - COLLECTION_POSITION_OFFSET) * LOAD_ITEM_COUNT).coerceAtLeast(0))
             .take(LOAD_ITEM_COUNT)
-        callback(products)
+        onSuccess(products)
     }
 
 
-    override fun fetchMaxPageCount(callback: (Int) -> Unit) {
+    override fun fetchMaxPageCount(onSuccess: (Int) -> Unit) {
         if (_cart.size % LOAD_ITEM_COUNT == 0) {
-            callback(_cart.size / LOAD_ITEM_COUNT)
+            onSuccess(_cart.size / LOAD_ITEM_COUNT)
         } else {
-            callback((_cart.size / LOAD_ITEM_COUNT) + PAGE_COUNT_OFFSET)
+            onSuccess((_cart.size / LOAD_ITEM_COUNT) + PAGE_COUNT_OFFSET)
         }
     }
 

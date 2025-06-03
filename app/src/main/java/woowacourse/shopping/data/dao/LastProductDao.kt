@@ -3,6 +3,7 @@ package woowacourse.shopping.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.entity.LastProductEntity
 
@@ -15,7 +16,7 @@ interface LastProductDao {
     @Query("SELECT * FROM lastProduct WHERE productId = :productId LIMIT 1")
     fun findByProductId(productId: Int): LastProductEntity?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cart: LastProductEntity)
 
     @Delete

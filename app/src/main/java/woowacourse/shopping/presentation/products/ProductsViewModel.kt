@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.products
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,31 +29,26 @@ class ProductsViewModel(
     private var _lastProducts = MutableLiveData<List<Product>>(emptyList())
     val lastProducts: LiveData<List<Product>> get() = _lastProducts
 
-    private val mainHandler = Handler(Looper.getMainLooper())
-
-
     init {
         fetchCartProducts()
         fetchLastProducts()
     }
 
-    fun fetchCartProducts(){
+    fun fetchCartProducts() {
         cartRepository.fetchAllProduct { cartList ->
             val result = cartList.associate { it.product.id to it.count }
 
-            mainHandler.post {
-                _cart.value = result
-            }
+            _cart.postValue(result)
+
         }
     }
 
 
-    fun fetchLastProducts(){
+    fun fetchLastProducts() {
         lastProductRepository.fetchProducts { products ->
             val result = products.map { it.product }
-            mainHandler.post {
-                _lastProducts.value = result
-            }
+            _lastProducts.postValue(result)
+            Log.d("test",_lastProducts.value.toString())
         }
 
     }
@@ -60,24 +56,20 @@ class ProductsViewModel(
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         productsRepository.fetchProducts(currentPage, count) { newProducts ->
-            mainHandler.post {
-                _products.value = products.value.orEmpty() + newProducts
-                currentPage += 1
-                updateIsLoadable()
-            }
+            _products.postValue(products.value.orEmpty() + newProducts)
+            currentPage += 1
+            updateIsLoadable()
         }
     }
 
     fun updateIsLoadable() {
         val lastId = products.value?.lastOrNull()?.id ?: 0
         productsRepository.fetchIsProductsLoadable(lastId) { result ->
-            mainHandler.post {
-                _isLoadingProducts.value = result
-            }
+            _isLoadingProducts.postValue(result)
         }
     }
 
-    private fun updateCountOrRemoveIfZero (id: Int, count: Int) {
+    private fun updateCountOrRemoveIfZero(id: Int, count: Int) {
         val currentCart = _cart.value.orEmpty().toMutableMap()
         val currentCount = currentCart[id]
 
@@ -91,17 +83,13 @@ class ProductsViewModel(
             currentCart.remove(id)
         }
 
-        _cart.value = currentCart
+        _cart.postValue(currentCart)
     }
 
     fun upCount(id: Int) {
         val product = _products.value?.find { it.id == id } ?: return
-
         updateCountOrRemoveIfZero(id, 1)
-
-        Thread {
-            cartRepository.upsertCartProduct(product, 1)
-        }.start()
+        cartRepository.upsertCartProduct(product, 1)
     }
 
     fun downCount(id: Int) {
@@ -109,9 +97,7 @@ class ProductsViewModel(
 
         updateCountOrRemoveIfZero(id, -1)
 
-        Thread {
-            cartRepository.upsertCartProduct(product, -1)
-        }.start()
+        cartRepository.upsertCartProduct(product, -1)
     }
 
     companion object {

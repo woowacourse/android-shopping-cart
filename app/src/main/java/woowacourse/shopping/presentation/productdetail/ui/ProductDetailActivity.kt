@@ -29,7 +29,6 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.la
 
         removeSupportActionBarTitle()
         updateProductDetail()
-        updateLastProduct()
         initViewBinding()
 
         viewModel.onProductAddedEvent.observe(this) {
@@ -40,13 +39,19 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.la
         }
         viewModel.latestProduct.observe(this){ lastProduct ->
             binding.lastProduct = lastProduct
+            viewModel.changeIsEqualProduct()
+
+
         }
         viewModel.product.observe(this) { product ->
             if (product != Product.DEFAULT_PRODUCT) {
+                viewModel.loadLatestViewedProduct()
                 viewModel.addLastProduct()
             }
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_detail, menu)
@@ -66,9 +71,6 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.la
         viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
     }
 
-    private fun updateLastProduct(){
-        viewModel.loadLatestViewedProduct()
-    }
 
     private fun initViewBinding() {
         binding.lifecycleOwner = this

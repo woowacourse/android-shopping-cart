@@ -12,7 +12,7 @@ object ProductDummyRepositoryImpl : ProductRepository {
     override fun fetchProducts(
         count: Int,
         lastId: Int,
-        callback: (List<Product>) -> Unit
+        onSuccess: (List<Product>) -> Unit
     ) {
         Thread {
             val result = dummyProducts
@@ -20,31 +20,31 @@ object ProductDummyRepositoryImpl : ProductRepository {
                 .take(count)
 
             mainHandler.post {
-                callback(result)
+                onSuccess(result)
             }
         }.start()
     }
 
     override fun fetchProductDetail(
         id: Int,
-        callback: (Product?) -> Unit
+        onSuccess: (Product?) -> Unit
     ) {
         Thread {
             val result = dummyProducts.find { it.id == id }
             mainHandler.post {
-                callback(result)
+                onSuccess(result)
             }
         }.start()
     }
 
     override fun fetchIsProductsLoadable(
         lastId: Int,
-        callback: (Boolean) -> Unit
+        onSuccess: (Boolean) -> Unit
     ) {
         Thread {
             val result = dummyProducts.any { it.id > lastId }
             mainHandler.post {
-                callback(result)
+                onSuccess(result)
             }
         }.start()
     }

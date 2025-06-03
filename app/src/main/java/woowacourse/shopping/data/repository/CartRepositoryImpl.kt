@@ -18,33 +18,32 @@ class CartRepositoryImpl(
     private val loadItemCount = 5
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    override fun fetchCartProducts(page: Int, callback: (List<CartProduct>) -> Unit) {
+    override fun fetchCartProducts(page: Int, onSuccess: (List<CartProduct>) -> Unit) {
         Thread {
             val offset = (page - 1) * loadItemCount
             val result = cartDao.fetchPagedCart(loadItemCount, offset)
                 .mapNotNull { it.toDomain(productDao) }
 
-            mainHandler.post {
-                callback(result)
-            }
+                onSuccess(result)
+
         }.start()
     }
 
-    override fun fetchAllProduct(callback: (List<CartProduct>) -> Unit) {
+    override fun fetchAllProduct(onSuccess: (List<CartProduct>) -> Unit) {
         Thread {
             val result = cartDao.getAll().mapNotNull { it.toDomain(productDao) }
-            mainHandler.post {
-                callback(result)
-            }
+
+            onSuccess(result)
+
         }.start()
     }
 
-    override fun fetchMaxPageCount(callback: (Int) -> Unit) {
+    override fun fetchMaxPageCount(onSuccess: (Int) -> Unit) {
         Thread {
             val total = cartDao.getTotalCount()
             val pageCount = (total + loadItemCount - 1) / loadItemCount
             mainHandler.post {
-                callback(pageCount)
+                onSuccess(pageCount)
             }
         }.start()
     }
