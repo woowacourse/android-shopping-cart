@@ -49,12 +49,17 @@ class GoodsViewModel(
         loadHistories()
         loadCarts()
         _items.addSource(histories) { updateHistories() }
-        _items.addSource(carts) { updateCarts() }
+        _items.addSource(carts) { updateCarts(page) }
     }
 
     fun addPage() {
-        page++
-        updateCarts()
+        val nextPage = page + 1
+        val newProducts = getProducts(nextPage)
+
+        if (newProducts.isNotEmpty()) {
+            updateCarts(nextPage)
+            page = nextPage
+        }
     }
 
     fun insertToCart(cart: Cart) {
@@ -155,7 +160,7 @@ class GoodsViewModel(
         _items.value = updatedItems
     }
 
-    private fun updateCarts() {
+    private fun updateCarts(page: Int) {
         val currentItems = _items.value.orEmpty()
         val recentItem = currentItems.find { it is GoodsItem.Recent } as? GoodsItem.Recent
         val newProducts =
@@ -170,7 +175,7 @@ class GoodsViewModel(
         updatedItems.addAll(newProducts)
         _items.value = currentItems + updatedItems
 
-        val total = newProducts.sumOf { it.cart.quantity }
+        val total = (currentItems + updatedItems).filterIsInstance<GoodsItem.Product>().sumOf { it.cart.quantity }
         _totalQuantity.value = total
         _hasNextPage.value = (page + 1) * PAGE_SIZE < dummyGoods.size
     }
