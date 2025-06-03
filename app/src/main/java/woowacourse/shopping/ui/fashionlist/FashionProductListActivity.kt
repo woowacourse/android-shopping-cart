@@ -38,7 +38,6 @@ class FashionProductListActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
-        viewModel.loadRecentProducts()
         initViews()
         initObserver()
     }
@@ -74,7 +73,6 @@ class FashionProductListActivity : AppCompatActivity() {
                 viewModel, productClickListener =
                     object : ProductClickListener {
                         override fun onClick(product: Product) {
-                            viewModel.addRecentProduct(product.id)
                             val intent =
                                 ProductDetailActivity.newIntent(
                                     this@FashionProductListActivity,
@@ -94,13 +92,8 @@ class FashionProductListActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.products.observe(this) { products ->
-            fashionProductListAdapter.update(products)
-        }
-
-        viewModel.cartItems.observe(this) { cartItems ->
-            val cartMap = cartItems.associateBy { it.id }
-            fashionProductListAdapter.updateCartItems(cartMap)
+        viewModel.productsUiState.observe(this) { uiStates ->
+            fashionProductListAdapter.update(uiStates)
         }
     }
 

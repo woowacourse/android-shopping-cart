@@ -9,20 +9,18 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentLayoutBinding
 import woowacourse.shopping.databinding.LoadMoreItemBinding
 import woowacourse.shopping.databinding.ProductItemBinding
-import woowacourse.shopping.domain.product.CartItem
 
 class FashionProductListAdapter(
     private val viewModel: ProductListViewModel,
     private val productClickListener: ProductClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<ProductListViewType> = emptyList()
-    private var cartItemsMap: Map<Long, CartItem> = emptyMap()
 
     override fun getItemViewType(position: Int): Int {
-        val item = viewModel.products.value?.get(position) ?: throw IllegalArgumentException("")
+        val item = viewModel.productsUiState.value?.get(position) ?: throw IllegalArgumentException("")
         return when (item) {
-            is ProductListViewType.FashionProductItemType -> R.layout.product_item
-            is ProductListViewType.LoadMoreType -> R.layout.load_more_item
+            is ProductListViewType.FashionProductItem -> R.layout.product_item
+            ProductListViewType.LoadMore -> R.layout.load_more_item
             is ProductListViewType.RecentProducts -> R.layout.item_recent_layout
         }
     }
@@ -58,28 +56,21 @@ class FashionProductListAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val item = viewModel.products.value?.get(position) ?: throw IllegalArgumentException("")
+        val item = viewModel.productsUiState.value?.get(position) ?: throw IllegalArgumentException("")
         when (holder) {
             is FashionProductItemViewHolder -> {
-                val product = item as ProductListViewType.FashionProductItemType
-                val cartItem = cartItemsMap[item.product.id]
-                holder.bind(product, cartItem)
+                holder.bind(item as ProductListViewType.FashionProductItem)
             }
             is RecentProductLayoutViewHolder -> holder.bind((item as ProductListViewType.RecentProducts).products)
         }
     }
 
-    override fun getItemCount() = viewModel.products.value?.size ?: throw IllegalArgumentException("")
+    override fun getItemCount() = viewModel.productsUiState.value?.size ?: throw IllegalArgumentException("")
 
     @SuppressLint("NotifyDataSetChanged")
-    fun update(it: List<ProductListViewType>?) {
-        items = it ?: throw IllegalArgumentException("")
-        notifyDataSetChanged()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateCartItems(cartMap: Map<Long, CartItem>) {
-        this.cartItemsMap = cartMap
+    fun update(uiStates: List<ProductListViewType>) {
+        this.items = uiStates
         notifyDataSetChanged()
     }
 }
+
