@@ -6,25 +6,62 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.product.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.model.cart.CartItem" />
+
+        <variable
+            name="productEventListener"
+            type="woowacourse.shopping.view.products.ProductEventListener" />
+
+        <variable
+            name="isSelectorVisible"
+            type="java.lang.Boolean" />
+
+        <import type="android.view.View" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btn_selected_product"
-        android:clickable="true"
+        android:onClick="@{()->productEventListener.onProductClick(cartItem)}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/product_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@null"
-            app:imageUrl="@{product.imageUrl}"
-            app:layout_constraintDimensionRatio="1:1"
             android:scaleType="centerCrop"
+            app:imageUrl="@{cartItem.product.imageUrl}"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_quantity_select"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/background_white_round"
+            android:contentDescription="@null"
+            android:onClick="@{()->productEventListener.onOpenQuantitySelectClick(cartItem)}"
+            android:visibility="@{isSelectorVisible ? View.GONE: View.VISIBLE}"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image" />
+
+        <include
+            android:id="@+id/view_quantity_select"
+            layout="@layout/item_product_quantity_selector"
+            android:visibility="@{isSelectorVisible || cartItem.quantity > 1 ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            app:layout_constraintStart_toStartOf="@id/product_image" />
 
 
         <TextView
@@ -35,7 +72,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="@{product.title}"
+            android:text="@{cartItem.product.title}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -45,7 +82,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price_format,product.price)}"
+            android:text="@{String.format(@string/product_price_format,cartItem.product.price)}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/product_title"
             app:layout_constraintStart_toStartOf="@id/product_title"

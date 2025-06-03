@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -22,9 +25,9 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = cartViewModel
         initRecyclerView()
-        observeLoadedItems()
-        observeProducts()
-        setButtonsClickListener()
+        observeLoadedProducts()
+        observeFinishCartButton()
+        cartViewModel.observeToastMessage(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -33,39 +36,46 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        cartViewModel.updateQuantity()
+    }
+
     private fun initRecyclerView() {
         adapter =
-            CartAdapter(onProductRemoveClickListener = { product ->
-                cartViewModel.removeToCart(
-                    product,
-                )
-            })
+            CartAdapter(
+                onProductRemoveClickListener = { cartItem ->
+                    cartViewModel.removeFromCart(
+                        cartItem,
+                    )
+                },
+                quantitySelectButtonListener =
+                    object : QuantitySelectButtonListener {
+                        override fun increase(productId: Long) {
+                            cartViewModel.increaseQuantity(productId)
+                        }
+
+                        override fun decrease(productId: Long) {
+                            cartViewModel.decreaseQuantity(productId)
+                        }
+                    },
+            )
         binding.rvProductsInCart.adapter = adapter
     }
 
-    private fun setButtonsClickListener() {
-        binding.backImageBtn.setOnClickListener {
+    private fun observeFinishCartButton() {
+        cartViewModel.finishCart.observe(this) {
             finish()
         }
-
-        binding.btnPreviousPage.setOnClickListener {
-            cartViewModel.loadPreviousPage()
-        }
-
-        binding.btnNextPage.setOnClickListener {
-            cartViewModel.loadNextPage()
-        }
     }
 
-    private fun observeProducts() {
-        cartViewModel.products.observe(this) {
+    private fun observeLoadedProducts() {
+        cartViewModel.cartItems.observe(this) {
             adapter.updateProductsView(it)
         }
     }
 
-    private fun observeLoadedItems() {
-        cartViewModel.loadedProducts.observe(this) {
-            adapter.updateProductsView(it)
-        }
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

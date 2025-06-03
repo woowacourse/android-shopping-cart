@@ -7,6 +7,8 @@
             name="viewModel"
             type="woowacourse.shopping.view.products.ProductsViewModel" />
 
+        <import type="android.view.View" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,6 +30,21 @@
             app:title="Shopping"
             app:titleTextColor="@color/white">
 
+            <TextView
+                android:id="@+id/tv_cart_item_count"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/background_aqua_green_round"
+                android:gravity="center"
+                android:text="@{String.valueOf(viewModel.cartItemCount)}"
+                android:visibility="@{(viewModel.cartItemCount==0) ? View.GONE : View.VISIBLE}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="2" />
+
             <ImageButton
                 android:id="@+id/cart_image_btn"
                 android:layout_width="wrap_content"
@@ -35,22 +52,63 @@
                 android:layout_gravity="end"
                 android:backgroundTint="@android:color/transparent"
                 android:contentDescription="@null"
+                android:onClick="@{() -> viewModel.onNavigateToCartClicked()}"
                 android:src="@drawable/ic_cart" />
 
 
         </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/ll_recent_products"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="0.9"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/products_toolbar"
+            app:layout_constraintBottom_toTopOf="@id/rv_products"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_product_text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_recent_product">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/gray_7"
+            app:layout_constraintTop_toBottomOf="@id/ll_recent_products"
+            app:layout_constraintBottom_toTopOf="@id/rv_products"
+            android:layout_marginBottom="20dp" />
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layout_constraintVertical_weight="2.1"
             android:padding="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/btn_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/products_toolbar"
+            app:layout_constraintTop_toBottomOf="@id/ll_recent_products"
             app:spanCount="2"
             tools:listitem="@layout/item_product">
 
@@ -61,12 +119,12 @@
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_load_more"
-            app:visibility="@{viewModel.isLoadMoreButtonVisible}"
             android:onClick="@{() -> viewModel.loadPage()}"
+            android:text="@string/button_load_more"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:visibility="@{viewModel.isLoadMoreButtonVisible}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,4 +7,7 @@
     <string name="add_to_cart_message">"장바구니에 담겼습니다"</string>
     <string name="price_text">가격</string>
     <string name="cart">Cart</string>
+    <string name="recent_product_text">최근 본 상품</string>
+    <string name="last_product_text">마지막으로 본 상품</string>
+    <string name="fail_access_data_message">데이터 접근에 실패했습니다.</string>
 </resources>

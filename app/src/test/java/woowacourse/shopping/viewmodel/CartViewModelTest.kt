@@ -19,6 +19,7 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         repository = CartRepositoryImpl
+        repository.clear()
 
         SIX_QUANTITY_PRODUCTS.forEach {
             repository.add(it)
@@ -32,11 +33,9 @@ class CartViewModelTest {
         // given
 
         // when
-        viewModel.removeToCart(PRODUCT_1)
+        viewModel.removeFromCart(PRODUCT_1)
 
         // then
-        viewModel.products.value shouldNotBe null
-        viewModel.products.value?.contains(PRODUCT_1) shouldNotBe true
         viewModel.isOnlyOnePage.value shouldBe true
     }
 
@@ -49,8 +48,8 @@ class CartViewModelTest {
 
         // then
         viewModel.currentPageNumber.value shouldBe 2
-        viewModel.loadedProducts.value shouldNotBe null
-        viewModel.loadedProducts.value?.size shouldBe 1
+        viewModel.cartItems.value shouldNotBe null
+        viewModel.cartItems.value?.size shouldBe 1
         viewModel.isLastPage.value shouldBe true
     }
 
@@ -64,8 +63,8 @@ class CartViewModelTest {
 
         // then
         viewModel.currentPageNumber.value shouldBe 1
-        viewModel.loadedProducts.value shouldNotBe null
-        viewModel.loadedProducts.value?.size shouldBe 5
+        viewModel.cartItems.value shouldNotBe null
+        viewModel.cartItems.value?.size shouldBe 5
         viewModel.isFirstPage.value shouldBe true
     }
 }

@@ -16,6 +16,8 @@ fun setImageUrl(
     Glide
         .with(imageView.context)
         .load(imageUrl)
+        .placeholder(R.drawable.hamster)
+        .error(R.drawable.error_image)
         .into(imageView)
 }
 

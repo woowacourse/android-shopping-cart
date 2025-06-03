@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.TOTAL_PRODUCTS
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.products.ProductRepository
 import woowacourse.shopping.data.products.ProductRepositoryImpl
 import woowacourse.shopping.view.products.ProductsViewModel
@@ -17,7 +18,7 @@ class ProductsViewModelTest {
     @BeforeEach
     fun setUp() {
         repository = ProductRepositoryImpl()
-        viewModel = ProductsViewModel(repository)
+        viewModel = ProductsViewModel(repository, CartRepositoryImpl)
     }
 
     @Test

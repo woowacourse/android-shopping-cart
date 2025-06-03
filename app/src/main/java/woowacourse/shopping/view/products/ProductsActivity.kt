@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.products
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,15 +8,19 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.view.recentproduct.RecentProductsAdapter
 
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
-    private lateinit var adapter: ProductsAdapter
+    private lateinit var productsAdapter: ProductsAdapter
+    private lateinit var recentProductsAdapter: RecentProductsAdapter
     private val productsViewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +28,12 @@ class ProductsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
         binding.viewModel = productsViewModel
         binding.lifecycleOwner = this
-        initRecyclerView()
+        initRecentProductsRecyclerView()
+        initProductsRecyclerView()
+        observeRecentProductsView()
         observeProductsView()
-        setCartButtonClickListener()
+        observeCartButton()
+        productsViewModel.observeToastMessage(this)
         setupScrollListenerForMoreButton()
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -35,6 +41,16 @@ class ProductsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        productsViewModel.reloadPage()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        productsViewModel.updateQuantity()
     }
 
     private fun setupScrollListenerForMoreButton() {
@@ -45,26 +61,70 @@ class ProductsActivity : AppCompatActivity() {
         )
     }
 
-    private fun initRecyclerView() {
-        adapter = ProductsAdapter { product -> navigateToProductDetail(product) }
-        binding.rvProducts.adapter = adapter
+    private fun initProductsRecyclerView() {
+        productsAdapter =
+            ProductsAdapter(
+                productEventListener =
+                    object : ProductEventListener {
+                        override fun onProductClick(item: CartItem) {
+                            navigateToProductDetail(item)
+                            productsViewModel.addOrUpdateRecentProduct(item)
+                        }
+
+                        override fun onOpenQuantitySelectClick(item: CartItem) {
+                            productsViewModel.openQuantitySelectAndAddToCart(item)
+                            productsAdapter.notifyQuantitySelectViewChanged(item.product.id)
+                        }
+                    },
+                quantitySelectButtonListener =
+                    object : QuantitySelectButtonListener {
+                        override fun increase(productId: Long) {
+                            productsViewModel.increaseQuantity(productId)
+                        }
+
+                        override fun decrease(productId: Long) {
+                            productsViewModel.decreaseQuantity(productId)
+                        }
+                    },
+            )
+
+        binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
+    }
+
+    private fun initRecentProductsRecyclerView() {
+        recentProductsAdapter =
+            RecentProductsAdapter(recentProductClickListener = {
+                navigateToProductDetail(it)
+            })
+        binding.rvRecentProduct.adapter = recentProductsAdapter
+        binding.rvRecentProduct.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
 
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
-            adapter.updateProductsView(list)
+            productsAdapter.notifyProductsChanged(list)
         }
     }
 
-    private fun setCartButtonClickListener() {
-        binding.cartImageBtn.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
+    private fun observeRecentProductsView() {
+        productsViewModel.recentProducts.observe(this) { recentProducts ->
+            recentProductsAdapter.updateRecentProductsView(recentProducts)
         }
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.getIntent(this, product)
+    private fun observeCartButton() {
+        productsViewModel.navigateToCart.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                val intent = CartActivity.getIntent(this)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun navigateToProductDetail(cartItem: CartItem) {
+        val intent = ProductDetailActivity.getIntent(this, cartItem)
         startActivity(intent)
     }
 

@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.data.recentProducts
 
 import woowacourse.shopping.model.cart.CartItem
 
-interface CartRepository {
+interface RecentProductsRepository {
     fun getAll(callback: (Result<List<CartItem>>) -> Unit)
 
     fun add(
@@ -15,22 +15,16 @@ interface CartRepository {
         callback: (Result<Unit>) -> Unit,
     )
 
+    fun getSecondMostRecentProduct(callback: (Result<CartItem>) -> Unit)
+
     fun update(
         productId: Long,
-        quantityIncrease: Int,
+        quantity: Int,
         callback: (Result<Unit>) -> Unit,
     )
 
-    fun fetchProducts(
-        offset: Int,
-        limit: Int,
-        callback: (Result<List<CartItem>>) -> Unit,
-    )
-
-    fun clear()
-
-    fun findQuantityById(
+    fun findRecentProductById(
         productId: Long,
-        callback: (Result<Int>) -> Unit,
+        callback: (Result<CartItem>) -> Unit,
     )
 }

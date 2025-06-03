@@ -12,17 +12,17 @@ class CartRepositoryTest {
     @BeforeEach
     fun setUp() {
         cartRepository = CartRepositoryImpl
+        cartRepository.clear()
     }
 
     @Test
     fun `선택한 상품을 저장할 수 있다`() {
         // given
-        cartRepository.products.clear()
         cartRepository.add(PRODUCT_1)
         cartRepository.add(PRODUCT_2)
 
         // when
-        val result = cartRepository.products
+        val result = cartRepository.getAll()
 
         // then
         result shouldBe listOf(PRODUCT_1, PRODUCT_2)
@@ -31,13 +31,12 @@ class CartRepositoryTest {
     @Test
     fun `선택한 상품을 삭제할 수 있다`() {
         // given
-        cartRepository.products.clear()
         cartRepository.add(PRODUCT_1)
         cartRepository.add(PRODUCT_2)
         cartRepository.remove(PRODUCT_1)
 
         // when
-        val result = cartRepository.products
+        val result = cartRepository.getAll()
 
         // then
         result shouldBe listOf(PRODUCT_2)

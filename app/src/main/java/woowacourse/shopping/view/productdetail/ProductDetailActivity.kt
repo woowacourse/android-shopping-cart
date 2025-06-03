@@ -3,32 +3,44 @@ package woowacourse.shopping.view.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.intent.getSerializableExtraData
+import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val productDetailViewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val intentCartItemData by lazy {
+        intent.getSerializableExtraData<CartItem>(CART_ITEM_DATA_KEY)
+            ?: throw IllegalArgumentException()
+    }
+    private val productDetailViewModel: ProductDetailViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ProductDetailViewModel.Companion.Factory(intentCartItemData.product.id),
+        )[ProductDetailViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         binding.viewModel = productDetailViewModel
-
-        val intentProductData = intent.getSerializableExtraData<Product>(PRODUCT_DATA_KEY) ?: return
-        binding.product = intentProductData
-
+        binding.lifecycleOwner = this
+        productDetailViewModel.setLastProductTitle()
+        setQuantitySelector()
         setCloseButtonClickListener()
+        observeRecentProductVisibility()
+        productDetailViewModel.observeToastMessage(this)
         observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -37,10 +49,27 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setQuantitySelector() {
+        binding.quantitySelector.productId = intentCartItemData.product.id
+        binding.quantitySelector.quantitySelectButtonListener =
+            object : QuantitySelectButtonListener {
+                override fun increase(productId: Long) {
+                    productDetailViewModel.increaseQuantity(productId)
+                }
+
+                override fun decrease(productId: Long) {
+                    productDetailViewModel.decreaseQuantity(productId)
+                }
+            }
+        observeSelectedProductQuantity()
+    }
+
     private fun observeAddToCart() {
         productDetailViewModel.addToCart.observe(this) {
-            showAddToCartToastMessage()
-            finish()
+            it.getContentIfNotHandled()?.let {
+                showAddToCartToastMessage()
+                finish()
+            }
         }
     }
 
@@ -54,15 +83,27 @@ class ProductDetailActivity : AppCompatActivity() {
         Toast.makeText(this, getString(R.string.add_to_cart_message), Toast.LENGTH_SHORT).show()
     }
 
+    private fun observeRecentProductVisibility() {
+        productDetailViewModel.lastProductVisibility.observe(this) { visible ->
+            binding.recentProductInfo.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
+    private fun observeSelectedProductQuantity() {
+        productDetailViewModel.selectedProduct.observe(this) { selectedProduct ->
+            binding.quantitySelector.quantity = selectedProduct.quantity
+        }
+    }
+
     companion object {
-        private const val PRODUCT_DATA_KEY = "product"
+        private const val CART_ITEM_DATA_KEY = "cartItem"
 
         fun getIntent(
             context: Context,
-            product: Product,
+            cartItem: CartItem,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PRODUCT_DATA_KEY, product)
+                putExtra(CART_ITEM_DATA_KEY, cartItem)
             }
     }
 }

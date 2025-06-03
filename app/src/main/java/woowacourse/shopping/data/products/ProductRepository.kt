@@ -1,12 +1,14 @@
 package woowacourse.shopping.data.products
 
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 interface ProductRepository {
-    val dummyProducts: List<Product>
+    fun getAll(): List<CartItem>
+
+    fun getAllSize(): Int
 
     fun fetchProducts(
         offset: Int,
         limit: Int,
-    ): List<Product>
+    ): List<CartItem>
 }
