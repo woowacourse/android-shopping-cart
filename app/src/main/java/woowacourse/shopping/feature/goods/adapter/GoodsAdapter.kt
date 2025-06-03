@@ -24,7 +24,7 @@ class GoodsAdapter(
                     newItem: GoodsItem,
                 ): Boolean =
                     when {
-                        oldItem is GoodsItem.History && newItem is GoodsItem.History ->
+                        oldItem is GoodsItem.Recent && newItem is GoodsItem.Recent ->
                             oldItem.histories == newItem.histories
                         oldItem is GoodsItem.Product && newItem is GoodsItem.Product ->
                             oldItem.cart.goods.id == newItem.cart.goods.id
@@ -57,7 +57,7 @@ class GoodsAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is GoodsItem.History -> ItemViewType.HISTORY.type
+            is GoodsItem.Recent -> ItemViewType.HISTORY.type
             is GoodsItem.Product -> ItemViewType.GOODS.type
             is GoodsItem.LoadMore -> ItemViewType.LOAD_MORE.type
         }
@@ -88,7 +88,7 @@ class GoodsAdapter(
         position: Int,
     ) {
         when (val item = getItem(position)) {
-            is GoodsItem.History -> {
+            is GoodsItem.Recent -> {
                 if (holder is HistoryContainerViewHolder) {
                     holder.bind(item.histories)
                 }

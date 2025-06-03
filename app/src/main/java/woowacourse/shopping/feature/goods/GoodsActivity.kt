@@ -15,6 +15,7 @@ import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
@@ -22,7 +23,6 @@ import woowacourse.shopping.feature.goods.adapter.GoodsSpanSizeLookup
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.feature.model.State
-import woowacourse.shopping.util.toUi
 
 class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
@@ -118,8 +118,8 @@ class GoodsActivity : AppCompatActivity() {
                         navigate(cart)
                     }
 
-                    override fun onClickHistory(cart: Cart) {
-                        viewModel.findCartFromHistory(cart)
+                    override fun onClickHistory(history: History) {
+                        viewModel.findCartFromHistory(history)
                     }
 
                     override fun insertToCart(cart: Cart) {
@@ -160,7 +160,7 @@ class GoodsActivity : AppCompatActivity() {
     }
 
     private fun navigate(cart: Cart) {
-        val intent = GoodsDetailsActivity.newIntent(this, cart.toUi())
+        val intent = GoodsDetailsActivity.newIntent(this, cart.goods.id)
         activityResultLauncher.launch(intent)
     }
 

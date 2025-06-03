@@ -11,6 +11,7 @@ import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.model.GoodsItem
 import woowacourse.shopping.feature.model.State
 import woowacourse.shopping.util.Event
@@ -26,7 +27,7 @@ class GoodsViewModel(
     private val _items = MediatorLiveData<List<GoodsItem>>()
     val items: LiveData<List<GoodsItem>> get() = _items
 
-    private val histories = MutableLiveData<List<Cart>>()
+    private val histories = MutableLiveData<List<History>>()
 
     private val carts = MutableLiveData<List<Cart>>()
 
@@ -80,20 +81,17 @@ class GoodsViewModel(
             val cartsOnly = currentItems.filterIsInstance<GoodsItem.Product>()
             val updatedItems = mutableListOf<GoodsItem>()
             if (historiesList.isNotEmpty()) {
-                updatedItems.add(GoodsItem.History(historiesList))
+                updatedItems.add(GoodsItem.Recent(historiesList))
             }
             updatedItems.addAll(cartsOnly)
             _items.postValue(updatedItems)
         }
     }
 
-    fun findCartFromHistory(cart: Cart) {
-        val cart =
-            _items.value
-                ?.filterIsInstance<Cart>()
-                ?.find { it.goods.id == cart.goods.id }
-        if (cart != null) {
-            _navigateToCart.setValue(cart)
+    fun findCartFromHistory(history: History) {
+        val product = _items.value?.filterIsInstance<GoodsItem.Product>()?.find { it.cart.goods.id == history.id }
+        if (product != null) {
+            _navigateToCart.setValue(product.cart)
         }
     }
 
@@ -123,7 +121,7 @@ class GoodsViewModel(
     ) {
         val updatedItems =
             _items.value
-                ?.filterIsInstance<GoodsItem.History>()
+                ?.filterIsInstance<GoodsItem.Recent>()
                 ?.plus(
                     _items.value
                         ?.filterIsInstance<GoodsItem.Product>()
@@ -147,7 +145,7 @@ class GoodsViewModel(
 
     private fun updateCombinedItems() {
         val previousItems = _items.value.orEmpty()
-        val existingHistory = previousItems.find { it is GoodsItem.History } as? GoodsItem.History
+        val existingRecent = previousItems.find { it is GoodsItem.Recent } as? GoodsItem.Recent
         val existingProducts = previousItems.filterIsInstance<GoodsItem.Product>()
 
         val newProducts =
@@ -158,10 +156,10 @@ class GoodsViewModel(
 
         val combinedItems =
             buildList {
-                if (existingHistory != null) {
-                    add(existingHistory)
+                if (existingRecent != null) {
+                    add(existingRecent)
                 } else if (page == INITIAL_PAGE) {
-                    histories.value?.let { if (it.isNotEmpty()) add(GoodsItem.History(it)) }
+                    histories.value?.let { if (it.isNotEmpty()) add(GoodsItem.Recent(it)) }
                 }
                 addAll(existingProducts)
                 addAll(newProducts)
