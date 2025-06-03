@@ -20,6 +20,16 @@ class CartRepositoryImpl(
         }
     }
 
+    override fun getCartById(
+        cartId: Int,
+        callback: (Cart?) -> Unit,
+    ) {
+        thread {
+            val cart = dao.getCartById(cartId)?.toDomain()
+            callback(cart)
+        }
+    }
+
     override fun insert(cart: Cart) {
         thread {
             val existing = dao.findById(cart.goods.id)

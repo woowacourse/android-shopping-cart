@@ -13,6 +13,9 @@ interface CartDao {
     @Query("SELECT * FROM cart")
     fun getAll(): List<CartEntity>
 
+    @Query("SELECT * FROM cart WHERE id = :cartId LIMIT 1")
+    fun getCartById(cartId: Int): CartEntity?
+
     @Insert
     fun insertAll(vararg cartEntities: CartEntity)
 

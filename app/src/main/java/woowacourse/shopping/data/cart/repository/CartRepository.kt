@@ -7,6 +7,11 @@ import woowacourse.shopping.domain.model.Carts
 interface CartRepository {
     fun getAll(callback: (Carts) -> Unit)
 
+    fun getCartById(
+        cartId: Int,
+        callback: (Cart?) -> Unit,
+    )
+
     fun insert(cart: Cart)
 
     fun insertAll(cart: Cart)
