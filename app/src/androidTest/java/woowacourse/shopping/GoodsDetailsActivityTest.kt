@@ -11,7 +11,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
-import woowacourse.shopping.feature.model.CartUiModel
 
 @Suppress("ktlint:standard:function-naming")
 class GoodsDetailsActivityTest {
