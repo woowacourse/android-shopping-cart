@@ -21,6 +21,8 @@ class ProductListViewModel(
 
     private var pageNumber = 0
 
+    private var cartItems: List<CartItem> = emptyList()
+
     private val _navigateToDetail = MutableLiveData<Product>()
     val navigateToDetail: LiveData<Product> = _navigateToDetail
 
@@ -30,18 +32,26 @@ class ProductListViewModel(
 
     fun loadProducts() {
         val products = productRepository.getProductPagedItems(pageNumber++, 20)
-        val current = _productsUiState.value?.toMutableList() ?: mutableListOf()
 
-        val newUiStates = products.map { product ->
-            ProductListViewType.FashionProductItem(
-                product = product,
-                cartItem = CartItem(product.id, product, 0),
-            )
+        cartRepository.getAll {
+            cartItems = it
+
+            val cartMap = cartItems.associateBy { it.id }
+
+            val newUiStates = products.map { product ->
+                ProductListViewType.FashionProductItem(
+                    product,
+                    cartMap[product.id],
+                    cartMap[product.id] == null,
+                )
+            }
+
+            val current = _productsUiState.value?.toMutableList() ?: mutableListOf()
+            current.addAll(newUiStates)
+            _productsUiState.postValue(current)
         }
-
-        current.addAll(newUiStates)
-        _productsUiState.value = current
     }
+
 
     fun onFloatingButtonClick(product: Product) {
         updateUi(product.id) { state ->
@@ -59,9 +69,13 @@ class ProductListViewModel(
         loadProducts()
     }
 
-    private fun updateUi(productId: Long, transform: (ProductListViewType.FashionProductItem) -> ProductListViewType.FashionProductItem) {
+    private fun updateUi(
+        productId: Long,
+        transform: (ProductListViewType.FashionProductItem) -> ProductListViewType.FashionProductItem
+    ) {
         val current = _productsUiState.value?.toMutableList() ?: return
-        val index = current.indexOfFirst { it is ProductListViewType.FashionProductItem && it.product.id == productId }
+        val index =
+            current.indexOfFirst { it is ProductListViewType.FashionProductItem && it.product.id == productId }
         if (index == -1) return
 
         val updated = transform(current[index] as ProductListViewType.FashionProductItem)
@@ -92,3 +106,4 @@ class ProductListViewModel(
         }
     }
 }
+
