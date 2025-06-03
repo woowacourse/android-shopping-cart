@@ -12,11 +12,15 @@
 
         <variable
             name="decrease"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
 
         <variable
             name="increase"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_btn_product_count_minus"
-            android:onClick="@{() -> decrease.invoke()}"
+            android:onClick="@{() -> decrease.invoke(cartItem)}"
             android:text="@string/product_count_minus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_btn_product_count_plus"
-            android:onClick="@{() -> increase.invoke()}"
+            android:onClick="@{() -> increase.invoke(cartItem)}"
             android:text="@string/product_count_plus"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_count_minus"
             app:layout_constraintStart_toEndOf="@id/tv_product_count"

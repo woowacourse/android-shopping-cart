@@ -23,11 +23,11 @@
 
         <variable
             name="decrease"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
 
         <variable
             name="increase"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,6 +82,7 @@
             layout="@layout/component_product_count_no_vm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:cartItem="@{cartItem}"
             app:decrease="@{decrease}"
             app:increase="@{increase}"
             app:layout_constraintEnd_toEndOf="parent"
