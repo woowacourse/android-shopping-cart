@@ -26,6 +26,14 @@ class CartRepository(
         }
     }
 
+    fun getAll(callback: (List<CartItem>) -> Unit) {
+        thread {
+            val cartItemEntities = cartDao.getAll()
+            val cartItems = cartItemEntities.map { it.toDomain(productDao.findById(it.id) ?: return@thread) }
+            callback(cartItems)
+        }
+    }
+
     fun upsert(cartItem: CartItem, callback: (CartItem) -> Unit) {
         thread {
             cartDao.upsert(CartItemEntity(cartItem.id, cartItem.quantity))

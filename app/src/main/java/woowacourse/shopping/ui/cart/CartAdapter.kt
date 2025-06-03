@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.CartItemBinding
 import woowacourse.shopping.domain.product.CartItem
-import woowacourse.shopping.ui.fashionlist.ProductListViewModel
 
 class CartAdapter(
-    private var items: List<CartItem>,
     private val viewModel: CartViewModel,
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    private var items: List<CartItem> = emptyList()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

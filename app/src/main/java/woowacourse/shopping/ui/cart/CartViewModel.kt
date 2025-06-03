@@ -21,6 +21,7 @@ class CartViewModel(
 
     init {
         cartRepository.getSize { size = it }
+        update()
     }
 
     fun isLastPage(): Boolean {

@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.product.Product
 sealed class ProductListViewType {
     data class FashionProductItem(
         val product: Product,
-        val cartItem: CartItem?,
+        val cartItem: CartItem? = null,
         val isButtonVisible: Boolean = true,
     ) : ProductListViewType()
 

@@ -49,7 +49,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         cartAdapter =
-            CartAdapter(emptyList(), viewModel)
+            CartAdapter(viewModel)
 
         binding.rvCart.adapter = cartAdapter
         binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }
@@ -57,9 +57,16 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initObserve() {
-
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.cartItems.observe(this) {
+            cartAdapter.updateItem(it)
+        }
+
+        viewModel.pageNumber.observe(this) {
+            updateButtonTint(it)
+        }
     }
 
     private fun updateButtonTint(it: Int?) {
@@ -79,7 +86,6 @@ class CartActivity : AppCompatActivity() {
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
