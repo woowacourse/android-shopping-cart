@@ -1,4 +1,4 @@
-package woowacourse.shopping.productDetail
+package woowacourse.shopping.view.productDetail
 
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario

@@ -1,11 +1,10 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.product.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.product.remote.MockProductServer
 
 class MockProductServerTest {
     private val mockProductServer = MockProductServer()
@@ -26,8 +25,8 @@ class MockProductServerTest {
         val response = client.newCall(request).execute()
 
         // then:
-        assertThat(response.code).isEqualTo(200)
-        assertThat(response.body?.string()).isEqualTo(
+        Assertions.assertThat(response.code).isEqualTo(200)
+        Assertions.assertThat(response.body?.string()).isEqualTo(
             """
             [
             {
@@ -71,7 +70,7 @@ class MockProductServerTest {
         val response = client.newCall(request).execute()
 
         // then:
-        assertThat(response.code).isEqualTo(404)
+        Assertions.assertThat(response.code).isEqualTo(404)
     }
 
     private fun String.allSpaceTrim(): String = replace("\\s".toRegex(), "")
