@@ -34,9 +34,13 @@ class ProductRepositoryImpl(
         }
     }
 
-    override fun addRecentProduct(product: Product) {
+    override fun addRecentProduct(
+        product: Product,
+        callback: (Product?) -> Unit,
+    ) {
         thread {
             recentProductDao.insert(product.toRecentEntity())
+            callback(product)
         }
     }
 

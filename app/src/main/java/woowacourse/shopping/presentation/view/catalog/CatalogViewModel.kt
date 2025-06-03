@@ -139,7 +139,20 @@ class CatalogViewModel(
         }
     }
 
-    fun increaseCartItem(productId: Long) {
+    fun addRecentProduct(product: ProductUiModel) {
+        productRepository.addRecentProduct(product.toProduct()) {
+            updateRecentProducts()
+        }
+    }
+
+    private fun calculateTotalCartCount() {
+        productRepository.loadCartItems { cartItems ->
+            val totalCount = cartItems?.sumOf { it.amount } ?: 0
+            _totalCartCount.postValue(totalCount)
+        }
+    }
+
+    private fun increaseCartItem(productId: Long) {
         cartRepository.increaseCartItem(productId) { updatedCartItem ->
             updatedCartItem?.let {
                 _itemUpdateEvent.postValue(it.toUiModel())
@@ -148,25 +161,13 @@ class CatalogViewModel(
         }
     }
 
-    fun decreaseCartItem(productId: Long) {
+    private fun decreaseCartItem(productId: Long) {
         cartRepository.decreaseCartItem(productId) { updatedCartItem ->
             updatedCartItem?.let {
                 _itemUpdateEvent.postValue(it.toUiModel())
                 calculateTotalCartCount()
             } ?: _deleteState.postValue(productId)
             calculateTotalCartCount()
-        }
-    }
-
-    fun addRecentProduct(product: ProductUiModel) {
-        productRepository.addRecentProduct(product.toProduct())
-        updateRecentProducts()
-    }
-
-    private fun calculateTotalCartCount() {
-        productRepository.loadCartItems { cartItems ->
-            val totalCount = cartItems?.sumOf { it.amount } ?: 0
-            _totalCartCount.postValue(totalCount)
         }
     }
 

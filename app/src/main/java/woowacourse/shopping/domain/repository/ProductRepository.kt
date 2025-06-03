@@ -12,7 +12,10 @@ interface ProductRepository {
 
     fun loadCartItems(callback: (List<CartItem>?) -> Unit)
 
-    fun addRecentProduct(product: Product)
+    fun addRecentProduct(
+        product: Product,
+        callback: (Product?) -> Unit,
+    )
 
     fun loadRecentProducts(
         limit: Int,
