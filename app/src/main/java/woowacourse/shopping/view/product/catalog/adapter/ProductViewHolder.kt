@@ -4,22 +4,33 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.util.QuantityControlEventHandler
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    eventHandler: EventHandler,
+    private val eventHandler: EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var currentItem: ProductCatalogItem.ProductItem
+
     init {
         binding.handler = eventHandler
+        binding.itemQuantityControl.tvIncrease.setOnClickListener {
+            eventHandler.onQuantityIncreaseClick(currentItem)
+        }
+        binding.itemQuantityControl.tvDecrease.setOnClickListener {
+            eventHandler.onQuantityDecreaseClick(currentItem)
+        }
     }
 
-    fun bind(product: Product) {
-        binding.product = product
+    fun bind(productItem: ProductCatalogItem.ProductItem) {
+        currentItem = productItem
+        binding.productItem = productItem
     }
 
-    interface EventHandler {
-        fun onProductClick(item: Product)
+    interface EventHandler : QuantityControlEventHandler<ProductCatalogItem.ProductItem> {
+        fun onProductClick(item: ProductCatalogItem.ProductItem)
+
+        fun onAddClick(item: ProductCatalogItem.ProductItem)
     }
 
     companion object {

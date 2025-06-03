@@ -3,15 +3,16 @@ package woowacourse.shopping.view.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.cart.ShoppingCartActivity
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.util.getSerializableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -22,13 +23,20 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setUpView()
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
+        val app = application as ShoppingApplication
         viewModel =
             ViewModelProvider(
                 this,
-                ProductDetailViewModelFactory(product, applicationContext),
+                ProductDetailViewModelFactory(
+                    product,
+                    app.cartProductRepository,
+                    app.recentProductRepository,
+                ),
             )[ProductDetailViewModel::class.java]
         initBindings(product)
         initObservers()
+
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun setUpView() {
@@ -42,13 +50,25 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initBindings(product: Product) {
-        binding.product = product
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         binding.handler = viewModel
+        binding.itemQuantityControl.tvIncrease.setOnClickListener {
+            viewModel.onQuantityIncreaseClick(product)
+        }
+        binding.itemQuantityControl.tvDecrease.setOnClickListener {
+            viewModel.onQuantityDecreaseClick(product)
+        }
     }
 
     private fun initObservers() {
-        viewModel.navigateEvent.observe(this) {
-            val intent = ShoppingCartActivity.newIntent(this)
+        viewModel.addToCartEvent.observe(this) {
+            Toast.makeText(this, R.string.message_add_to_cart, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.lastProductClickEvent.observe(this) {
+            val intent = newIntent(this, viewModel.lastViewedProduct.value?.product ?: return@observe)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
     }

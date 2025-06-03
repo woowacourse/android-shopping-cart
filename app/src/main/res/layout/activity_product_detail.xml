@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="viewmodel"
+            type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
 
         <variable
             name="handler"
@@ -32,7 +34,7 @@
                     android:id="@+id/iv_detail_product_image"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    app:imageUrl="@{product.imageUrl}"
+                    app:imageUrl="@{viewmodel.product.imageUrl}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ic_launcher_foreground" />
@@ -43,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@{product.name}"
+                    android:text="@{viewmodel.product.name}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -59,28 +61,65 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_detail_product_name" />
 
                 <TextView
+                    android:id="@+id/tv_detail_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/price"
+                    android:text="@{@string/product_price(viewmodel.totalPrice)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider" />
-
-                <TextView
-                    android:id="@+id/tv_detail_product_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="18dp"
-                    android:text="@{String.format(@string/product_price, product.price)}"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider"
                     tools:text="2,500원" />
+
+                <include
+                    android:id="@+id/item_quantity_control"
+                    layout="@layout/item_quantity_control"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="14dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
+                    app:quantity="@{viewmodel.quantity}" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/style_product_edge"
+                    android:onClick="@{() -> handler.onLastProductClick()}"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp"
+                    app:currentProductId="@{viewmodel.product.id}"
+                    app:lastViewedProduct="@{viewmodel.lastViewedProduct}"
+                    app:layout_constraintTop_toBottomOf="@id/item_quantity_control">
+
+                    <TextView
+                        android:id="@+id/tv_last_product"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/last_product"
+                        android:textColor="@color/primary_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{viewmodel.lastViewedProduct.product.name}"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_last_product"
+                        tools:text="아메리카노" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -91,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary_color"
-            android:onClick="@{() -> handler.onProductAddClick()}"
+            android:onClick="@{() -> handler.onAddToCartClick()}"
             android:paddingVertical="12dp"
             android:text="@string/add_shopping_cart"
             android:textColor="@color/white"

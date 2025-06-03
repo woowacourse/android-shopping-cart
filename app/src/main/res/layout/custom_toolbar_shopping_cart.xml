@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="woowacourse.shopping.view.product.catalog.ProductCatalogViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray"
+        android:paddingHorizontal="10dp">
+
+        <ImageView
+            android:id="@+id/iv_shopping_cart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleX="-1"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_shopping_cart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/style_round_primary"
+            android:gravity="center"
+            android:text="@{viewmodel.totalQuantity.toString()}"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:visibility="@{viewmodel.totalQuantity > 0 ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_shopping_cart"
+            tools:text="0" />
+
+    </FrameLayout>
+
+</layout>

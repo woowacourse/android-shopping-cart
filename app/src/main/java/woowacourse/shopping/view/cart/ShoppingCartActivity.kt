@@ -9,15 +9,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.view.cart.adapter.CartProductAdapter
 
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityShoppingCartBinding.inflate(layoutInflater) }
     private val viewModel by lazy {
+        val app = application as ShoppingApplication
         ViewModelProvider(
             this,
-            ShoppingCartViewModelFactory(applicationContext),
+            ShoppingCartViewModelFactory(app.cartProductRepository),
         )[ShoppingCartViewModel::class.java]
     }
 
@@ -29,6 +31,8 @@ class ShoppingCartActivity : AppCompatActivity() {
         initRecyclerView()
         initBindings()
         initObservers()
+
+        supportActionBar?.title = ACTION_BAR_TITLE
     }
 
     private fun setUpView() {
@@ -44,6 +48,7 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         adapter = CartProductAdapter(eventHandler = viewModel)
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initBindings() {
@@ -60,5 +65,7 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
+
+        private const val ACTION_BAR_TITLE = "Cart"
     }
 }

@@ -1,8 +1,8 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.data.PagedResult
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.model.PagedResult
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class FakeProductRepository : ProductRepository {
     private val fakeProducts =
@@ -15,14 +15,30 @@ class FakeProductRepository : ProductRepository {
             )
         }
 
-    override fun getAll(): List<Product> = fakeProducts
+    override fun getProductById(
+        id: Long,
+        onResult: (Result<Product?>) -> Unit,
+    ) {
+        val result = fakeProducts.find { it.id == id }
+        onResult(Result.success(result))
+    }
+
+    override fun getProductsByIds(
+        ids: List<Long>,
+        onResult: (Result<List<Product>>) -> Unit,
+    ) {
+        val result = ids.mapNotNull { id -> fakeProducts.find { it.id == id } }
+        onResult(Result.success(result))
+    }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product> {
+        onResult: (Result<PagedResult<Product>>) -> Unit,
+    ) {
         val pagedItems = fakeProducts.drop(offset).take(limit)
         val hasNext = offset + pagedItems.size < fakeProducts.size
-        return PagedResult(pagedItems, hasNext)
+        val result = PagedResult(pagedItems, hasNext)
+        onResult(Result.success(result))
     }
 }

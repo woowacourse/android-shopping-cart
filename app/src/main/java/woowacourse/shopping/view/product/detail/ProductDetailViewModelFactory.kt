@@ -1,22 +1,24 @@
 package woowacourse.shopping.view.product.detail
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.cart.LocalCartProductRepository
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModelFactory(
     private val product: Product,
-    private val applicationContext: Context,
+    private val cartProductRepository: CartProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-            val database = ShoppingCartDatabase.getDataBase(applicationContext)
-            val repository = LocalCartProductRepository(database.cartProductDao)
-            return ProductDetailViewModel(product, repository) as T
+            return ProductDetailViewModel(
+                product,
+                cartProductRepository,
+                recentProductRepository,
+            ) as T
         }
         throw IllegalArgumentException()
     }

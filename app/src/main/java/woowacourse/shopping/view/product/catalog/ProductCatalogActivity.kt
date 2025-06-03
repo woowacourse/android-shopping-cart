@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
+import woowacourse.shopping.databinding.CustomToolbarShoppingCartBinding
 import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
@@ -20,9 +22,14 @@ import woowacourse.shopping.view.product.detail.ProductDetailActivity
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
     private val viewModel by lazy {
+        val app = application as ShoppingApplication
         ViewModelProvider(
             this,
-            ProductCatalogViewModelFactory(),
+            ProductCatalogViewModelFactory(
+                app.productRepository,
+                app.cartProductRepository,
+                app.recentProductRepository,
+            ),
         )[ProductCatalogViewModel::class.java]
     }
 
@@ -35,9 +42,23 @@ class ProductCatalogActivity : AppCompatActivity() {
         initObservers()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadCatalog()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_shopping_cart, menu)
+
+        val binding = CustomToolbarShoppingCartBinding.inflate(layoutInflater)
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
+
+        val menuItem = menu.findItem(R.id.shopping_cart)
+        menuItem.actionView = binding.root
+        menuItem.actionView?.setOnClickListener {
+            onOptionsItemSelected(menuItem)
+        }
         return true
     }
 
@@ -67,16 +88,24 @@ class ProductCatalogActivity : AppCompatActivity() {
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
-                    when (ProductCatalogItem.ViewType.entries[productAdapter.getItemViewType(position)]) {
-                        ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
+                    when (
+                        ProductCatalogItem.ViewType.entries[
+                            productAdapter.getItemViewType(
+                                position,
+                            ),
+                        ]
+                    ) {
+                        ProductCatalogItem.ViewType.RECENT_PRODUCT -> GRID_SPAN_COUNT
                         ProductCatalogItem.ViewType.PRODUCT -> 1
+                        ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
                     }
             }
         binding.rvProducts.layoutManager = gridLayoutManager
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initObservers() {
-        viewModel.productItems.observe(this) { value ->
+        viewModel.productCatalogItems.observe(this) { value ->
             productAdapter.updateItems(value)
         }
 
