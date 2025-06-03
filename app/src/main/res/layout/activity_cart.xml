@@ -9,17 +9,6 @@
             name="cartVM"
             type="woowacourse.shopping.view.cart.CartViewModel" />
 
-        <variable
-            name="toPrevious"
-            type="kotlin.jvm.functions.Function0" />
-
-        <variable
-            name="toNext"
-            type="kotlin.jvm.functions.Function0" />
-        
-        <variable
-            name="currentPage"
-            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +73,7 @@
             android:background="@drawable/round_btn_cart_previous"
             android:contentDescription="@null"
             android:enabled="@{cartVM.hasPrevious}"
-            android:onClick="@{()-> toPrevious.invoke()}"
+            android:onClick="@{()-> cartVM.minusPage()}"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_cart_page"
@@ -112,7 +101,7 @@
             android:background="@drawable/round_btn_cart_next"
             android:contentDescription="@null"
             android:enabled="@{cartVM.hasNext}"
-            android:onClick="@{()-> toNext.invoke()}"
+            android:onClick="@{()-> cartVM.plusPage()}"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintEnd_toEndOf="parent"

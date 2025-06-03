@@ -121,10 +121,12 @@ class CartViewModel(
                 _currentPage.value = (_currentPage.value ?: 1) - 1
             }
         }
+        fetchData()
     }
 
     fun plusPage() {
         _currentPage.value = (_currentPage.value ?: 1) + 1
+        fetchData()
     }
 
     fun increaseProductCount(cartItem: CartItem) {

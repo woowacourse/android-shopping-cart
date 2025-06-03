@@ -47,8 +47,6 @@ class CartActivity : AppCompatActivity() {
         binding.apply {
             lifecycleOwner = this@CartActivity
             cartVM = cartViewModel
-            toPrevious = ::navigateToPrevious
-            toNext = ::navigateToNext
         }
     }
 
@@ -78,16 +76,6 @@ class CartActivity : AppCompatActivity() {
         Toast
             .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private fun navigateToPrevious() {
-        cartViewModel.minusPage()
-        cartViewModel.fetchData()
-    }
-
-    private fun navigateToNext() {
-        cartViewModel.plusPage()
-        cartViewModel.fetchData()
     }
 
     companion object {
