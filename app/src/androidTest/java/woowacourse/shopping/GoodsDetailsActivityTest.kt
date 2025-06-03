@@ -10,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 
 @Suppress("ktlint:standard:function-naming")
@@ -18,7 +17,8 @@ class GoodsDetailsActivityTest {
     private lateinit var scenario: ActivityScenario<GoodsDetailsActivity>
 
     private val testGoods =
-        GoodsUiModel(
+        CartUiModel(
+            id = 0,
             name = "테스트 상품",
             price = 10000,
             thumbnailUrl = "",

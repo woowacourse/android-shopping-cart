@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
-import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Carts
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -15,17 +16,24 @@ class CartViewModel(
     private var currentPage: Int = 1
     private val _page = MutableLiveData(currentPage)
     val page: LiveData<Int> get() = _page
-    val cart: LiveData<List<Goods>> =
+    private val _cart = MutableLiveData<Cart>()
+    val cart: LiveData<Cart> get() = _cart
+    val carts: LiveData<Carts> =
         _page.switchMap { pageNum ->
-            getProducts(pageNum)
+            cartRepository.getPage(PAGE_SIZE, (pageNum - 1) * PAGE_SIZE)
         }
-    val totalItemsCount: LiveData<Int> = cartRepository.getAllItemsSize()
+    private val _totalItemsCount = MutableLiveData(0)
+    val totalItemsCount: LiveData<Int> get() = _totalItemsCount
     private val _isLeftPageEnable = MutableLiveData(false)
     val isLeftPageEnable: LiveData<Boolean> get() = _isLeftPageEnable
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
 
-    fun delete(goods: Goods) {
+    init {
+        fetchTotalItemsCount()
+    }
+
+    fun delete(cart: Cart) {
         val total = totalItemsCount.value ?: 0
         val endPage = ((total - 1) / PAGE_SIZE) + 1
 
@@ -34,7 +42,7 @@ class CartViewModel(
             _page.value = currentPage
         }
 
-        cartRepository.delete(goods)
+        cartRepository.deleteAll(cart)
         updatePageButtonStates()
     }
 
@@ -61,7 +69,31 @@ class CartViewModel(
         _showPageButton.value = showButtons
     }
 
-    private fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
+    fun insertToCart(cart: Cart) {
+        _cart.value = cart
+        cartRepository.insert(cart)
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity + 1)
+            _cart.value = updated
+        }
+    }
+
+    fun removeFromCart(cart: Cart) {
+        _cart.value = cart
+        cartRepository.delete(cart)
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity - 1)
+            _cart.value = updated
+        }
+    }
+
+    private fun fetchTotalItemsCount() {
+        cartRepository.getAllItemsSize { count ->
+            _totalItemsCount.postValue(count)
+        }
+    }
 
     companion object {
         private const val PAGE_SIZE = 5

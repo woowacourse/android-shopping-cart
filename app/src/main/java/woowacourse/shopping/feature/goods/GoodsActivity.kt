@@ -4,70 +4,168 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
-import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.feature.ScrollListener
+import woowacourse.shopping.databinding.MenuCartActionViewBinding
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
+import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
+import woowacourse.shopping.feature.goods.adapter.GoodsSpanSizeLookup
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
-import woowacourse.shopping.util.toUi
+import woowacourse.shopping.feature.model.ResultCode
+import woowacourse.shopping.feature.model.State
 
-class GoodsActivity :
-    AppCompatActivity(),
-    GoodsViewHolder.GoodsClickListener {
+class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
-    private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
-    val viewModel: GoodsViewModel by viewModels()
+    private lateinit var adapter: GoodsAdapter
+    private val viewModel: GoodsViewModel by viewModels {
+        (application as ShoppingApplication).goodsFactory
+    }
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGoodsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-
-        binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
 
-        updateMoreButton()
+        setupAdapter()
+        setupRecyclerView()
+        observeViewModel()
+        setupActivityResultLauncher()
+        observeCartInsertResult()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.nav_cart, menu)
-        return super.onCreateOptionsMenu(menu)
+        val menuItem = menu.findItem(R.id.nav_cart)
+        val binding = MenuCartActionViewBinding.inflate(layoutInflater)
+        menuItem.actionView = binding.root
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        binding.root.setOnClickListener {
+            onOptionsItemSelected(menuItem)
+        }
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_cart -> {
                 val intent = Intent(this, CartActivity::class.java)
-                startActivity(intent)
+                activityResultLauncher.launch(intent)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun updateMoreButton() {
-        viewModel.isFullLoaded.observe(this) { isFullLoaded ->
-            binding.rvGoods.clearOnScrollListeners()
-            binding.rvGoods.addOnScrollListener(
-                ScrollListener(
-                    shouldShowButton = { !isFullLoaded },
-                    onVisibilityChange = viewModel::updateMoreButtonVisibility,
-                ),
-            )
+    private fun setupRecyclerView() {
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = GoodsSpanSizeLookup(adapter)
+        binding.rvGoods.layoutManager = gridLayoutManager
+        binding.rvGoods.adapter = adapter
+    }
+
+    private fun observeViewModel() {
+        viewModel.hasNextPage.observe(this) { hasNext ->
+            adapter.setHasNextPage(hasNext)
+        }
+        viewModel.navigateToCart.observe(this) { cart ->
+            navigate(cart)
         }
     }
 
-    private fun navigate(goods: Goods) {
-        val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
-        startActivity(intent)
+    private fun observeCartInsertResult() {
+        viewModel.cartInsertEvent.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { state ->
+                when (state) {
+                    is State.Success ->
+                        Toast
+                            .makeText(
+                                this,
+                                R.string.goods_detail_cart_insert_success_toast_message,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    is State.Failure ->
+                        Toast
+                            .makeText(
+                                this,
+                                R.string.goods_detail_cart_insert_fail_toast_message,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                }
+            }
+        }
     }
 
-    override fun onClickGoods(goods: Goods) {
-        navigate(goods)
+    private fun setupAdapter() {
+        adapter =
+            GoodsAdapter(
+                object : GoodsClickListener {
+                    override fun onClickGoods(cart: Cart) {
+                        navigate(cart)
+                    }
+
+                    override fun onClickHistory(history: History) {
+                        viewModel.findCartFromHistory(history)
+                    }
+
+                    override fun insertToCart(cart: Cart) {
+                        viewModel.insertToCart(cart)
+                    }
+
+                    override fun removeFromCart(cart: Cart) {
+                        viewModel.removeFromCart(cart)
+                    }
+
+                    override fun loadMore() {
+                        viewModel.addPage()
+                    }
+                },
+            )
+    }
+
+    private fun setupActivityResultLauncher() {
+        activityResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult(),
+            ) { result ->
+                when (result.resultCode) {
+                    ResultCode.GOODS_DETAIL_INSERT.code,
+                    ResultCode.CART_INSERT.code,
+                    -> {
+                        handleActivityResult(result.data)
+                    }
+                }
+            }
+    }
+
+    private fun handleActivityResult(data: Intent?) {
+        val changedId = data?.getLongExtra(GOODS_ID, 0) ?: 0
+        val changedQuantity = data?.getIntExtra(GOODS_QUANTITY, 0) ?: 0
+        viewModel.updateItemQuantity(changedId, changedQuantity)
+        viewModel.refreshHistoryOnly()
+    }
+
+    private fun navigate(cart: Cart) {
+        val intent = GoodsDetailsActivity.newIntent(this, cart.goods.id)
+        activityResultLauncher.launch(intent)
+    }
+
+    companion object {
+        private const val GOODS_ID = "GOODS_ID"
+        private const val GOODS_QUANTITY = "GOODS_QUANTITY"
     }
 }

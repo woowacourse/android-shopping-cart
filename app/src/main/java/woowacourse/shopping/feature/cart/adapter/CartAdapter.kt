@@ -2,14 +2,14 @@ package woowacourse.shopping.feature.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 
 class CartAdapter(
     private val cartClickListener: CartViewHolder.CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items: MutableList<Goods> = mutableListOf()
+    private val items: MutableList<Cart> = mutableListOf()
 
-    fun setItems(newItems: List<Goods>) {
+    fun setItems(newItems: List<Cart>) {
         val maxSize = maxOf(items.size, newItems.size)
 
         items.clear()
@@ -26,7 +26,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val item: Goods = items[position]
+        val item: Cart = items[position]
         holder.bind(item)
     }
 

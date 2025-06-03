@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.GoodsActivity
-import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 
 @Suppress("ktlint:standard:function-naming")
 class GoodsActivityTest {
@@ -69,11 +68,12 @@ class GoodsActivityTest {
     }
 
     @Test
-    fun 상품_아이템을_클릭하면_상품_상세_화면으로_이동한다() {
+    fun 상품_아이템_클릭시_상세화면_출력_검증() {
         onView(withId(R.id.rv_goods))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
 
-        intended(hasComponent(GoodsDetailsActivity::class.java.name))
+        onView(withId(R.id.tv_goods_details_name))
+            .check(matches(isDisplayed()))
     }
 
     @Test

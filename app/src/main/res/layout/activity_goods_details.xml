@@ -5,9 +5,6 @@
 
     <data>
         <variable
-            name="goods"
-            type="woowacourse.shopping.feature.GoodsUiModel" />
-        <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel" />
     </data>
@@ -24,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:contentDescription="@string/goods_detail_image_description"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{viewModel.cart.goods.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -35,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{goods.name}"
+            android:text="@{viewModel.cart.goods.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -51,45 +48,55 @@
             app:layout_constraintTop_toBottomOf="@id/tv_goods_details_name" />
 
         <TextView
+            android:id="@+id/tv_goods_details_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@string/goods_detail_price"
+            android:layout_marginStart="18dp"
+            android:text="@{@string/goods_price(viewModel.cart.goods.price)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view"
-            tools:text="가격" />
+            tools:text="99,800원" />
 
-        <TextView
-            android:id="@+id/tv_goods_details_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <woowacourse.shopping.feature.CustomCartQuantity
+            android:id="@+id/custom_cart_quantity"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/goods_price(goods.price)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            app:count="@{viewModel.cart.quantity}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            tools:text="99,800원" />
+            app:layout_constraintTop_toBottomOf="@+id/view"/>
+
+        <woowacourse.shopping.feature.CustomLastViewed
+            android:id="@+id/custom_last_viewed"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginHorizontal="18dp"
+            app:name="@{String.valueOf(viewModel.lastViewed.name)}"
+            app:visible="@{viewModel.isLastViewedVisible}"
+            app:layout_constraintTop_toBottomOf="@id/tv_goods_details_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/tv_add_cart_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/cyan"
+            android:background="@color/baemin_mint"
+            android:clickable="true"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.commitCart()}"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:clickable="true"
-            android:onClick="@{() -> viewModel.insertToCart(goods)}"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

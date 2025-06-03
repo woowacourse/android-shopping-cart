@@ -2,42 +2,66 @@ package woowacourse.shopping.fixture
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Carts
 
 class FakeCartRepository : CartRepository {
-    private val goodsList = mutableListOf<Goods>()
-    private val goodsLiveData = MutableLiveData<List<Goods>>()
-    private val sizeLiveData = MutableLiveData<Int>()
+    private val cartList = mutableListOf<Cart>()
+    private val cartLiveData = MutableLiveData<List<Cart>>()
+    private var sizeLiveData: Int = 0
+    var savedCart: Cart? = null
 
     init {
         updateLiveData()
     }
 
     private fun updateLiveData() {
-        goodsLiveData.value = goodsList.toList()
-        sizeLiveData.value = goodsList.size
+        cartLiveData.value = cartList.toList()
+        sizeLiveData = cartList.size
     }
 
-    override fun getAll(): LiveData<List<Goods>> = goodsLiveData
-
-    override fun insert(goods: Goods) {
-        goodsList.add(goods)
+    override fun insert(cart: Cart) {
+        cartList.add(cart)
+        savedCart = cart
         updateLiveData()
     }
 
-    override fun delete(goods: Goods) {
-        goodsList.removeIf { it.id == goods.id }
+    override fun insertAll(cart: Cart) {
+        cartList.add(cart)
+        savedCart = cart
         updateLiveData()
+    }
+
+    override fun delete(cart: Cart) {
+        cartList.removeIf { it.goods.id == cart.goods.id }
+        updateLiveData()
+    }
+
+    override fun deleteAll(cart: Cart) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAll(onSuccess: (Carts) -> Unit) {
+        val totalQuantity = cartList.sumOf { it.quantity }
+        onSuccess(Carts(cartList.toList(), totalQuantity))
     }
 
     override fun getPage(
         limit: Int,
         offset: Int,
-    ): LiveData<List<Goods>> {
-        val page = goodsList.drop(offset).take(limit)
-        return MutableLiveData(page)
+    ): LiveData<Carts> {
+        val page = cartList.drop(offset).take(limit)
+        val totalQuantity = cartList.sumOf { it.quantity }
+        return MutableLiveData(Carts(page, totalQuantity))
     }
 
-    override fun getAllItemsSize(): LiveData<Int> = sizeLiveData
+    override fun getAllItemsSize(onSuccess: (Int) -> Unit) {
+        onSuccess(sizeLiveData)
+    }
+
+    override fun getTotalQuantity(onSuccess: (Int) -> Unit) {
+        val total = cartList.sumOf { it.quantity }
+        onSuccess(total)
+    }
 }

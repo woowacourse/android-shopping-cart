@@ -8,20 +8,20 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
-import woowacourse.shopping.feature.GoodsUiModel
-import woowacourse.shopping.feature.cart.ViewModelFactory
+import woowacourse.shopping.feature.CustomCartQuantity
+import woowacourse.shopping.feature.CustomLastViewed
+import woowacourse.shopping.feature.model.ResultCode
+import woowacourse.shopping.feature.model.State
 import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private lateinit var goods: GoodsUiModel
+    private val goodsId by lazy { intent.getLongExtra(GOODS_KEY, 0) }
     private val viewModel: GoodsDetailsViewModel by viewModels {
-        ViewModelFactory { GoodsDetailsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+        (application as ShoppingApplication).goodsDetailsFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,23 +29,18 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-        binding.goods = goods
+        viewModel.setInitialCart(goodsId)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.isSuccess.observe(this) { isSuccess ->
-            val message: String =
-                getString(
-                    if (isSuccess) {
-                        R.string.goods_detail_cart_insert_success_toast_message
-                    } else {
-                        R.string.goods_detail_cart_insert_fail_toast_message
-                    },
-                )
-
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        viewModel.lastViewed.observe(this) {
+            viewModel.updateLastViewedVisibility()
         }
+
+        sendRecentHistory()
+        observeCartInsertResult()
+        setOnClickListener()
+        navigateToLastViewed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,15 +57,84 @@ class GoodsDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun navigateToLastViewed() {
+        viewModel.navigateToLastViewedCart.observe(this) { lastViewedCart ->
+            lastViewedCart.let {
+                val intent = newIntent(this@GoodsDetailsActivity, it.goods.id)
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
+    private fun observeCartInsertResult() {
+        viewModel.cartInsertEvent.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { state ->
+                when (state) {
+                    is State.Success -> {
+                        Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+                        setResult(
+                            ResultCode.GOODS_DETAIL_INSERT.code,
+                            Intent().apply {
+                                putExtra(GOODS_ID, goodsId)
+                                putExtra(GOODS_QUANTITY, viewModel.cart.value?.quantity)
+                            },
+                        )
+                    }
+                    is State.Failure ->
+                        Toast
+                            .makeText(
+                                this,
+                                R.string.goods_detail_cart_insert_fail_toast_message,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                }
+            }
+        }
+    }
+
+    private fun sendRecentHistory() {
+        setResult(
+            ResultCode.GOODS_DETAIL_INSERT.code,
+            Intent().apply {
+                putExtra(HISTORY_ID, goodsId)
+            },
+        )
+    }
+
+    private fun setOnClickListener() {
+        binding.customCartQuantity.setClickListener(
+            object : CustomCartQuantity.CartQuantityClickListener {
+                override fun onAddClick() {
+                    viewModel.increaseQuantity()
+                }
+
+                override fun onRemoveClick() {
+                    viewModel.decreaseQuantity()
+                }
+            },
+        )
+        binding.customLastViewed.setClickListener(
+            object : CustomLastViewed.LastViewedClickListener {
+                override fun navigate() {
+                    viewModel.emitLastViewedCart()
+                }
+            },
+        )
+    }
+
     companion object {
-        private const val GOODS_KEY = "GOODS"
+        private const val GOODS_KEY = "GOODS_KEY"
+        private const val GOODS_ID = "GOODS_ID"
+        private const val GOODS_QUANTITY = "GOODS_QUANTITY"
+        private const val HISTORY_ID = "HISTORY_ID"
 
         fun newIntent(
             context: Context,
-            goods: GoodsUiModel,
+            goodsId: Long,
         ): Intent =
             Intent(context, GoodsDetailsActivity::class.java).apply {
-                putExtra(GOODS_KEY, goods)
+                putExtra(GOODS_KEY, goodsId)
             }
     }
 }
