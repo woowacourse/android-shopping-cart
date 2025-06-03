@@ -40,7 +40,7 @@ class ProductViewModel(
     private val _onNavigateToCartEvent = MutableLiveData<Unit>()
     val onNavigateToCartEvent: LiveData<Unit> get() = _onNavigateToCartEvent
 
-    var totalProductsCount: Int = 0
+    private var totalProductsCount: Int = 0
     private var currentIndex = 0
     private var isShowMore = false
 
