@@ -2,7 +2,6 @@ package woowacourse.shopping.data.source.cart
 
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.TableCartItem
 import kotlin.concurrent.thread
 
 class CartStorageImpl private constructor(
@@ -17,13 +16,13 @@ class CartStorageImpl private constructor(
     override fun getProducts(
         limit: Int,
         offset: Int,
-        onResult: (List<TableCartItem>) -> Unit,
+        onResult: (List<CartStorageItem>) -> Unit,
     ) {
         thread {
             val cartItem =
                 cartDao
                     .getLimitProducts(limit, offset)
-                    .map { TableCartItem(it.productId, it.count) }
+                    .map { CartStorageItem(it.productId, it.count) }
             onResult(cartItem)
         }
     }

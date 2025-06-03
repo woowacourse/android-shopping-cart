@@ -2,7 +2,6 @@ package woowacourse.shopping.data.source.cart
 
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.TableCartItem
 
 interface CartStorage {
     fun getAllProductsSize(onResult: (Int) -> Unit)
@@ -10,7 +9,7 @@ interface CartStorage {
     fun getProducts(
         limit: Int,
         offset: Int,
-        onResult: (List<TableCartItem>) -> Unit,
+        onResult: (List<CartStorageItem>) -> Unit,
     )
 
     fun addProduct(

@@ -16,9 +16,9 @@ class CartRepositoryImpl private constructor(
         offset: Int,
         onResult: (List<CartItem>) -> Unit,
     ) {
-        cartStorage.getProducts(limit, offset) { tableCartItems ->
+        cartStorage.getProducts(limit, offset) { CartStorageItems ->
             val products =
-                tableCartItems.map {
+                CartStorageItems.map {
                     CartItem(
                         productStorage.getProduct(it.productId),
                         it.count,
