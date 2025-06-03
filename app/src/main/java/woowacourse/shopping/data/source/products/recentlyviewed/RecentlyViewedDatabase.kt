@@ -13,6 +13,7 @@ abstract class RecentlyViewedDatabase : RoomDatabase() {
         private const val DB_NAME = "recently_viewed"
         private var instance: RecentlyViewedDatabase? = null
 
+        @Synchronized
         fun initialize(context: Context): RecentlyViewedDatabase =
             instance ?: Room
                 .databaseBuilder(

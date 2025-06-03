@@ -13,6 +13,7 @@ abstract class CartDatabase : RoomDatabase() {
         private const val DB_NAME = "cart"
         private var instance: CartDatabase? = null
 
+        @Synchronized
         fun initialize(context: Context): CartDatabase =
             instance ?: Room
                 .databaseBuilder(

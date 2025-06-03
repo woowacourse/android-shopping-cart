@@ -65,6 +65,7 @@ class CartStorageImpl private constructor(
     companion object {
         private var instance: CartStorageImpl? = null
 
+        @Synchronized
         fun initialize(cartDao: CartDao): CartStorageImpl = instance ?: CartStorageImpl(cartDao).also { instance = it }
     }
 }

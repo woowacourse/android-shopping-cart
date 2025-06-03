@@ -37,6 +37,7 @@ class RecentlyViewedRepositoryImpl(
         private const val MAX_COUNT_RECENTLY_VIEWED_PRODUCTS: Int = 10
         private var instance: RecentlyViewedRepositoryImpl? = null
 
+        @Synchronized
         fun initialize(
             recentlyViewedStorage: RecentlyViewedStorage,
             productStorage: ProductStorage,

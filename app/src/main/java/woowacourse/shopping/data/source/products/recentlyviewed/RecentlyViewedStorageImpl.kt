@@ -39,6 +39,7 @@ class RecentlyViewedStorageImpl(
     companion object {
         private var instance: RecentlyViewedStorageImpl? = null
 
+        @Synchronized
         fun initialize(recentlyViewedDao: RecentlyViewedDao): RecentlyViewedStorageImpl =
             instance ?: RecentlyViewedStorageImpl(recentlyViewedDao).also { instance = it }
     }

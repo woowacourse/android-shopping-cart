@@ -40,6 +40,7 @@ class CartRepositoryImpl private constructor(
     companion object {
         private var instance: CartRepositoryImpl? = null
 
+        @Synchronized
         fun initialize(
             cartStorage: CartStorage,
             productStorage: ProductStorage,
