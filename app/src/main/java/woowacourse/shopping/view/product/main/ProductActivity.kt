@@ -37,6 +37,8 @@ class ProductActivity : AppCompatActivity() {
                 }
             },
             ::navigateToProductDetail,
+            onIncrease = { productViewModel.increaseProductCount(it) },
+            onDecrease = { productViewModel.decreaseProductCount(it) },
         )
     }
 
@@ -98,6 +100,9 @@ class ProductActivity : AppCompatActivity() {
         productViewModel.onNavigateToCartEvent.observe(this) { navigateToCart() }
         productViewModel.addPosition.observe(this) { position ->
             productAdapter.notifyItemChanged(position)
+        }
+        productViewModel.allCartItems.observe(this) { product ->
+            productAdapter.notifyDataSetChanged()
         }
     }
 

@@ -11,6 +11,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.data.repository.products.catalog.ProductRepository
 import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepository
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.product.main.adapter.ViewItems
 import woowacourse.shopping.view.product.main.adapter.ViewItems.Divider
@@ -25,6 +26,12 @@ class ProductViewModel(
 ) : ViewModel() {
     private val _products = MutableLiveData<List<ViewItems>>(emptyList())
     val products: LiveData<List<ViewItems>> get() = _products
+
+    private val _allCartItems = MutableLiveData<List<CartItem>>(emptyList())
+    val allCartItems: LiveData<List<CartItem>> get() = _allCartItems
+
+    private val _cartItems = MutableLiveData<List<CartItem>>(emptyList())
+    val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
     private val _cartItemsCount = MutableLiveData<Int>(0)
     val cartItemsCount: LiveData<String>
@@ -58,10 +65,40 @@ class ProductViewModel(
         totalProductsCount = productRepository.getProductsSize()
     }
 
+    fun increaseProductCount(cartItem: CartItem) {
+        updateProductCount(cartItem, cartItem.count + 1)
+    }
+
+    fun decreaseProductCount(cartItem: CartItem) {
+        if (cartItem.count > 1) {
+            updateProductCount(cartItem, cartItem.count - 1)
+        }
+    }
+
+    private fun updateProductCount(
+        cartItem: CartItem,
+        newCount: Int,
+    ) {
+        val updatedItem = cartItem.copy(count = newCount)
+        cartRepository.updateCartItem(updatedItem)
+        val updatedList =
+            _allCartItems.value?.map {
+                if (it.product.id == cartItem.product.id) updatedItem else it
+            } ?: return
+
+        _allCartItems.value = updatedList
+    }
+
     fun fetchData() {
-        val newProducts = productRepository.getProducts(currentIndex, LIMIT_COUNT + 1)
+        val newProducts =
+            productRepository.getProducts(currentIndex, LIMIT_COUNT + 1).map { product ->
+                _cartItems.value?.find { it.product.id == product.id }
+                    ?: CartItem(product = product, count = 0)
+            }
+        val previousProducts = _allCartItems.value ?: emptyList()
+        _allCartItems.postValue(previousProducts + newProducts)
         isShowMore = newProducts.size == LIMIT_COUNT + 1
-        val productToUpdate: List<Product> = newProducts.take(LIMIT_COUNT)
+        val productToUpdate: List<CartItem> = newProducts.take(LIMIT_COUNT)
         val updatedViewItems: List<ViewItems> = getUpdatedViewItems(productToUpdate)
         _products.postValue(updatedViewItems)
         currentIndex += LIMIT_COUNT
@@ -73,7 +110,7 @@ class ProductViewModel(
         }
     }
 
-    private fun getUpdatedViewItems(productToUpdate: List<Product>): List<ViewItems> {
+    private fun getUpdatedViewItems(productToUpdate: List<CartItem>): List<ViewItems> {
         val currentProducts = products.value ?: emptyList()
         val productsWithoutLoadItem =
             if (currentProducts.lastOrNull() is ShowMore) {
@@ -100,10 +137,10 @@ class ProductViewModel(
     }
 
     fun addCart(
-        product: Product,
+        cartItem: CartItem,
         position: Int,
     ): Boolean {
-        cartRepository.addProduct(product, 1)
+        cartRepository.addProduct(cartItem.product, 1)
         _addPosition.postValue(position)
         fetchCartItemsCount()
         return true
