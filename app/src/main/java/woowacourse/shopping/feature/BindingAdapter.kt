@@ -12,7 +12,7 @@ import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.model.GoodsItem
 
 @BindingAdapter("imgUrl")
-fun ImageView.loadImageFromUrl(url: String) {
+fun ImageView.loadImageFromUrl(url: String?) {
     Glide.with(this.context).load(url).into(this)
 }
 
