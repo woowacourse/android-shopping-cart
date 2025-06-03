@@ -15,9 +15,6 @@ interface CartDao {
         offset: Int,
     ): List<CartEntity>
 
-    @Query("SELECT * FROM cart WHERE id = :id")
-    fun getProduct(id: Long): CartEntity
-
     @Query("SELECT * FROM cart WHERE product_id = :productId")
     fun getCartItem(productId: Long): CartEntity?
 
