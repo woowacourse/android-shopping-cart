@@ -13,7 +13,7 @@
 
         <variable
             name="productDetailEventListener"
-            type="woowacourse.shopping.view.productDetail.ProductDetailClickListener" />
+            type="woowacourse.shopping.view.productDetail.ProductDetailListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:onClick="@{() -> productDetailEventListener.onCloseButton()}"
+                android:onClick="@{() -> productDetailEventListener.onCloseButtonClick()}"
                 android:padding="16dp"
                 android:src="@drawable/ic_close"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:product="@{viewModel.product}"
-                    app:productQuantityClickListener="@{productDetailEventListener}"
+                    app:productQuantityListener="@{productDetailEventListener}"
                     android:layout_marginEnd="14dp"
                     app:layout_constraintBottom_toBottomOf="@id/productDetailPrice"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +122,7 @@
                     android:layout_marginHorizontal="18dp"
                     android:layout_marginTop="30dp"
                     android:background="@drawable/background_product_detail_recent_watching"
-                    android:onClick="@{() -> productDetailEventListener.onRecentProduct(viewModel.recentWatchingProduct)}"
+                    android:onClick="@{() -> productDetailEventListener.onRecentProductClick(viewModel.recentWatchingProduct)}"
                     android:paddingHorizontal="18dp"
                     android:paddingVertical="16dp"
                     android:visibility="@{viewModel.recentProductBoxVisible ? View.VISIBLE : View.GONE}"
@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:background="@color/mint"
             android:gravity="center"
-            android:onClick="@{() -> productDetailEventListener.onAddingToShoppingCart()}"
+            android:onClick="@{() -> productDetailEventListener.onAddingToShoppingCartClick()}"
             android:paddingVertical="12dp"
             android:text="@string/product_detail_add_to_shopping_cart"
             android:textColor="@color/white"

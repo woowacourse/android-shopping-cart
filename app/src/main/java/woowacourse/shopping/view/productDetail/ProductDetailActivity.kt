@@ -18,7 +18,7 @@ import woowacourse.shopping.view.common.showSnackBar
 
 class ProductDetailActivity :
     AppCompatActivity(),
-    ProductDetailClickListener {
+    ProductDetailListener {
     private val viewModel: ProductDetailViewModel by viewModels()
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
@@ -69,7 +69,7 @@ class ProductDetailActivity :
         binding.root.showSnackBar(getString(messageResourceId))
     }
 
-    override fun onCloseButton() {
+    override fun onCloseButtonClick() {
         val intent =
             Intent().apply {
                 putExtra("updateProduct", viewModel.product.value)
@@ -78,7 +78,7 @@ class ProductDetailActivity :
         finish()
     }
 
-    override fun onAddingToShoppingCart() {
+    override fun onAddingToShoppingCartClick() {
         viewModel.addToShoppingCart()
     }
 
@@ -90,7 +90,7 @@ class ProductDetailActivity :
         viewModel.minusQuantity()
     }
 
-    override fun onRecentProduct(product: Product) {
+    override fun onRecentProductClick(product: Product) {
         val intent =
             Intent().apply {
                 putExtra("recentProduct", viewModel.recentWatchingProduct.value)

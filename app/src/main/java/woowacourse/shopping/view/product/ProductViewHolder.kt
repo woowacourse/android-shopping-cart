@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.ProductQuantityClickListener
+import woowacourse.shopping.view.common.ProductQuantityListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    productListener: ProductClickListener,
+    productListener: ProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.productClickListener = productListener
+        binding.productListener = productListener
     }
 
     fun bind(item: ProductsItem.ProductItem) {
@@ -22,7 +22,7 @@ class ProductViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            productListener: ProductClickListener,
+            productListener: ProductListener,
         ): ProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(layoutInflater, parent, false)
@@ -30,7 +30,7 @@ class ProductViewHolder(
         }
     }
 
-    interface ProductClickListener : ProductQuantityClickListener {
+    interface ProductListener : ProductQuantityListener {
         fun onProductClick(product: Product)
     }
 }

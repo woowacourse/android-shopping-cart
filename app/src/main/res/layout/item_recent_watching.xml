@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="recentMoreWatchingClickListener"
-            type="woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingClickListener" />
+            name="recentMoreWatchingListener"
+            type="woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingListener" />
 
         <variable
             name="product"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> recentMoreWatchingClickListener.onRecentProductClick(product)}"
+        android:onClick="@{() -> recentMoreWatchingListener.onRecentProductClick(product)}"
         android:paddingEnd="8dp"
         tools:ignore="RtlSymmetry">
 

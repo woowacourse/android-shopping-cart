@@ -66,7 +66,7 @@ class ProductAdapter(
     }
 
     interface ProductListener :
-        ProductViewHolder.ProductClickListener,
-        ProductMoreViewHolder.ProductMoreClickListener,
-        RecentProductViewHolder.ProductRecentMoreWatchingClickListener
+        ProductViewHolder.ProductListener,
+        ProductMoreViewHolder.ProductMoreListener,
+        RecentProductViewHolder.ProductRecentMoreWatchingListener
 }

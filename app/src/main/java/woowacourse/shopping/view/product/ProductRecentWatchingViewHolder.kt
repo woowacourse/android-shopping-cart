@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductRecentWatchingBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingClickListener
+import woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingListener
 
 class ProductRecentWatchingViewHolder(
     private val binding: ItemProductRecentWatchingBinding,
-    private val productListener: ProductRecentMoreWatchingClickListener,
+    private val productListener: ProductRecentMoreWatchingListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(recentWatchingProducts: List<Product>) {
         val adapter = RecentProductAdapter(recentWatchingProducts, productListener)
@@ -22,7 +22,7 @@ class ProductRecentWatchingViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            productListener: ProductRecentMoreWatchingClickListener,
+            productListener: ProductRecentMoreWatchingListener,
         ): ProductRecentWatchingViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemProductRecentWatchingBinding.inflate(layoutInflater, parent, false)

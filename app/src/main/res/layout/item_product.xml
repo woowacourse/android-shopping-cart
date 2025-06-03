@@ -12,14 +12,14 @@
             type="woowacourse.shopping.view.product.ProductsItem.ProductItem" />
 
         <variable
-            name="productClickListener"
-            type="woowacourse.shopping.view.product.ProductViewHolder.ProductClickListener" />
+            name="productListener"
+            type="woowacourse.shopping.view.product.ProductViewHolder.ProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> productClickListener.onProductClick(productItem.product)}">
+        android:onClick="@{() -> productListener.onProductClick(productItem.product)}">
 
         <ImageView
             android:id="@+id/productImage"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{() -> productClickListener.onPlusShoppingCartClick(productItem.product)}"
+            android:onClick="@{() -> productListener.onPlusShoppingCartClick(productItem.product)}"
             android:src="@drawable/btn_product_plus"
             android:visibility="@{productItem.selectedQuantity==0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/productImage"
@@ -54,7 +54,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:product="@{productItem.product}"
-            app:productQuantityClickListener="@{productClickListener}"
+            app:productQuantityListener="@{productListener}"
             app:quantity="@{productItem.selectedQuantity}" />
 
         <TextView

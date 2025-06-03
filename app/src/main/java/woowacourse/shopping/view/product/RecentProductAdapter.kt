@@ -3,11 +3,11 @@ package woowacourse.shopping.view.product
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingClickListener
+import woowacourse.shopping.view.product.RecentProductViewHolder.ProductRecentMoreWatchingListener
 
 class RecentProductAdapter(
     private val products: List<Product>,
-    private val productListener: ProductRecentMoreWatchingClickListener,
+    private val productListener: ProductRecentMoreWatchingListener,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,

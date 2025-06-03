@@ -51,5 +51,5 @@ class ShoppingCartProductAdapter(
 
     interface ShoppingCartListener :
         ShoppingCartPaginationViewHolder.ShoppingCartPaginationClickListener,
-        ShoppingCartProductViewHolder.ShoppingCartProductClickListener
+        ShoppingCartProductViewHolder.ShoppingCartProductListener
 }

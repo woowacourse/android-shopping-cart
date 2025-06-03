@@ -8,10 +8,10 @@ import woowacourse.shopping.domain.product.Product
 
 class RecentProductViewHolder(
     private val binding: ItemRecentWatchingBinding,
-    productListener: ProductRecentMoreWatchingClickListener,
+    productListener: ProductRecentMoreWatchingListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.recentMoreWatchingClickListener = productListener
+        binding.recentMoreWatchingListener = productListener
     }
 
     fun bind(product: Product) {
@@ -21,7 +21,7 @@ class RecentProductViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            productListener: ProductRecentMoreWatchingClickListener,
+            productListener: ProductRecentMoreWatchingListener,
         ): RecentProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemRecentWatchingBinding.inflate(layoutInflater, parent, false)
@@ -29,7 +29,7 @@ class RecentProductViewHolder(
         }
     }
 
-    interface ProductRecentMoreWatchingClickListener {
+    interface ProductRecentMoreWatchingListener {
         fun onRecentProductClick(product: Product)
     }
 }

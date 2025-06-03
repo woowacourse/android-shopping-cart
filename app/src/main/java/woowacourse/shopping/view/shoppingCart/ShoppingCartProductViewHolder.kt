@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.ProductQuantityClickListener
+import woowacourse.shopping.view.common.ProductQuantityListener
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartProductViewHolder(
     private val binding: ItemShoppingCartProductBinding,
-    shoppingCartListener: ShoppingCartProductClickListener,
+    shoppingCartListener: ShoppingCartProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.shoppingCartProductClickListener = shoppingCartListener
@@ -23,7 +23,7 @@ class ShoppingCartProductViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            shoppingCartListener: ShoppingCartProductClickListener,
+            shoppingCartListener: ShoppingCartProductListener,
         ): ShoppingCartProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingCartProductBinding.inflate(layoutInflater, parent, false)
@@ -31,7 +31,7 @@ class ShoppingCartProductViewHolder(
         }
     }
 
-    interface ShoppingCartProductClickListener : ProductQuantityClickListener {
+    interface ShoppingCartProductListener : ProductQuantityListener {
         fun onRemoveButton(product: Product)
     }
 }

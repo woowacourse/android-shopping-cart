@@ -11,7 +11,7 @@
 
         <variable
             name="shoppingCartProductClickListener"
-            type="woowacourse.shopping.view.shoppingCart.ShoppingCartProductViewHolder.ShoppingCartProductClickListener" />
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartProductViewHolder.ShoppingCartProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            app:productQuantityClickListener="@{shoppingCartProductClickListener}"
+            app:productQuantityListener="@{shoppingCartProductClickListener}"
             app:layout_constraintBottom_toTopOf="@id/shoppingCartPrice"
             app:layout_constraintEnd_toEndOf="@id/shoppingCartPrice"
             app:product="@{shoppingCartProduct.product}"

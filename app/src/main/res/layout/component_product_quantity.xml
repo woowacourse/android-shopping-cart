@@ -14,8 +14,8 @@
             type="int" />
 
         <variable
-            name="productQuantityClickListener"
-            type="woowacourse.shopping.view.common.ProductQuantityClickListener" />
+            name="productQuantityListener"
+            type="woowacourse.shopping.view.common.ProductQuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +27,7 @@
             android:id="@+id/productMinusQuantityButton"
             style="@style/ProductQuantityButton"
             android:background="@drawable/background_product_minus_quantity_button"
-            android:onClick="@{() -> productQuantityClickListener.onMinusShoppingCartClick(product)}"
+            android:onClick="@{() -> productQuantityListener.onMinusShoppingCartClick(product)}"
             android:text="@string/product_minus_quantity_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/productQuantity"
@@ -55,7 +55,7 @@
             android:id="@+id/productPlusQuantityButton"
             style="@style/ProductQuantityButton"
             android:background="@drawable/background_product_plus_quantity_button"
-            android:onClick="@{() -> productQuantityClickListener.onPlusShoppingCartClick(product)}"
+            android:onClick="@{() -> productQuantityListener.onPlusShoppingCartClick(product)}"
             android:text="@string/product_plus_quantity_button"
             app:layout_constraintBottom_toBottomOf="@id/productPlusQuantityButton"
             app:layout_constraintDimensionRatio="1:1"
