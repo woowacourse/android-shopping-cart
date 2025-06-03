@@ -97,7 +97,6 @@ class CartViewModel(
             totalProductsCount -= 1
             totalPage = calculateTotalPages(totalProductsCount)
             minusPage()
-            fetchData()
         } else {
             _products.value = currentProducts
             pageCache[_currentPage.value ?: 1] = currentProducts
