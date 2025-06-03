@@ -29,6 +29,9 @@ class CartViewModel(
     private val _exitEvent = MutableLiveData<Unit>()
     val exitEvent: LiveData<Unit> get() = _exitEvent
 
+    private val _removePosition = MutableLiveData<Int>()
+    val removePosition: LiveData<Int> get() = _removePosition
+
     private var totalProductsCount = 0
     private var totalPage = 0
     private var offset = 0
@@ -64,7 +67,11 @@ class CartViewModel(
         }
     }
 
-    fun deleteProduct(cartItem: CartItem) {
+    fun deleteProduct(
+        cartItem: CartItem,
+        position: Int,
+    ) {
+        _removePosition.value = position
         cartRepository.deleteProduct(cartItem.product.id)
         val currentProducts =
             _products.value

@@ -12,13 +12,17 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.CartItem
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val cartProductAdapter: CartProductAdapter by lazy {
         CartProductAdapter(
-            onDeleteClick = ::deleteProduct,
+            onDeleteClick = { cartItem, position ->
+                cartViewModel.deleteProduct(
+                    cartItem,
+                    position,
+                )
+            },
             onIncrease = { cartViewModel.increaseProductCount(it) },
             onDecrease = { cartViewModel.decreaseProductCount(it) },
         )
@@ -65,17 +69,12 @@ class CartActivity : AppCompatActivity() {
         cartViewModel.exitEvent.observe(this) {
             finish()
         }
-    }
-
-    private fun deleteProduct(
-        cartItem: CartItem,
-        position: Int,
-    ) {
-        cartProductAdapter.removeProduct(position)
-        cartViewModel.deleteProduct(cartItem)
-        Toast
-            .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
-            .show()
+        cartViewModel.removePosition.observe(this) { position ->
+            cartProductAdapter.removeProduct(position)
+            Toast
+                .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     companion object {
