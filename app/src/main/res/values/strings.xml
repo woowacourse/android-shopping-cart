@@ -7,6 +7,7 @@
     <!-- Detail Screen -->
     <string name="detail_add_cart_button_text">장바구니 담기</string>
     <string name="detail_price_text">가격</string>
+    <string name="detail_last_viewed_text">마지막으로 본 상품</string>
 
     <!-- Cart Screen -->
     <string name="toolbar_cart_title">Cart</string>
@@ -14,4 +15,8 @@
     <!-- Catalog Screen -->
     <string name="toolbar_catalog_title">Shopping</string>
     <string name="load_more_text">더보기</string>
+    <string name="product_count_down_text">-</string>
+    <string name="product_count_up_text">+</string>
+    <string name="catalog_recent_product_title">최근 본 상품</string>
+
 </resources>

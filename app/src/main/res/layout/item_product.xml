@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.view.catalog.CatalogViewModel" />
+
         <variable
             name="product"
             type="woowacourse.shopping.presentation.model.ProductUiModel" />
@@ -28,6 +34,35 @@
             android:contentDescription="@null"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_open_select_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_bg_circle"
+            android:onClick="@{() -> eventListener.onInitialAddToCartClicked(product)}"
+            android:padding="16dp"
+            android:src="@drawable/ic_add"
+            android:elevation="5dp"
+            android:visibility="@{product.amount != 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="@id/image_view_product" />
+
+        <include
+            android:id="@+id/category_item_counter"
+            layout="@layout/view_select_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="@{product.amount == 0 || product == null ? View.GONE : View.VISIBLE}"
+            app:amount="@{product.amount}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:productId="@{product.id}" />
+
 
         <TextView
             android:id="@+id/text_view_product_name"

@@ -1,43 +1,43 @@
 package woowacourse.shopping.presentation.view.cart.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.ProductUiModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.view.ItemCounterListener
 
 class CartAdapter(
-    products: List<ProductUiModel> = emptyList(),
     private val eventListener: CartEventListener,
-) : RecyclerView.Adapter<CartViewHolder>() {
-    private val products = products.toMutableList()
-
-    override fun getItemCount(): Int = products.size
-
+    private val itemCounterListener: ItemCounterListener,
+) : ListAdapter<CartItem, CartViewHolder>(cartDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartViewHolder = CartViewHolder.from(parent, eventListener)
+    ): CartViewHolder = CartViewHolder.from(parent, eventListener, itemCounterListener)
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
+        holder.bind(getItem(position))
     }
 
-    fun updateProducts(products: List<ProductUiModel>) {
-        this.products.clear()
-        this.products.addAll(products)
+    companion object {
+        private val cartDiffCallback =
+            object : DiffUtil.ItemCallback<CartItem>() {
+                override fun areItemsTheSame(
+                    oldItem: CartItem,
+                    newItem: CartItem,
+                ): Boolean = oldItem.product.id == newItem.product.id
 
-        notifyDataSetChanged()
-    }
-
-    fun removeProduct(id: Long) {
-        val index = products.indexOfFirst { it.id == id }
-        products.removeAt(index)
-        notifyItemRemoved(index)
+                override fun areContentsTheSame(
+                    oldItem: CartItem,
+                    newItem: CartItem,
+                ): Boolean = oldItem == newItem
+            }
     }
 
     interface CartEventListener {
-        fun onProductDeletion(product: ProductUiModel)
+        fun onProductDeletion(cartItem: CartItem)
     }
 }

@@ -25,12 +25,11 @@ class GridSpacingItemDecoration(
         }
 
         val column = position % spanCount
-        outRect.set(
-            getLeftPadding(column),
-            ZERO,
-            getRightPadding(column),
-            spacingPx,
-        )
+
+        val left = spacingPx * (spanCount - column) / spanCount
+        val right = spacingPx * (column + 1) / spanCount
+
+        outRect.set(left, 0, right, spacingPx)
     }
 
     private fun getLeftPadding(column: Int): Int =

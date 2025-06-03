@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.presentation.model.ProductUiModel" />
@@ -32,10 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                app:tint="@color/white"
                 android:background="@color/transparent"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_close" />
+                android:src="@drawable/ic_close"
+                app:tint="@color/white" />
         </Toolbar>
 
         <ImageView
@@ -66,35 +68,77 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="@id/text_view_price_title"
+            app:layout_constraintBottom_toTopOf="@id/text_view_detail_price"
             app:layout_constraintTop_toBottomOf="@id/text_view_detail_product_name" />
 
-        <TextView
-            android:id="@+id/text_view_price_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail_price_text"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/text_view_detail_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text='@{String.format(@string/product_price_format, product.price * vm.amount)}'
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_price_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/text_view_price_title"
-            app:layout_constraintTop_toTopOf="@id/text_view_price_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="10,000원" />
+
+        <include
+            android:id="@+id/detail_item_counter"
+            layout="@layout/view_select_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            app:amount="@{vm.amount}"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
+            app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
+            app:productId="@{product.id}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view_detail_last_viewed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/shape_cart_item"
+            android:paddingBottom="16dp"
+            android:visibility="@{(vm.lastViewedProduct == null || vm.lastViewedProduct.id == product.id) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_detail_price">
+
+            <TextView
+                android:id="@+id/text_view_detail_last_viewed_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/detail_last_viewed_text"
+                android:textColor="@color/mint"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_detail_last_viewed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{vm.lastViewedProduct.name}"
+                android:textColor="@color/gray_55"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/text_view_detail_last_viewed_title"
+                app:layout_constraintStart_toStartOf="@id/text_view_detail_last_viewed_title"
+                app:layout_constraintTop_toBottomOf="@id/text_view_detail_last_viewed_title"
+                tools:text="잉어킹" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"
@@ -102,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{() -> vm.addProduct(product)}"
+            android:onClick="@{() -> vm.addCartItem()}"
             android:text="@string/detail_add_cart_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"

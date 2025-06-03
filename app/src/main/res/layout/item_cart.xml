@@ -6,12 +6,13 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
 
         <variable
             name="eventListener"
             type="woowacourse.shopping.presentation.view.cart.adapter.CartAdapter.CartEventListener" />
+
 
     </data>
 
@@ -29,7 +30,7 @@
             android:layout_height="32dp"
             android:backgroundTint="@color/transparent"
             android:contentDescription="@null"
-            android:onClick="@{() -> eventListener.onProductDeletion(product)}"
+            android:onClick="@{() -> eventListener.onProductDeletion(cartItem)}"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +39,7 @@
             android:id="@+id/cart_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{product.name}"
+            android:text="@{cartItem.product.name}"
             android:textColor="@color/gray_55"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -49,7 +50,7 @@
 
         <ImageView
             android:id="@+id/image_view_product"
-            imageUrl="@{product.imageUrl}"
+            imageUrl="@{cartItem.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
@@ -61,11 +62,23 @@
             app:layout_constraintTop_toBottomOf="@id/cart_item_name"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            android:id="@+id/cart_item_counter"
+            layout="@layout/view_select_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:amount="@{cartItem.amount}"
+            app:layout_constraintBottom_toTopOf="@id/text_view_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_product"
+            app:productId="@{cartItem.product.id}" />
+
         <TextView
             android:id="@+id/text_view_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:text="@{String.format(@string/product_price_format, cartItem.totalPrice)}"
             android:textAlignment="textEnd"
             android:textColor="@color/gray_55"
             android:textSize="20sp"

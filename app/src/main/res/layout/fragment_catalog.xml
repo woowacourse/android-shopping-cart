@@ -5,6 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.view.catalog.CatalogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +35,22 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/text_view_cart_total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@drawable/shape_bg_circle"
+                android:backgroundTint="@color/mint"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@{String.valueOf(vm.totalCartCount)}"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="@{vm.totalCartCount == 0 ? View.GONE : View.VISIBLE}"
+                tools:text="10" />
+
             <ImageButton
                 android:id="@+id/btn_navigate_cart"
                 android:layout_width="wrap_content"
@@ -39,16 +60,18 @@
                 android:contentDescription="@null"
                 android:src="@drawable/ic_cart" />
 
+
         </Toolbar>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_products"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_catalog"
             tools:listitem="@layout/item_product" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

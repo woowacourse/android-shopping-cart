@@ -1,59 +1,10 @@
-package woowacourse.shopping.fixture
+package woowacourse.shopping.domain.fixture
 
-import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.model.toUiModel
 
-val dummyCartItemFixture =
-    listOf(
-        CartItem(
-            Product(
-                id = 1,
-                name = "이상해씨",
-                imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000101.png",
-                Price(10_000),
-            ),
-            amount = 1,
-        ),
-        CartItem(
-            Product(
-                id = 2,
-                name = "이상해풀",
-                imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000201.png",
-                Price(10_000),
-            ),
-            amount = 1,
-        ),
-        CartItem(
-            Product(
-                id = 3,
-                name = "이상해꽃",
-                imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000301.png",
-                Price(10_000),
-            ),
-            amount = 1,
-        ),
-        CartItem(
-            Product(
-                id = 4,
-                name = "파이리",
-                imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000401.png",
-                Price(10_000),
-            ),
-            amount = 1,
-        ),
-        CartItem(
-            Product(
-                id = 5,
-                name = "리자드",
-                imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000501.png",
-                Price(10_000),
-            ),
-            amount = 1,
-        ),
-    )
-
-val dummyProductsFixture =
+val dummyProductUiModelFixture =
     listOf(
         Product(
             id = 1,
@@ -235,4 +186,4 @@ val dummyProductsFixture =
             imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/003001.png",
             Price(10_000),
         ),
-    ).sortedBy { it.id }
+    ).sortedBy { it.id }.map { it.toUiModel() }

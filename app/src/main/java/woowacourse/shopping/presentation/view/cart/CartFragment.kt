@@ -6,17 +6,26 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.databinding.FragmentCartBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 
 class CartFragment :
     BaseFragment<FragmentCartBinding>(R.layout.fragment_cart),
-    CartAdapter.CartEventListener {
-    private val cartAdapter: CartAdapter by lazy { CartAdapter(eventListener = this) }
+    CartAdapter.CartEventListener,
+    ItemCounterListener {
+    private val cartAdapter: CartAdapter by lazy {
+        CartAdapter(
+            eventListener = this,
+            itemCounterListener = this,
+        )
+    }
 
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val viewModel: CartViewModel by viewModels { CartViewModel.factory(cartRepository = RepositoryProvider.cartRepository) }
+
     private val backCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -29,10 +38,12 @@ class CartFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        binding.recyclerViewCart.adapter = cartAdapter
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        initObserver()
+        observeViewModel()
         initListener()
-        setCartAdapter()
 
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
     }
@@ -42,31 +53,25 @@ class CartFragment :
         backCallback.remove()
     }
 
-    override fun onProductDeletion(product: ProductUiModel) {
-        viewModel.deleteProduct(product)
+    override fun onProductDeletion(cartItem: CartItem) {
+        viewModel.deleteProduct(cartItem)
     }
 
-    private fun setCartAdapter() {
-        binding.recyclerViewCart.adapter = cartAdapter
+    override fun increase(productId: Long) {
+        viewModel.increaseAmount(productId)
     }
 
-    private fun initObserver() {
-        binding.vm = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+    override fun decrease(productId: Long) {
+        viewModel.decreaseAmount(productId)
+    }
+
+    private fun observeViewModel() {
+        viewModel.products.observe(viewLifecycleOwner) {
+            cartAdapter.submitList(it)
+        }
 
         viewModel.page.observe(viewLifecycleOwner) {
             binding.recyclerViewCart.smoothScrollToPosition(0)
-        }
-
-        viewModel.products.observe(viewLifecycleOwner) {
-            cartAdapter.updateProducts(it)
-        }
-
-        viewModel.deleteState.observe(viewLifecycleOwner) {
-            it?.let {
-                cartAdapter.removeProduct(it)
-                viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
-            }
         }
     }
 
@@ -77,6 +82,8 @@ class CartFragment :
     }
 
     private fun navigateToScreen() {
+        parentFragmentManager.setFragmentResult("cart_update_result", Bundle())
+
         parentFragmentManager.popBackStack()
         parentFragmentManager.commit {
             remove(this@CartFragment)

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.view.ItemCounterListener" />
+
+        <variable
+            name="productId"
+            type="Long" />
+        
+        <variable
+            name="amount"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingVertical="4dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/btn_detail_count_down"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/product_count_down_text"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() -> listener.decrease(productId)}"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
+            app:layout_constraintEnd_toStartOf="@id/text_view_detail_amount"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_detail_amount" />
+
+        <TextView
+            android:id="@+id/text_view_detail_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(amount)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_detail_count_up"
+            app:layout_constraintStart_toEndOf="@id/btn_detail_count_down"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/btn_detail_count_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/product_count_up_text"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() -> listener.increase(productId)}"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_detail_amount"
+            app:layout_constraintTop_toTopOf="@id/text_view_detail_amount" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
