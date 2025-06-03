@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.productDetail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
@@ -18,8 +19,7 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _event: MutableSingleLiveData<ProductDetailEvent> =
-        MutableSingleLiveData()
+    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
@@ -31,40 +31,41 @@ class ProductDetailViewModel(
     private val _recentWatchingProduct: MutableLiveData<Product> = MutableLiveData()
     val recentWatchingProduct: LiveData<Product> get() = _recentWatchingProduct
 
-    private val _recentProductBoxVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _recentProductBoxVisible: MediatorLiveData<Boolean> = MediatorLiveData()
     val recentProductBoxVisible: LiveData<Boolean> get() = _recentProductBoxVisible
 
-    fun updateProduct(
-        product: Product,
-        isLastWatching: Boolean,
-    ) {
+    init {
+        _recentProductBoxVisible.addSource(_recentWatchingProduct) { product ->
+            _recentProductBoxVisible.value = !isLastWatchingProduct(product)
+        }
+    }
+
+    private fun isLastWatchingProduct(product: Product): Boolean = product.id == _product.value?.id
+
+    fun updateProduct(product: Product) {
         _product.value = product
         _price.value = product.price
 
-        productsRepository.updateRecentWatchingProduct(product) { result ->
-            result.onFailure {
-                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
-            }
-        }
-
-        if (isLastWatching) return
-        updateRecentWatchingProduct()
+        getRecentWatchingProduct()
     }
 
-    private fun updateRecentWatchingProduct() {
+    private fun getRecentWatchingProduct() {
         productsRepository.getRecentWatchingProducts(1) { result ->
             result
                 .onSuccess { recentProducts: List<Product> ->
-                    val isLastWatchingProduct = recentProducts[0] == this.product.value
-                    if (recentProducts.isEmpty() || isLastWatchingProduct) {
-                        _recentProductBoxVisible.postValue(false)
-                        return@getRecentWatchingProducts
-                    }
                     _recentWatchingProduct.postValue(recentProducts[0])
-                    _recentProductBoxVisible.postValue(true)
+                    updateRecentWatchingProduct()
                 }.onFailure {
                     _event.postValue(ProductDetailEvent.GET_RECENT_WATCHING_FAILURE)
                 }
+        }
+    }
+
+    private fun updateRecentWatchingProduct() {
+        productsRepository.updateRecentWatchingProduct(product.value ?: return) { result ->
+            result.onFailure {
+                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
+            }
         }
     }
 

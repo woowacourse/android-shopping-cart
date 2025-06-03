@@ -62,7 +62,7 @@ class ProductsActivity :
         }
 
     private fun navigateToRecentProduct(product: Product) {
-        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product, true))
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

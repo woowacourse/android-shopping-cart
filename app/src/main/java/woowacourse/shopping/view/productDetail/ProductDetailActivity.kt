@@ -39,9 +39,7 @@ class ProductDetailActivity :
                 binding.root.showSnackBar(getString(R.string.product_not_provided_error_message))
                 return finish()
             }
-        val isLastWatching: Boolean =
-            intent.getSerializableExtraData(EXTRA_IS_LAST_WATCHING) ?: false
-        viewModel.updateProduct(product, isLastWatching)
+        viewModel.updateProduct(product)
         bindViewModel(product)
         setupObservers()
     }
@@ -110,19 +108,16 @@ class ProductDetailActivity :
 
     companion object {
         private const val EXTRA_PRODUCT = "woowacourse.shopping.EXTRA_PRODUCT"
-        private const val EXTRA_IS_LAST_WATCHING = "woowacourse.shopping.EXTRA_IS_LAST_WATCHING"
 
         fun newIntent(
             context: Context,
             product: Product,
-            isLastWatching: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(
                     EXTRA_PRODUCT,
                     product,
                 )
-                putExtra(EXTRA_IS_LAST_WATCHING, isLastWatching)
             }
     }
 }
