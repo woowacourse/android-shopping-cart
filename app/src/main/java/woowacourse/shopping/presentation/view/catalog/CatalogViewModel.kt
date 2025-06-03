@@ -12,12 +12,14 @@ import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toCartItem
 import woowacourse.shopping.presentation.model.toProduct
 import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(),
+    ItemCounterListener {
     private val _items = MutableLiveData<List<CatalogItem>>()
     val items: LiveData<List<CatalogItem>> = _items
 
@@ -35,6 +37,14 @@ class CatalogViewModel(
 
     init {
         fetchProducts()
+    }
+
+    override fun increase(productId: Long) {
+        increaseCartItem(productId)
+    }
+
+    override fun decrease(productId: Long) {
+        decreaseCartItem(productId)
     }
 
     fun fetchProducts() {
