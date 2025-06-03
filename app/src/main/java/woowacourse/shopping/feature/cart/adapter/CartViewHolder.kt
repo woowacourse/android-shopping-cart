@@ -11,23 +11,26 @@ class CartViewHolder(
     private val binding: ItemCartBinding,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var currentCart: Cart
+
     init {
         binding.cartClickListener = cartClickListener
-    }
-
-    fun bind(cart: Cart) {
-        binding.cart = cart
         binding.customCartQuantity.setClickListener(
             object : CustomCartQuantity.CartQuantityClickListener {
                 override fun onAddClick() {
-                    cartClickListener.insertToCart(cart)
+                    cartClickListener.insertToCart(currentCart)
                 }
 
                 override fun onRemoveClick() {
-                    cartClickListener.removeFromCart(cart)
+                    cartClickListener.removeFromCart(currentCart)
                 }
             },
         )
+    }
+
+    fun bind(cart: Cart) {
+        currentCart = cart
+        binding.cart = cart
     }
 
     companion object {
