@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.product.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,10 +22,21 @@ class ProductActivity : AppCompatActivity() {
     private val productViewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
-            ::onShowMore,
-            ::onAddCart,
+            onShowMore = ::onShowMore,
+            onAddCart = { cartItem, position, view ->
+                val success =
+                    productViewModel.addCart(
+                        cartItem,
+                        position,
+                    )
+                if (success) {
+                    view.visibility = View.GONE
+                    val parent = view.parent as View
+                    parent.findViewById<View>(R.id.i_product_count_control).visibility =
+                        View.VISIBLE
+                }
+            },
             ::navigateToProductDetail,
-            viewModel = productViewModel,
         )
     }
 
@@ -84,18 +96,13 @@ class ProductActivity : AppCompatActivity() {
             productViewModel.fetchData()
         }
         productViewModel.onNavigateToCartEvent.observe(this) { navigateToCart() }
+        productViewModel.addPosition.observe(this) { position ->
+            productAdapter.notifyItemChanged(position)
+        }
     }
 
     private fun navigateToCart() {
         startActivity(CartActivity.newIntent(context = this))
-    }
-
-    private fun onAddCart(
-        product: Product,
-        position: Int,
-    ) {
-        productViewModel.addCart(product)
-        productAdapter.notifyItemChanged(position)
     }
 
     private fun onShowMore(): Boolean {

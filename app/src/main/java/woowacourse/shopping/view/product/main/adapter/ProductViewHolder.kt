@@ -1,21 +1,19 @@
 package woowacourse.shopping.view.product.main.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.main.ProductViewModel
 
 class ProductViewHolder(
     val binding: ItemProductBinding,
     val navigateToProductDetail: (Product) -> Unit,
-    val onAddCart: (Product, Int) -> Unit,
-    val viewModel: ProductViewModel,
+    val onAddCart: (Product, Int, View) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.vm = viewModel
         binding.onAddCart = onAddCart
         binding.lifecycleOwner = binding.root.findViewTreeLifecycleOwner()
         binding.onSelectedProduct = navigateToProductDetail
@@ -29,12 +27,11 @@ class ProductViewHolder(
         fun from(
             parent: ViewGroup,
             navigateToProductDetail: (Product) -> Unit,
-            onAddCart: (Product, Int) -> Unit,
-            viewModel: ProductViewModel,
+            onAddCart: (Product, Int, View) -> Unit,
         ): ProductViewHolder {
             val binding =
                 ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductViewHolder(binding, navigateToProductDetail, onAddCart, viewModel)
+            return ProductViewHolder(binding, navigateToProductDetail, onAddCart)
         }
     }
 }

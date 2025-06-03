@@ -34,11 +34,11 @@ class ProductViewModel(
     private val _recentlyViewedProducts = MutableLiveData<List<Product>>(emptyList())
     val recentlyViewedProducts: LiveData<List<Product>> get() = _recentlyViewedProducts
 
-    private val _isAddCart = MutableLiveData<Boolean>(false)
-    val isAddCart: LiveData<Boolean> get() = _isAddCart
-
     private val _onNavigateToCartEvent = MutableLiveData<Unit>()
     val onNavigateToCartEvent: LiveData<Unit> get() = _onNavigateToCartEvent
+
+    private val _addPosition = MutableLiveData<Int>()
+    val addPosition: LiveData<Int> get() = _addPosition
 
     private var totalProductsCount: Int = 0
     private var currentIndex = 0
@@ -99,10 +99,14 @@ class ProductViewModel(
         }
     }
 
-    fun addCart(product: Product) {
+    fun addCart(
+        product: Product,
+        position: Int,
+    ): Boolean {
         cartRepository.addProduct(product, 1)
-        _isAddCart.postValue(true)
+        _addPosition.postValue(position)
         fetchCartItemsCount()
+        return true
     }
 
     companion object {

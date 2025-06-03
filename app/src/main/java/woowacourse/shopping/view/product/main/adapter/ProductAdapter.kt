@@ -1,17 +1,16 @@
 package woowacourse.shopping.view.product.main.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.main.ProductViewModel
 import woowacourse.shopping.view.product.main.adapter.ViewItems.ViewType
 
 class ProductAdapter(
     private val onShowMore: () -> Boolean,
-    private val onAddCart: (Product, Int) -> Unit,
+    private val onAddCart: (Product, Int, View) -> Unit,
     private val navigateToProductDetail: (Product) -> Unit,
-    private val viewModel: ProductViewModel,
 ) : RecyclerView.Adapter<ViewHolder>() {
     private var items: List<ViewItems> = emptyList()
 
@@ -23,7 +22,7 @@ class ProductAdapter(
     ): ViewHolder =
         when (ViewType.Companion.from(viewType)) {
             ViewType.PRODUCTS ->
-                ProductViewHolder.from(parent, navigateToProductDetail, onAddCart, viewModel)
+                ProductViewHolder.from(parent, navigateToProductDetail, onAddCart)
 
             ViewType.SHOW_MORE -> ShowMoreViewHolder.from(parent, onShowMore)
             ViewType.RECENTLY_VIEWED_PRODUCTS ->
