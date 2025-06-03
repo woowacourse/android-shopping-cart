@@ -13,7 +13,6 @@ import woowacourse.shopping.feature.model.State
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
-import woowacourse.shopping.util.updateQuantity
 
 class GoodsDetailsViewModel(
     private val cartRepository: CartRepository,

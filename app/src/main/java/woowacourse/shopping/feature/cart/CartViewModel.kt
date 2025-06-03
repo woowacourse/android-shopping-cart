@@ -7,7 +7,6 @@ import androidx.lifecycle.switchMap
 import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
-import woowacourse.shopping.util.updateQuantity
 
 class CartViewModel(
     private val cartRepository: CartRepository,

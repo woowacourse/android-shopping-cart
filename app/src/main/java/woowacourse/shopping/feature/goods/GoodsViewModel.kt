@@ -48,12 +48,13 @@ class GoodsViewModel(
     init {
         loadHistories()
         loadCarts()
-        _items.addSource(histories) { updateCombinedItems() }
+        _items.addSource(histories) { updateHistories() }
+        _items.addSource(carts) { updateCarts() }
     }
 
     fun addPage() {
         page++
-        updateCombinedItems()
+        updateCarts()
     }
 
     fun insertToCart(cart: Cart) {
@@ -143,31 +144,35 @@ class GoodsViewModel(
         return dummyGoods.subList(fromIndex, toIndex)
     }
 
-    private fun updateCombinedItems() {
-        val previousItems = _items.value.orEmpty()
-        val existingRecent = previousItems.find { it is GoodsItem.Recent } as? GoodsItem.Recent
-        val existingProducts = previousItems.filterIsInstance<GoodsItem.Product>()
+    private fun updateHistories() {
+        val currentItems = _items.value.orEmpty().filterIsInstance<GoodsItem.Product>()
+        val newHistories = histories.value.orEmpty()
+        val updatedItems = mutableListOf<GoodsItem>()
+        if (newHistories.isNotEmpty()) {
+            updatedItems.add(GoodsItem.Recent(newHistories))
+        }
+        updatedItems.addAll(currentItems)
+        _items.value = updatedItems
+    }
 
+    private fun updateCarts() {
+        val currentItems = _items.value.orEmpty()
+        val recentItem = currentItems.find { it is GoodsItem.Recent } as? GoodsItem.Recent
         val newProducts =
             getProducts(page).map { goods ->
                 val quantity = carts.value?.find { it.goods.id == goods.id }?.quantity ?: 0
                 GoodsItem.Product(Cart(goods = goods, quantity = quantity))
             }
+        val updatedItems = mutableListOf<GoodsItem>()
+        if (recentItem != null && page == PAGE_SIZE) {
+            updatedItems.add(recentItem)
+        }
+        updatedItems.addAll(newProducts)
+        _items.value = currentItems + updatedItems
 
-        val combinedItems =
-            buildList {
-                if (existingRecent != null) {
-                    add(existingRecent)
-                } else if (page == INITIAL_PAGE) {
-                    histories.value?.let { if (it.isNotEmpty()) add(GoodsItem.Recent(it)) }
-                }
-                addAll(existingProducts)
-                addAll(newProducts)
-            }
-
-        _items.value = combinedItems
-        _totalQuantity.postValue(combinedItems.filterIsInstance<GoodsItem.Product>().sumOf { it.cart.quantity })
-        _hasNextPage.postValue((page + 1) * PAGE_SIZE < dummyGoods.size)
+        val total = newProducts.sumOf { it.cart.quantity }
+        _totalQuantity.value = total
+        _hasNextPage.value = (page + 1) * PAGE_SIZE < dummyGoods.size
     }
 
     private fun loadCarts() {
