@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.productdetail.DetailViewModel" />
@@ -96,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginBottom="30dp"
+            android:visibility="@{viewModel.recentProduct != null ? View.VISIBLE : View.GONE}"
             app:item="@{viewModel.recentProduct}"
             app:layout_constraintBottom_toTopOf="@id/btn_detail_add_cart"
             app:layout_constraintStart_toStartOf="parent"

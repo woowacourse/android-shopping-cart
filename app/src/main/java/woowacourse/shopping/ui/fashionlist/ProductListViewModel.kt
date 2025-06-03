@@ -23,9 +23,6 @@ class ProductListViewModel(
 
     private var cartItems: List<CartItem> = emptyList()
 
-    private val _navigateToDetail = MutableLiveData<Product>()
-    val navigateToDetail: LiveData<Product> = _navigateToDetail
-
     init {
         loadProducts()
     }
@@ -33,77 +30,92 @@ class ProductListViewModel(
     fun loadProducts() {
         val products = productRepository.getProductPagedItems(pageNumber++, 20)
 
-        cartRepository.getAll {
-            cartItems = it
-
-            val cartMap = cartItems.associateBy { it.id }
-
-            val newUiStates = products.map { product ->
-                ProductListViewType.FashionProductItem(
-                    product,
-                    cartMap[product.id],
-                    cartMap[product.id] == null,
-                )
+        historyRepository.getRecentProducts(10) { recentIds ->
+            val recentProductsUiState: ProductListViewType? = if (recentIds.isNotEmpty()) {
+                val recentProducts = recentIds.map { id ->
+                    productRepository.fetchById(id)
+                }
+                ProductListViewType.RecentProducts(recentProducts)
+            } else {
+                null
             }
 
-            val current = _productsUiState.value?.toMutableList() ?: mutableListOf()
-            current.addAll(newUiStates)
-            _productsUiState.postValue(current)
+            cartRepository.getAll { carts ->
+                cartItems = carts
+                val cartMap = cartItems.associateBy { it.id }
+
+                val newUiStates = products.map { product ->
+                    ProductListViewType.FashionProductItem(
+                        product = product,
+                        cartItem = cartMap[product.id],
+                        isButtonVisible = cartMap[product.id] == null,
+                    )
+                }
+
+                val current = _productsUiState.value?.toMutableList() ?: mutableListOf()
+
+                recentProductsUiState?.let { current.add(it) }
+
+                current.addAll(newUiStates)
+
+                _productsUiState.postValue(current)
+            }
         }
     }
+
 
 
     fun onFloatingButtonClick(product: Product) {
-        updateUi(product.id) { state ->
-            state.copy(
-                isButtonVisible = false,
-                cartItem = CartItem(product.id, product, 1)
-            )
-        }
-
-        val cartItem = CartItem(product.id, product, 1)
-        cartRepository.upsert(cartItem) { }
+    updateUi(product.id) { state ->
+        state.copy(
+            isButtonVisible = false,
+            cartItem = CartItem(product.id, product, 1)
+        )
     }
 
-    fun onClickLoadMore() {
-        loadProducts()
+    val cartItem = CartItem(product.id, product, 1)
+    cartRepository.upsert(cartItem) { }
+}
+
+fun onClickLoadMore() {
+    loadProducts()
+}
+
+private fun updateUi(
+    productId: Long,
+    transform: (ProductListViewType.FashionProductItem) -> ProductListViewType.FashionProductItem
+) {
+    val current = _productsUiState.value?.toMutableList() ?: return
+    val index =
+        current.indexOfFirst { it is ProductListViewType.FashionProductItem && it.product.id == productId }
+    if (index == -1) return
+
+    val updated = transform(current[index] as ProductListViewType.FashionProductItem)
+    current[index] = updated
+    _productsUiState.postValue(current)
+}
+
+override fun onClickIncrease(cartItem: CartItem) {
+    val newItem = cartItem.copy(quantity = cartItem.quantity + 1)
+    cartRepository.upsert(newItem) {
+        updateUi(cartItem.id) { state -> state.copy(cartItem = newItem) }
     }
+}
 
-    private fun updateUi(
-        productId: Long,
-        transform: (ProductListViewType.FashionProductItem) -> ProductListViewType.FashionProductItem
-    ) {
-        val current = _productsUiState.value?.toMutableList() ?: return
-        val index =
-            current.indexOfFirst { it is ProductListViewType.FashionProductItem && it.product.id == productId }
-        if (index == -1) return
-
-        val updated = transform(current[index] as ProductListViewType.FashionProductItem)
-        current[index] = updated
-        _productsUiState.postValue(current)
-    }
-
-    override fun onClickIncrease(cartItem: CartItem) {
-        val newItem = cartItem.copy(quantity = cartItem.quantity + 1)
-        cartRepository.upsert(newItem) {
-            updateUi(cartItem.id) { state -> state.copy(cartItem = newItem) }
-        }
-    }
-
-    override fun onClickDecrease(cartItem: CartItem) {
-        if (cartItem.quantity == 1) {
-            cartRepository.removeById(cartItem.id) {
-                updateUi(cartItem.id) { state ->
-                    state.copy(cartItem = null, isButtonVisible = true)
-                }
+override fun onClickDecrease(cartItem: CartItem) {
+    if (cartItem.quantity == 1) {
+        cartRepository.removeById(cartItem.id) {
+            updateUi(cartItem.id) { state ->
+                state.copy(cartItem = null, isButtonVisible = true)
             }
-            return
         }
-
-        val newItem = cartItem.copy(quantity = cartItem.quantity - 1)
-        cartRepository.upsert(newItem) {
-            updateUi(cartItem.id) { state -> state.copy(cartItem = newItem) }
-        }
+        return
     }
+
+    val newItem = cartItem.copy(quantity = cartItem.quantity - 1)
+    cartRepository.upsert(newItem) {
+        updateUi(cartItem.id) { state -> state.copy(cartItem = newItem) }
+    }
+}
 }
 

@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.room.util.copy
 import woowacourse.shopping.data.local.repository.CartRepository
 import woowacourse.shopping.data.local.repository.HistoryRepository
 import woowacourse.shopping.data.local.repository.ProductRepository
@@ -26,22 +25,30 @@ class DetailViewModel(
 
     private var _recentProductId: Long? = null
 
-    private val _recentProduct = MutableLiveData<Product>()
-    val recentProduct: LiveData<Product> = _recentProduct
+    private val _recentProduct = MutableLiveData<Product?>()
+    val recentProduct: LiveData<Product?> = _recentProduct
 
     init {
         loadLastItem()
     }
 
-    fun loadLastItem() {
-        historyRepository.getRecentProducts(1) {
-            _recentProductId = it.first()
-        }
-        val recentProductId = _recentProductId ?: return
-        val recentProduct = productRepository.fetchById(recentProductId)
-        _recentProduct.value = recentProduct
+    fun saveHistory() {
+        historyRepository.insert(product.id) {  }
+    }
 
-        historyRepository.insert(product.id) { }
+    fun loadLastItem() {
+        historyRepository.getRecentProducts(2) { recentIds ->
+            val filtered = recentIds.filter { it != product.id }
+
+            if (filtered.isEmpty()) {
+                _recentProduct.postValue(null)
+                return@getRecentProducts
+            }
+
+            val recentProductId = filtered.first()
+            val recentProduct = productRepository.fetchById(recentProductId)
+            _recentProduct.postValue(recentProduct)
+        }
     }
 
     override fun onClickIncrease(cartItem: CartItem) {

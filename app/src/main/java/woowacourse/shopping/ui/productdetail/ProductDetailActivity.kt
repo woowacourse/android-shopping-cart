@@ -37,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity() {
             product
         )
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        viewModel.saveHistory()
         applyWindowInsets()
         initObserver()
         setSupportActionBar(binding.toolbarProductDetail)
