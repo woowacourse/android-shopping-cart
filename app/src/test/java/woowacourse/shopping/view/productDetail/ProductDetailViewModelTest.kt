@@ -37,7 +37,7 @@ class ProductDetailViewModelTest {
     fun `상품을 업데이트하면 product의 값이 해당 상품이 된다`() {
         // given:
         // when:
-        productDetailViewModel.updateProduct(PRODUCT_LUCKY, false)
+        productDetailViewModel.updateProduct(PRODUCT_LUCKY)
 
         // then:
         val result = productDetailViewModel.product.getOrAwaitValue()
@@ -47,7 +47,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `쇼핑카트에 상품을 추가했을 때 성공 시 휘발성 이벤트 ADD_SHOPPING_CART_SUCCESS 값을 가진다`() {
         // given:
-        productDetailViewModel.updateProduct(PRODUCT_LUCKY, false)
+        productDetailViewModel.updateProduct(PRODUCT_LUCKY)
         every { shoppingCartRepository.add(PRODUCT_LUCKY, any(), captureLambda()) } answers {
             lambda<(Result<Unit>) -> Unit>().invoke(Result.success(Unit))
         }
@@ -63,7 +63,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `쇼핑카트에 상품을 추가했을 때 실패 시 휘발성 이벤트 ADD_SHOPPING_CART_FAILURE 값을 가진다`() {
         // given:
-        productDetailViewModel.updateProduct(PRODUCT_LUCKY, false)
+        productDetailViewModel.updateProduct(PRODUCT_LUCKY)
         every { shoppingCartRepository.add(PRODUCT_LUCKY, any(), captureLambda()) } answers {
             lambda<(Result<Unit>) -> Unit>().invoke(Result.failure(RuntimeException()))
         }
