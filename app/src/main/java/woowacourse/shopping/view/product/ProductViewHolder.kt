@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.product
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
@@ -17,23 +16,7 @@ class ProductViewHolder(
     }
 
     fun bind(item: ProductsItem.ProductItem) {
-        binding.product = item.product
-        if (item.selectedQuantity == 0) {
-            handleEmptySelectedQuantityVisibility()
-            return
-        }
-        handleSelectedQuantityVisibility(item)
-    }
-
-    private fun handleEmptySelectedQuantityVisibility() {
-        binding.productQuantityComponentLayout.visibility = View.GONE
-        binding.productPlusQuantityButtonDefault.visibility = View.VISIBLE
-    }
-
-    private fun handleSelectedQuantityVisibility(item: ProductsItem.ProductItem) {
-        binding.productQuantityComponentLayout.visibility = View.VISIBLE
-        binding.productPlusQuantityButtonDefault.visibility = View.GONE
-        binding.productQuantityComponent.quantity = item.selectedQuantity
+        binding.productItem = item
     }
 
     companion object {

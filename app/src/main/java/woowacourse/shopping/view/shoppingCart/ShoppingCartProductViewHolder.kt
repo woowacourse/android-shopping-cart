@@ -13,14 +13,11 @@ class ShoppingCartProductViewHolder(
     shoppingCartListener: ShoppingCartProductClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onRemoveProduct = shoppingCartListener::onRemoveButton
-        binding.shoppingCartQuantityComponent.productQuantityClickListener = shoppingCartListener
+        binding.shoppingCartProductClickListener = shoppingCartListener
     }
 
     fun bind(item: ProductItem) {
         binding.shoppingCartProduct = item.shoppingCartProduct
-        binding.shoppingCartQuantityComponent.product = item.shoppingCartProduct.product
-        binding.shoppingCartQuantityComponent.quantity = item.shoppingCartProduct.quantity
     }
 
     companion object {

@@ -40,25 +40,19 @@ class ProductDetailActivity :
                 return finish()
             }
         viewModel.updateProduct(product)
-        bindViewModel(product)
+        bindViewModel()
         setupObservers()
     }
 
-    private fun bindViewModel(product: Product) {
+    private fun bindViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.productDetailEventListener = this
-        binding.productDetailQuantityComponent.product = product
-        binding.productDetailQuantityComponent.productQuantityClickListener = this
     }
 
     private fun setupObservers() {
         viewModel.event.observe(this) { event: ProductDetailEvent ->
             handleEvent(event)
-        }
-
-        viewModel.quantity.observe(this) { quantity: Int ->
-            binding.productDetailQuantityComponent.quantity = quantity
         }
     }
 

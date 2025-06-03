@@ -10,8 +10,8 @@
             type="woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct" />
 
         <variable
-            name="onRemoveProduct"
-            type="kotlin.jvm.functions.Function1" />
+            name="shoppingCartProductClickListener"
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartProductViewHolder.ShoppingCartProductClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
             android:id="@+id/shoppingCartProductDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> onRemoveProduct.invoke(shoppingCartProduct.product)}"
+            android:onClick="@{() -> shoppingCartProductClickListener.onRemoveButton(shoppingCartProduct.product)}"
             android:padding="16dp"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductName"
@@ -59,21 +59,19 @@
             app:imageUrl="@{shoppingCartProduct.product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/shoppingCartProductName"
-            app:layout_constraintTop_toBottomOf="@id/shoppingCartProductName"
-            tools:src="@drawable/product_image_example" />
+            app:layout_constraintTop_toBottomOf="@id/shoppingCartProductName" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
+            android:id="@+id/shoppingCartQuantityComponent"
+            layout="@layout/component_product_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
+            app:productQuantityClickListener="@{shoppingCartProductClickListener}"
             app:layout_constraintBottom_toTopOf="@id/shoppingCartPrice"
-            app:layout_constraintEnd_toEndOf="@id/shoppingCartPrice">
-
-            <include
-                android:id="@+id/shoppingCartQuantityComponent"
-                layout="@layout/component_product_quantity" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintEnd_toEndOf="@id/shoppingCartPrice"
+            app:product="@{shoppingCartProduct.product}"
+            app:quantity="@{shoppingCartProduct.quantity}" />
 
         <TextView
             android:id="@+id/shoppingCartPrice"
