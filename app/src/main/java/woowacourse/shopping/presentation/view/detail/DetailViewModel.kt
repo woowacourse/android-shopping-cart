@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
@@ -68,16 +67,15 @@ class DetailViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory =
+        fun factory(
+            cartRepository: CartRepository,
+            productRepository: ProductRepository,
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    val cartRepository = RepositoryProvider.cartRepository
-                    val productRepository = RepositoryProvider.productRepository
-                    return DetailViewModel(cartRepository, productRepository) as T
-                }
+                ): T = DetailViewModel(cartRepository, productRepository) as T
             }
     }
 }

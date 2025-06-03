@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.math.max
@@ -96,15 +95,12 @@ class CartViewModel(
     companion object {
         private const val DEFAULT_PAGE = 1
 
-        val Factory: ViewModelProvider.Factory =
+        fun factory(cartRepository: CartRepository): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    val repository = RepositoryProvider.cartRepository
-                    return CartViewModel(repository) as T
-                }
+                ): T = CartViewModel(cartRepository) as T
             }
     }
 }

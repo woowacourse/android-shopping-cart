@@ -7,6 +7,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.databinding.FragmentCatalogBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.custom.GridSpacingItemDecoration
@@ -26,7 +27,12 @@ class CatalogFragment :
         )
     }
 
-    private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
+    private val viewModel: CatalogViewModel by viewModels {
+        CatalogViewModel.factory(
+            productRepository = RepositoryProvider.productRepository,
+            cartRepository = RepositoryProvider.cartRepository,
+        )
+    }
 
     override fun onViewCreated(
         view: View,

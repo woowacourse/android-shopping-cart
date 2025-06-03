@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseFragment
@@ -23,7 +24,7 @@ class CartFragment :
         )
     }
 
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val viewModel: CartViewModel by viewModels { CartViewModel.factory(cartRepository = RepositoryProvider.cartRepository) }
 
     private val backCallback =
         object : OnBackPressedCallback(true) {
