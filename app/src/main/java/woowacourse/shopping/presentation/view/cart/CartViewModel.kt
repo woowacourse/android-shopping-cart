@@ -13,11 +13,8 @@ import kotlin.math.max
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<CartItem>>()
+    private val _products = MutableLiveData<List<CartItem>>(emptyList())
     val products: LiveData<List<CartItem>> = _products
-
-    private val _deleteState = MutableLiveData<Long>()
-    val deleteState: LiveData<Long> = _deleteState
 
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
@@ -25,13 +22,10 @@ class CartViewModel(
     private val _hasMore = MutableLiveData<Boolean>()
     val hasMore: LiveData<Boolean> = _hasMore
 
-    private val _itemUpdateEvent = MutableLiveData<CartItem>()
-    val itemUpdateEvent: LiveData<CartItem> = _itemUpdateEvent
-
-    private val limit: Int = 5
+    private val limit = 5
 
     init {
-        fetchShoppingCart(false)
+        fetchShoppingCart(isNextPage = false)
     }
 
     fun fetchShoppingCart(
@@ -39,13 +33,11 @@ class CartViewModel(
         isRefresh: Boolean = false,
     ) {
         val currentPage = _page.value ?: DEFAULT_PAGE
-
-        val newPage = (calculatePage(isNextPage, currentPage, isRefresh))
-
+        val newPage = calculatePage(isNextPage, currentPage, isRefresh)
         val newOffset = (newPage - DEFAULT_PAGE) * limit
 
-        cartRepository.getCartItems(limit = limit, offset = newOffset) { products, hasMore ->
-            _products.postValue(products.map { it })
+        cartRepository.getCartItems(limit = limit, offset = newOffset) { items, hasMore ->
+            _products.postValue(items.toList())
             _page.postValue(newPage)
             _hasMore.postValue(hasMore)
         }
@@ -53,21 +45,38 @@ class CartViewModel(
 
     fun deleteProduct(cartItem: CartItem) {
         cartRepository.deleteCartItem(cartItem.product.id) {
-            _deleteState.postValue(it)
+            val updatedList =
+                _products.value.orEmpty().filterNot {
+                    it.product.id == cartItem.product.id
+                }
+            _products.postValue(updatedList)
         }
     }
 
     fun increaseAmount(productId: Long) {
         cartRepository.increaseCartItem(productId) { updatedItem ->
-            updatedItem?.let { _itemUpdateEvent.postValue(it) }
+            updatedItem?.let {
+                val updatedList =
+                    _products.value.orEmpty().map {
+                        if (it.product.id == productId) updatedItem else it
+                    }
+                _products.postValue(updatedList)
+            }
         }
     }
 
     fun decreaseAmount(productId: Long) {
         cartRepository.decreaseCartItem(productId) { updatedItem ->
-            updatedItem?.let {
-                _itemUpdateEvent.postValue(it)
-            } ?: _deleteState.postValue(productId)
+            val currentList = _products.value.orEmpty()
+            val newList =
+                if (updatedItem == null) {
+                    currentList.filterNot { it.product.id == productId }
+                } else {
+                    currentList.map {
+                        if (it.product.id == productId) updatedItem else it
+                    }
+                }
+            _products.postValue(newList)
         }
     }
 
@@ -77,19 +86,16 @@ class CartViewModel(
         isRefresh: Boolean,
     ): Int {
         if (isRefresh) return currentPage
-
         return if (isNextPage) {
             currentPage + DEFAULT_PAGE
         } else {
-            max(
-                DEFAULT_PAGE,
-                currentPage - DEFAULT_PAGE,
-            )
+            max(DEFAULT_PAGE, currentPage - DEFAULT_PAGE)
         }
     }
 
     companion object {
         private const val DEFAULT_PAGE = 1
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(

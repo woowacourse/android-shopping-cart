@@ -24,6 +24,7 @@ class CartFragment :
     }
 
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+
     private val backCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -36,10 +37,12 @@ class CartFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        binding.recyclerViewCart.adapter = cartAdapter
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        initObserver()
+        observeViewModel()
         initListener()
-        setCartAdapter()
 
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
     }
@@ -61,31 +64,13 @@ class CartFragment :
         viewModel.decreaseAmount(productId)
     }
 
-    private fun setCartAdapter() {
-        binding.recyclerViewCart.adapter = cartAdapter
-    }
-
-    private fun initObserver() {
-        binding.vm = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+    private fun observeViewModel() {
+        viewModel.products.observe(viewLifecycleOwner) {
+            cartAdapter.submitList(it)
+        }
 
         viewModel.page.observe(viewLifecycleOwner) {
             binding.recyclerViewCart.smoothScrollToPosition(0)
-        }
-
-        viewModel.products.observe(viewLifecycleOwner) {
-            cartAdapter.updateCartItems(it)
-        }
-
-        viewModel.deleteState.observe(viewLifecycleOwner) {
-            it?.let {
-                cartAdapter.removeProduct(it)
-                viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
-            }
-        }
-
-        viewModel.itemUpdateEvent.observe(viewLifecycleOwner) {
-            cartAdapter.updateItem(it)
         }
     }
 

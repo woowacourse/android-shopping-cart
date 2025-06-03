@@ -10,7 +10,7 @@ import woowacourse.shopping.presentation.view.ItemCounterListener
 class CatalogAdapter(
     private val eventListener: CatalogEventListener,
     private val itemCounterListener: ItemCounterListener,
-) : ListAdapter<CatalogItem, RecyclerView.ViewHolder>(DiffCallback) {
+) : ListAdapter<CatalogItem, RecyclerView.ViewHolder>(itemDiffCallback) {
     override fun getItemViewType(position: Int): Int = getItem(position).viewType.ordinal
 
     override fun onCreateViewHolder(
@@ -68,7 +68,7 @@ class CatalogAdapter(
     }
 
     companion object {
-        private val DiffCallback =
+        private val itemDiffCallback =
             object : DiffUtil.ItemCallback<CatalogItem>() {
                 override fun areItemsTheSame(
                     oldItem: CatalogItem,
