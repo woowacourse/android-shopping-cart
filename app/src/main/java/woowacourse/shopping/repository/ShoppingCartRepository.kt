@@ -3,7 +3,7 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.products.ShoppingCart
 
 interface ShoppingCartRepository {
-    fun addCart(
+    fun updateCart(
         productId: Int,
         quantity: Int,
     )
@@ -13,5 +13,6 @@ interface ShoppingCartRepository {
     fun singlePage(
         page: Int,
         size: Int,
-    ): List<ShoppingCart>
+        onResult: (List<ShoppingCart>) -> Unit,
+    )
 }
