@@ -1,17 +1,51 @@
 package woowacourse.shopping.data.repository
 
+import android.os.Handler
+import android.os.Looper
 import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
 object ProductDummyRepositoryImpl : ProductRepository {
-    const val INITIAL_PRODUCT_ID: Int = 0
+
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun fetchProducts(
         count: Int,
         lastId: Int,
-    ): List<Product> = dummyProducts.filter { it.id > lastId }.take(count)
+        onSuccess: (List<Product>) -> Unit
+    ) {
+        Thread {
+            val result = dummyProducts
+                .filter { it.id > lastId }
+                .take(count)
 
-    override fun fetchProductDetail(id: Int): Product? = dummyProducts.find { it.id == id }
+            mainHandler.post {
+                onSuccess(result)
+            }
+        }.start()
+    }
 
-    override fun fetchIsProductsLoadable(lastId: Int): Boolean = dummyProducts.maxOfOrNull { it.id > lastId } == true
+    override fun fetchProductDetail(
+        id: Int,
+        onSuccess: (Product?) -> Unit
+    ) {
+        Thread {
+            val result = dummyProducts.find { it.id == id }
+            mainHandler.post {
+                onSuccess(result)
+            }
+        }.start()
+    }
+
+    override fun fetchIsProductsLoadable(
+        lastId: Int,
+        onSuccess: (Boolean) -> Unit
+    ) {
+        Thread {
+            val result = dummyProducts.any { it.id > lastId }
+            mainHandler.post {
+                onSuccess(result)
+            }
+        }.start()
+    }
 }

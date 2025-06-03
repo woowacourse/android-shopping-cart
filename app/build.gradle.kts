@@ -66,4 +66,11 @@ dependencies {
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     implementation(libs.glide)
+    implementation("androidx.room:room-runtime:2.7.1")
+    kapt("androidx.room:room-compiler:2.7.1")
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("com.google.code.gson:gson:2.10.1")
+
 }

@@ -15,4 +15,7 @@
     <string name="cart_title">Cart</string>
     <string name="cart_page_previous"><![CDATA[<]]></string>
     <string name="cart_page_next"><![CDATA[>]]></string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="lastProductText">마지막으로 본 상품</string>
 </resources>

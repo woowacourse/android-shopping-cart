@@ -8,8 +8,13 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.presentation.productdetail.ProductDetailViewModel" />
+        <variable
+            name="lastProduct"
+            type="woowacourse.shopping.domain.model.Product" />
 
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,37 +57,56 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_name" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingHorizontal="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@{@string/products_price(viewModel.product.price*viewModel.count)}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_product_detail">
+            app:layout_constraintTop_toBottomOf="@+id/divider_product_detail"
+            app:layout_constraintVertical_bias="0.058"
+            tools:text="99,800원" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/divider_product_detail"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product_detail_price"
+                android:text="@string/minus"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+                android:textSize="30sp"
+                android:layout_marginEnd="30dp"
+                android:onClick="@{()->viewModel.downCount()}"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/products_price(viewModel.product.price)}"
+                android:text="@{String.valueOf(viewModel.count)}"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:text="99,800원" />
+                android:textSize="30sp"
+                android:layout_marginEnd="30dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plus"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:onClick="@{()->viewModel.upCount()}"/>
         </LinearLayout>
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint_1"
@@ -96,5 +120,35 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:background="@drawable/bg_product_detail_gray_4_border"
+            app:isGone="@{viewModel.isEqualProduct}"/>        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/lastProductText"
+            android:textColor="@color/mint_1"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toTopOf="@+id/view"
+            app:isGone="@{viewModel.isEqualProduct}" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="@{lastProduct.name}"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            android:textSize="20sp"
+            tools:text="상품이름이 들어갑니다"
+        app:isGone="@{viewModel.isEqualProduct}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

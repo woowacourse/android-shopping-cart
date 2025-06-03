@@ -1,0 +1,73 @@
+package woowacourse.shopping.data.repository
+
+import woowacourse.shopping.data.dao.CartDao
+import woowacourse.shopping.data.dao.ProductDao
+import woowacourse.shopping.data.entity.CartEntity
+import woowacourse.shopping.data.entity.toDomain
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.Product
+import android.os.Handler
+import android.os.Looper
+
+
+class CartRepositoryImpl(
+    private val cartDao: CartDao,
+    private val productDao: ProductDao
+) : CartRepository {
+
+    private val loadItemCount = 5
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    override fun fetchCartProducts(page: Int, onSuccess: (List<CartProduct>) -> Unit) {
+        Thread {
+            val offset = (page - 1) * loadItemCount
+            val result = cartDao.fetchPagedCart(loadItemCount, offset)
+                .mapNotNull { it.toDomain(productDao) }
+
+                onSuccess(result)
+
+        }.start()
+    }
+
+    override fun fetchAllProduct(onSuccess: (List<CartProduct>) -> Unit) {
+        Thread {
+            val result = cartDao.getAll().mapNotNull { it.toDomain(productDao) }
+
+            onSuccess(result)
+
+        }.start()
+    }
+
+    override fun fetchMaxPageCount(onSuccess: (Int) -> Unit) {
+        Thread {
+            val total = cartDao.getTotalCount()
+            val pageCount = (total + loadItemCount - 1) / loadItemCount
+            mainHandler.post {
+                onSuccess(pageCount)
+            }
+        }.start()
+    }
+
+    override fun upsertCartProduct(product: Product, count: Int) {
+        Thread {
+            val existing = cartDao.getAll().find { it.productId == product.id }
+            val newCount = (existing?.count ?: 0) + count
+            cartDao.deleteById(product.id)
+            if (newCount >= 1) {
+                cartDao.upsert(CartEntity(productId = product.id, count = newCount))
+            }
+        }.start()
+    }
+
+    override fun removeCartProduct(id: Int) {
+        Thread {
+            cartDao.deleteById(id)
+        }.start()
+    }
+
+    override fun clearCart() {
+        Thread {
+            cartDao.clear()
+        }.start()
+    }
+}

@@ -6,19 +6,23 @@
     <data>
 
         <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.products.ProductsViewModel" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
 
-        <variable
-            name="onClickHandler"
-            type="woowacourse.shopping.presentation.ui.products.ProductViewHolder.OnClickHandler" />
+        <import type="android.view.View" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->onClickHandler.onProductClick(product.id)}"
         android:padding="6dp">
+
 
         <ImageView
             android:id="@+id/iv_product_preview"
@@ -64,5 +68,72 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product_preview"
+            app:layout_constraintDimensionRatio="3:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.9"
+            app:isGone="@{(vm.cart[product.id] == null)}"
+            >
+
+            <TextView
+                android:id="@+id/tv_product_minus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_products_white_1_radius_left_100dp"
+                android:gravity="center"
+                android:text="@string/minus"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/tv_product_count"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_products_white_1"
+                android:gravity="center"
+                android:text="@{String.valueOf(vm.cart[product.id])}"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_product_plus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_products_white_1_radius_right_100dp"
+                android:gravity="center"
+                android:text="@string/plus"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_product_open_count"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_products_circle_white"
+            android:backgroundTint="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/plus"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:isGone="@{(vm.cart[product.id] != null)}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_preview"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@+id/iv_product_preview"
+            app:layout_constraintWidth_percent="0.3" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

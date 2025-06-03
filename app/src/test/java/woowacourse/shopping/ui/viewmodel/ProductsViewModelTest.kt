@@ -4,17 +4,24 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ProductsViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductsViewModelTest {
     private lateinit var viewModel: ProductsViewModel
+    private lateinit var fakeCartRepository: FakeCartRepository
+    private lateinit var fakeProductRepository: FakeProductRepository
+    private lateinit var fakeLastProductRepository: FakeLastProductRepository
 
     @BeforeEach
     fun setup() {
-        viewModel = ProductsViewModel(FakeProductRepository())
+        fakeCartRepository = FakeCartRepository()
+        fakeProductRepository = FakeProductRepository()
+        fakeLastProductRepository = FakeLastProductRepository()
+
+        viewModel = ProductsViewModel(fakeProductRepository,fakeCartRepository,fakeLastProductRepository)
     }
 
     @Test
