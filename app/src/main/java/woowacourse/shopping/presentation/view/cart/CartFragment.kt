@@ -96,6 +96,8 @@ class CartFragment :
     }
 
     private fun navigateToScreen() {
+        parentFragmentManager.setFragmentResult("cart_update_result", Bundle())
+
         parentFragmentManager.popBackStack()
         parentFragmentManager.commit {
             remove(this@CartFragment)

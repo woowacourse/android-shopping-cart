@@ -66,6 +66,8 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     }
 
     private fun navigateToScreen() {
+        parentFragmentManager.setFragmentResult("cart_update_result", Bundle())
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             replace(R.id.shopping_fragment_container, CartFragment::class.java, null)
