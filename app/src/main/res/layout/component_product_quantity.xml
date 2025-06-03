@@ -25,17 +25,11 @@
 
         <TextView
             android:id="@+id/productMinusQuantityButton"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
+            style="@style/ProductQuantityButton"
             android:background="@drawable/background_product_minus_quantity_button"
-            android:gravity="center"
             android:onClick="@{() -> productQuantityClickListener.onMinusShoppingCartClick(product)}"
             android:text="@string/product_minus_quantity_button"
-            android:textColor="@color/gray_5"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/productQuantity"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent" />
@@ -59,15 +53,10 @@
 
         <TextView
             android:id="@+id/productPlusQuantityButton"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
+            style="@style/ProductQuantityButton"
             android:background="@drawable/background_product_plus_quantity_button"
-            android:gravity="center"
             android:onClick="@{() -> productQuantityClickListener.onPlusShoppingCartClick(product)}"
             android:text="@string/product_plus_quantity_button"
-            android:textColor="@color/gray_5"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/productPlusQuantityButton"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
