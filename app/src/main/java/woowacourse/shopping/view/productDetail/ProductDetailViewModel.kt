@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
@@ -13,10 +14,11 @@ import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
+    product: Product,
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
     private val productsRepository: ProductsRepository = DefaultProductsRepository.get(),
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
+    private val _product: MutableLiveData<Product> = MutableLiveData(product)
     val product: LiveData<Product> get() = _product
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
@@ -38,16 +40,11 @@ class ProductDetailViewModel(
         _recentProductBoxVisible.addSource(_recentWatchingProduct) { product ->
             _recentProductBoxVisible.value = !isLastWatchingProduct(product)
         }
+        _price.value = this.product.value?.price
+        getRecentWatchingProduct()
     }
 
     private fun isLastWatchingProduct(product: Product): Boolean = product.id == _product.value?.id
-
-    fun updateProduct(product: Product) {
-        _product.value = product
-        _price.value = product.price
-
-        getRecentWatchingProduct()
-    }
 
     private fun getRecentWatchingProduct() {
         productsRepository.getRecentWatchingProducts(1) { result ->
@@ -89,5 +86,13 @@ class ProductDetailViewModel(
     fun minusQuantity() {
         _quantity.value = (_quantity.value)?.minus(1)?.coerceAtLeast(1)
         _price.value = quantity.value?.times(product.value?.price ?: 0)
+    }
+
+    companion object {
+        fun provideFactory(product: Product): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T = ProductDetailViewModel(product) as T
+            }
     }
 }

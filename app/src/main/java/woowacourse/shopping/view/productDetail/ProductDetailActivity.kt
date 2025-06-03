@@ -19,7 +19,13 @@ import woowacourse.shopping.view.common.showSnackBar
 class ProductDetailActivity :
     AppCompatActivity(),
     ProductDetailListener {
-    private val viewModel: ProductDetailViewModel by viewModels()
+    private val viewModel: ProductDetailViewModel by viewModels {
+        ProductDetailViewModel.provideFactory(
+            intent.getSerializableExtraData(EXTRA_PRODUCT)
+                ?: error("상품 상세 화면: Product 가 전달되지 않았습니다."),
+        )
+    }
+
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
     }
@@ -30,16 +36,14 @@ class ProductDetailActivity :
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.productDetailRoot)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom,
+            )
             insets
         }
-
-        val product: Product =
-            intent.getSerializableExtraData(EXTRA_PRODUCT) ?: run {
-                binding.root.showSnackBar(getString(R.string.product_not_provided_error_message))
-                return finish()
-            }
-        viewModel.updateProduct(product)
         bindViewModel()
         setupObservers()
     }
