@@ -19,7 +19,7 @@ import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private val cartId by lazy { intent.getLongExtra(GOODS_KEY, 0) }
+    private val goodsId by lazy { intent.getLongExtra(GOODS_KEY, 0) }
     private val viewModel: GoodsDetailsViewModel by viewModels {
         (application as ShoppingApplication).goodsDetailsFactory
     }
@@ -29,7 +29,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.setInitialCart(cartId)
+        viewModel.setInitialCart(goodsId)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -76,7 +76,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
                         setResult(
                             ResultCode.GOODS_DETAIL_INSERT.code,
                             Intent().apply {
-                                putExtra(GOODS_ID, cartId)
+                                putExtra(GOODS_ID, goodsId)
                                 putExtra(GOODS_QUANTITY, viewModel.cart.value?.quantity)
                             },
                         )
@@ -97,7 +97,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
         setResult(
             ResultCode.GOODS_DETAIL_INSERT.code,
             Intent().apply {
-                putExtra(HISTORY_ID, cartId)
+                putExtra(HISTORY_ID, goodsId)
             },
         )
     }
@@ -131,10 +131,10 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         fun newIntent(
             context: Context,
-            cartId: Long,
+            goodsId: Long,
         ): Intent =
             Intent(context, GoodsDetailsActivity::class.java).apply {
-                putExtra(GOODS_KEY, cartId)
+                putExtra(GOODS_KEY, goodsId)
             }
     }
 }
