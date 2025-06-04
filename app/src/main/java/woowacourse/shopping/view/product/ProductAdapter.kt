@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -37,12 +38,24 @@ class ProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
+        val isUpdatedAllItems: Boolean =
+            this.items.none { it is ProductsItem.RecentWatchingItem } && items.any { it is ProductsItem.RecentWatchingItem }
+        if (isUpdatedAllItems) {
+            changeAllItems(items)
+            return
+        }
         if (items.size > this.items.size) {
             appendItems(items)
             return
         }
 
         changeItems(items)
+    }
+
+    private fun changeAllItems(items: List<ProductsItem>) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
     }
 
     private fun changeItems(items: List<ProductsItem>) {
