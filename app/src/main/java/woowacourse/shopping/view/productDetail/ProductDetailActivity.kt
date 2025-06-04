@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -61,25 +60,52 @@ class ProductDetailActivity :
     }
 
     private fun handleEvent(event: ProductDetailEvent) {
-        @StringRes
-        val messageResourceId: Int =
-            when (event) {
-                ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
-                ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
-                ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE -> R.string.product_detail_add_recent_watching_error_message
-                ProductDetailEvent.GET_RECENT_WATCHING_FAILURE -> R.string.product_detail_update_recent_watching_error_message
+        when (event) {
+            ProductDetailEvent.CartAdditionFailed ->
+                binding.root.showSnackBar(
+                    getString(R.string.product_detail_add_shopping_cart_error_message),
+                )
+
+            ProductDetailEvent.CartAdditionSucceeded ->
+                binding.root.showSnackBar(
+                    getString(
+                        R.string.product_detail_add_shopping_cart_success_message,
+                    ),
+                )
+
+            is ProductDetailEvent.UpdatedProductRequested -> {
+                val intent =
+                    Intent().apply {
+                        putExtra("updateProduct", event.product)
+                    }
+                setResult(ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK, intent)
+                finish()
             }
 
-        binding.root.showSnackBar(getString(messageResourceId))
+            ProductDetailEvent.RecentProductFetchFailed ->
+                binding.root.showSnackBar(
+                    getString(R.string.product_detail_update_recent_watching_error_message),
+                )
+
+            ProductDetailEvent.RecentProductAdditionFailed ->
+                binding.root.showSnackBar(
+                    getString(R.string.product_detail_add_recent_watching_error_message),
+                )
+
+            is ProductDetailEvent.RecentProductRequested -> {
+                val intent =
+                    Intent().apply {
+                        putExtra("recentProduct", event.recentProduct)
+                        putExtra("updateProduct", event.currentProduct)
+                    }
+                setResult(ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 
     override fun onCloseButtonClick() {
-        val intent =
-            Intent().apply {
-                putExtra("updateProduct", viewModel.product.value)
-            }
-        setResult(ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK, intent)
-        finish()
+        viewModel.updateProductRequestedEvent()
     }
 
     override fun onAddingToShoppingCartClick() {
@@ -95,13 +121,7 @@ class ProductDetailActivity :
     }
 
     override fun onRecentProductClick(product: Product) {
-        val intent =
-            Intent().apply {
-                putExtra("recentProduct", viewModel.recentWatchingProduct.value)
-                putExtra("updateProduct", viewModel.product.value)
-            }
-        setResult(ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK, intent)
-        finish()
+        viewModel.updateRecentProductEvent()
     }
 
     companion object {

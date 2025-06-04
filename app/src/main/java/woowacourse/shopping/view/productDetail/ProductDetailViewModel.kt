@@ -54,7 +54,7 @@ class ProductDetailViewModel(
                     _recentWatchingProduct.postValue(recentProducts[0])
                     updateRecentWatchingProduct()
                 }.onFailure {
-                    _event.postValue(ProductDetailEvent.GET_RECENT_WATCHING_FAILURE)
+                    _event.postValue(ProductDetailEvent.RecentProductFetchFailed)
                 }
         }
     }
@@ -62,7 +62,7 @@ class ProductDetailViewModel(
     private fun updateRecentWatchingProduct() {
         productsRepository.updateRecentWatchingProduct(product.value?.id ?: return) { result ->
             result.onFailure {
-                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
+                _event.postValue(ProductDetailEvent.RecentProductAdditionFailed)
             }
         }
     }
@@ -72,9 +72,9 @@ class ProductDetailViewModel(
         shoppingCartRepository.add(product, quantity.value ?: return) { result ->
             result
                 .onSuccess {
-                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
+                    _event.postValue(ProductDetailEvent.CartAdditionSucceeded)
                 }.onFailure {
-                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
+                    _event.postValue(ProductDetailEvent.CartAdditionFailed)
                 }
         }
     }
@@ -87,6 +87,19 @@ class ProductDetailViewModel(
     fun minusQuantity() {
         _quantity.value = (_quantity.value)?.minus(1)?.coerceAtLeast(1)
         _price.value = quantity.value?.times(product.value?.price ?: 0)
+    }
+
+    fun updateProductRequestedEvent() {
+        _event.setValue(ProductDetailEvent.UpdatedProductRequested(product.value ?: return))
+    }
+
+    fun updateRecentProductEvent() {
+        _event.setValue(
+            ProductDetailEvent.RecentProductRequested(
+                currentProduct = product.value ?: return,
+                recentProduct = recentWatchingProduct.value ?: return,
+            ),
+        )
     }
 
     companion object {

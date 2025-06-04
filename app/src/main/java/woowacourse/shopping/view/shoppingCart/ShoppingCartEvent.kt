@@ -1,8 +1,17 @@
 package woowacourse.shopping.view.shoppingCart
 
-enum class ShoppingCartEvent {
-    UPDATE_SHOPPING_CART_FAILURE,
-    REMOVE_SHOPPING_CART_PRODUCT_FAILURE,
-    DECREASE_SHOPPING_CART_PRODUCT_FAILURE,
-    ADD_SHOPPING_CART_PRODUCT_FAILURE,
+import woowacourse.shopping.domain.product.Product
+
+sealed interface ShoppingCartEvent {
+    data object CartRemovedFailed : ShoppingCartEvent
+
+    data object CartFetchFailed : ShoppingCartEvent
+
+    data object CartIncreasingFailed : ShoppingCartEvent
+
+    data object CartDecreasingFailed : ShoppingCartEvent
+
+    data class UpdatedProductRequested(
+        val products: Array<Product>,
+    ) : ShoppingCartEvent
 }

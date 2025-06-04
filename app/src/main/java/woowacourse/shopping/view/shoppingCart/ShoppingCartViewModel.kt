@@ -42,7 +42,7 @@ class ShoppingCartViewModel(
                     val items = createShoppingCartItems(shoppingCartProducts)
                     _shoppingCart.postValue(items)
                 }.onFailure {
-                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
+                    _event.postValue(ShoppingCartEvent.CartFetchFailed)
                 }
         }
     }
@@ -83,7 +83,7 @@ class ShoppingCartViewModel(
                     currentUpdatedProducts.add(product)
                     _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
-                    _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
+                    _event.postValue(ShoppingCartEvent.CartRemovedFailed)
                 }
         }
     }
@@ -99,7 +99,7 @@ class ShoppingCartViewModel(
                     currentUpdatedProducts.add(product)
                     _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
-                    _event.postValue(ShoppingCartEvent.DECREASE_SHOPPING_CART_PRODUCT_FAILURE)
+                    _event.postValue(ShoppingCartEvent.CartDecreasingFailed)
                 }
         }
     }
@@ -115,7 +115,7 @@ class ShoppingCartViewModel(
                     currentUpdatedProducts.add(product)
                     _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
-                    _event.postValue(ShoppingCartEvent.ADD_SHOPPING_CART_PRODUCT_FAILURE)
+                    _event.postValue(ShoppingCartEvent.CartIncreasingFailed)
                 }
         }
     }
@@ -128,6 +128,14 @@ class ShoppingCartViewModel(
     fun minusPage() {
         page = page.minus(1).coerceAtLeast(MINIMUM_PAGE)
         updateShoppingCart()
+    }
+
+    fun updateProductsRequest() {
+        _event.postValue(
+            ShoppingCartEvent.UpdatedProductRequested(
+                updatedProducts.value?.toTypedArray() ?: emptyArray(),
+            ),
+        )
     }
 
     companion object {
