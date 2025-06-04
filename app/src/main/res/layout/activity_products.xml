@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="adapter"
             type="woowacourse.shopping.view.product.ProductAdapter" />
@@ -12,6 +14,10 @@
         <variable
             name="onClickShoppingCartButton"
             type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.view.product.ProductsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,7 +75,9 @@
                     android:layout_marginStart="2dp"
                     android:background="@drawable/background_shopping_cart_quantity"
                     android:gravity="center"
+                    android:text="@{String.valueOf(viewModel.shoppingCartQuantity)}"
                     android:textColor="@color/white"
+                    android:visibility="@{viewModel.shoppingCartQuantity>0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@id/productsShoppingCartQuantity"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"

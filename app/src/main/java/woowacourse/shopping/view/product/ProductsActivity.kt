@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -83,6 +82,7 @@ class ProductsActivity :
     private fun initDataBinding() {
         binding.adapter = productAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
+        binding.viewModel = this.viewModel
         binding.lifecycleOwner = this
     }
 
@@ -91,20 +91,8 @@ class ProductsActivity :
             productAdapter.submitList(products)
         }
 
-        viewModel.shoppingCartQuantity.observe(this) { shoppingCartQuantity: Int ->
-            handleShoppingCartQuantity(shoppingCartQuantity)
-        }
-
         viewModel.event.observe(this) { event: ProductsEvent ->
             handleUiEvent(event)
-        }
-    }
-
-    private fun handleShoppingCartQuantity(shoppingCartQuantity: Int) {
-        binding.productsShoppingCartQuantity.apply {
-            visibility =
-                if (shoppingCartQuantity > 0) View.VISIBLE else View.GONE
-            text = shoppingCartQuantity.toString()
         }
     }
 
