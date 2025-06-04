@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.goodsdetails
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -72,9 +73,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
             )
         }
         viewModel.clickMostRecentlyGoodsEvent.observe(this) { mostRecentGoods ->
-            val intent = newIntent(this, mostRecentGoods.toUi())
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            intent.putExtra(EXTRA_SOURCE, SOURCE_RECENTLY_VIEWED)
+            val intent = fromDetails(this, mostRecentGoods.toUi())
             startActivity(intent)
         }
     }
@@ -104,17 +103,33 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
     companion object {
         private const val GOODS_KEY = "GOODS"
+        private const val EXTRA_SOURCE = "extra_source"
+        private const val SOURCE_RECENTLY_VIEWED = "recently_viewed"
+        private const val SOURCE_GOODS_LIST = "goods_list"
 
-        fun newIntent(
+        fun fromGoods(
+            context: Context,
+            goods: GoodsUiModel,
+        ): Intent =
+            createBaseIntent(context, goods).apply {
+                putExtra(EXTRA_SOURCE, SOURCE_GOODS_LIST)
+            }
+
+        fun fromDetails(
+            context: Context,
+            goods: GoodsUiModel,
+        ): Intent =
+            createBaseIntent(context, goods).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP
+                putExtra(EXTRA_SOURCE, SOURCE_RECENTLY_VIEWED)
+            }
+
+        private fun createBaseIntent(
             context: Context,
             goods: GoodsUiModel,
         ): Intent =
             Intent(context, GoodsDetailsActivity::class.java).apply {
                 putExtra(GOODS_KEY, goods)
             }
-
-        const val EXTRA_SOURCE = "extra_source"
-        const val SOURCE_RECENTLY_VIEWED = "recently_viewed"
-        const val SOURCE_GOODS_LIST = "goods_list"
     }
 }

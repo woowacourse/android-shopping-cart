@@ -26,8 +26,6 @@ import woowacourse.shopping.feature.goods.adapter.horizontal.RecentlyViewedGoods
 import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
-import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity.Companion.EXTRA_SOURCE
-import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity.Companion.SOURCE_GOODS_LIST
 import woowacourse.shopping.util.toUi
 
 class GoodsActivity : AppCompatActivity() {
@@ -139,8 +137,7 @@ class GoodsActivity : AppCompatActivity() {
     }
 
     private fun navigateGoodsDetails(goods: Goods) {
-        val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
-        intent.putExtra(EXTRA_SOURCE, SOURCE_GOODS_LIST)
+        val intent = GoodsDetailsActivity.fromGoods(this, goods.toUi())
         startActivity(intent)
     }
 
