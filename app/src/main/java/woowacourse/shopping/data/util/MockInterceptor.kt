@@ -1,5 +1,7 @@
 package woowacourse.shopping.data.util
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -10,6 +12,8 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import woowacourse.shopping.BuildConfig
 
 class MockInterceptor : Interceptor {
+    private val gson = Gson()
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
@@ -27,10 +31,19 @@ class MockInterceptor : Interceptor {
             path.matches(Regex("/products/\\d+")) -> {
                 val productId = path.substringAfterLast("/").toIntOrNull()
                 if (productId != null) {
-                    createMockResponse(request, 200, getProductByIdJson(productId))
+                    createMockResponse(request, 200, getProductJsonById(productId))
                 } else {
                     createMockResponse(request, 404, """{"error": "Invalid product ID"}""")
                 }
+            }
+            path == "/products/ids" && request.method == "POST" -> {
+                val buffer = okio.Buffer()
+                request.body?.writeTo(buffer)
+                val bodyString = buffer.readUtf8()
+                val requestData = gson.fromJson(bodyString, JsonObject::class.java)
+                val ids = requestData.getAsJsonArray("ids")?.map { it.asInt } ?: emptyList()
+
+                createMockResponse(request, 200, getProductJsonByIds(ids))
             }
 
             path == "/products" && (url.queryParameter("limit") != null || url.queryParameter("offset") != null) -> {
@@ -72,7 +85,27 @@ class MockInterceptor : Interceptor {
         }
         """.trimIndent()
 
-    private fun getProductByIdJson(productId: Int): String {
+    private fun getProductJsonByIds(productIds: List<Int>): String {
+        val selectedProducts =
+            productIds.mapNotNull { productId ->
+                val index = productId - 1
+                if (index in allProducts.indices) allProducts[index] else null
+            }
+
+        return if (selectedProducts.isNotEmpty()) {
+            """
+        {
+            "products": [
+                ${selectedProducts.joinToString(",\n                ")}
+            ]
+        }
+        """
+        } else {
+            """{"error": "Product not found"}"""
+        }
+    }
+
+    private fun getProductJsonById(productId: Int): String {
         val productIndex = productId - 1
 
         return if (productIndex in allProducts.indices) {
