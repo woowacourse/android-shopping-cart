@@ -12,7 +12,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.goods.GoodsDto
-import woowacourse.shopping.data.util.ApiEndpoints.PRODUCTS
 import woowacourse.shopping.data.util.mapper.toDomain
 import woowacourse.shopping.domain.model.Goods
 import java.io.IOException
@@ -24,7 +23,7 @@ class GoodsRemoteDataSourceImpl(
     private val gson = Gson()
 
     override fun fetchGoodsSize(onComplete: (Int) -> Unit) {
-        val request = createGetRequest("$PRODUCTS/size")
+        val request = createGetRequest("products/size")
         executeRequest(request) { jsonString ->
             val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
             val size = jsonObject.get("size")?.asInt ?: 0
@@ -37,7 +36,7 @@ class GoodsRemoteDataSourceImpl(
         offset: Int,
         onComplete: (List<Goods>) -> Unit,
     ) {
-        val request = createGetRequest("$PRODUCTS?limit=$limit&offset=$offset")
+        val request = createGetRequest("products?limit=$limit&offset=$offset")
         executeRequestForGoodsList(request, onComplete)
     }
 
@@ -45,7 +44,7 @@ class GoodsRemoteDataSourceImpl(
         id: Int,
         onComplete: (Goods?) -> Unit,
     ) {
-        val request = createGetRequest("$PRODUCTS/$id")
+        val request = createGetRequest("products/$id")
         executeRequest(request) { jsonString ->
             try {
                 val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
@@ -67,7 +66,7 @@ class GoodsRemoteDataSourceImpl(
         onComplete: (List<Goods>?) -> Unit,
     ) {
         val requestBody = gson.toJson(mapOf("ids" to ids))
-        val request = createPostRequest("$PRODUCTS/ids", requestBody)
+        val request = createPostRequest("products/ids", requestBody)
 
         executeRequestForGoodsList(request) { goodsList ->
             onComplete(goodsList)
@@ -131,7 +130,7 @@ class GoodsRemoteDataSourceImpl(
         executeRequest(request) { jsonString ->
             try {
                 val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-                val productsJsonArray = jsonObject.getAsJsonArray(PRODUCTS)
+                val productsJsonArray = jsonObject.getAsJsonArray("products")
                 val listType = object : TypeToken<List<GoodsDto>>() {}.type
                 val goodsDtoList: List<GoodsDto> = gson.fromJson(productsJsonArray, listType)
                 onComplete(goodsDtoList.toDomain())
