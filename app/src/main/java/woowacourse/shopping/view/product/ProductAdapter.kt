@@ -2,13 +2,11 @@ package woowacourse.shopping.view.product
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.product.Product
 
 class ProductAdapter(
-    private val onSelectProduct: (Product) -> Unit,
-    private val onLoad: () -> Unit,
+    private val productListener: ProductListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<ProductsItem> = emptyList()
+    private val items: MutableList<ProductsItem> = mutableListOf()
 
     override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
@@ -17,8 +15,13 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (ProductsItem.ItemType.from(viewType)) {
-            ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
-            ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
+            ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, productListener)
+            ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, productListener)
+            ProductsItem.ItemType.RECENT_WATCHING ->
+                ProductRecentWatchingViewHolder.of(
+                    parent,
+                    productListener,
+                )
         }
 
     override fun onBindViewHolder(
@@ -27,17 +30,55 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> holder.bind(items[position] as ProductsItem.ProductItem)
+            is ProductRecentWatchingViewHolder -> holder.bind((items[position] as ProductsItem.RecentWatchingItem).products)
         }
     }
 
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
+        val isUpdatedAllItems: Boolean =
+            this.items.none { it is ProductsItem.RecentWatchingItem } && items.any { it is ProductsItem.RecentWatchingItem }
+        if (isUpdatedAllItems) {
+            changeAllItems(items)
+            return
+        }
+        if (items.size > this.items.size) {
+            appendItems(items)
+            return
+        }
+
+        changeItems(items)
+    }
+
+    private fun changeAllItems(items: List<ProductsItem>) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    private fun changeItems(items: List<ProductsItem>) {
+        items.forEachIndexed { index, newItem ->
+            val oldItem = this.items[index]
+            if (oldItem != newItem) {
+                this.items[index] = newItem
+                notifyItemChanged(index)
+            }
+        }
+    }
+
+    private fun appendItems(items: List<ProductsItem>) {
         val previousSize = this.items.size
         val insertedCount = items.size - previousSize
 
-        this.items = items
+        this.items.clear()
+        this.items.addAll(items)
 
         notifyItemRangeInserted(previousSize, insertedCount)
     }
+
+    interface ProductListener :
+        ProductViewHolder.ProductListener,
+        ProductMoreViewHolder.ProductMoreListener,
+        RecentProductViewHolder.ProductRecentMoreWatchingListener
 }

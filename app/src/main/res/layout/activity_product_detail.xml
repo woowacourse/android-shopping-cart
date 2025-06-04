@@ -5,13 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
 
         <variable
             name="productDetailEventListener"
-            type="woowacourse.shopping.view.productDetail.ProductDetailClickListener" />
+            type="woowacourse.shopping.view.productDetail.ProductDetailListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:onClick="@{() -> productDetailEventListener.close()}"
+                android:onClick="@{() -> productDetailEventListener.onCloseButtonClick()}"
                 android:padding="16dp"
                 android:src="@drawable/ic_close"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -85,30 +87,76 @@
                     app:layout_constraintTop_toBottomOf="@id/productDetailName" />
 
                 <TextView
-                    android:id="@+id/productDetailPriceTitle"
+                    android:id="@+id/productDetailPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/product_detail_price_title"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/productDetailDivider" />
-
-                <TextView
-                    android:id="@+id/productDetailPrice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="18dp"
-                    android:gravity="end"
-                    android:text="@{@string/product_price_format(viewModel.product.price)}"
+                    android:text="@{@string/product_price_format(viewModel.price)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/productDetailPriceTitle"
-                    app:layout_constraintTop_toTopOf="@id/productDetailPriceTitle"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailDivider"
                     tools:text="99,800원" />
+
+                <include
+                    android:id="@+id/productDetailQuantityComponent"
+                    layout="@layout/component_product_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:product="@{viewModel.product}"
+                    app:productQuantityListener="@{productDetailEventListener}"
+                    android:layout_marginEnd="14dp"
+                    app:layout_constraintBottom_toBottomOf="@id/productDetailPrice"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/productDetailPrice"
+                    app:layout_constraintTop_toTopOf="@id/productDetailPrice"
+                    app:quantity="@{viewModel.quantity}" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/background_product_detail_recent_watching"
+                    android:onClick="@{() -> productDetailEventListener.onRecentProductClick(viewModel.recentWatchingProduct)}"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp"
+                    android:visibility="@{viewModel.recentProductBoxVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
+
+                    <TextView
+                        android:id="@+id/productDetailRecentWatchingTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/product_detail_recent_watching_title"
+                        android:textColor="@color/mint"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{viewModel.recentWatchingProduct.name}"
+                        android:textColor="@color/gray_5"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/productDetailRecentWatchingTitle"
+                        tools:text="엄청엄청엄청엄청긴이름을가진상품입니다라마바사" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
@@ -119,7 +167,7 @@
             android:layout_height="wrap_content"
             android:background="@color/mint"
             android:gravity="center"
-            android:onClick="@{() -> productDetailEventListener.addToShoppingCart()}"
+            android:onClick="@{() -> productDetailEventListener.onAddingToShoppingCartClick()}"
             android:paddingVertical="12dp"
             android:text="@string/product_detail_add_to_shopping_cart"
             android:textColor="@color/white"

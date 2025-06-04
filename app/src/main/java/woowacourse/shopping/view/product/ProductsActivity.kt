@@ -2,6 +2,7 @@ package woowacourse.shopping.view.product
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,18 +11,55 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.showToast
+import woowacourse.shopping.view.common.GridItemDecoration
+import woowacourse.shopping.view.common.getSerializableExtraData
+import woowacourse.shopping.view.common.showSnackBar
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
+import woowacourse.shopping.view.productDetail.ProductDetailActivity.Companion.UPDATED_PRODUCT_RESULT_OK
+import woowacourse.shopping.view.productDetail.ProductDetailActivity.Companion.UPDATED_RECENT_PRODUCT_RESULT_OK
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity.Companion.UPDATED_SHOPPING_CART_RESULT_OK
 
-class ProductsActivity : AppCompatActivity() {
+class ProductsActivity :
+    AppCompatActivity(),
+    ProductAdapter.ProductListener {
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
+
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(::navigateToProductDetail, viewModel::updateProducts)
-    }
+    private val productAdapter: ProductAdapter by lazy { ProductAdapter(this) }
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                UPDATED_PRODUCT_RESULT_OK -> {
+                    val updateItem: Product =
+                        result.data?.getSerializableExtraData("updateProduct")
+                            ?: return@registerForActivityResult
+                    viewModel.fetchSelectedQuantity(updateItem)
+                    viewModel.updateRecentWatching()
+                }
+
+                UPDATED_SHOPPING_CART_RESULT_OK -> {
+                    val updateItems: Array<Product> =
+                        result.data?.getSerializableExtraData("updateProducts")
+                            ?: return@registerForActivityResult
+                    viewModel.fetchSelectedQuantity(updateItems.toList())
+                }
+
+                UPDATED_RECENT_PRODUCT_RESULT_OK -> {
+                    val updateQuantityProduct: Product =
+                        result.data?.getSerializableExtraData("updateProduct")
+                            ?: return@registerForActivityResult
+                    val recentProduct: Product =
+                        result.data?.getSerializableExtraData("recentProduct")
+                            ?: return@registerForActivityResult
+                    viewModel.fetchSelectedQuantity(listOf(updateQuantityProduct, recentProduct))
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,31 +72,44 @@ class ProductsActivity : AppCompatActivity() {
         }
 
         initDataBinding()
-        handleEventsFromViewModel()
-        bindData()
+        setupObservers()
         setupAdapter()
-        if (viewModel.products.value?.isEmpty() == true) {
-            viewModel.updateProducts()
-        }
     }
 
     private fun initDataBinding() {
         binding.adapter = productAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
+        binding.viewModel = this.viewModel
         binding.lifecycleOwner = this
     }
 
-    private fun handleEventsFromViewModel() {
+    private fun setupObservers() {
+        viewModel.products.observe(this) { products: List<ProductsItem> ->
+            productAdapter.submitList(products)
+        }
+
         viewModel.event.observe(this) { event: ProductsEvent ->
-            when (event) {
-                ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
-            }
+            handleUiEvent(event)
         }
     }
 
-    private fun bindData() {
-        viewModel.products.observe(this) { products: List<ProductsItem> ->
-            productAdapter.submitList(products)
+    private fun handleUiEvent(event: ProductsEvent) {
+        when (event) {
+            ProductsEvent.UPDATE_PRODUCT_FAILURE -> binding.root.showSnackBar(getString(R.string.products_update_products_error_message))
+            ProductsEvent.NOT_ADD_TO_SHOPPING_CART ->
+                binding.root.showSnackBar(
+                    getString(R.string.product_detail_add_shopping_cart_error_message),
+                )
+
+            ProductsEvent.NOT_MINUS_TO_SHOPPING_CART ->
+                binding.root.showSnackBar(
+                    getString(R.string.products_minus_shopping_cart_product_error_message),
+                )
+
+            ProductsEvent.UPDATE_RECENT_WATCHING_PRODUCTS_FAILURE ->
+                binding.root.showSnackBar(
+                    getString(R.string.products_add_recent_watching_product_error_message),
+                )
         }
     }
 
@@ -70,17 +121,45 @@ class ProductsActivity : AppCompatActivity() {
                     when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
                         ProductsItem.ItemType.PRODUCT -> 1
                         ProductsItem.ItemType.MORE -> 2
+                        ProductsItem.ItemType.RECENT_WATCHING -> 2
                     }
             }
 
-        binding.products.layoutManager = gridLayoutManager
+        binding.products.apply {
+            layoutManager = gridLayoutManager
+            addItemDecoration(
+                GridItemDecoration(
+                    context = this@ProductsActivity,
+                    viewTypeToDecorate = ProductsItem.ItemType.PRODUCT.ordinal,
+                    spanCount = 2,
+                    sideMarginDp = 20,
+                    itemSpacingDp = 12,
+                ),
+            )
+        }
     }
 
     private fun navigateToShoppingCart() {
-        startActivity(ShoppingCartActivity.newIntent(this))
+        activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
+    override fun onProductClick(product: Product) {
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
+    }
+
+    override fun onPlusShoppingCartClick(product: Product) {
+        viewModel.addProductToShoppingCart(product)
+    }
+
+    override fun onMinusShoppingCartClick(product: Product) {
+        viewModel.minusProductToShoppingCart(product)
+    }
+
+    override fun onLoadClick() {
+        viewModel.updateProducts()
+    }
+
+    override fun onRecentProductClick(product: Product) {
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
     }
 }

@@ -8,10 +8,10 @@ import woowacourse.shopping.databinding.ItemShoppingCartPaginationBinding
 
 class ShoppingCartPaginationViewHolder(
     private val binding: ItemShoppingCartPaginationBinding,
-    private val onShoppingCartPaginationClickListener: OnShoppingCartPaginationClickListener,
+    shoppingCartListener: ShoppingCartPaginationClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onShoppingCartPaginationListener = onShoppingCartPaginationClickListener
+        binding.onShoppingCartPaginationListener = shoppingCartListener
     }
 
     fun bind(item: ShoppingCartItem.PaginationItem) {
@@ -24,14 +24,20 @@ class ShoppingCartPaginationViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            onShoppingCartPaginationClickListener: OnShoppingCartPaginationClickListener,
+            shoppingCartListener: ShoppingCartPaginationClickListener,
         ): ShoppingCartPaginationViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingCartPaginationBinding.inflate(layoutInflater, parent, false)
             return ShoppingCartPaginationViewHolder(
                 binding,
-                onShoppingCartPaginationClickListener,
+                shoppingCartListener,
             )
         }
+    }
+
+    interface ShoppingCartPaginationClickListener {
+        fun onMinusPage()
+
+        fun onPlusPage()
     }
 }

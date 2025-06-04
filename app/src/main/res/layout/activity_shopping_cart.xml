@@ -10,8 +10,8 @@
             type="woowacourse.shopping.view.shoppingCart.ShoppingCartProductAdapter" />
 
         <variable
-            name="onClickBackButton"
-            type="kotlin.jvm.functions.Function0" />
+            name="shoppingCartListener"
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartListener" />
 
     </data>
 
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:onClick="@{() -> onClickBackButton.invoke()}"
+                android:onClick="@{() -> shoppingCartListener.onBackButtonClick()}"
                 android:padding="16dp"
                 android:src="@drawable/ic_back"
                 app:layout_constraintBottom_toBottomOf="parent"

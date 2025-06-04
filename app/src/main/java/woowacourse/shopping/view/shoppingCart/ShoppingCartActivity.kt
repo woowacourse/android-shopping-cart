@@ -5,17 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.view.common.showToast
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.showSnackBar
 
 class ShoppingCartActivity :
     AppCompatActivity(),
-    OnShoppingCartPaginationClickListener {
+    ShoppingCartListener {
     private val viewModel: ShoppingCartViewModel by viewModels()
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(layoutInflater)
@@ -43,7 +43,8 @@ class ShoppingCartActivity :
 
     private fun initDataBinding() {
         binding.adapter = shoppingCartProductAdapter
-        binding.onClickBackButton = ::finish
+        binding.lifecycleOwner = this
+        binding.shoppingCartListener = this
     }
 
     private fun bindData() {
@@ -54,17 +55,39 @@ class ShoppingCartActivity :
 
     private fun handleEvents() {
         viewModel.event.observe(this) { event: ShoppingCartEvent ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE ->
-                        R.string.shopping_cart_update_shopping_cart_error_message
+            when (event) {
+                ShoppingCartEvent.CartDecreasingFailed ->
+                    binding.root.showSnackBar(
+                        getString(R.string.products_minus_shopping_cart_product_error_message),
+                    )
 
-                    ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE ->
-                        R.string.shopping_cart_remove_shopping_cart_product_error_message
+                ShoppingCartEvent.CartFetchFailed ->
+                    binding.root.showSnackBar(
+                        getString(R.string.shopping_cart_update_shopping_cart_error_message),
+                    )
+
+                ShoppingCartEvent.CartIncreasingFailed ->
+                    binding.root.showSnackBar(
+                        getString(R.string.product_detail_add_shopping_cart_error_message),
+                    )
+
+                ShoppingCartEvent.CartRemovedFailed ->
+                    binding.root.showSnackBar(
+                        getString(R.string.shopping_cart_remove_shopping_cart_product_error_message),
+                    )
+
+                is ShoppingCartEvent.UpdatedProductRequested -> {
+                    val intent =
+                        Intent().apply {
+                            putExtra(
+                                "updateProducts",
+                                viewModel.updatedProducts.value?.toTypedArray(),
+                            )
+                        }
+                    setResult(UPDATED_SHOPPING_CART_RESULT_OK, intent)
+                    finish()
                 }
-
-            showToast(getString(messageResourceId))
+            }
         }
     }
 
@@ -76,7 +99,25 @@ class ShoppingCartActivity :
         viewModel.plusPage()
     }
 
+    override fun onRemoveButton(product: Product) {
+        viewModel.removeShoppingCartProduct(product)
+    }
+
+    override fun onPlusShoppingCartClick(product: Product) {
+        viewModel.addQuantity(product)
+    }
+
+    override fun onMinusShoppingCartClick(product: Product) {
+        viewModel.decreaseQuantity(product)
+    }
+
+    override fun onBackButtonClick() {
+        viewModel.updateProductsRequest()
+    }
+
     companion object {
+        const val UPDATED_SHOPPING_CART_RESULT_OK = 300
+
         fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }

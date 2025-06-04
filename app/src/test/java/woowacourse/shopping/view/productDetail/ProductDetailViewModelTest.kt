@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.fixture.PRODUCT_LUCKY
 import woowacourse.shopping.view.common.InstantTaskExecutorExtension
@@ -23,11 +24,13 @@ class ProductDetailViewModelTest {
 
     private lateinit var productDetailViewModel: ProductDetailViewModel
     private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var productsRepository: ProductsRepository
 
     @BeforeEach
     fun setUp() {
-        shoppingCartRepository = mockk()
-        productDetailViewModel = ProductDetailViewModel(shoppingCartRepository)
+        productsRepository = mockk(relaxed = true)
+        shoppingCartRepository = mockk(relaxed = true)
+        productDetailViewModel = ProductDetailViewModel(shoppingCartRepository, productsRepository)
     }
 
     @Test
@@ -45,7 +48,7 @@ class ProductDetailViewModelTest {
     fun `쇼핑카트에 상품을 추가했을 때 성공 시 휘발성 이벤트 ADD_SHOPPING_CART_SUCCESS 값을 가진다`() {
         // given:
         productDetailViewModel.updateProduct(PRODUCT_LUCKY)
-        every { shoppingCartRepository.add(PRODUCT_LUCKY, captureLambda()) } answers {
+        every { shoppingCartRepository.add(PRODUCT_LUCKY, any(), captureLambda()) } answers {
             lambda<(Result<Unit>) -> Unit>().invoke(Result.success(Unit))
         }
 
@@ -61,7 +64,7 @@ class ProductDetailViewModelTest {
     fun `쇼핑카트에 상품을 추가했을 때 실패 시 휘발성 이벤트 ADD_SHOPPING_CART_FAILURE 값을 가진다`() {
         // given:
         productDetailViewModel.updateProduct(PRODUCT_LUCKY)
-        every { shoppingCartRepository.add(PRODUCT_LUCKY, captureLambda()) } answers {
+        every { shoppingCartRepository.add(PRODUCT_LUCKY, any(), captureLambda()) } answers {
             lambda<(Result<Unit>) -> Unit>().invoke(Result.failure(RuntimeException()))
         }
 

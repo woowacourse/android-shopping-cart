@@ -4,13 +4,14 @@
     <data>
 
         <variable
-            name="load"
-            type="kotlin.jvm.functions.Function0" />
+            name="productMoreListener"
+            type="woowacourse.shopping.view.product.ProductMoreViewHolder.ProductMoreListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp">
 
         <TextView
             android:id="@+id/productsMoreButton"
@@ -22,7 +23,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:minHeight="0dp"
-            android:onClick="@{() -> load.invoke()}"
+            android:onClick="@{() -> productMoreListener.onLoadClick()}"
             android:padding="12dp"
             android:text="@string/products_more_button"
             android:textColor="@color/black"

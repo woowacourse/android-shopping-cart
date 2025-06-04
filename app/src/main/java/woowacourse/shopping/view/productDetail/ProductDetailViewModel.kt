@@ -1,8 +1,12 @@
 package woowacourse.shopping.view.productDetail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.data.product.repository.DefaultProductsRepository
+import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
@@ -10,28 +14,115 @@ import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
-    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
+    product: Product,
+    private val isRecentWatchingProduct: Boolean,
+    private val previousUpdatedProduct: Product?,
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
+    private val productsRepository: ProductsRepository = DefaultProductsRepository.get(),
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
+    private val _product: MutableLiveData<Product> = MutableLiveData(product)
     val product: LiveData<Product> get() = _product
 
-    private val _event: MutableSingleLiveData<ProductDetailEvent> =
-        MutableSingleLiveData()
+    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
-    fun updateProduct(product: Product) {
-        _product.value = product
+    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
+    val quantity: LiveData<Int> get() = _quantity
+
+    private val _price: MutableLiveData<Int> = MutableLiveData()
+    val price: LiveData<Int> get() = _price
+
+    private val _recentWatchingProduct: MutableLiveData<Product> = MutableLiveData()
+    val recentWatchingProduct: LiveData<Product> get() = _recentWatchingProduct
+
+    private val _recentProductBoxVisible: MediatorLiveData<Boolean> = MediatorLiveData()
+    val recentProductBoxVisible: LiveData<Boolean> get() = _recentProductBoxVisible
+
+    init {
+        _recentProductBoxVisible.addSource(_recentWatchingProduct) { product ->
+            _recentProductBoxVisible.value = !isLastWatchingProduct(product)
+        }
+        _price.value = this.product.value?.price
+        getRecentWatchingProduct()
+    }
+
+    private fun isLastWatchingProduct(product: Product): Boolean = isRecentWatchingProduct || product.id == _product.value?.id
+
+    private fun getRecentWatchingProduct() {
+        productsRepository.getRecentWatchingProducts(1) { result ->
+            result
+                .onSuccess { recentProducts: List<Product> ->
+                    if (recentProducts.isEmpty()) return@getRecentWatchingProducts updateRecentWatchingProduct()
+                    _recentWatchingProduct.postValue(recentProducts[0])
+                    updateRecentWatchingProduct()
+                }.onFailure {
+                    _event.postValue(ProductDetailEvent.RecentProductFetchFailed)
+                }
+        }
+    }
+
+    private fun updateRecentWatchingProduct() {
+        productsRepository.updateRecentWatchingProduct(product.value?.id ?: return) { result ->
+            result.onFailure {
+                _event.postValue(ProductDetailEvent.RecentProductAdditionFailed)
+            }
+        }
     }
 
     fun addToShoppingCart() {
         val product = requireNotNull(product.value) { "product.value가 null입니다." }
-        shoppingCartRepository.add(product) { result ->
+        shoppingCartRepository.add(product, quantity.value ?: return) { result ->
             result
                 .onSuccess {
-                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
+                    _event.postValue(ProductDetailEvent.CartAdditionSucceeded)
                 }.onFailure {
-                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
+                    _event.postValue(ProductDetailEvent.CartAdditionFailed)
                 }
         }
+    }
+
+    fun plusQuantity() {
+        _quantity.value = (_quantity.value ?: 0) + 1
+        _price.value = quantity.value?.times(product.value?.price ?: 0)
+    }
+
+    fun minusQuantity() {
+        _quantity.value = (_quantity.value)?.minus(1)?.coerceAtLeast(1)
+        _price.value = quantity.value?.times(product.value?.price ?: 0)
+    }
+
+    fun updateProductRequestedEvent() {
+        _event.setValue(
+            ProductDetailEvent.UpdatedProductRequested(
+                product = product.value ?: return,
+                previousUpdatedProduct = previousUpdatedProduct,
+            ),
+        )
+    }
+
+    fun updateRecentProductEvent() {
+        _event.setValue(
+            ProductDetailEvent.RecentProductRequested(
+                currentProduct = product.value ?: return,
+                recentProduct = recentWatchingProduct.value ?: return,
+            ),
+        )
+    }
+
+    companion object {
+        fun provideFactory(
+            product: Product,
+            isRecentWatchingProduct: Boolean,
+            previousUpdatedProduct: Product? = null,
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    ProductDetailViewModel(
+                        product,
+                        isRecentWatchingProduct,
+                        previousUpdatedProduct,
+                    ) as T
+            }
     }
 }

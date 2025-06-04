@@ -11,3 +11,5 @@ val PRODUCT_LUCKY =
         price = 4000,
         imageUrl = "https://i.namu.wiki/i/ExNTyOB5363wFnhGLSfRPOSj9G5VwSQiISkjICuIVI-8S8djFN8cJLB44Mb7jzqQMu-8OJxtuPTmE3FLkq4ebg.webp",
     )
+
+val RECENT_PRODUCTS = List(5) { PRODUCT_LUCKY }
