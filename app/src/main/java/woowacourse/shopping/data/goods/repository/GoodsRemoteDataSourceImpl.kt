@@ -5,8 +5,10 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.goods.GoodsDto
@@ -22,12 +24,12 @@ class GoodsRemoteDataSourceImpl(
     private val gson = Gson()
 
     override fun fetchGoodsSize(onComplete: (Int) -> Unit) {
-        val request =
-            Request
-                .Builder()
-                .url("$baseUrl/$PRODUCTS/size")
-                .build()
-        fetchGoodsSizeRequest(request, onComplete)
+        val request = createGetRequest("$PRODUCTS/size")
+        executeRequest(request) { jsonString ->
+            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+            val size = jsonObject.get("size")?.asInt ?: 0
+            onComplete(size)
+        }
     }
 
     override fun fetchPageGoods(
@@ -35,29 +37,69 @@ class GoodsRemoteDataSourceImpl(
         offset: Int,
         onComplete: (List<Goods>) -> Unit,
     ) {
-        val request =
-            Request
-                .Builder()
-                .url("$baseUrl/$PRODUCTS?limit=$limit&offset=$offset")
-                .build()
-        fetchPageGoodsRequest(request, onComplete)
+        val request = createGetRequest("$PRODUCTS?limit=$limit&offset=$offset")
+        executeRequestForGoodsList(request, onComplete)
     }
 
     override fun fetchGoodsById(
         id: Int,
         onComplete: (Goods?) -> Unit,
     ) {
-        val request =
-            Request
-                .Builder()
-                .url("$baseUrl/$PRODUCTS/$id")
-                .build()
-        fetchGoodsByIdRequest(request, onComplete)
+        val request = createGetRequest("$PRODUCTS/$id")
+        executeRequest(request) { jsonString ->
+            try {
+                val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+                if (jsonObject.has("product")) {
+                    val productJsonString = jsonObject.get("product").toString()
+                    val goodsDto = gson.fromJson(productJsonString, GoodsDto::class.java)
+                    onComplete(goodsDto.toDomain())
+                } else {
+                    onComplete(null)
+                }
+            } catch (e: Exception) {
+                onComplete(null)
+            }
+        }
     }
 
-    private fun fetchPageGoodsRequest(
+    override fun fetchGoodsByIds(
+        ids: List<Int>,
+        onComplete: (List<Goods>?) -> Unit,
+    ) {
+        val requestBody = gson.toJson(mapOf("ids" to ids))
+        val request = createPostRequest("$PRODUCTS/ids", requestBody)
+
+        executeRequestForGoodsList(request) { goodsList ->
+            onComplete(goodsList)
+        }
+    }
+
+    private fun createBaseRequestBuilder(): Request.Builder =
+        Request
+            .Builder()
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+
+    private fun createGetRequest(endpoint: String): Request =
+        createBaseRequestBuilder()
+            .url("$baseUrl/$endpoint")
+            .build()
+
+    private fun createPostRequest(
+        endpoint: String,
+        jsonBody: String,
+    ): Request {
+        val requestBody =
+            jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
+        return createBaseRequestBuilder()
+            .url("$baseUrl/$endpoint")
+            .post(requestBody)
+            .build()
+    }
+
+    private fun executeRequest(
         request: Request,
-        onComplete: (List<Goods>) -> Unit,
+        onSuccess: (String) -> Unit,
     ) {
         okHttpClient.newCall(request).enqueue(
             object : Callback {
@@ -65,22 +107,9 @@ class GoodsRemoteDataSourceImpl(
                     call: Call,
                     response: Response,
                 ) {
-                    val responseBody = response.body
-                    if (responseBody != null) {
-                        val jsonString = responseBody.string()
-                        if (jsonString.isNotEmpty()) {
-                            try {
-                                val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-                                val productsJsonArray = jsonObject.getAsJsonArray(PRODUCTS)
-                                val listType = object : TypeToken<List<GoodsDto>>() {}.type
-                                val goodsDtoList: List<GoodsDto> =
-                                    gson.fromJson(productsJsonArray, listType)
-                                val goods = goodsDtoList.toDomain()
-
-                                onComplete(goods)
-                            } catch (e: Exception) {
-                                onComplete(emptyList())
-                            }
+                    response.body?.string()?.let { jsonString ->
+                        if (response.isSuccessful) {
+                            onSuccess(jsonString)
                         }
                     }
                 }
@@ -89,83 +118,26 @@ class GoodsRemoteDataSourceImpl(
                     call: Call,
                     e: IOException,
                 ) {
+                    // todo 에러 처리
                 }
             },
         )
     }
 
-    private fun fetchGoodsSizeRequest(
+    private fun executeRequestForGoodsList(
         request: Request,
-        onComplete: (Int) -> Unit,
+        onComplete: (List<Goods>) -> Unit,
     ) {
-        okHttpClient.newCall(request).enqueue(
-            object : Callback {
-                override fun onResponse(
-                    call: Call,
-                    response: Response,
-                ) {
-                    response.body?.string()?.let { jsonString ->
-                        try {
-                            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-                            val size = jsonObject.get("size")?.asInt ?: 0
-                            onComplete(size)
-                        } catch (e: Exception) {
-                            onComplete(0)
-                        }
-                    } ?: onComplete(0)
-                }
-
-                override fun onFailure(
-                    call: Call,
-                    e: IOException,
-                ) {
-                    onComplete(0)
-                }
-            },
-        )
-    }
-
-    private fun fetchGoodsByIdRequest(
-        request: Request,
-        onComplete: (Goods?) -> Unit,
-    ) {
-        okHttpClient.newCall(request).enqueue(
-            object : Callback {
-                override fun onResponse(
-                    call: Call,
-                    response: Response,
-                ) {
-                    response.body?.string()?.let { jsonString ->
-                        try {
-                            if (response.code == 404) {
-                                onComplete(null)
-                                return
-                            }
-
-                            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-
-                            if (jsonObject.has("product")) {
-                                val productJsonString = jsonObject.get("product").toString()
-                                val goodsDto =
-                                    gson.fromJson(productJsonString, GoodsDto::class.java)
-                                val goods = goodsDto.toDomain()
-                                onComplete(goods)
-                            } else {
-                                onComplete(null)
-                            }
-                        } catch (e: Exception) {
-                            onComplete(null)
-                        }
-                    } ?: onComplete(null)
-                }
-
-                override fun onFailure(
-                    call: Call,
-                    e: IOException,
-                ) {
-                    onComplete(null)
-                }
-            },
-        )
+        executeRequest(request) { jsonString ->
+            try {
+                val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+                val productsJsonArray = jsonObject.getAsJsonArray(PRODUCTS)
+                val listType = object : TypeToken<List<GoodsDto>>() {}.type
+                val goodsDtoList: List<GoodsDto> = gson.fromJson(productsJsonArray, listType)
+                onComplete(goodsDtoList.toDomain())
+            } catch (e: Exception) {
+                onComplete(emptyList())
+            }
+        }
     }
 }

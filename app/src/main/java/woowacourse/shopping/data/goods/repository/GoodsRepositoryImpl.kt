@@ -36,24 +36,8 @@ class GoodsRepositoryImpl(
                 return@fetchRecentGoodsIds
             }
 
-            val goodsList = mutableListOf<Goods>()
-            var completedCount = 0
-
-            recentIds.forEach { idString ->
-                val id = idString.toIntOrNull() ?: return@forEach
-
-                fetchGoodsById(id) { goods ->
-                    goods?.let { goodsList.add(it) }
-                    completedCount++
-
-                    if (completedCount == recentIds.size) {
-                        val sortedGoods =
-                            goodsList.sortedBy { goods ->
-                                recentIds.indexOf(goods.id.toString())
-                            }
-                        onComplete(sortedGoods)
-                    }
-                }
+            remoteDataSource.fetchGoodsByIds(recentIds.map { it.toInt() }) {
+                onComplete(it ?: emptyList())
             }
         }
     }

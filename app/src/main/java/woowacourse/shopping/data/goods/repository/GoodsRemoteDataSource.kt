@@ -15,4 +15,9 @@ interface GoodsRemoteDataSource {
         id: Int,
         onComplete: (Goods?) -> Unit,
     )
+
+    fun fetchGoodsByIds(
+        ids: List<Int>,
+        onComplete: (List<Goods>?) -> Unit,
+    )
 }
