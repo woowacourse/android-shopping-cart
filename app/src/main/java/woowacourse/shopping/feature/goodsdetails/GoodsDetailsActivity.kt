@@ -43,27 +43,47 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeBinding()
+        initializeViewModelData()
+        setupEventListeners()
+        observeViewModelEvents()
+    }
+
+    private fun initializeBinding() {
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
 
+    private fun initializeViewModelData() {
         val source = intent.getStringExtra(EXTRA_SOURCE)
         if (source != SOURCE_RECENTLY_VIEWED) {
             viewModel.initMostRecentlyViewedGoods()
         }
+    }
 
-        binding.viewModel = viewModel
-        binding.quantityChangeListener =
-            object : QuantityChangeListener {
-                override fun onIncrease(cartItem: CartItem) {
-                    viewModel.increaseSelectorQuantity()
-                }
+    private fun setupEventListeners() {
+        binding.quantityChangeListener = createQuantityChangeListener()
+    }
 
-                override fun onDecrease(cartItem: CartItem) {
-                    viewModel.decreaseSelectorQuantity()
-                }
+    private fun createQuantityChangeListener(): QuantityChangeListener =
+        object : QuantityChangeListener {
+            override fun onIncrease(cartItem: CartItem) {
+                viewModel.increaseSelectorQuantity()
             }
 
+            override fun onDecrease(cartItem: CartItem) {
+                viewModel.decreaseSelectorQuantity()
+            }
+        }
+
+    private fun observeViewModelEvents() {
+        observeAlertEvents()
+        observeMostRecentlyGoodsEvents()
+    }
+
+    private fun observeAlertEvents() {
         viewModel.alertEvent.observe(this) { goodsDetailsAlertMessage ->
             showMessage(
                 getString(
@@ -72,6 +92,9 @@ class GoodsDetailsActivity : AppCompatActivity() {
                 ),
             )
         }
+    }
+
+    private fun observeMostRecentlyGoodsEvents() {
         viewModel.clickMostRecentlyGoodsEvent.observe(this) { mostRecentGoods ->
             val intent = fromDetails(this, mostRecentGoods.toUi())
             startActivity(intent)

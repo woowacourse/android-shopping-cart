@@ -39,12 +39,24 @@ class CartActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupActionBar()
+        initializeBinding()
+        setupRecyclerView()
+    }
+
+    private fun setupActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initializeBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-        binding.rvCartItems.adapter = adapter
         binding.viewModel = viewModel
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvCartItems.adapter = adapter
     }
 
     override fun onResume() {

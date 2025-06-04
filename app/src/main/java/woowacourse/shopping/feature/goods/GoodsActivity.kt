@@ -78,27 +78,46 @@ class GoodsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeBinding()
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun initializeBinding() {
         binding = ActivityGoodsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-
-        binding.rvGoodsItems.adapter = concatAdapter
         binding.viewModel = viewModel
+    }
 
+    private fun setupRecyclerView() {
+        binding.rvGoodsItems.adapter = concatAdapter
         binding.rvGoodsItems.layoutManager = getLayoutManager()
+        binding.rvGoodsItems.addItemDecoration(
+            GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
+        )
+    }
 
+    private fun setupObservers() {
+        observeNavigationEvents()
+        observeCartQuantityChanges()
+        observeRecentlyViewedGoods()
+    }
+
+    private fun observeNavigationEvents() {
         viewModel.navigateToCart.observe(this) {
             val intent = CartActivity.newIntent(this)
             startActivity(intent)
         }
+    }
 
+    private fun observeCartQuantityChanges() {
         viewModel.goodsWithCartQuantity.observe(this) {
             viewModel.updateCartQuantity()
         }
-        binding.rvGoodsItems.addItemDecoration(
-            GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
-        )
+    }
 
+    private fun observeRecentlyViewedGoods() {
         viewModel.recentlyViewedGoods.observe(this) { goods ->
             recentlyViewedGoodsAdapter.setItems(goods)
         }
