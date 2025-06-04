@@ -23,10 +23,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.R
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
+import woowacourse.shopping.util.InstantTaskExecutorExtension
 
+@ExtendWith(InstantTaskExecutorExtension::class)
 @Suppress("ktlint:standard:function-naming")
 class GoodsActivityTest {
     private lateinit var countingIdlingResource: CountingIdlingResource

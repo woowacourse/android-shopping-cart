@@ -12,9 +12,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.R
 import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.util.InstantTaskExecutorExtension
 
+@ExtendWith(InstantTaskExecutorExtension::class)
 @Suppress("ktlint:standard:function-naming")
 class GoodsDetailsActivityTest {
     private lateinit var scenario: ActivityScenario<GoodsDetailsActivity>
