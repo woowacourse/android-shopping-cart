@@ -9,7 +9,8 @@ interface CartRepository {
     fun fetchPageCartItems(
         limit: Int,
         offset: Int,
-        onComplete: (List<CartItem>) -> Unit,
+        onSuccess: (List<CartItem>) -> Unit,
+        onFailure: (CartError) -> Unit,
     )
 
     fun addOrIncreaseQuantity(

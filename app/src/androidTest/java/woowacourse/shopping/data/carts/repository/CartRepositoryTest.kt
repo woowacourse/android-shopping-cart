@@ -203,10 +203,10 @@ class CartRepositoryTest {
         val latch = CountDownLatch(1)
         var result: List<CartItem>? = null
 
-        cartRepository.fetchPageCartItems(limit, offset) { cartItems ->
+        cartRepository.fetchPageCartItems(limit, offset, { cartItems ->
             result = cartItems
             latch.countDown()
-        }
+        }, {})
         assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
 
         return result!!

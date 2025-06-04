@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.carts.repository
 
+import android.database.sqlite.SQLiteException
 import android.os.Handler
 import android.os.Looper
 import woowacourse.shopping.data.ShoppingDatabase
@@ -25,13 +26,25 @@ class CartRepositoryImpl(
     override fun fetchPageCartItems(
         limit: Int,
         offset: Int,
-        onComplete: (List<CartItem>) -> Unit,
+        onSuccess: (List<CartItem>) -> Unit,
+        onFailure: (CartError) -> Unit,
     ) {
         thread {
-            val cartEntities = shoppingDatabase.cartDao().getPage(limit, offset)
+            try {
+                val cartEntities = shoppingDatabase.cartDao().getPage(limit, offset)
+                val cartItems = cartEntities.map { it.toDomainCartItem() }
 
-            Handler(Looper.getMainLooper()).post {
-                onComplete(cartEntities.map { it.toDomainCartItem() })
+                Handler(Looper.getMainLooper()).post {
+                    onSuccess(cartItems)
+                }
+            } catch (exception: SQLiteException) {
+                Handler(Looper.getMainLooper()).post {
+                    onFailure(CartError.DatabaseError)
+                }
+            } catch (exception: Exception) {
+                Handler(Looper.getMainLooper()).post {
+                    onFailure(CartError.GeneralError)
+                }
             }
         }
     }

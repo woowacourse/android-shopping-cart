@@ -3,8 +3,12 @@ package woowacourse.shopping.feature.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.R
+import woowacourse.shopping.data.carts.repository.CartError
 import woowacourse.shopping.data.carts.repository.CartRepository
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.max
 
 class CartViewModel(
@@ -34,6 +38,9 @@ class CartViewModel(
 
     private val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
 
+    private val _alertMessageEvent = MutableSingleLiveData<Int>()
+    val alertMessageEvent: SingleLiveData<Int> = _alertMessageEvent
+
     init {
         updateCartQuantity()
     }
@@ -60,9 +67,16 @@ class CartViewModel(
         cartRepository.fetchPageCartItems(
             PAGE_SIZE,
             (currentPage - 1) * PAGE_SIZE,
-        ) { currentPageCartItems ->
-            _cart.value = currentPageCartItems
-        }
+            { currentPageCartItems ->
+                _cart.value = currentPageCartItems
+            },
+            { cartError ->
+                when (cartError) {
+                    CartError.DatabaseError -> _alertMessageEvent.postValue(R.string.database_error)
+                    CartError.GeneralError -> _alertMessageEvent.postValue(R.string.unknown_error)
+                }
+            },
+        )
         updateCartDataSize()
         updatePageMoveAvailability()
     }
@@ -71,9 +85,11 @@ class CartViewModel(
         cartRepository.fetchPageCartItems(
             PAGE_SIZE,
             (currentPage - 1) * PAGE_SIZE,
-        ) { currentPageCartItems ->
-            _cart.postValue(currentPageCartItems)
-        }
+            { currentPageCartItems ->
+                _cart.postValue(currentPageCartItems)
+            },
+            {},
+        )
     }
 
     private fun updateCartDataSize() {

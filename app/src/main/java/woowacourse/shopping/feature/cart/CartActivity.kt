@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
@@ -42,6 +44,7 @@ class CartActivity :
         setupActionBar()
         initializeBinding()
         setupRecyclerView()
+        setupObservers()
     }
 
     private fun setupActionBar() {
@@ -57,6 +60,22 @@ class CartActivity :
 
     private fun setupRecyclerView() {
         binding.rvCartItems.adapter = adapter
+    }
+
+    private fun setupObservers() {
+        observeAlertEvents()
+    }
+
+    private fun observeAlertEvents() {
+        viewModel.alertMessageEvent.observe(this) { messageId ->
+            showAlertMessage(messageId)
+        }
+    }
+
+    private fun showAlertMessage(
+        @StringRes messageId: Int,
+    ) {
+        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
