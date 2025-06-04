@@ -50,6 +50,7 @@ class ProductDetailViewModel(
         productsRepository.getRecentWatchingProducts(1) { result ->
             result
                 .onSuccess { recentProducts: List<Product> ->
+                    if (recentProducts.isEmpty()) return@getRecentWatchingProducts updateRecentWatchingProduct()
                     _recentWatchingProduct.postValue(recentProducts[0])
                     updateRecentWatchingProduct()
                 }.onFailure {
@@ -59,7 +60,7 @@ class ProductDetailViewModel(
     }
 
     private fun updateRecentWatchingProduct() {
-        productsRepository.updateRecentWatchingProduct(product.value ?: return) { result ->
+        productsRepository.updateRecentWatchingProduct(product.value?.id ?: return) { result ->
             result.onFailure {
                 _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
             }

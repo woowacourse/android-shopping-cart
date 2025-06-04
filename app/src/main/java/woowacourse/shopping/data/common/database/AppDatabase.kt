@@ -14,7 +14,7 @@ import woowacourse.shopping.data.shoppingCart.local.entity.ShoppingCartProductEn
         ProductEntity::class,
         RecentWatchingEntity::class,
     ],
-    version = 2,
+    version = 4,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recentWatchingDao(): RecentWatchingDao

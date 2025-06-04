@@ -34,25 +34,35 @@ class DefaultProductsRepository(
     ) {
         thread {
             runCatching {
-                recentWatchingDao.getRecentWatchingProducts(size)
-            }.onSuccess { recentWatchingProducts: List<RecentWatchingEntity> ->
-                onResult(Result.success(recentWatchingProducts.map { it.product }))
+                val recentEntities = recentWatchingDao.getRecentWatchingProducts(size)
+                val productIds = recentEntities.map { it.productId }
+
+                getProductsByIds(productIds)
+            }.onSuccess { products ->
+                onResult(Result.success(products))
             }.onFailure { exception ->
                 onResult(Result.failure(exception))
             }
         }
     }
 
+    private fun getProductsByIds(productIds: List<Long>): List<Product> {
+        val products =
+            productIds.map { productId: Long ->
+                productRemoteDataStorage.getProductsById(productId)
+            }
+        return products.map(ProductResponseDto::toDomain)
+    }
+
     override fun updateRecentWatchingProduct(
-        product: Product,
+        productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
             runCatching {
                 recentWatchingDao.insertRecentWatching(
                     RecentWatchingEntity(
-                        productId = product.id,
-                        product = product,
+                        productId = productId,
                     ),
                 )
             }.onSuccess {
@@ -68,7 +78,8 @@ class DefaultProductsRepository(
 
         fun initialize(recentWatchingDao: RecentWatchingDao) {
             if (INSTANCE == null) {
-                INSTANCE = DefaultProductsRepository(recentWatchingDao = recentWatchingDao)
+                INSTANCE =
+                    DefaultProductsRepository(recentWatchingDao = recentWatchingDao)
             }
         }
 

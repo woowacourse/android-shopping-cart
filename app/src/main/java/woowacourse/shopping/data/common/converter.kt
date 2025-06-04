@@ -16,3 +16,11 @@ fun <T> convertToJson(data: T): String {
     val gson = Gson()
     return gson.toJson(data)
 }
+
+fun <T> convertJsonToObject(
+    json: String,
+    classType: Class<T>,
+): T {
+    val gson = Gson()
+    return gson.fromJson(json, classType)
+}

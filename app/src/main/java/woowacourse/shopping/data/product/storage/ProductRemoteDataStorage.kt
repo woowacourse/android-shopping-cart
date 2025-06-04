@@ -7,4 +7,6 @@ interface ProductRemoteDataStorage {
         lastProductId: Long?,
         size: Int,
     ): List<ProductResponseDto>
+
+    fun getProductsById(productId: Long): ProductResponseDto
 }

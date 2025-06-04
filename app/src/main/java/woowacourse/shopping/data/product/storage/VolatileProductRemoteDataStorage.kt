@@ -173,4 +173,11 @@ object VolatileProductRemoteDataStorage : ProductRemoteDataStorage {
         if (startPosition + size > products.size) return products.slice(startPosition..products.size - 1)
         return products.subList(startPosition, startPosition + size)
     }
+
+    override fun getProductsById(productId: Long): ProductResponseDto {
+        val targetProduct: ProductResponseDto =
+            products.find { it.id == productId }
+                ?: throw NoSuchElementException("해당 Id($productId) 에 해당하는 상품이 없습니다.")
+        return targetProduct
+    }
 }

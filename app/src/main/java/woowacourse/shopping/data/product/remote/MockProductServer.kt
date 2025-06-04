@@ -5,6 +5,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.common.convertToJson
+import woowacourse.shopping.data.product.storage.VolatileProductRemoteDataStorage.getProductsById
 import woowacourse.shopping.data.product.storage.VolatileProductRemoteDataStorage.load
 import java.net.URI
 import kotlin.concurrent.thread
@@ -20,6 +21,17 @@ class MockProductServer {
             object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
                     when {
+                        request.path?.removePrefix("/products/")?.toLongOrNull() != null -> {
+                            val productId = request.path?.substringAfterLast("/")?.toLong()
+                            val product = getProductsById(productId ?: error("Invalid ID"))
+                            val json = convertToJson(product)
+
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(json)
+                        }
+
                         request.path?.startsWith("/products") == true -> {
                             val uri = URI("http://localhost${request.path}")
                             val queryParams =

@@ -15,7 +15,7 @@ interface ProductsRepository {
     )
 
     fun updateRecentWatchingProduct(
-        product: Product,
+        productId: Long,
         onResult: (Result<Unit>) -> Unit,
     )
 }
