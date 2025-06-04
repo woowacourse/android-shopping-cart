@@ -11,23 +11,14 @@ import okhttp3.Response
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.goods.GoodsDto
 import woowacourse.shopping.data.util.ApiEndpoints.PRODUCTS
-import woowacourse.shopping.data.util.MockInterceptor
 import woowacourse.shopping.data.util.mapper.toDomain
 import woowacourse.shopping.domain.model.Goods
 import java.io.IOException
 
 class GoodsRemoteDataSourceImpl(
     private val baseUrl: String = BuildConfig.BASE_URL,
-    private val useInterceptor: Boolean = true,
+    private val okHttpClient: OkHttpClient,
 ) : GoodsRemoteDataSource {
-    private val okHttpClient =
-        OkHttpClient
-            .Builder()
-            .apply {
-                if (useInterceptor) {
-                    addInterceptor(MockInterceptor())
-                }
-            }.build()
     private val gson = Gson()
 
     override fun fetchGoodsSize(onComplete: (Int) -> Unit) {

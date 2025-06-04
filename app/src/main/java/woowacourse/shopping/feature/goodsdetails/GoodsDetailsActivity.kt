@@ -14,6 +14,7 @@ import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
 import woowacourse.shopping.data.goods.repository.GoodsLocalDataSourceImpl
 import woowacourse.shopping.data.goods.repository.GoodsRemoteDataSourceImpl
 import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
+import woowacourse.shopping.data.util.MockInterceptor.Companion.mockOkHttpClient
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.GoodsUiModel
@@ -38,7 +39,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
                 goodsUiModel,
                 CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
                 GoodsRepositoryImpl(
-                    GoodsRemoteDataSourceImpl(),
+                    GoodsRemoteDataSourceImpl(okHttpClient = mockOkHttpClient),
                     GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
                 ),
             )

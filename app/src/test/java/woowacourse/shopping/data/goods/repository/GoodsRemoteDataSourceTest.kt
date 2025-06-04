@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.goods.repository
 
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +26,7 @@ class GoodsRemoteDataSourceTest {
         dataSource =
             GoodsRemoteDataSourceImpl(
                 baseUrl = mockWebServer.url("/").toString().removeSuffix("/"),
-                useInterceptor = false,
+                OkHttpClient.Builder().build(),
             )
     }
 
