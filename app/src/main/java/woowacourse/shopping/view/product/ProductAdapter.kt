@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
