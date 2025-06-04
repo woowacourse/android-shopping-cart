@@ -8,15 +8,12 @@ import woowacourse.shopping.data.common.convertToJson
 import woowacourse.shopping.data.product.storage.VolatileProductRemoteDataStorage.getProductsById
 import woowacourse.shopping.data.product.storage.VolatileProductRemoteDataStorage.load
 import java.net.URI
-import kotlin.concurrent.thread
 
 class MockProductServer {
     val mockWebServer = MockWebServer()
 
     fun start(port: Int) {
-        thread {
-            mockWebServer.start(port)
-        }
+        mockWebServer.start(port)
         val dispatcher =
             object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =

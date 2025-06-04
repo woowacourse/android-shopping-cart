@@ -1,19 +1,21 @@
 package woowacourse.shopping.data.product.storage
 
-import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.data.common.convertJsonToList
 import woowacourse.shopping.data.common.convertJsonToObject
 import woowacourse.shopping.data.product.remote.MockProductServer
 import woowacourse.shopping.data.product.remote.dto.ProductResponseDto
+import kotlin.concurrent.thread
 
 class ProductRemoteStorage : ProductRemoteDataStorage {
     private val mockProductServer = MockProductServer()
     private val client = OkHttpClient()
 
     init {
-        mockProductServer.start(12345)
+        thread {
+            mockProductServer.start(12345)
+        }
     }
 
     override fun load(
