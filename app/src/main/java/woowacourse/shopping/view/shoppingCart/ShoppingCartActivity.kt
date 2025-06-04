@@ -11,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.showSnackBar
 
 class ShoppingCartActivity :
@@ -85,7 +84,7 @@ class ShoppingCartActivity :
                                 viewModel.updatedProducts.value?.toTypedArray(),
                             )
                         }
-                    setResult(ResultFrom.SHOPPING_CART_BACK.RESULT_OK, intent)
+                    setResult(UPDATED_SHOPPING_CART_RESULT_OK, intent)
                     finish()
                 }
             }
@@ -117,6 +116,8 @@ class ShoppingCartActivity :
     }
 
     companion object {
+        const val UPDATED_SHOPPING_CART_RESULT_OK = 300
+
         fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }

@@ -12,11 +12,13 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.common.GridItemDecoration
-import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
+import woowacourse.shopping.view.productDetail.ProductDetailActivity.Companion.UPDATED_PRODUCT_RESULT_OK
+import woowacourse.shopping.view.productDetail.ProductDetailActivity.Companion.UPDATED_RECENT_PRODUCT_RESULT_OK
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity.Companion.UPDATED_SHOPPING_CART_RESULT_OK
 
 class ProductsActivity :
     AppCompatActivity(),
@@ -32,7 +34,7 @@ class ProductsActivity :
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             when (result.resultCode) {
-                ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK -> {
+                UPDATED_PRODUCT_RESULT_OK -> {
                     val updateItem: Product =
                         result.data?.getSerializableExtraData("updateProduct")
                             ?: return@registerForActivityResult
@@ -40,14 +42,14 @@ class ProductsActivity :
                     viewModel.updateRecentWatching()
                 }
 
-                ResultFrom.SHOPPING_CART_BACK.RESULT_OK -> {
+                UPDATED_SHOPPING_CART_RESULT_OK -> {
                     val updateItems: Array<Product> =
                         result.data?.getSerializableExtraData("updateProducts")
                             ?: return@registerForActivityResult
                     viewModel.fetchSelectedQuantity(updateItems.toList())
                 }
 
-                ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK -> {
+                UPDATED_RECENT_PRODUCT_RESULT_OK -> {
                     val updateQuantityProduct: Product =
                         result.data?.getSerializableExtraData("updateProduct")
                             ?: return@registerForActivityResult
@@ -55,14 +57,9 @@ class ProductsActivity :
                         result.data?.getSerializableExtraData("recentProduct")
                             ?: return@registerForActivityResult
                     viewModel.fetchSelectedQuantity(listOf(updateQuantityProduct, recentProduct))
-                    navigateToRecentProduct(recentProduct)
                 }
             }
         }
-
-    private fun navigateToRecentProduct(product: Product) {
-        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

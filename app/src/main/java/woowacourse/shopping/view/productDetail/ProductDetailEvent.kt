@@ -13,6 +13,7 @@ sealed interface ProductDetailEvent {
 
     data class UpdatedProductRequested(
         val product: Product,
+        val previousUpdatedProduct: Product? = null,
     ) : ProductDetailEvent
 
     data class RecentProductRequested(

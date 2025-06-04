@@ -15,6 +15,8 @@ import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
     product: Product,
+    private val isRecentWatchingProduct: Boolean,
+    private val previousUpdatedProduct: Product?,
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
     private val productsRepository: ProductsRepository = DefaultProductsRepository.get(),
 ) : ViewModel() {
@@ -44,7 +46,7 @@ class ProductDetailViewModel(
         getRecentWatchingProduct()
     }
 
-    private fun isLastWatchingProduct(product: Product): Boolean = product.id == _product.value?.id
+    private fun isLastWatchingProduct(product: Product): Boolean = isRecentWatchingProduct || product.id == _product.value?.id
 
     private fun getRecentWatchingProduct() {
         productsRepository.getRecentWatchingProducts(1) { result ->
@@ -90,7 +92,12 @@ class ProductDetailViewModel(
     }
 
     fun updateProductRequestedEvent() {
-        _event.setValue(ProductDetailEvent.UpdatedProductRequested(product.value ?: return))
+        _event.setValue(
+            ProductDetailEvent.UpdatedProductRequested(
+                product = product.value ?: return,
+                previousUpdatedProduct = previousUpdatedProduct,
+            ),
+        )
     }
 
     fun updateRecentProductEvent() {
@@ -103,10 +110,19 @@ class ProductDetailViewModel(
     }
 
     companion object {
-        fun provideFactory(product: Product): ViewModelProvider.Factory =
+        fun provideFactory(
+            product: Product,
+            isRecentWatchingProduct: Boolean,
+            previousUpdatedProduct: Product? = null,
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T = ProductDetailViewModel(product) as T
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    ProductDetailViewModel(
+                        product,
+                        isRecentWatchingProduct,
+                        previousUpdatedProduct,
+                    ) as T
             }
     }
 }

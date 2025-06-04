@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
 
@@ -20,13 +20,56 @@ class ProductDetailActivity :
     ProductDetailListener {
     private val viewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModel.provideFactory(
-            intent.getSerializableExtraData(EXTRA_PRODUCT)
-                ?: error("상품 상세 화면: Product 가 전달되지 않았습니다."),
+            product =
+                intent.getSerializableExtraData(EXTRA_PRODUCT)
+                    ?: error("상품 상세 화면: Product 가 전달되지 않았습니다."),
+            isRecentWatchingProduct =
+                intent.getBooleanExtra(
+                    EXTRA_IS_RECENT_WATCHING_PRODUCT,
+                    false,
+                ),
+            previousUpdatedProduct =
+                intent.getSerializableExtraData(EXTRA_UPDATED_PREVIOUS_PRODUCT),
         )
     }
 
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                RECENT_PRODUCT_BACK_RESULT_OK -> {
+                    val updateQuantityProduct: Product =
+                        result.data?.getSerializableExtraData("updateProduct")
+                            ?: return@registerForActivityResult
+                    val recentProduct: Product =
+                        result.data?.getSerializableExtraData("recentProduct")
+                            ?: return@registerForActivityResult
+                    setupRecentProductResult(
+                        updateQuantityProduct,
+                        recentProduct,
+                        UPDATED_RECENT_PRODUCT_RESULT_OK,
+                    )
+                }
+            }
+        }
+
+    private fun setupRecentProductResult(
+        updateQuantityProduct: Product,
+        recentProduct: Product,
+        resultCode: Int,
+    ) {
+        val intent =
+            Intent().apply {
+                putExtra("updateProduct", updateQuantityProduct)
+                putExtra("recentProduct", recentProduct)
+            }
+        setResult(resultCode, intent)
+        finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,12 +117,20 @@ class ProductDetailActivity :
                 )
 
             is ProductDetailEvent.UpdatedProductRequested -> {
-                val intent =
-                    Intent().apply {
-                        putExtra("updateProduct", event.product)
-                    }
-                setResult(ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK, intent)
-                finish()
+                if (event.previousUpdatedProduct == null) {
+                    val intent =
+                        Intent().apply {
+                            putExtra("updateProduct", event.product)
+                        }
+                    setResult(UPDATED_PRODUCT_RESULT_OK, intent)
+                    finish()
+                    return
+                }
+                setupRecentProductResult(
+                    event.previousUpdatedProduct,
+                    event.product,
+                    RECENT_PRODUCT_BACK_RESULT_OK,
+                )
             }
 
             ProductDetailEvent.RecentProductFetchFailed ->
@@ -94,12 +145,13 @@ class ProductDetailActivity :
 
             is ProductDetailEvent.RecentProductRequested -> {
                 val intent =
-                    Intent().apply {
-                        putExtra("recentProduct", event.recentProduct)
-                        putExtra("updateProduct", event.currentProduct)
-                    }
-                setResult(ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK, intent)
-                finish()
+                    newIntent(
+                        context = this,
+                        product = event.recentProduct,
+                        isRecentWatchingProduct = true,
+                        previousUpdatedProduct = event.currentProduct,
+                    )
+                activityResultLauncher.launch(intent)
             }
         }
     }
@@ -126,15 +178,32 @@ class ProductDetailActivity :
 
     companion object {
         private const val EXTRA_PRODUCT = "woowacourse.shopping.EXTRA_PRODUCT"
+        private const val EXTRA_IS_RECENT_WATCHING_PRODUCT =
+            "woowacourse.shopping.EXTRA_IS_RECENT_WATCHING_PRODUCT"
+        private const val EXTRA_UPDATED_PREVIOUS_PRODUCT =
+            "woowacourse.shopping.EXTRA_UPDATED_PREVIOUS_PRODUCT"
+        const val UPDATED_PRODUCT_RESULT_OK = 200
+        const val UPDATED_RECENT_PRODUCT_RESULT_OK = 201
+        const val RECENT_PRODUCT_BACK_RESULT_OK = 202
 
         fun newIntent(
             context: Context,
             product: Product,
+            isRecentWatchingProduct: Boolean = false,
+            previousUpdatedProduct: Product? = null,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(
                     EXTRA_PRODUCT,
                     product,
+                )
+                putExtra(
+                    EXTRA_IS_RECENT_WATCHING_PRODUCT,
+                    isRecentWatchingProduct,
+                )
+                putExtra(
+                    EXTRA_UPDATED_PREVIOUS_PRODUCT,
+                    previousUpdatedProduct,
                 )
             }
     }
