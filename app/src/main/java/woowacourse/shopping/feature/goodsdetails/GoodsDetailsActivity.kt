@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
@@ -23,26 +24,27 @@ import woowacourse.shopping.util.toUi
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private lateinit var viewModel: GoodsDetailsViewModel
+
+    private val goodsUiModel by lazy {
+        IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java)
+            ?: throw IllegalArgumentException("GoodsUiModel is required")
+    }
+    private val viewModel: GoodsDetailsViewModel by viewModels {
+        GoodsDetailsViewModelFactory(
+            goodsUiModel,
+            CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
+            GoodsRepositoryImpl(
+                GoodsRemoteDataSourceImpl(okHttpClient = mockOkHttpClient),
+                GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
+            ),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-
-        val goodsUiModel =
-            IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-
-        viewModel =
-            GoodsDetailsViewModel(
-                goodsUiModel,
-                CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
-                GoodsRepositoryImpl(
-                    GoodsRemoteDataSourceImpl(okHttpClient = mockOkHttpClient),
-                    GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
-                ),
-            )
 
         val source = intent.getStringExtra(EXTRA_SOURCE)
         if (source != SOURCE_RECENTLY_VIEWED) {
