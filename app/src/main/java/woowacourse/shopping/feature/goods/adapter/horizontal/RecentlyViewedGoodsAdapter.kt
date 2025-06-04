@@ -10,7 +10,7 @@ class RecentlyViewedGoodsAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<RecentlyViewedGoodsViewHolder>() {
-    val items: MutableList<Goods> =
+    private val items: MutableList<Goods> =
         mutableListOf()
 
     fun setItems(newItems: List<Goods>) {
