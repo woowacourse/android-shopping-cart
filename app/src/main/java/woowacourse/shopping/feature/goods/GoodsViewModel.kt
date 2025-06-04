@@ -41,7 +41,6 @@ class GoodsViewModel(
 
     init {
         appendCartItemsWithZeroQuantity()
-        updateRecentlyViewedGoods()
     }
 
     fun onCartClicked() {
