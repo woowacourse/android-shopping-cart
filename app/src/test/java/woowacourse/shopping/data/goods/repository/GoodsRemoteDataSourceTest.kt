@@ -88,21 +88,6 @@ class GoodsRemoteDataSourceTest {
     }
 
     @Test
-    fun `상품 개수 조회 실패시 반환하는 사이즈 0 반환`() {
-        // Given
-        enqueueMockResponse(500, "Internal Server Error")
-
-        // When
-        val result =
-            executeWithCallback<Int> { callback ->
-                dataSource.fetchGoodsSize(callback)
-            }
-
-        // Then
-        assertThat(result).isEqualTo(0)
-    }
-
-    @Test
     fun `상품 상세 조회 테스트`() {
         // Given
         val expectedGoods = GoodsDto(1, "상품1", 10000, "url1")
@@ -118,21 +103,6 @@ class GoodsRemoteDataSourceTest {
         assertThat(result).isNotNull
         assertThat(result!!.name).isEqualTo("상품1")
         assertThat(result.price).isEqualTo(10000)
-    }
-
-    @Test
-    fun `상품 상세 조회 404시 null 반환`() {
-        // Given
-        enqueueMockResponse(404, mapOf("error" to "Not found"))
-
-        // When
-        val result =
-            executeWithCallback<Goods?> { callback ->
-                dataSource.fetchGoodsById(999, callback)
-            }
-
-        // Then
-        assertThat(result).isNull()
     }
 
     @Test

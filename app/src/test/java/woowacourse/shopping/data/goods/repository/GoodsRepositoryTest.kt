@@ -61,18 +61,15 @@ class GoodsRepositoryTest {
         val ids = listOf("1", "2")
         val goods1 = Goods("상품1", 10000, "url1", 1)
         val goods2 = Goods("상품2", 20000, "url2", 2)
+        val expectedGoods = listOf(goods1, goods2)
 
         // Local: ID 목록 반환
         every { localDataSource.fetchRecentGoodsIds(any()) } answers {
             firstArg<(List<String>) -> Unit>()(ids)
         }
 
-        // Remote: 각 상품 상세정보 반환
-        every { remoteDataSource.fetchGoodsById(1, any()) } answers {
-            secondArg<(Goods?) -> Unit>()(goods1)
-        }
-        every { remoteDataSource.fetchGoodsById(2, any()) } answers {
-            secondArg<(Goods?) -> Unit>()(goods2)
+        every { remoteDataSource.fetchGoodsByIds(listOf(1, 2), any()) } answers {
+            secondArg<(List<Goods>?) -> Unit>()(expectedGoods)
         }
 
         // When
@@ -83,11 +80,11 @@ class GoodsRepositoryTest {
 
         // Then
         assertThat(result).hasSize(2)
-        assertThat(result[0].name).isEqualTo("상품1") // 순서 유지
+        assertThat(result[0].name).isEqualTo("상품1")
+        assertThat(result[1].name).isEqualTo("상품2")
 
         verify { localDataSource.fetchRecentGoodsIds(any()) }
-        verify { remoteDataSource.fetchGoodsById(1, any()) }
-        verify { remoteDataSource.fetchGoodsById(2, any()) }
+        verify { remoteDataSource.fetchGoodsByIds(listOf(1, 2), any()) }
     }
 
     @Test
