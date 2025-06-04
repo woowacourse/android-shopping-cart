@@ -29,7 +29,7 @@ class GoodsDetailsActivityTest {
     @Before
     fun setUp() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val intent = GoodsDetailsActivity.newIntent(context, testGoods)
+        val intent = GoodsDetailsActivity.fromGoods(context, testGoods)
         scenario = ActivityScenario.launch(intent)
     }
 
