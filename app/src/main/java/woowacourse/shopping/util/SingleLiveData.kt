@@ -8,10 +8,6 @@ abstract class SingleLiveData<T> {
 
     protected constructor()
 
-    protected constructor(value: T) {
-        liveData.value = Event(value)
-    }
-
     protected open fun setValue(value: T) {
         liveData.value = Event(value)
     }
@@ -27,12 +23,5 @@ abstract class SingleLiveData<T> {
         onResult: (T) -> Unit,
     ) {
         liveData.observe(owner) { it.getContentIfNotHandled()?.let(onResult) }
-    }
-
-    fun observePeek(
-        owner: LifecycleOwner,
-        onResult: (T) -> Unit,
-    ) {
-        liveData.observe(owner) { onResult(it.peekContent()) }
     }
 }
