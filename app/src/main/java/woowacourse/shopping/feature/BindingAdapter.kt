@@ -3,14 +3,16 @@ package woowacourse.shopping.feature
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 
 @BindingAdapter("imgUrl")
 fun loadImageFromUrl(
@@ -18,26 +20,36 @@ fun loadImageFromUrl(
     url: String?,
 ) {
     url?.let {
-        Glide.with(imageView.context).load(url).into(imageView)
+        val placeholderDrawable =
+            ContextCompat.getDrawable(imageView.context, R.drawable.image_placeholder)
+        Glide
+            .with(imageView.context)
+            .load(url)
+            .placeholder(placeholderDrawable)
+            .error(placeholderDrawable)
+            .into(imageView)
     }
 }
 
-@BindingAdapter("items")
-fun RecyclerView.bindItems(items: List<Goods>?) {
+@BindingAdapter("cartItems")
+fun RecyclerView.bindCartItems(cartItems: List<CartItem>?) {
     when (val adapter = this.adapter) {
         is GoodsAdapter -> {
-            if (items != null) adapter.setItems(items)
+            if (cartItems != null) adapter.setItems(cartItems)
         }
+
         is CartAdapter -> {
-            if (items != null) adapter.setItems(items)
+            if (cartItems != null) adapter.setItems(cartItems)
         }
+
         is ConcatAdapter -> {
             adapter.adapters.forEach { childAdapter ->
-                if (childAdapter is GoodsAdapter && items != null) {
-                    childAdapter.setItems(items)
+                if (childAdapter is GoodsAdapter && cartItems != null) {
+                    childAdapter.setItems(cartItems)
                 }
-                if (childAdapter is CartAdapter && items != null) {
-                    childAdapter.setItems(items)
+
+                if (childAdapter is CartAdapter && cartItems != null) {
+                    childAdapter.setItems(cartItems)
                 }
             }
         }

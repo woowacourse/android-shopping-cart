@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.carts
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -10,4 +10,5 @@ data class CartEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "thumbnail_url") val thumbnailUrl: String,
+    @ColumnInfo(name = "quantity") val quantity: Int,
 )

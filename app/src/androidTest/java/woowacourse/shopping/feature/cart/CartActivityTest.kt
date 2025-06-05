@@ -6,13 +6,16 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.R
+import woowacourse.shopping.util.InstantTaskExecutorExtension
 
+@ExtendWith(InstantTaskExecutorExtension::class)
 @Suppress("ktlint:standard:function-naming")
 class CartActivityTest {
     @Test
     fun 장바구니_화면_레이아웃_테스트() {
         ActivityScenario.launch(CartActivity::class.java)
-        onView(withId(R.id.rv_goods)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_cart_items)).check(matches(isDisplayed()))
     }
 }

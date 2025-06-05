@@ -1,45 +1,114 @@
 package woowacourse.shopping.feature.goods
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.carts.repository.CartRepository
+import woowacourse.shopping.data.goods.repository.GoodsRepository
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
-import kotlin.math.min
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 
-class GoodsViewModel : ViewModel() {
-    private val _goods = MutableLiveData<List<Goods>>()
-    val goods: LiveData<List<Goods>> get() = _goods
+class GoodsViewModel(
+    private val cartRepository: CartRepository,
+    private val goodsRepository: GoodsRepository,
+) : ViewModel() {
+    private val goods = mutableListOf<Goods>()
     private var page: Int = 1
-    private val _isFullLoaded = MutableLiveData(PAGE_SIZE >= dummyGoods.size)
+    private val _isFullLoaded = MutableLiveData(false)
     val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
+    private val _goodsWithCartQuantity = MutableLiveData<List<CartItem>>()
+    val goodsWithCartQuantity: LiveData<List<CartItem>> get() = _goodsWithCartQuantity
+    private var _totalCartItemSize: MutableLiveData<String> = MutableLiveData("0")
+    val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
+    private var _hasCartItem: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasCartItem: LiveData<Boolean> get() = _hasCartItem
+    private var _isOverflowCartSizeThreshold: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isOverflowCartSizeThreshold: LiveData<Boolean> get() = _isOverflowCartSizeThreshold
+
+    private val _navigateToCart = MutableSingleLiveData<Unit>()
+    val navigateToCart: SingleLiveData<Unit> get() = _navigateToCart
+    private val _recentlyViewedGoods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val recentlyViewedGoods: LiveData<List<Goods>> get() = _recentlyViewedGoods
+    val hasRecentlyViewedGoods =
+        MediatorLiveData<Boolean>().apply {
+            addSource(recentlyViewedGoods) { goods ->
+                value = goods.isNotEmpty()
+            }
+        }
 
     init {
-        loadGoods()
+        appendCartItemsWithZeroQuantity()
     }
 
-    private fun loadGoods() {
-        val currentList = _goods.value ?: emptyList()
-        val newList = getProducts(page)
-        _goods.value = currentList + newList
-        _isFullLoaded.value = page * PAGE_SIZE >= dummyGoods.size
+    fun onCartClicked() {
+        _navigateToCart.setValue(Unit)
+    }
+
+    private fun appendCartItemsWithZeroQuantity() {
+        val goodsLoadOffset = (page - 1) * PAGE_SIZE
+        goodsRepository.fetchPageGoods(
+            limit = PAGE_SIZE,
+            offset = goodsLoadOffset,
+        ) { fetchedGoods ->
+            goods.addAll(fetchedGoods)
+            goodsRepository.fetchGoodsSize { totalSize ->
+                _isFullLoaded.postValue(page * PAGE_SIZE >= totalSize)
+            }
+            _goodsWithCartQuantity.postValue(goods.map { CartItem(goods = it, quantity = 0) })
+        }
+    }
+
+    fun updateRecentlyViewedGoods() {
+        goodsRepository.fetchRecentGoods { goods ->
+            _recentlyViewedGoods.postValue(goods)
+        }
+    }
+
+    fun updateCartQuantity() {
+        cartRepository.fetchAllCartItems { cartItems ->
+            val cartItemsMap = cartItems.associateBy { it.goods.id }
+            _goodsWithCartQuantity.value =
+                goods.map { goods ->
+                    cartItemsMap[goods.id] ?: CartItem(goods = goods, quantity = 0)
+                }
+            setTotalCartItem(cartItems.sumOf { it.quantity })
+        }
+    }
+
+    private fun setTotalCartItem(totalCartQuantity: Int) {
+        val sizeText =
+            when {
+                totalCartQuantity < 1 -> "0"
+                totalCartQuantity in 1..MAXIMUM_CART_SIZE_THRESHOLD -> totalCartQuantity.toString()
+                else -> "$MAXIMUM_CART_SIZE_THRESHOLD+"
+            }
+        _totalCartItemSize.postValue(sizeText)
+        _hasCartItem.value = totalCartQuantity > 0
+        _isOverflowCartSizeThreshold.value = totalCartQuantity > MAXIMUM_CART_SIZE_THRESHOLD
     }
 
     fun addPage() {
         page++
-        loadGoods()
+        appendCartItemsWithZeroQuantity()
     }
 
-    private fun getProducts(
-        page: Int,
-        pageSize: Int = PAGE_SIZE,
-    ): List<Goods> {
-        val fromIndex = (page - 1) * pageSize
-        val toIndex = min(page * pageSize, dummyGoods.size)
-        return dummyGoods.subList(fromIndex, toIndex)
+    fun addCartItemOrIncreaseQuantity(cartItem: CartItem) {
+        cartRepository.addOrIncreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
+    }
+
+    fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
+        cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
     }
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val MAXIMUM_CART_SIZE_THRESHOLD = 99
     }
 }

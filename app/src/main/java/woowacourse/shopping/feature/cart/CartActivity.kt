@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.ShoppingDatabase
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.adapter.CartViewHolder
 
@@ -20,16 +23,64 @@ class CartActivity :
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
     }
-    private val adapter: CartAdapter by lazy { CartAdapter(this) }
+    private val adapter: CartAdapter by lazy {
+        CartAdapter(
+            this,
+            quantityChangeListener =
+                object : QuantityChangeListener {
+                    override fun onIncrease(cartItem: CartItem) {
+                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = QUANTITY_UPDATE_UNIT))
+                    }
+
+                    override fun onDecrease(cartItem: CartItem) {
+                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = QUANTITY_UPDATE_UNIT))
+                    }
+                },
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupActionBar()
+        initializeBinding()
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun setupActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initializeBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-        binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvCartItems.adapter = adapter
+    }
+
+    private fun setupObservers() {
+        observeAlertEvents()
+    }
+
+    private fun observeAlertEvents() {
+        viewModel.alertMessageEvent.observe(this) { messageId ->
+            showAlertMessage(messageId)
+        }
+    }
+
+    private fun showAlertMessage(
+        @StringRes messageId: Int,
+    ) {
+        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateCartQuantity()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -37,13 +88,15 @@ class CartActivity :
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickDeleteButton(goods: Goods) {
-        val deletedIndex: Int? = viewModel.getPosition(goods)
+    override fun onClickDeleteButton(cartItem: CartItem) {
+        val deletedIndex: Int? = viewModel.getPosition(cartItem)
         deletedIndex?.let { adapter.removeItem(it) }
-        viewModel.delete(goods)
+        viewModel.delete(cartItem)
     }
 
     companion object {
+        private const val QUANTITY_UPDATE_UNIT = 1
+
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

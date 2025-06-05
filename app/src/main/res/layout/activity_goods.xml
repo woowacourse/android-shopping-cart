@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goods.GoodsViewModel" />
@@ -16,17 +17,16 @@
         android:fitsSystemWindows="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_goods"
+            android:id="@+id/rv_goods_items"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="14dp"
-            app:items="@{viewModel.goods}"
-            app:moreButtonVisible="@{!viewModel.isFullLoaded}"
+            app:cartItems="@{viewModel.goodsWithCartQuantity}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:moreButtonVisible="@{!viewModel.isFullLoaded}"
             tools:listitem="@layout/item_goods" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ fun Goods.toUi(): GoodsUiModel =
         name = name,
         price = price,
         thumbnailUrl = thumbnailUrl,
+        id = id,
     )
 
 fun GoodsUiModel.toDomain(): Goods =
@@ -15,4 +16,5 @@ fun GoodsUiModel.toDomain(): Goods =
         name = name,
         price = price,
         thumbnailUrl = thumbnailUrl,
+        id = id,
     )

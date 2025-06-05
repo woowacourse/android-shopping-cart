@@ -3,9 +3,12 @@ package woowacourse.shopping.feature.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.model.Goods
-import kotlin.concurrent.thread
+import woowacourse.shopping.R
+import woowacourse.shopping.data.carts.repository.CartError
+import woowacourse.shopping.data.carts.repository.CartRepository
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.max
 
 class CartViewModel(
@@ -22,8 +25,8 @@ class CartViewModel(
     private val _page = MutableLiveData(currentPage)
     val page: LiveData<Int> get() = _page
 
-    private val _cart = MutableLiveData<List<Goods>>()
-    val cart: LiveData<List<Goods>> get() = _cart
+    private val _cart = MutableLiveData<List<CartItem>>()
+    val cart: LiveData<List<CartItem>> get() = _cart
 
     private var totalCartSizeData: Int = 0
 
@@ -35,42 +38,83 @@ class CartViewModel(
 
     private val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
 
+    private val _alertMessageEvent = MutableSingleLiveData<Int>()
+    val alertMessageEvent: SingleLiveData<Int> = _alertMessageEvent
+
     init {
-        updateCartData()
-        updateCartDataSize()
+        updateCartQuantity()
     }
 
-    fun getPosition(goods: Goods): Int? {
-        val idx = cart.value?.indexOf(goods) ?: return null
+    fun getPosition(cartItem: CartItem): Int? {
+        val idx = cart.value?.indexOf(cartItem) ?: return null
         return if (idx >= 0) idx else null
     }
 
-    private fun updateCartData() {
-        thread {
-            val currentPageCartItems = cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
-            _cart.postValue(currentPageCartItems)
+    fun addCartItemOrIncreaseQuantity(cartItem: CartItem) {
+        cartRepository.addOrIncreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
         }
     }
 
+    fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
+        cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+            updatePage()
+        }
+    }
+
+    fun updateCartQuantity() {
+        cartRepository.fetchPageCartItems(
+            PAGE_SIZE,
+            (currentPage - 1) * PAGE_SIZE,
+            { currentPageCartItems ->
+                _cart.value = currentPageCartItems
+            },
+            { cartError ->
+                when (cartError) {
+                    CartError.DatabaseError -> _alertMessageEvent.postValue(R.string.database_error)
+                    CartError.GeneralError -> _alertMessageEvent.postValue(R.string.unknown_error)
+                }
+            },
+        )
+        updateCartDataSize()
+        updatePageMoveAvailability()
+    }
+
+    private fun updateCartData() {
+        cartRepository.fetchPageCartItems(
+            PAGE_SIZE,
+            (currentPage - 1) * PAGE_SIZE,
+            { currentPageCartItems ->
+                _cart.postValue(currentPageCartItems)
+            },
+            {},
+        )
+    }
+
     private fun updateCartDataSize() {
-        thread {
-            totalCartSizeData = cartRepository.getAllItemsSize()
+        cartRepository.getAllItemsSize { totalCartSize ->
+            totalCartSizeData = totalCartSize
             _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
             updatePageMoveAvailability()
         }
     }
 
-    fun delete(goods: Goods) {
-        cartRepository.delete(goods) {
-            thread {
-                totalCartSizeData = cartRepository.getAllItemsSize()
-                if (currentPage > endPage) {
-                    currentPage = endPage
-                }
-                _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
-                updatePageMoveAvailability()
-                updateCartData()
+    fun delete(cartItem: CartItem) {
+        cartRepository.delete(cartItem.goods) {
+            updatePage()
+        }
+    }
+
+    private fun updatePage() {
+        cartRepository.getAllItemsSize { totalCartSize ->
+            totalCartSizeData = totalCartSize
+            if (currentPage > endPage) {
+                currentPage = endPage
             }
+            _isMultiplePages.postValue(totalCartSize > PAGE_SIZE)
+            updatePageMoveAvailability()
+            updateCartData()
         }
     }
 
@@ -87,20 +131,8 @@ class CartViewModel(
     }
 
     private fun updatePageMoveAvailability() {
-        when {
-            currentPage == 1 -> {
-                _isLeftPageEnable.postValue(false)
-                _isRightPageEnable.postValue(currentPage < endPage)
-            }
-            currentPage < endPage -> {
-                _isLeftPageEnable.postValue(currentPage > 1)
-                _isRightPageEnable.postValue(currentPage < endPage)
-            }
-            currentPage == endPage -> {
-                _isLeftPageEnable.postValue(currentPage > 1)
-                _isRightPageEnable.postValue(false)
-            }
-        }
+        _isLeftPageEnable.postValue(currentPage > 1)
+        _isRightPageEnable.postValue(currentPage < endPage)
     }
 
     companion object {

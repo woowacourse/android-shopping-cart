@@ -5,28 +5,90 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            name="clickListener"
+            type="woowacourse.shopping.feature.goods.adapter.vertical.GoodsClickListener" />
+
+        <variable
+            name="quantityChangeListener"
+            type="woowacourse.shopping.feature.QuantityChangeListener" />
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> clickListener.onClickGoods(cartItem.goods)}"
         android:paddingHorizontal="6dp"
         android:paddingBottom="12dp">
-
 
         <ImageView
             android:id="@+id/iv_item_goods_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@string/goods_image_description"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{cartItem.goods.thumbnailUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/ic_launcher_background" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_item_goods_thumbnail"
+            app:layout_constraintEnd_toEndOf="@+id/iv_item_goods_thumbnail">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_plus_quantity_round"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="0dp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:onClick="@{() -> quantityChangeListener.onIncrease(cartItem)}"
+                android:stateListAnimator="@null"
+                android:text="+"
+                android:textColor="@color/gray_700"
+                android:textSize="30sp"
+                android:visibility="@{cartItem.quantity &lt;= 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="@{cartItem.quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_item_goods_thumbnail"
+            app:layout_constraintEnd_toEndOf="@+id/iv_item_goods_thumbnail"
+            app:layout_constraintStart_toStartOf="@+id/iv_item_goods_thumbnail"
+
+            tools:alpha="0.5"
+            tools:visibility="visible">
+
+            <include
+                android:id="@+id/quantitySelector"
+                layout="@layout/quantity_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cartItem="@{cartItem}"
+                app:quantityChangeListener="@{quantityChangeListener}" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_item_goods_name"
@@ -37,7 +99,7 @@
             android:layout_marginEnd="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{goods.name}"
+            android:text="@{cartItem.goods.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -49,7 +111,7 @@
             android:id="@+id/tv_item_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/goods_price(goods.price)}"
+            android:text="@{@string/goods_price(cartItem.goods.price)}"
             android:textColor="@color/gray_800"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/tv_item_goods_name"

@@ -2,16 +2,16 @@ package woowacourse.shopping.feature.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.CartItem
 
 class CartViewHolder(
-    private val binding: ItemCartBinding,
+    val binding: ItemCartBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(goods: Goods) {
-        binding.goods = goods
+    fun bind(cartItem: CartItem) {
+        binding.cartItem = cartItem
     }
 
     interface CartClickListener {
-        fun onClickDeleteButton(goods: Goods)
+        fun onClickDeleteButton(cartItem: CartItem)
     }
 }

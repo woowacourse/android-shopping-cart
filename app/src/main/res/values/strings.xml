@@ -12,7 +12,8 @@
     <string name="goods_detail_image_description">상품 상세 이미지</string>
     <string name="goods_details_cart_button">장바구니 담기</string>
     <string name="goods_detail_price">가격</string>
-    <string name="goods_detail_cart_insert_complete_toast_message">상품이 장바구니에 담겼습니다!</string>
+    <string name="goods_detail_cart_insert_complete_toast_message">%d개의 상품이 장바구니에 추가되었습니다!</string>
+    <string name="recently_viewed_header">마지막으로 본 상품</string>
 
     <!--    CartActivity-->
     <string name="cart_action_bar_name">Cart</string>
@@ -21,5 +22,10 @@
     <string name="cart_item_image_description">장바구니 아이템 이미지</string>
     <string name="cart_left_page_button"><![CDATA[<]]></string>
     <string name="cart_right_page_button"><![CDATA[>]]></string>
+    <string name="recently_viewed_goods_header">최근 본 상품</string>
+
+    <!--    ErrorMessages-->
+    <string name="database_error">데이터베이스 에러가 발생 하였습니다</string>
+    <string name="unknown_error">알 수 없는 에러가 발생 하였습니다</string>
 
 </resources>

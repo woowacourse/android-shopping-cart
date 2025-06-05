@@ -2,7 +2,6 @@ package woowacourse.shopping.feature.goods
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.component1
@@ -10,34 +9,118 @@ import androidx.core.util.component2
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingDatabase
+import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
+import woowacourse.shopping.data.goods.repository.GoodsLocalDataSourceImpl
+import woowacourse.shopping.data.goods.repository.GoodsRemoteDataSourceImpl
+import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
+import woowacourse.shopping.data.util.MockInterceptor.Companion.mockOkHttpClient
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.databinding.MenuCartNavbarBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
-import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
+import woowacourse.shopping.feature.goods.adapter.horizontal.HorizontalSectionAdapter
+import woowacourse.shopping.feature.goods.adapter.horizontal.RecentlyViewedGoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.util.toUi
 
-class GoodsActivity :
-    AppCompatActivity(),
-    GoodsClickListener {
+class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
-    private val viewModel: GoodsViewModel by viewModels()
-    private val goodsAdapter by lazy { GoodsAdapter(this) }
-    private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
-    private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
+    private lateinit var navbarBinding: MenuCartNavbarBinding
+    private val viewModel: GoodsViewModel by viewModels {
+        GoodsViewModelFactory(
+            CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
+            GoodsRepositoryImpl(
+                GoodsRemoteDataSourceImpl(okHttpClient = mockOkHttpClient),
+                GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
+            ),
+        )
+    }
+
+    private val recentlyViewedGoodsAdapter by lazy {
+        RecentlyViewedGoodsAdapter(this) { goods -> navigateGoodsDetails(goods) }
+    }
+    private val horizontalSelectionAdapter by lazy {
+        HorizontalSectionAdapter(this, viewModel, recentlyViewedGoodsAdapter)
+    }
+    private val goodsAdapter by lazy {
+        GoodsAdapter(
+            goodsClickListener = { goods -> navigateGoodsDetails(goods) },
+            quantityChangeListener =
+                object : QuantityChangeListener {
+                    override fun onIncrease(cartItem: CartItem) {
+                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = 1))
+                    }
+
+                    override fun onDecrease(cartItem: CartItem) {
+                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = 1))
+                    }
+                },
+        )
+    }
+    private val moreButtonAdapter by lazy {
+        MoreButtonAdapter {
+            viewModel.addPage()
+            viewModel.updateCartQuantity()
+        }
+    }
+    private val concatAdapter by lazy {
+        ConcatAdapter(
+            horizontalSelectionAdapter,
+            goodsAdapter,
+            moreButtonAdapter,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeBinding()
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun initializeBinding() {
         binding = ActivityGoodsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-
-        binding.rvGoods.adapter = concatAdapter
         binding.viewModel = viewModel
+    }
 
-        binding.rvGoods.layoutManager = getLayoutManager()
+    private fun setupRecyclerView() {
+        binding.rvGoodsItems.adapter = concatAdapter
+        binding.rvGoodsItems.layoutManager = getLayoutManager()
+        binding.rvGoodsItems.addItemDecoration(
+            GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
+        )
+    }
+
+    private fun setupObservers() {
+        observeNavigationEvents()
+        observeCartQuantityChanges()
+        observeRecentlyViewedGoods()
+    }
+
+    private fun observeNavigationEvents() {
+        viewModel.navigateToCart.observe(this) {
+            val intent = CartActivity.newIntent(this)
+            startActivity(intent)
+        }
+    }
+
+    private fun observeCartQuantityChanges() {
+        viewModel.goodsWithCartQuantity.observe(this) {
+            viewModel.updateCartQuantity()
+        }
+    }
+
+    private fun observeRecentlyViewedGoods() {
+        viewModel.recentlyViewedGoods.observe(this) { goods ->
+            recentlyViewedGoodsAdapter.setItems(goods)
+        }
     }
 
     private fun getLayoutManager(): GridLayoutManager {
@@ -55,27 +138,29 @@ class GoodsActivity :
         return layoutManager
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateCartQuantity()
+        viewModel.updateRecentlyViewedGoods()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_cart, menu)
+        val menuItem = menu?.findItem(R.id.nav_cart)
+        navbarBinding = MenuCartNavbarBinding.inflate(layoutInflater)
+        navbarBinding.lifecycleOwner = this
+        navbarBinding.viewModel = viewModel
+        menuItem?.actionView = navbarBinding.root
+
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun navigate(goods: Goods) {
-        val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
+    private fun navigateGoodsDetails(goods: Goods) {
+        val intent = GoodsDetailsActivity.fromGoods(this, goods.toUi())
         startActivity(intent)
     }
 
-    override fun onClickGoods(goods: Goods) {
-        navigate(goods)
+    companion object {
+        private const val GRID_GOODS_ITEM_HORIZONTAL_PADDING = 14
     }
 }
