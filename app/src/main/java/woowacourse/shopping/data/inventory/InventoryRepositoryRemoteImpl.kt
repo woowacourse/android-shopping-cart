@@ -12,7 +12,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.IOException
 import woowacourse.shopping.data.product.ProductEntity
-import woowacourse.shopping.data.toProduct
+import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
@@ -62,7 +62,7 @@ class InventoryRepositoryRemoteImpl(
                         println("GetOrNull Error: ${response.code} ${response.message}")
                     }
                     thread {
-                        onResult(product?.toProduct())
+                        onResult(product?.toDomain())
                     }
                 }
             },
@@ -106,7 +106,7 @@ class InventoryRepositoryRemoteImpl(
                         println("GetAll Error: ${response.code} ${response.message}")
                     }
                     thread {
-                        onSuccess(products.map(ProductEntity::toProduct))
+                        onSuccess(products.map(ProductEntity::toDomain))
                     }
                 }
             },

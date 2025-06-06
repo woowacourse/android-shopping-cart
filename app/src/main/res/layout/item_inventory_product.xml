@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem" />
+            type="woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel" />
 
         <variable
             name="handler"

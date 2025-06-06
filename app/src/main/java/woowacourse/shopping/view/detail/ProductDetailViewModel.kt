@@ -9,8 +9,8 @@ import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toUiModel
-import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.domain.RecentItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -19,11 +19,11 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
-    private val _product = MutableLiveData<ProductItem>()
-    val product: LiveData<ProductItem> get() = _product
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> get() = _product
 
-    private val _lastProduct = MutableLiveData<RecentProduct>()
-    val lastProduct: LiveData<RecentProduct> get() = _lastProduct
+    private val _lastProduct = MutableLiveData<RecentItem>()
+    val lastProduct: LiveData<RecentItem> get() = _lastProduct
 
     fun loadInventoryProduct(productId: Int) {
         inventoryRepository.getOrNull(productId) { inventoryProduct ->
@@ -41,9 +41,9 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun updateRecentProducts(product: ProductItem) {
+    private fun updateRecentProducts(product: ProductUiModel) {
         val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val recentProduct = RecentProduct(product.product.id, product.product.name, product.product.imageUrl, time)
+        val recentProduct = RecentItem(product.product.id, product.product.name, product.product.imageUrl, time)
         recentProductRepository.insert(recentProduct)
     }
 

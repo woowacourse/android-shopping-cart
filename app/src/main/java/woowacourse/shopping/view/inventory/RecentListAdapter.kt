@@ -2,11 +2,11 @@ package woowacourse.shopping.view.inventory
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentItem
 import woowacourse.shopping.view.inventory.viewholder.RecentItemViewHolder
 
 class RecentListAdapter(private val handler: InventoryEventHandler) : RecyclerView.Adapter<RecentItemViewHolder>() {
-    private val items: MutableList<RecentProduct> = mutableListOf()
+    private val items: MutableList<RecentItem> = mutableListOf()
 
     override fun getItemCount(): Int = items.size
 
@@ -24,7 +24,7 @@ class RecentListAdapter(private val handler: InventoryEventHandler) : RecyclerVi
         holder.bind(items[position])
     }
 
-    fun submitList(newItems: List<RecentProduct>) {
+    fun submitList(newItems: List<RecentItem>) {
         items.clear()
         items.addAll(newItems)
     }

@@ -15,7 +15,7 @@ import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
 
 class InventoryRepositoryImplTest {
     @get:Rule
@@ -40,7 +40,7 @@ class InventoryRepositoryImplTest {
     @Test
     fun 페이지의_크기만큼_항목이_들어있다() {
         val expected = listOf(
-            ProductItem(
+            ProductUiModel(
                 Product(
                     0,
                     "[병천아우내] 모듬순대",
@@ -49,7 +49,7 @@ class InventoryRepositoryImplTest {
                 ),
                 1,
             ),
-            ProductItem(
+            ProductUiModel(
                 Product(
                     1,
                     "[빙그래] 요맘때 파인트 710mL 3종 (택1)",
@@ -58,7 +58,7 @@ class InventoryRepositoryImplTest {
                 ),
                 1,
             ),
-            ProductItem(
+            ProductUiModel(
                 Product(
                     2,
                     "[애슐리] 크런치즈엣지 포테이토피자 495g",

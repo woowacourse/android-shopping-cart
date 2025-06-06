@@ -1,14 +1,14 @@
 package woowacourse.shopping.data.recent
 
 import woowacourse.shopping.data.toEntity
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentItem
 import kotlin.concurrent.thread
 
 class RecentProductRepositoryImpl(private val recentProductDao: RecentProductDao) :
     RecentProductRepository {
     override fun getMostRecent(
         count: Int,
-        onSuccess: (List<RecentProduct>) -> Unit,
+        onSuccess: (List<RecentItem>) -> Unit,
     ) {
         thread {
             val recentProducts = recentProductDao.getMostRecent(count)
@@ -18,7 +18,7 @@ class RecentProductRepositoryImpl(private val recentProductDao: RecentProductDao
 
     override fun getLastProductBefore(
         productId: Int,
-        onResult: (RecentProduct?) -> Unit,
+        onResult: (RecentItem?) -> Unit,
     ) {
         thread {
             val lastProduct = recentProductDao.getLastProductBefore(productId)
@@ -26,7 +26,7 @@ class RecentProductRepositoryImpl(private val recentProductDao: RecentProductDao
         }
     }
 
-    override fun insert(recentProduct: RecentProduct) {
+    override fun insert(recentProduct: RecentItem) {
         thread {
             recentProductDao.insert(recentProduct.toEntity())
         }

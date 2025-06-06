@@ -2,8 +2,8 @@ package woowacourse.shopping.data.inventory
 
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductEntity
+import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
-import woowacourse.shopping.data.toProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
@@ -14,14 +14,14 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
         onResult: (Product?) -> Unit,
     ) {
         thread {
-            val product = productDao.getOrNull(id)?.toProduct()
+            val product = productDao.getOrNull(id)?.toDomain()
             onResult(product)
         }
     }
 
     override fun getAll(onSuccess: (List<Product>) -> Unit) {
         thread {
-            val result = productDao.getAll().map(ProductEntity::toProduct)
+            val result = productDao.getAll().map(ProductEntity::toDomain)
             onSuccess(result)
         }
     }

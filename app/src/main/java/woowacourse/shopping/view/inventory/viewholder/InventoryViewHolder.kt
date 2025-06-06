@@ -9,8 +9,8 @@ import woowacourse.shopping.databinding.ItemInventoryRecentListBinding
 import woowacourse.shopping.databinding.ItemInventoryShowMoreBinding
 import woowacourse.shopping.view.inventory.InventoryEventHandler
 import woowacourse.shopping.view.inventory.RecentListAdapter
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 
 sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: BINDING) :
@@ -32,7 +32,7 @@ sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: B
             binding.rvRecentList.adapter = adapter
         }
 
-        fun bind(item: RecentProductsItem) {
+        fun bind(item: RecentProducts) {
             binding.item = item
             adapter.submitList(item.recentProducts)
         }
@@ -67,7 +67,7 @@ sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: B
             binding.handler = handler
         }
 
-        fun bind(item: ProductItem) {
+        fun bind(item: ProductUiModel) {
             binding.item = item
         }
     }

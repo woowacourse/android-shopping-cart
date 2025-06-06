@@ -5,15 +5,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.recent.RecentProductEntity.Companion.RECENT_PRODUCT_TABLE_NAME
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentItem
 
 @Dao
 interface RecentProductDao {
     @Query("SELECT * FROM $RECENT_PRODUCT_TABLE_NAME ORDER BY timestamp DESC LIMIT :count")
-    fun getMostRecent(count: Int): List<RecentProduct>
+    fun getMostRecent(count: Int): List<RecentItem>
 
     @Query("SELECT * FROM $RECENT_PRODUCT_TABLE_NAME WHERE id != :id ORDER BY timestamp DESC LIMIT 1")
-    fun getLastProductBefore(id: Int): RecentProduct?
+    fun getLastProductBefore(id: Int): RecentItem?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recentProductEntity: RecentProductEntity)

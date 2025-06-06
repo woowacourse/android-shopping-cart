@@ -4,7 +4,7 @@ package woowacourse.shopping
 
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
 
 val inventoryItem = Product(
     0,
@@ -14,7 +14,7 @@ val inventoryItem = Product(
 )
 
 val allInventoryProducts = listOf(
-    ProductItem(
+    ProductUiModel(
         Product(
             0,
             "[병천아우내] 모듬순대",
@@ -23,7 +23,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             1,
             "[빙그래] 요맘때 파인트 710mL 3종 (택1)",
@@ -32,7 +32,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             2,
             "[애슐리] 크런치즈엣지 포테이토피자 495g",
@@ -41,7 +41,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             3,
             "치밥하기 좋은 순살 바베큐치킨",
@@ -50,7 +50,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             4,
             "[이연복의 목란] 짜장면 2인분",
@@ -59,7 +59,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             5,
             "[콜린스 다이닝] 마르게리타 미트볼",
@@ -68,7 +68,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             6,
             "[투다리] 푸짐한 김치어묵 우동전골",
@@ -77,7 +77,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             7,
             "[투다리] 한우대창나베",
@@ -86,7 +86,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             8,
             "[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트",
@@ -95,7 +95,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             9,
             "[투다리] 오리지널 알탕",
@@ -104,7 +104,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             10,
             "[소반옥] 왕갈비탕 1kg",
@@ -113,7 +113,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             11,
             "[금룡각] 마라탕",
@@ -122,7 +122,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             12,
             "[모현상회] 대광어회 150g (냉장)",
@@ -131,7 +131,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             13,
             "[사미헌] 우거지 갈비탕",
@@ -140,7 +140,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             14,
             "[최현석의 쵸이닷] 파스타 인기 메뉴 12종 (택1)",
@@ -149,7 +149,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             15,
             "[일상식탁] 부산식 얼큰 낙곱새",
@@ -158,7 +158,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             16,
             "[본죽] 메추리알 장조림",
@@ -167,7 +167,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             17,
             "[미트클레버] 대구막창",
@@ -176,7 +176,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             18,
             "[배나무골] 연잎 삼겹살 (냉장)",
@@ -185,7 +185,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             19,
             "[하루한킷] 송탄식 부대찌개",
@@ -194,7 +194,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             20,
             "[성수동 팩피 : FAGP] 감바스 파스타",
@@ -203,7 +203,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             21,
             "[크리스피크림도넛] 오리지널 글레이즈드 (9개입)",
@@ -212,7 +212,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             22,
             "[궁] 고추장 제육 돈불고기 600g",
@@ -221,7 +221,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             23,
             "[부산 상국이네] 떡볶이 (2~3인분)",
@@ -230,7 +230,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             24,
             "[최현석의 쵸이닷] 트러플 크림 뇨끼",
@@ -239,7 +239,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             25,
             "[골라담기] 오뚜기 라면 6종 균일가 (택3)",
@@ -248,7 +248,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             26,
             "냉동 유기농 블루베리 700g (미국산)",
@@ -257,7 +257,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             27,
             "[애슐리] 홈스토랑 볶음밥 6종 (4개입) (택1)",
@@ -266,7 +266,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             28,
             "[더건강한] 닭가슴살 2종 (100g*4) (택1)",
@@ -275,7 +275,7 @@ val allInventoryProducts = listOf(
         ),
         1,
     ),
-    ProductItem(
+    ProductUiModel(
         Product(
             29,
             "[태우한우] 1+ 한우 안심 스테이크 200g (냉장)",

@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain
 
-data class RecentProduct(
+data class RecentItem(
     val id: Int,
     val name: String,
     val imageUrl: String,

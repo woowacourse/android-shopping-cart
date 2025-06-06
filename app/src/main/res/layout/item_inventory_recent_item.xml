@@ -8,7 +8,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.domain.RecentProduct" />
+            type="woowacourse.shopping.domain.RecentItem" />
         <variable
             name="handler"
             type="woowacourse.shopping.view.inventory.InventoryEventHandler" />

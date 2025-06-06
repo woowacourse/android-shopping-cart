@@ -3,8 +3,8 @@ package woowacourse.shopping.view.inventory
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 import woowacourse.shopping.view.inventory.item.InventoryItem.ViewType
 import woowacourse.shopping.view.inventory.viewholder.InventoryViewHolder
@@ -17,7 +17,7 @@ class InventoryAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].type.ordinal
+        return items[position].viewType.ordinal
     }
 
     override fun onCreateViewHolder(
@@ -37,9 +37,9 @@ class InventoryAdapter(
     ) {
         val item = items[position]
         when (holder) {
-            is InventoryViewHolder.ProductViewHolder -> holder.bind(item as ProductItem)
+            is InventoryViewHolder.ProductViewHolder -> holder.bind(item as ProductUiModel)
             is InventoryViewHolder.ShowMoreViewHolder -> holder.bind(item as ShowMore)
-            is InventoryViewHolder.RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem)
+            is InventoryViewHolder.RecentItemsListViewHolder -> holder.bind(item as RecentProducts)
         }
     }
 
@@ -66,9 +66,9 @@ class InventoryAdapter(
         }
     }
 
-    fun updateProduct(product: ProductItem) {
+    fun updateProduct(product: ProductUiModel) {
         items.forEachIndexed { index, item ->
-            if (item is ProductItem && item.product.id == product.product.id) items[index] = product
+            if (item is ProductUiModel && item.product.id == product.product.id) items[index] = product
             notifyItemChanged(index)
         }
     }

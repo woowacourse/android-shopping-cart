@@ -13,8 +13,8 @@ import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 
 class InventoryViewModel(
@@ -25,8 +25,8 @@ class InventoryViewModel(
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     val items: LiveData<List<InventoryItem>> get() = _items
 
-    private val _inventoryUpdateEvent = MutableLiveData<ProductItem>()
-    val inventoryUpdateEvent: LiveData<ProductItem> = _inventoryUpdateEvent
+    private val _inventoryUpdateEvent = MutableLiveData<ProductUiModel>()
+    val inventoryUpdateEvent: LiveData<ProductUiModel> = _inventoryUpdateEvent
 
     private val _cartCount: MutableLiveData<Int> = MutableLiveData()
     val cartCount: LiveData<Int> get() = _cartCount
@@ -38,7 +38,7 @@ class InventoryViewModel(
     }
 
     fun requestPage() {
-        val currentPageSize = _items.value?.filterIsInstance<ProductItem>()?.size ?: 0
+        val currentPageSize = _items.value?.filterIsInstance<ProductUiModel>()?.size ?: 0
         inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->
             updateInventoryProducts(page)
         }
@@ -49,13 +49,13 @@ class InventoryViewModel(
         requestPage()
     }
 
-    fun increaseQuantity(product: ProductItem) {
+    fun increaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
         shoppingCartRepository.insert(updatedProduct.toCartItem())
         _inventoryUpdateEvent.value = updatedProduct
     }
 
-    fun decreaseQuantity(product: ProductItem) {
+    fun decreaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
         if (updatedProduct.quantity == 0) {
             shoppingCartRepository.delete(product.toCartItem())
@@ -68,11 +68,11 @@ class InventoryViewModel(
     private fun updateInventoryProducts(newPage: Page<Product>) {
         shoppingCartRepository.getAll { cartProducts ->
             recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
-                val products = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
+                val products = _items.value?.filterIsInstance<ProductUiModel>() ?: emptyList()
                 val productUiModels = matchProductsToCartProducts(newPage.items, cartProducts)
                 val newList =
                     buildList {
-                        add(RecentProductsItem(recentProducts))
+                        add(RecentProducts(recentProducts))
                         addAll(products)
                         addAll(productUiModels)
                         if (newPage.hasNext) add(ShowMore)
@@ -85,7 +85,7 @@ class InventoryViewModel(
     private fun matchProductsToCartProducts(
         products: List<Product>,
         cartProducts: List<CartProduct>,
-    ): List<ProductItem> {
+    ): List<ProductUiModel> {
         val idToCartProduct =
             cartProducts.associateBy(
                 { cartItem -> cartItem.id },

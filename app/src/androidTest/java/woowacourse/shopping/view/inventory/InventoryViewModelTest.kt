@@ -16,7 +16,7 @@ import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
 
 @Suppress("FunctionName")
 class InventoryViewModelTest {
@@ -62,7 +62,7 @@ class InventoryViewModelTest {
         viewModel.requestPage()
 
         // then
-        val actual = viewModel.items.getOrAwaitValue().filterIsInstance<ProductItem>().size
+        val actual = viewModel.items.getOrAwaitValue().filterIsInstance<ProductUiModel>().size
         val expected = 20
         assertThat(actual).isEqualTo(expected)
     }

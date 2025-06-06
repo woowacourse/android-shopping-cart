@@ -1,19 +1,19 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentItem
 
 interface RecentProductRepository {
     fun getMostRecent(
         count: Int,
-        onSuccess: (List<RecentProduct>) -> Unit,
+        onSuccess: (List<RecentItem>) -> Unit,
     )
 
     fun getLastProductBefore(
         productId: Int,
-        onResult: (RecentProduct?) -> Unit,
+        onResult: (RecentItem?) -> Unit,
     )
 
-    fun insert(recentProduct: RecentProduct)
+    fun insert(recentProduct: RecentItem)
 
     fun clear()
 }
