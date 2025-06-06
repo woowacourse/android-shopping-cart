@@ -6,43 +6,40 @@ import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import woowacourse.shopping.view.inventory.item.InventoryItemType
-import woowacourse.shopping.view.inventory.viewholder.ProductViewHolder
-import woowacourse.shopping.view.inventory.viewholder.RecentItemsListViewHolder
-import woowacourse.shopping.view.inventory.viewholder.ShowMoreViewHolder
+import woowacourse.shopping.view.inventory.item.InventoryItem.ViewType
+import woowacourse.shopping.view.inventory.viewholder.InventoryViewHolder
 
 class InventoryAdapter(
     private val handler: InventoryEventHandler,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<InventoryViewHolder<*>>() {
     private val items: MutableList<InventoryItem> = mutableListOf()
 
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].type.id
+        return items[position].type.ordinal
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return when (viewType) {
-            InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
-            InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
-            InventoryItemType.RECENT_PRODUCTS.id -> RecentItemsListViewHolder(parent)
-            else -> throw IllegalStateException()
+    ): InventoryViewHolder<*> {
+        return when (ViewType.entries[viewType]) {
+            ViewType.PRODUCT -> InventoryViewHolder.ProductViewHolder(parent, handler)
+            ViewType.SHOW_MORE -> InventoryViewHolder.ShowMoreViewHolder(parent, handler)
+            ViewType.RECENT_PRODUCTS -> InventoryViewHolder.RecentItemsListViewHolder(parent)
         }
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: InventoryViewHolder<*>,
         position: Int,
     ) {
         val item = items[position]
         when (holder) {
-            is ProductViewHolder -> holder.bind(item as ProductItem)
-            is ShowMoreViewHolder -> holder.bind(item as ShowMore)
-            is RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem, handler)
+            is InventoryViewHolder.ProductViewHolder -> holder.bind(item as ProductItem)
+            is InventoryViewHolder.ShowMoreViewHolder -> holder.bind(item as ShowMore)
+            is InventoryViewHolder.RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem, handler)
         }
     }
 

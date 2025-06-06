@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ToolbarCartCounterBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
-import woowacourse.shopping.view.inventory.item.InventoryItemType
+import woowacourse.shopping.view.inventory.item.InventoryItem.ViewType
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class InventoryActivity :
@@ -70,10 +70,11 @@ class InventoryActivity :
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return when (binding.rvProductList.adapter?.getItemViewType(position)) {
-                        InventoryItemType.PRODUCT.id -> PRODUCT_SPAN_SIZE
-                        InventoryItemType.SHOW_MORE.id, InventoryItemType.RECENT_PRODUCTS.id -> MAX_SPAN_SIZE
-                        else -> throw IllegalStateException()
+                    val adapter = binding.rvProductList.adapter ?: return MAX_SPAN_SIZE
+                    val viewType = adapter.getItemViewType(position)
+                    return when (ViewType.entries[viewType]) {
+                        ViewType.PRODUCT -> PRODUCT_SPAN_SIZE
+                        ViewType.SHOW_MORE, ViewType.RECENT_PRODUCTS -> MAX_SPAN_SIZE
                     }
                 }
             }
