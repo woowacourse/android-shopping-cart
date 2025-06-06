@@ -84,6 +84,9 @@ class InventoryActivity :
                 adapter.submitList(items)
                 loadCartCount()
             }
+            inventoryUpdateEvent.observe(this@InventoryActivity) { item ->
+                adapter.updateProduct(item)
+            }
             requestPage()
         }
     }
@@ -92,18 +95,12 @@ class InventoryActivity :
         startActivity(ProductDetailActivity.newIntent(this, productId))
     }
 
-    override fun onIncreaseQuantity(
-        position: Int,
-        product: ProductItem,
-    ) {
-        viewModel.increaseQuantity(position, product)
+    override fun onIncreaseQuantity(product: ProductItem) {
+        viewModel.increaseQuantity(product)
     }
 
-    override fun onDecreaseQuantity(
-        position: Int,
-        product: ProductItem,
-    ) {
-        viewModel.decreaseQuantity(position, product)
+    override fun onDecreaseQuantity(product: ProductItem) {
+        viewModel.decreaseQuantity(product)
     }
 
     override fun onShowMore() {

@@ -5,15 +5,9 @@ import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 interface InventoryEventHandler {
     fun onSelectProduct(productId: Int)
 
-    fun onIncreaseQuantity(
-        position: Int,
-        product: ProductItem,
-    )
+    fun onIncreaseQuantity(product: ProductItem)
 
-    fun onDecreaseQuantity(
-        position: Int,
-        product: ProductItem,
-    )
+    fun onDecreaseQuantity(product: ProductItem)
 
     fun onShowMore()
 }

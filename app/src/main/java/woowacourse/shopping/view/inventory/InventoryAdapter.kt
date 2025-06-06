@@ -65,4 +65,11 @@ class InventoryAdapter(
             notifyItemRangeRemoved(newCount, oldCount - newCount)
         }
     }
+
+    fun updateProduct(product: ProductItem) {
+        items.forEachIndexed { index, item ->
+            if (item is ProductItem && item.product.id == product.product.id) items[index] = product
+            notifyItemChanged(index)
+        }
+    }
 }

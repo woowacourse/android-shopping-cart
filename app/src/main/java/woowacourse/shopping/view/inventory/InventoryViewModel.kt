@@ -23,6 +23,9 @@ class InventoryViewModel(
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     val items: LiveData<List<InventoryItem>> get() = _items
 
+    private val _inventoryUpdateEvent = MutableLiveData<ProductItem>()
+    val inventoryUpdateEvent: LiveData<ProductItem> = _inventoryUpdateEvent
+
     private val _cartCount: MutableLiveData<Int> = MutableLiveData()
     val cartCount: LiveData<Int> get() = _cartCount
 
@@ -48,34 +51,22 @@ class InventoryViewModel(
         requestPage()
     }
 
-    fun increaseQuantity(
-        position: Int,
-        product: ProductItem,
-    ) {
+    fun increaseQuantity(product: ProductItem) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
-        (_items.value ?: emptyList()).toMutableList().let { newList ->
-            newList[position] = updatedProduct
-            _items.postValue(newList)
-        }
         inventoryRepository.insert(updatedProduct)
         shoppingCartRepository.insert(updatedProduct.toCartItem())
+        _inventoryUpdateEvent.value = updatedProduct
     }
 
-    fun decreaseQuantity(
-        position: Int,
-        product: ProductItem,
-    ) {
+    fun decreaseQuantity(product: ProductItem) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
-        (_items.value ?: emptyList()).toMutableList().let { newList ->
-            newList[position] = updatedProduct
-            _items.postValue(newList)
-        }
         inventoryRepository.insert(updatedProduct)
         if (updatedProduct.quantity == 0) {
             shoppingCartRepository.delete(product.toCartItem())
-            return
+        } else {
+            shoppingCartRepository.insert(updatedProduct.toCartItem())
         }
-        shoppingCartRepository.insert(updatedProduct.toCartItem())
+        _inventoryUpdateEvent.value = updatedProduct
     }
 
     private fun updateInventoryProducts(newPage: Page<ProductItem>) {

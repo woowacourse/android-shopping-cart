@@ -40,6 +40,7 @@
             android:layout_height="42dp"
             android:layout_margin="10dp"
             android:clickable="true"
+            android:onClick="@{() -> handler.onIncreaseQuantity(item)}"
             android:src="@drawable/icon_plus"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
@@ -60,6 +61,7 @@
                 android:background="@drawable/background_layout_product_counter_decrease"
                 android:clickable="true"
                 android:gravity="center"
+                android:onClick="@{() -> handler.onDecreaseQuantity(item)}"
                 android:text="@string/button_minus"
                 android:textColor="@color/dark_gray"
                 android:textSize="22sp"
@@ -85,6 +87,7 @@
                 android:background="@drawable/background_layout_product_counter_increase"
                 android:clickable="true"
                 android:gravity="center"
+                android:onClick="@{() -> handler.onIncreaseQuantity(item)}"
                 android:text="@string/button_plus"
                 android:textColor="@color/dark_gray"
                 android:textSize="22sp"

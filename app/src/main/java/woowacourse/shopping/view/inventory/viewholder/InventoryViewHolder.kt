@@ -55,7 +55,7 @@ sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: B
 
     class ProductViewHolder(
         parent: ViewGroup,
-        private val handler: InventoryEventHandler,
+        handler: InventoryEventHandler,
     ) : InventoryViewHolder<ItemInventoryProductBinding>(
             ItemInventoryProductBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -69,15 +69,6 @@ sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: B
 
         fun bind(item: ProductItem) {
             binding.item = item
-            binding.tvDecreaseQuantity.setOnClickListener {
-                handler.onDecreaseQuantity(adapterPosition, item)
-            }
-            binding.tvIncreaseQuantity.setOnClickListener {
-                handler.onIncreaseQuantity(adapterPosition, item)
-            }
-            binding.ivAddProductIcon.setOnClickListener {
-                handler.onIncreaseQuantity(adapterPosition, item)
-            }
         }
     }
 }
