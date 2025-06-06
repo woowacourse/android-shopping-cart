@@ -58,7 +58,7 @@ class InventoryAdapter(
         }
 
         if (newCount < oldCount) {
-            for (removedIndex in newCount..<oldCount) {
+            repeat(oldCount - newCount) {
                 items.removeAt(items.size - 1)
             }
             notifyItemRangeRemoved(newCount, oldCount - newCount)
