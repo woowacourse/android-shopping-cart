@@ -15,23 +15,26 @@ import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 
 sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: BINDING) :
     RecyclerView.ViewHolder(binding.root) {
-    class RecentItemsListViewHolder(parent: ViewGroup) :
+    class RecentItemsListViewHolder(
+        parent: ViewGroup,
+        handler: InventoryEventHandler,
+    ) :
         InventoryViewHolder<ItemInventoryRecentListBinding>(
-            ItemInventoryRecentListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            ),
-        ) {
-        fun bind(
-            item: RecentProductsItem,
-            handler: InventoryEventHandler,
-        ) {
-            RecentListAdapter(handler).let { adapter ->
-                binding.item = item
-                binding.rvRecentList.adapter = adapter
-                adapter.submitList(item.recentProducts)
-            }
+                ItemInventoryRecentListBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false,
+                ),
+            ) {
+        private val adapter = RecentListAdapter(handler)
+
+        init {
+            binding.rvRecentList.adapter = adapter
+        }
+
+        fun bind(item: RecentProductsItem) {
+            binding.item = item
+            adapter.submitList(item.recentProducts)
         }
     }
 

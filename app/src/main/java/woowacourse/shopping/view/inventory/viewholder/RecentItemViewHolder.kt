@@ -9,7 +9,7 @@ import woowacourse.shopping.view.inventory.InventoryEventHandler
 
 class RecentItemViewHolder(
     parent: ViewGroup,
-    private val handler: InventoryEventHandler,
+    handler: InventoryEventHandler,
 ) : BaseViewHolder<ItemInventoryRecentItemBinding>(
         ItemInventoryRecentItemBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -17,8 +17,11 @@ class RecentItemViewHolder(
             false,
         ),
     ) {
+    init {
+        binding.handler = handler
+    }
+
     fun bind(item: RecentProduct) {
         binding.product = item
-        binding.handler = handler
     }
 }

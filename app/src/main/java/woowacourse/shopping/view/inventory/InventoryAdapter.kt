@@ -27,7 +27,7 @@ class InventoryAdapter(
         return when (ViewType.entries[viewType]) {
             ViewType.PRODUCT -> InventoryViewHolder.ProductViewHolder(parent, handler)
             ViewType.SHOW_MORE -> InventoryViewHolder.ShowMoreViewHolder(parent, handler)
-            ViewType.RECENT_PRODUCTS -> InventoryViewHolder.RecentItemsListViewHolder(parent)
+            ViewType.RECENT_PRODUCTS -> InventoryViewHolder.RecentItemsListViewHolder(parent, handler)
         }
     }
 
@@ -39,7 +39,7 @@ class InventoryAdapter(
         when (holder) {
             is InventoryViewHolder.ProductViewHolder -> holder.bind(item as ProductItem)
             is InventoryViewHolder.ShowMoreViewHolder -> holder.bind(item as ShowMore)
-            is InventoryViewHolder.RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem, handler)
+            is InventoryViewHolder.RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem)
         }
     }
 
