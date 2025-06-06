@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
-import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 
@@ -50,7 +49,6 @@ class ShoppingCartViewModel(
             newList[position] = updatedItem
             _products.postValue(_products.value?.copy(items = newList))
         }
-        inventoryRepository.insert(updatedItem.toDomain())
         shoppingCartRepository.insert(updatedItem)
     }
 
@@ -67,13 +65,11 @@ class ShoppingCartViewModel(
             newList[position] = updatedItem
             _products.postValue(_products.value?.copy(items = newList))
         }
-        inventoryRepository.insert(updatedItem.toDomain())
         shoppingCartRepository.insert(updatedItem)
     }
 
     fun removeCartItem(product: CartProduct) {
         shoppingCartRepository.delete(product)
-        inventoryRepository.insert(product.toDomain().copy(quantity = 0))
         requestPage(_products.value?.pageIndex ?: 0)
     }
 

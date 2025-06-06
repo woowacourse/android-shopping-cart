@@ -8,8 +8,10 @@ import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
-import woowacourse.shopping.data.toDomain
+import woowacourse.shopping.data.toUiModel
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
@@ -36,13 +38,9 @@ class InventoryViewModel(
     }
 
     fun requestPage() {
-        shoppingCartRepository.getAll { allProducts ->
-            allProducts.forEach { product -> inventoryRepository.insert(product.toDomain()) }
-            val currentPageSize = _items.value?.filterIsInstance<ProductItem>()?.size ?: 0
-            inventoryRepository.getPage(
-                PAGE_SIZE,
-                currentPageSize / PAGE_SIZE,
-            ) { page -> updateInventoryProducts(page) }
+        val currentPageSize = _items.value?.filterIsInstance<ProductItem>()?.size ?: 0
+        inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->
+            updateInventoryProducts(page)
         }
     }
 
@@ -53,14 +51,12 @@ class InventoryViewModel(
 
     fun increaseQuantity(product: ProductItem) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
-        inventoryRepository.insert(updatedProduct)
         shoppingCartRepository.insert(updatedProduct.toCartItem())
         _inventoryUpdateEvent.value = updatedProduct
     }
 
     fun decreaseQuantity(product: ProductItem) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
-        inventoryRepository.insert(updatedProduct)
         if (updatedProduct.quantity == 0) {
             shoppingCartRepository.delete(product.toCartItem())
         } else {
@@ -69,18 +65,39 @@ class InventoryViewModel(
         _inventoryUpdateEvent.value = updatedProduct
     }
 
-    private fun updateInventoryProducts(newPage: Page<ProductItem>) {
-        recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
-            val products = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
-            val newList =
-                buildList {
-                    add(RecentProductsItem(recentProducts))
-                    addAll(products)
-                    addAll(newPage.items)
-                    if (newPage.hasNext) add(ShowMore)
-                }
-            _items.postValue(newList)
+    private fun updateInventoryProducts(newPage: Page<Product>) {
+        shoppingCartRepository.getAll { cartProducts ->
+            recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
+                val products = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
+                val productUiModels = matchProductsToCartProducts(newPage.items, cartProducts)
+                val newList =
+                    buildList {
+                        add(RecentProductsItem(recentProducts))
+                        addAll(products)
+                        addAll(productUiModels)
+                        if (newPage.hasNext) add(ShowMore)
+                    }
+                _items.postValue(newList)
+            }
         }
+    }
+
+    private fun matchProductsToCartProducts(
+        products: List<Product>,
+        cartProducts: List<CartProduct>,
+    ): List<ProductItem> {
+        val idToCartProduct =
+            cartProducts.associateBy(
+                { cartItem -> cartItem.id },
+                { cartItem -> cartItem.toUiModel() },
+            )
+
+        val fetchedUiModels =
+            products.map { product ->
+                idToCartProduct[product.id] ?: product.toUiModel()
+            }
+
+        return fetchedUiModels
     }
 
     companion object {

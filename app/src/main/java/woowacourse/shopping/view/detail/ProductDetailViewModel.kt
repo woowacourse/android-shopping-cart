@@ -8,6 +8,7 @@ import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
+import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import java.time.LocalDateTime
@@ -27,8 +28,9 @@ class ProductDetailViewModel(
     fun loadInventoryProduct(productId: Int) {
         inventoryRepository.getOrNull(productId) { inventoryProduct ->
             if (inventoryProduct != null) {
-                _product.postValue(inventoryProduct.copy(quantity = PRODUCT_MINIMUM_QUANTITY))
-                updateRecentProducts(inventoryProduct)
+                val item = inventoryProduct.toUiModel().copy(quantity = PRODUCT_MINIMUM_QUANTITY)
+                _product.postValue(item)
+                updateRecentProducts(item)
             }
         }
     }
@@ -51,7 +53,6 @@ class ProductDetailViewModel(
             val existingQuantity = productItem.quantity
             val currentQuantity = cartItem?.quantity ?: 0
             val item = productItem.copy(quantity = existingQuantity + currentQuantity)
-            inventoryRepository.insert(item)
             shoppingCartRepository.insert(item.toCartItem())
         }
     }

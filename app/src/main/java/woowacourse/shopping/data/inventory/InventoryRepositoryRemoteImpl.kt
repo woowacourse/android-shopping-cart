@@ -12,9 +12,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.IOException
 import woowacourse.shopping.data.product.ProductEntity
-import woowacourse.shopping.data.toDomain
+import woowacourse.shopping.data.toProduct
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
 
 class InventoryRepositoryRemoteImpl(
@@ -25,7 +25,7 @@ class InventoryRepositoryRemoteImpl(
 
     override fun getOrNull(
         id: Int,
-        onResult: (ProductItem?) -> Unit,
+        onResult: (Product?) -> Unit,
     ) {
         val request =
             Request.Builder()
@@ -62,14 +62,14 @@ class InventoryRepositoryRemoteImpl(
                         println("GetOrNull Error: ${response.code} ${response.message}")
                     }
                     thread {
-                        onResult(product?.toDomain())
+                        onResult(product?.toProduct())
                     }
                 }
             },
         )
     }
 
-    override fun getAll(onSuccess: (List<ProductItem>) -> Unit) {
+    override fun getAll(onSuccess: (List<Product>) -> Unit) {
         val request =
             Request.Builder()
                 .url("$baseUrl/product-items")
@@ -106,7 +106,7 @@ class InventoryRepositoryRemoteImpl(
                         println("GetAll Error: ${response.code} ${response.message}")
                     }
                     thread {
-                        onSuccess(products.map(ProductEntity::toDomain))
+                        onSuccess(products.map(ProductEntity::toProduct))
                     }
                 }
             },
@@ -116,7 +116,7 @@ class InventoryRepositoryRemoteImpl(
     override fun getPage(
         pageSize: Int,
         pageIndex: Int,
-        onSuccess: (Page<ProductItem>) -> Unit,
+        onSuccess: (Page<Product>) -> Unit,
     ) {
         getAll { allItems ->
             val from = pageSize * pageIndex
@@ -135,7 +135,7 @@ class InventoryRepositoryRemoteImpl(
         }
     }
 
-    override fun insert(product: ProductItem) {
+    override fun insert(product: Product) {
         val productItemJson = gson.toJson(product)
         val requestBody =
             productItemJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
