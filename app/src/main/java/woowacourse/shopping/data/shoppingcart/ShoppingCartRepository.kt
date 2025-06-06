@@ -21,7 +21,10 @@ interface ShoppingCartRepository {
 
     fun insert(cartProduct: CartProduct)
 
-    fun delete(cartProduct: CartProduct)
+    fun delete(
+        cartProduct: CartProduct,
+        onSuccess: () -> Unit,
+    )
 
     fun clear()
 }

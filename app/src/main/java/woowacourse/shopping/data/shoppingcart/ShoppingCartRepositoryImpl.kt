@@ -57,9 +57,13 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
         }
     }
 
-    override fun delete(cartProduct: CartProduct) {
+    override fun delete(
+        cartProduct: CartProduct,
+        onSuccess: () -> Unit,
+    ) {
         thread {
             cartItemDao.delete(cartProduct.toEntity())
+            onSuccess()
         }
     }
 

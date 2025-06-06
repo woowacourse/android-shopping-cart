@@ -53,10 +53,16 @@ class ShoppingCartActivity :
         }
 
         with(viewModel) {
+            val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
+
             products.observe(this@ShoppingCartActivity) { page ->
-                val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.submitList(page.items)
             }
+
+            cartUpdateEvent.observe(this@ShoppingCartActivity) { item ->
+                adapter.updateCartProduct(item)
+            }
+
             modifiedProductIds.observe(this@ShoppingCartActivity) { modifiedProductIds ->
                 val intent =
                     Intent().putIntegerArrayListExtra(
@@ -77,18 +83,12 @@ class ShoppingCartActivity :
         viewModel.requestNextPage()
     }
 
-    override fun onIncreaseQuantity(
-        position: Int,
-        product: CartProduct,
-    ) {
-        viewModel.increaseQuantity(position, product)
+    override fun onIncreaseQuantity(product: CartProduct) {
+        viewModel.increaseQuantity(product)
     }
 
-    override fun onDecreaseQuantity(
-        position: Int,
-        product: CartProduct,
-    ) {
-        viewModel.decreaseQuantity(position, product)
+    override fun onDecreaseQuantity(product: CartProduct) {
+        viewModel.decreaseQuantity(product)
     }
 
     override fun onRemoveProduct(product: CartProduct) {

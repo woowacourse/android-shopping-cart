@@ -16,6 +16,9 @@ class ShoppingCartViewModel(
     private val _products = MutableLiveData<Page<CartProduct>>()
     val products: LiveData<Page<CartProduct>> get() = _products
 
+    private val _cartUpdateEvent = MutableLiveData<CartProduct>()
+    val cartUpdateEvent: LiveData<CartProduct> = _cartUpdateEvent
+
     private val _modifiedProductIds = MutableLiveData<Set<Int>>()
     val modifiedProductIds: LiveData<Set<Int>> = _modifiedProductIds
 
@@ -43,40 +46,29 @@ class ShoppingCartViewModel(
         }
     }
 
-    fun increaseQuantity(
-        position: Int,
-        product: CartProduct,
-    ) {
+    fun increaseQuantity(product: CartProduct) {
         val updatedItem = product.copy(quantity = product.quantity + 1)
-        (_products.value?.items ?: emptyList()).toMutableList().let { newList ->
-            newList[position] = updatedItem
-            _products.postValue(_products.value?.copy(items = newList))
-        }
         shoppingCartRepository.insert(updatedItem)
+        _cartUpdateEvent.value = updatedItem
         _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
     }
 
-    fun decreaseQuantity(
-        position: Int,
-        product: CartProduct,
-    ) {
+    fun decreaseQuantity(product: CartProduct) {
         if (product.quantity == MINIMUM_CART_ITEM_QUANTITY) {
             removeCartItem(product)
             return
         }
         val updatedItem = product.copy(quantity = product.quantity - 1)
-        (_products.value?.items ?: emptyList()).toMutableList().let { newList ->
-            newList[position] = updatedItem
-            _products.postValue(_products.value?.copy(items = newList))
-        }
+        _cartUpdateEvent.value = updatedItem
         shoppingCartRepository.insert(updatedItem)
         _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
     }
 
     fun removeCartItem(product: CartProduct) {
-        shoppingCartRepository.delete(product)
-        requestPage(_products.value?.pageIndex ?: 0)
-        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+        shoppingCartRepository.delete(product) {
+            _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+            requestPage(_products.value?.pageIndex ?: 0)
+        }
     }
 
     companion object {

@@ -68,7 +68,7 @@ class InventoryViewModel(
     fun decreaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
         if (updatedProduct.quantity == 0) {
-            shoppingCartRepository.delete(product.toCartItem())
+            shoppingCartRepository.delete(product.toCartItem()) {}
         } else {
             shoppingCartRepository.insert(updatedProduct.toCartItem())
         }

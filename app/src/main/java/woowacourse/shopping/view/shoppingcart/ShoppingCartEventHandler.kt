@@ -7,15 +7,9 @@ interface ShoppingCartEventHandler {
 
     fun onGoToNextPage()
 
-    fun onIncreaseQuantity(
-        position: Int,
-        product: CartProduct,
-    )
+    fun onIncreaseQuantity(product: CartProduct)
 
-    fun onDecreaseQuantity(
-        position: Int,
-        product: CartProduct,
-    )
+    fun onDecreaseQuantity(product: CartProduct)
 
     fun onRemoveProduct(product: CartProduct)
 }
