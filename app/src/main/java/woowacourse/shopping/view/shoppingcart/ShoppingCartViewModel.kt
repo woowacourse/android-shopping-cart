@@ -16,6 +16,9 @@ class ShoppingCartViewModel(
     private val _products = MutableLiveData<Page<CartProduct>>()
     val products: LiveData<Page<CartProduct>> get() = _products
 
+    private val _modifiedProductIds = MutableLiveData<Set<Int>>()
+    val modifiedProductIds: LiveData<Set<Int>> = _modifiedProductIds
+
     fun requestPage(pageIndex: Int) {
         shoppingCartRepository.getPage(PAGE_SIZE, pageIndex) { page ->
             if (page.items.isEmpty()) {
@@ -50,6 +53,7 @@ class ShoppingCartViewModel(
             _products.postValue(_products.value?.copy(items = newList))
         }
         shoppingCartRepository.insert(updatedItem)
+        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
     }
 
     fun decreaseQuantity(
@@ -66,11 +70,13 @@ class ShoppingCartViewModel(
             _products.postValue(_products.value?.copy(items = newList))
         }
         shoppingCartRepository.insert(updatedItem)
+        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
     }
 
     fun removeCartItem(product: CartProduct) {
         shoppingCartRepository.delete(product)
         requestPage(_products.value?.pageIndex ?: 0)
+        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
     }
 
     companion object {

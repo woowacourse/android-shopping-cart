@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.databinding.ToolbarCartCounterBinding
+import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.inventory.adapter.InventoryAdapter
@@ -22,6 +24,25 @@ class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
     InventoryEventHandler {
     private lateinit var viewModel: InventoryViewModel
+
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                ActivityResult.CART_ITEM_ADDED.hashCode() -> {
+                    val addedProductId =
+                        result.data?.getIntExtra(ActivityResult.CART_ITEM_ADDED.key, 0) ?: 0
+                    viewModel.loadUpdatedProductInfo(listOf(addedProductId))
+                }
+
+                ActivityResult.CART_ITEM_MODIFIED.hashCode() -> {
+                    val modifiedProductIds =
+                        result.data?.getIntegerArrayListExtra(ActivityResult.CART_ITEM_MODIFIED.key)
+                    viewModel.loadUpdatedProductInfo(modifiedProductIds.orEmpty())
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,14 +73,9 @@ class InventoryActivity :
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.root.setOnClickListener {
-            startActivity(ShoppingCartActivity.newIntent(this))
+            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.reloadPage()
     }
 
     private fun initRecyclerview() {
@@ -93,7 +109,7 @@ class InventoryActivity :
     }
 
     override fun onSelectProduct(productId: Int) {
-        startActivity(ProductDetailActivity.newIntent(this, productId))
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, productId))
     }
 
     override fun onIncreaseQuantity(product: ProductUiModel) {
@@ -113,7 +129,10 @@ class InventoryActivity :
         private const val PRODUCT_SPAN_SIZE = 1
 
         fun newIntent(context: Context): Intent {
-            return Intent(context, InventoryActivity::class.java)
+            return Intent(
+                context,
+                InventoryActivity::class.java,
+            ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
     }
 }

@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
@@ -59,7 +59,13 @@ class ProductDetailActivity :
 
     override fun onAddToCart() {
         viewModel.addToCart()
-        startActivity(ShoppingCartActivity.newIntent(this))
+        val intent =
+            Intent().putExtra(
+                ActivityResult.CART_ITEM_ADDED.key,
+                viewModel.product.value?.product?.id ?: 0,
+            )
+        setResult(ActivityResult.CART_ITEM_ADDED.hashCode(), intent)
+        finish()
     }
 
     override fun onDecreaseQuantity() {
@@ -80,7 +86,7 @@ class ProductDetailActivity :
             return Intent(context, ProductDetailActivity::class.java).putExtra(
                 KEY_PRODUCT_ID,
                 productId,
-            )
+            ).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         }
     }
 }

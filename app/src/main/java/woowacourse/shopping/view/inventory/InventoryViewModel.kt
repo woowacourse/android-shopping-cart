@@ -37,6 +37,16 @@ class InventoryViewModel(
         }
     }
 
+    fun loadUpdatedProductInfo(updatedProductIds: List<Int>) {
+        updatedProductIds.forEach { id ->
+            shoppingCartRepository.getOrNull(id) { cartProduct ->
+                if (cartProduct != null) {
+                    _inventoryUpdateEvent.postValue(cartProduct.toUiModel())
+                }
+            }
+        }
+    }
+
     fun requestPage() {
         val currentPageSize = _items.value?.filterIsInstance<ProductUiModel>()?.size ?: 0
         inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->

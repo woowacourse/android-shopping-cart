@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.inventory.InventoryActivity
 import woowacourse.shopping.view.shoppingcart.adapter.ShoppingCartAdapter
 
 class ShoppingCartActivity :
@@ -34,7 +33,7 @@ class ShoppingCartActivity :
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        goToMainActivity()
+        finish()
         return super.onOptionsItemSelected(item)
     }
 
@@ -43,21 +42,6 @@ class ShoppingCartActivity :
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.shopping_cart_toolbar_title)
         }
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    goToMainActivity()
-                }
-            },
-        )
-    }
-
-    private fun goToMainActivity() {
-        val intent =
-            InventoryActivity.newIntent(this@ShoppingCartActivity)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
     }
 
     private fun initRecyclerView() {
@@ -72,6 +56,14 @@ class ShoppingCartActivity :
             products.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.submitList(page.items)
+            }
+            modifiedProductIds.observe(this@ShoppingCartActivity) { modifiedProductIds ->
+                val intent =
+                    Intent().putIntegerArrayListExtra(
+                        ActivityResult.CART_ITEM_MODIFIED.key,
+                        ArrayList(modifiedProductIds),
+                    )
+                setResult(ActivityResult.CART_ITEM_MODIFIED.hashCode(), intent)
             }
             requestPage(0)
         }
