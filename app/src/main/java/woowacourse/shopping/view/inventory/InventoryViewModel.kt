@@ -12,10 +12,10 @@ import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
-import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
+import woowacourse.shopping.view.inventory.adapter.InventoryItem
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.RecentProducts
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ShowMore
 
 class InventoryViewModel(
     private val inventoryRepository: InventoryRepository,

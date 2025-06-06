@@ -1,13 +1,12 @@
-package woowacourse.shopping.view.inventory
+package woowacourse.shopping.view.inventory.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
-import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import woowacourse.shopping.view.inventory.item.InventoryItem.ViewType
-import woowacourse.shopping.view.inventory.viewholder.InventoryViewHolder
+import woowacourse.shopping.view.inventory.InventoryEventHandler
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.RecentProducts
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ShowMore
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ViewType
 
 class InventoryAdapter(
     private val handler: InventoryEventHandler,

@@ -8,7 +8,7 @@
 
         <variable
             name="item"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts" />
+            type="woowacourse.shopping.view.inventory.adapter.InventoryItem.RecentProducts" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

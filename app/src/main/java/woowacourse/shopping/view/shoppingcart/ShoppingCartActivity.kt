@@ -12,6 +12,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.InventoryActivity
+import woowacourse.shopping.view.shoppingcart.adapter.ShoppingCartAdapter
 
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),

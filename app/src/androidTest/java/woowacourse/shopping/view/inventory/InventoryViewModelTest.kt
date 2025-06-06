@@ -16,7 +16,7 @@ import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 @Suppress("FunctionName")
 class InventoryViewModelTest {

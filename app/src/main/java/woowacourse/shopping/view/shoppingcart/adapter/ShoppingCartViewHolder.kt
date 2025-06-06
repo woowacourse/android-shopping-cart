@@ -1,10 +1,11 @@
-package woowacourse.shopping.view.shoppingcart
+package woowacourse.shopping.view.shoppingcart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.base.BaseViewHolder
+import woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,

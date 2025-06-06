@@ -10,7 +10,7 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.RecentItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 import java.time.LocalDateTime
 import java.time.ZoneId
 

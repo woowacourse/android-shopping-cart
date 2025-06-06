@@ -1,9 +1,9 @@
-package woowacourse.shopping.view.inventory
+package woowacourse.shopping.view.inventory.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.RecentItem
-import woowacourse.shopping.view.inventory.viewholder.RecentItemViewHolder
+import woowacourse.shopping.view.inventory.InventoryEventHandler
 
 class RecentListAdapter(private val handler: InventoryEventHandler) : RecyclerView.Adapter<RecentItemViewHolder>() {
     private val items: MutableList<RecentItem> = mutableListOf()

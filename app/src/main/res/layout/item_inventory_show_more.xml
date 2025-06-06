@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem" />
+            type="woowacourse.shopping.view.inventory.adapter.InventoryItem" />
 
         <variable
             name="handler"

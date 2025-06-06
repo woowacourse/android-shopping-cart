@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.inventory.viewholder
+package woowacourse.shopping.view.inventory.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,10 +8,9 @@ import woowacourse.shopping.databinding.ItemInventoryProductBinding
 import woowacourse.shopping.databinding.ItemInventoryRecentListBinding
 import woowacourse.shopping.databinding.ItemInventoryShowMoreBinding
 import woowacourse.shopping.view.inventory.InventoryEventHandler
-import woowacourse.shopping.view.inventory.RecentListAdapter
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
-import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.RecentProducts
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ShowMore
 
 sealed class InventoryViewHolder<BINDING : ViewBinding>(protected val binding: BINDING) :
     RecyclerView.ViewHolder(binding.root) {

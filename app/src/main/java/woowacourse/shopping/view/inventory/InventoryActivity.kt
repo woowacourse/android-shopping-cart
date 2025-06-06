@@ -13,8 +13,9 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.databinding.ToolbarCartCounterBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.inventory.item.InventoryItem.ViewType
+import woowacourse.shopping.view.inventory.adapter.InventoryAdapter
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ViewType
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class InventoryActivity :

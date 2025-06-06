@@ -4,7 +4,7 @@ package woowacourse.shopping
 
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 val inventoryItem = Product(
     0,

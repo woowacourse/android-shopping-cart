@@ -15,7 +15,7 @@ import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 class InventoryRepositoryImplTest {
     @get:Rule
