@@ -11,8 +11,6 @@ import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.RecentItem
 import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 class ProductDetailViewModel(
     private val inventoryRepository: InventoryRepository,
@@ -26,11 +24,11 @@ class ProductDetailViewModel(
     val lastProduct: LiveData<RecentItem> get() = _lastProduct
 
     fun loadInventoryProduct(productId: Int) {
-        inventoryRepository.getOrNull(productId) { inventoryProduct ->
-            if (inventoryProduct != null) {
-                val item = inventoryProduct.toUiModel().copy(quantity = PRODUCT_MINIMUM_QUANTITY)
+        inventoryRepository.getOrNull(productId) { product ->
+            if (product != null) {
+                val item = product.toUiModel().copy(quantity = PRODUCT_MINIMUM_QUANTITY)
                 _product.postValue(item)
-                updateRecentProducts(item)
+                recentProductRepository.insert(product)
             }
         }
     }
@@ -39,12 +37,6 @@ class ProductDetailViewModel(
         recentProductRepository.getMostRecent(1) { result ->
             if (result.isNotEmpty()) _lastProduct.postValue(result.first())
         }
-    }
-
-    private fun updateRecentProducts(product: ProductUiModel) {
-        val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val recentProduct = RecentItem(product.product.id, product.product.name, product.product.imageUrl, time)
-        recentProductRepository.insert(recentProduct)
     }
 
     fun addToCart() {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.recent
 
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentItem
 
 interface RecentProductRepository {
@@ -13,7 +14,7 @@ interface RecentProductRepository {
         onResult: (RecentItem?) -> Unit,
     )
 
-    fun insert(recentProduct: RecentItem)
+    fun insert(product: Product)
 
     fun clear()
 }
