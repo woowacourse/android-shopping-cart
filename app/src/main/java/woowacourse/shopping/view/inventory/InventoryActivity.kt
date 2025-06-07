@@ -3,11 +3,10 @@ package woowacourse.shopping.view.inventory
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.databinding.ToolbarCartCounterBinding
 import woowacourse.shopping.view.ActivityResult
@@ -21,7 +20,7 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
     InventoryEventHandler {
-    private lateinit var viewModel: InventoryViewModel
+    private val viewModel: InventoryViewModel by viewModels { InventoryViewModel.Factory }
 
     private val activityResultLauncher =
         registerForActivityResult(
@@ -44,15 +43,6 @@ class InventoryActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val application = application as ShoppingApplication
-        val factory =
-            InventoryViewModel.createFactory(
-                application.inventoryRepository,
-                application.shoppingCartRepository,
-                application.recentProductRepository,
-            )
-        viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
         initRecyclerview()
     }
 

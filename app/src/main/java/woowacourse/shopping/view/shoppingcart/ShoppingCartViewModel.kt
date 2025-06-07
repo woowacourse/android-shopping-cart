@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.inventory.InventoryRepository
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 
 class ShoppingCartViewModel(
-    private val inventoryRepository: InventoryRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _products = MutableLiveData<Page<CartProduct>>()
@@ -78,20 +79,15 @@ class ShoppingCartViewModel(
         private const val MINIMUM_CART_ITEM_QUANTITY = 1
 
         @Suppress("UNCHECKED_CAST")
-        fun createFactory(
-            inventoryRepository: InventoryRepository,
-            shoppingCartRepository: ShoppingCartRepository,
-        ): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return (
-                        ShoppingCartViewModel(
-                            inventoryRepository,
-                            shoppingCartRepository,
-                        ) as T
-                    )
+        val Factory: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = extras[APPLICATION_KEY] as ShoppingApplication
+                    return (ShoppingCartViewModel(application.shoppingCartRepository) as T)
                 }
             }
-        }
     }
 }

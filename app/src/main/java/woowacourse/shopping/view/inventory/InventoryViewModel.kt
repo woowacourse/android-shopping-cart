@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
@@ -119,22 +122,21 @@ class InventoryViewModel(
         private const val RECENT_PRODUCTS_MAX_COUNT = 10
 
         @Suppress("UNCHECKED_CAST")
-        fun createFactory(
-            inventoryRepository: InventoryRepository,
-            shoppingCartRepository: ShoppingCartRepository,
-            recentProductRepository: RecentProductRepository,
-        ): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        val Factory: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = extras[APPLICATION_KEY] as ShoppingApplication
                     return (
                         InventoryViewModel(
-                            inventoryRepository,
-                            shoppingCartRepository,
-                            recentProductRepository,
+                            application.inventoryRepository,
+                            application.shoppingCartRepository,
+                            application.recentProductRepository,
                         ) as T
                     )
                 }
             }
-        }
     }
 }

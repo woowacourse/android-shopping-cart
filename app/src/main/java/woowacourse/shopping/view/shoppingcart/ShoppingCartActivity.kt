@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.ActivityResult
@@ -16,19 +15,11 @@ import woowacourse.shopping.view.shoppingcart.adapter.ShoppingCartAdapter
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
     ShoppingCartEventHandler {
-    private lateinit var viewModel: ShoppingCartViewModel
+    private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initActionBar()
-
-        val application = application as ShoppingApplication
-        val factory =
-            ShoppingCartViewModel.createFactory(
-                application.inventoryRepository,
-                application.shoppingCartRepository,
-            )
-        viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         initRecyclerView()
     }
 

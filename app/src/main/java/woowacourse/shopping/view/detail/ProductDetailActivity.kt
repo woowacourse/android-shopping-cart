@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
@@ -15,7 +14,7 @@ import woowacourse.shopping.view.base.BaseActivity
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
     ProductDetailEventHandler {
-    private lateinit var viewModel: ProductDetailViewModel
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +37,6 @@ class ProductDetailActivity :
     }
 
     private fun initializeViewModel(productId: Int) {
-        val application = application as ShoppingApplication
-        val factory =
-            ProductDetailViewModel.createFactory(
-                application.inventoryRepository,
-                application.shoppingCartRepository,
-                application.recentProductRepository,
-            )
-        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.loadInventoryProduct(productId)
         viewModel.loadLastViewedProduct()
     }
