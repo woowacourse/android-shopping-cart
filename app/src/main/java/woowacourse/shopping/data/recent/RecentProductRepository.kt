@@ -9,11 +9,6 @@ interface RecentProductRepository {
         onSuccess: (List<RecentItem>) -> Unit,
     )
 
-    fun getLastProductBefore(
-        productId: Int,
-        onResult: (RecentItem?) -> Unit,
-    )
-
     fun insert(product: Product)
 
     fun clear()

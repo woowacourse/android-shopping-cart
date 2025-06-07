@@ -91,7 +91,7 @@ class InventoryViewModel(
     private fun updateInventoryProducts(newPage: Page<Product>) {
         shoppingCartRepository.getAll { cartProducts ->
             recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
-                val products = _items.value?.filterIsInstance<ProductUiModel>() ?: emptyList()
+                val products = _items.value?.filterIsInstance<ProductUiModel>().orEmpty()
                 val productUiModels = matchProductsToCartProducts(newPage.items, cartProducts)
                 val newList =
                     buildList {

@@ -45,6 +45,8 @@ class InventoryActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initRecyclerview()
+        initObserver()
+        viewModel.requestPage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,7 +59,6 @@ class InventoryActivity :
                 null,
                 false,
             )
-
         menu?.findItem(R.id.menu_item_shopping_cart)?.actionView = binding.root
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -74,6 +75,7 @@ class InventoryActivity :
             itemAnimator = null
             layoutManager = gridLayoutManager
         }
+
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -85,6 +87,9 @@ class InventoryActivity :
                     }
                 }
             }
+    }
+
+    private fun initObserver() {
         with(viewModel) {
             val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
@@ -93,7 +98,6 @@ class InventoryActivity :
             inventoryUpdateEvent.observe(this@InventoryActivity) { item ->
                 adapter.updateProduct(item)
             }
-            requestPage()
         }
     }
 

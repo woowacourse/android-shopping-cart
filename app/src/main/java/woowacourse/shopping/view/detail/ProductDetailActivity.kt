@@ -26,6 +26,11 @@ class ProductDetailActivity :
         binding.handler = this
     }
 
+    private fun initializeViewModel(productId: Int) {
+        viewModel.loadInventoryProduct(productId)
+        viewModel.loadLastViewedProduct()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
         return super.onCreateOptionsMenu(menu)
@@ -34,11 +39,6 @@ class ProductDetailActivity :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         finish()
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun initializeViewModel(productId: Int) {
-        viewModel.loadInventoryProduct(productId)
-        viewModel.loadLastViewedProduct()
     }
 
     override fun onSelectRecentProduct() {
