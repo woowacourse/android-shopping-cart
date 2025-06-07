@@ -19,7 +19,10 @@ interface ShoppingCartRepository {
         onSuccess: (Page<CartProduct>) -> Unit,
     )
 
-    fun insert(cartProduct: CartProduct)
+    fun insert(
+        cartProduct: CartProduct,
+        onSuccess: () -> Unit,
+    )
 
     fun delete(
         cartProduct: CartProduct,

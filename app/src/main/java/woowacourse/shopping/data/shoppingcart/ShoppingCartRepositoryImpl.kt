@@ -51,9 +51,13 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
         }
     }
 
-    override fun insert(cartProduct: CartProduct) {
+    override fun insert(
+        cartProduct: CartProduct,
+        onSuccess: () -> Unit,
+    ) {
         thread {
             cartItemDao.insert(cartProduct.toEntity())
+            onSuccess()
         }
     }
 

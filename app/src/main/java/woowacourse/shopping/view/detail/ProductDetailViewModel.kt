@@ -45,7 +45,7 @@ class ProductDetailViewModel(
             val existingQuantity = productItem.quantity
             val currentQuantity = cartItem?.quantity ?: 0
             val item = productItem.copy(quantity = existingQuantity + currentQuantity)
-            shoppingCartRepository.insert(item.toCartItem())
+            shoppingCartRepository.insert(item.toCartItem()) {}
         }
     }
 

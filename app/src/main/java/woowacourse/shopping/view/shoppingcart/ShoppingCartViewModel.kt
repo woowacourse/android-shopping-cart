@@ -48,9 +48,10 @@ class ShoppingCartViewModel(
 
     fun increaseQuantity(product: CartProduct) {
         val updatedItem = product.copy(quantity = product.quantity + 1)
-        shoppingCartRepository.insert(updatedItem)
-        _cartUpdateEvent.value = updatedItem
-        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+        shoppingCartRepository.insert(updatedItem) {
+            _cartUpdateEvent.postValue(updatedItem)
+            _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+        }
     }
 
     fun decreaseQuantity(product: CartProduct) {
@@ -59,9 +60,10 @@ class ShoppingCartViewModel(
             return
         }
         val updatedItem = product.copy(quantity = product.quantity - 1)
-        _cartUpdateEvent.value = updatedItem
-        shoppingCartRepository.insert(updatedItem)
-        _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+        _cartUpdateEvent.postValue(updatedItem)
+        shoppingCartRepository.insert(updatedItem) {
+            _modifiedProductIds.postValue(_modifiedProductIds.value.orEmpty().plus(product.id))
+        }
     }
 
     fun removeCartItem(product: CartProduct) {

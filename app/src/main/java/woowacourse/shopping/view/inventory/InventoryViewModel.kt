@@ -38,6 +38,7 @@ class InventoryViewModel(
     }
 
     fun loadUpdatedProductInfo(updatedProductIds: List<Int>) {
+        loadCartCount()
         updatedProductIds.forEach { id ->
             shoppingCartRepository.getOrNull(id) { cartProduct ->
                 if (cartProduct != null) {
@@ -61,18 +62,25 @@ class InventoryViewModel(
 
     fun increaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
-        shoppingCartRepository.insert(updatedProduct.toCartItem())
-        _inventoryUpdateEvent.value = updatedProduct
+        shoppingCartRepository.insert(updatedProduct.toCartItem()) {
+            loadCartCount()
+            _inventoryUpdateEvent.postValue(updatedProduct)
+        }
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
         if (updatedProduct.quantity == 0) {
-            shoppingCartRepository.delete(product.toCartItem()) {}
+            shoppingCartRepository.delete(product.toCartItem()) {
+                loadCartCount()
+                _inventoryUpdateEvent.postValue(updatedProduct)
+            }
         } else {
-            shoppingCartRepository.insert(updatedProduct.toCartItem())
+            shoppingCartRepository.insert(updatedProduct.toCartItem()) {
+                loadCartCount()
+                _inventoryUpdateEvent.postValue(updatedProduct)
+            }
         }
-        _inventoryUpdateEvent.value = updatedProduct
     }
 
     private fun updateInventoryProducts(newPage: Page<Product>) {
