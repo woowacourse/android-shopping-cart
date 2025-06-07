@@ -1,6 +1,6 @@
 @file:Suppress("ktlint")
 
-package woowacourse.shopping.data.remote
+package woowacourse.shopping.data.inventory.remote
 
 object DummyProductContent {
     val contents = listOf(

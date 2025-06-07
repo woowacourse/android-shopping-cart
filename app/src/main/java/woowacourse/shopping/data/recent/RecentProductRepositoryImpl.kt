@@ -19,16 +19,6 @@ class RecentProductRepositoryImpl(private val recentProductDao: RecentProductDao
         }
     }
 
-    override fun getLastProductBefore(
-        productId: Int,
-        onResult: (RecentItem?) -> Unit,
-    ) {
-        thread {
-            val lastProduct = recentProductDao.getLastProductBefore(productId)
-            onResult(lastProduct)
-        }
-    }
-
     override fun insert(product: Product) {
         thread {
             val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

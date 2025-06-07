@@ -9,10 +9,10 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import woowacourse.shopping.data.remote.DummyProductContent
-import woowacourse.shopping.data.remote.ProductResponse
-import woowacourse.shopping.data.remote.ProductsResponse
-import woowacourse.shopping.data.remote.RemoteInventoryDataSourceImpl
+import woowacourse.shopping.data.inventory.remote.DummyProductContent
+import woowacourse.shopping.data.inventory.remote.ProductResponse
+import woowacourse.shopping.data.inventory.remote.ProductsResponse
+import woowacourse.shopping.data.inventory.remote.RemoteInventoryDataSourceImpl
 import kotlin.test.Test
 
 class ProductContentDataSourceTest {
