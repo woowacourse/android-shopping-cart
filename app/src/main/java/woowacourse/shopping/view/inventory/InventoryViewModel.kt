@@ -46,7 +46,13 @@ class InventoryViewModel(
         loadCartCount()
         updatedProductIds.forEach { id ->
             shoppingCartRepository.getOrNull(id) { cartProduct ->
-                if (cartProduct != null) {
+                if (cartProduct == null) {
+                    inventoryRepository.getOrNull(id) { product ->
+                        if (product != null) {
+                            _inventoryUpdateEvent.postValue(product.toUiModel())
+                        }
+                    }
+                } else {
                     _inventoryUpdateEvent.postValue(cartProduct.toUiModel())
                 }
             }

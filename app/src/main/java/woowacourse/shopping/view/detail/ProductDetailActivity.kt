@@ -51,10 +51,9 @@ class ProductDetailActivity :
     override fun onAddToCart() {
         viewModel.addToCart()
         val intent =
-            Intent().putExtra(
-                ActivityResult.CART_ITEM_ADDED.key,
-                viewModel.product.value?.product?.id ?: 0,
-            )
+            Intent().apply {
+                putExtra(ActivityResult.CART_ITEM_ADDED.key, viewModel.product.value?.product?.id ?: 0)
+            }
         setResult(ActivityResult.CART_ITEM_ADDED.hashCode(), intent)
         finish()
     }
@@ -77,7 +76,7 @@ class ProductDetailActivity :
             return Intent(context, ProductDetailActivity::class.java).putExtra(
                 KEY_PRODUCT_ID,
                 productId,
-            ).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            )
         }
     }
 }

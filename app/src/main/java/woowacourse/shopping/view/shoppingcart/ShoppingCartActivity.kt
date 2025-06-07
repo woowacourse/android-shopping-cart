@@ -62,6 +62,7 @@ class ShoppingCartActivity :
                     )
                 setResult(ActivityResult.CART_ITEM_MODIFIED.hashCode(), intent)
             }
+
             requestPage(0)
         }
     }

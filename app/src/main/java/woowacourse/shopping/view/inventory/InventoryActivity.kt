@@ -31,6 +31,7 @@ class InventoryActivity :
                     val addedProductId =
                         result.data?.getIntExtra(ActivityResult.CART_ITEM_ADDED.key, 0) ?: 0
                     viewModel.loadUpdatedProductInfo(listOf(addedProductId))
+                    onClickShoppingCart()
                 }
 
                 ActivityResult.CART_ITEM_MODIFIED.hashCode() -> {
@@ -97,7 +98,8 @@ class InventoryActivity :
     }
 
     override fun onClickShoppingCart() {
-        activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
+        val intent = ShoppingCartActivity.newIntent(this)
+        activityResultLauncher.launch(intent)
     }
 
     override fun onSelectProduct(productId: Int) {
