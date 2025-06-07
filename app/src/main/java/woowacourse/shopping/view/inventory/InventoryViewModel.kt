@@ -31,9 +31,11 @@ class InventoryViewModel(
     private val _cartCount: MutableLiveData<Int> = MutableLiveData()
     val cartCount: LiveData<Int> get() = _cartCount
 
-    fun loadCartCount() {
-        shoppingCartRepository.getTotalCount { totalCount ->
-            _cartCount.postValue(totalCount)
+    fun requestPage() {
+        val currentPageSize = _items.value?.filterIsInstance<ProductUiModel>()?.size ?: 0
+        inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->
+            updateInventoryProducts(page)
+            loadCartCount()
         }
     }
 
@@ -45,13 +47,6 @@ class InventoryViewModel(
                     _inventoryUpdateEvent.postValue(cartProduct.toUiModel())
                 }
             }
-        }
-    }
-
-    fun requestPage() {
-        val currentPageSize = _items.value?.filterIsInstance<ProductUiModel>()?.size ?: 0
-        inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->
-            updateInventoryProducts(page)
         }
     }
 
@@ -75,6 +70,12 @@ class InventoryViewModel(
                 loadCartCount()
                 _inventoryUpdateEvent.postValue(updatedProduct)
             }
+        }
+    }
+
+    private fun loadCartCount() {
+        shoppingCartRepository.getTotalCount { totalCount ->
+            _cartCount.postValue(totalCount)
         }
     }
 

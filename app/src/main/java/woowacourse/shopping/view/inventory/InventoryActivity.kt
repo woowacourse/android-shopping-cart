@@ -98,7 +98,6 @@ class InventoryActivity :
             val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
                 adapter.submitList(items)
-                loadCartCount()
             }
             inventoryUpdateEvent.observe(this@InventoryActivity) { item ->
                 adapter.updateProduct(item)
