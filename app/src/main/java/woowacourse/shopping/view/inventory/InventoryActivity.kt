@@ -46,7 +46,7 @@ class InventoryActivity :
         super.onCreate(savedInstanceState)
         initRecyclerview()
         initObserver()
-        viewModel.requestPage()
+        if (savedInstanceState == null) viewModel.requestPage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -32,7 +32,7 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
         onSuccess: (Page<Product>) -> Unit,
     ) {
         getAll { allItems ->
-            val from = pageSize * pageIndex
+            val from = (pageSize * pageIndex).coerceAtMost(allItems.size)
             val to = (from + pageSize).coerceAtMost(allItems.size)
             val items = allItems.subList(from, to)
             val hasPrevious = pageIndex > 0
