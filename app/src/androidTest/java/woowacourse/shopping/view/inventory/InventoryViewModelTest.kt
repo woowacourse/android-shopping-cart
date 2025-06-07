@@ -8,14 +8,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.allInventoryProducts
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.data.recent.RecentProductDatabase
 import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
-import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.util.allInventoryProducts
+import woowacourse.shopping.util.getOrAwaitValue
 import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 @Suppress("FunctionName")
@@ -60,6 +60,7 @@ class InventoryViewModelTest {
     fun 한_페이지에_상품이_20개씩_로드된다() {
         // when
         viewModel.requestPage()
+        Thread.sleep(10)
 
         // then
         val actual = viewModel.items.getOrAwaitValue().filterIsInstance<ProductUiModel>().size

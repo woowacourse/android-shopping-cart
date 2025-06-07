@@ -1,4 +1,4 @@
-package woowacourse.shopping.matcher
+package woowacourse.shopping.util
 
 import android.widget.TextView
 import androidx.test.espresso.ViewAssertion

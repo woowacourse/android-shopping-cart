@@ -1,14 +1,14 @@
 @file:Suppress("ktlint")
 
-package woowacourse.shopping
+package woowacourse.shopping.view.shoppingcart
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.matcher.isDisplayed
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.R
+import woowacourse.shopping.util.isDisplayed
 
 @Suppress("FunctionName")
 class ShoppingCartActivityTest {

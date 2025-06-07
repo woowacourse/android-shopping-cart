@@ -10,12 +10,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.allInventoryProducts
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.util.allInventoryProducts
 
 class InventoryRepositoryImplTest {
     @get:Rule
@@ -40,33 +39,24 @@ class InventoryRepositoryImplTest {
     @Test
     fun 페이지의_크기만큼_항목이_들어있다() {
         val expected = listOf(
-            ProductUiModel(
-                Product(
-                    0,
-                    "[병천아우내] 모듬순대",
-                    11900,
-                    "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
-                ),
-                1,
+            Product(
+                0,
+                "[병천아우내] 모듬순대",
+                11900,
+                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
             ),
-            ProductUiModel(
-                Product(
-                    1,
-                    "[빙그래] 요맘때 파인트 710mL 3종 (택1)",
-                    5000,
-                    "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/73061aab-a2e2-443a-b0f9-f19b7110045e.jpg",
-                ),
+            Product(
                 1,
+                "[빙그래] 요맘때 파인트 710mL 3종 (택1)",
+                5000,
+                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/73061aab-a2e2-443a-b0f9-f19b7110045e.jpg",
             ),
-            ProductUiModel(
-                Product(
-                    2,
-                    "[애슐리] 크런치즈엣지 포테이토피자 495g",
-                    10900,
-                    "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/23efcafe-0765-478f-afe9-f9af7bb9b7df.jpg",
-                ),
-                1,
-            )
+            Product(
+                2,
+                "[애슐리] 크런치즈엣지 포테이토피자 495g",
+                10900,
+                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/23efcafe-0765-478f-afe9-f9af7bb9b7df.jpg",
+            ),
         )
         repository.getPage(3, 0) { page ->
             assertThat(page.items).isEqualTo(expected)

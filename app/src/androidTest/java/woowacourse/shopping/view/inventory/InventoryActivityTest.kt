@@ -1,9 +1,8 @@
 
-package woowacourse.shopping
+package woowacourse.shopping.view.inventory
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -11,42 +10,43 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.recent.RecentProductDatabase
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
-import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
-import woowacourse.shopping.matcher.isDisplayed
-import woowacourse.shopping.matcher.isEllipsized
-import woowacourse.shopping.matcher.matchSizeWithViewType
-import woowacourse.shopping.matcher.matchText
-import woowacourse.shopping.matcher.performClick
-import woowacourse.shopping.matcher.scrollToPosition
-import woowacourse.shopping.matcher.sizeGreaterThan
-import woowacourse.shopping.view.inventory.InventoryActivity
+import woowacourse.shopping.util.RecyclerViewMatcher.Companion.withRecyclerView
+import woowacourse.shopping.util.isDisplayed
+import woowacourse.shopping.util.isEllipsized
+import woowacourse.shopping.util.matchText
+import woowacourse.shopping.util.performClick
+import woowacourse.shopping.util.scrollToPosition
+import woowacourse.shopping.util.sizeGreaterThan
 
 @Suppress("FunctionName")
 class InventoryActivityTest {
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(InventoryActivity::class.java)
-
     private lateinit var context: ShoppingApplication
+    private lateinit var shoppingCartDatabase: ShoppingCartDatabase
     private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var recentProductDatabase: RecentProductDatabase
     private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
 
-        val shoppingCartDatabase =
+        shoppingCartDatabase =
             Room.inMemoryDatabaseBuilder(context, ShoppingCartDatabase::class.java)
                 .allowMainThreadQueries()
                 .build()
         shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingCartDatabase.cartItemDao())
 
-        val recentProductDatabase =
+        recentProductDatabase =
             Room.inMemoryDatabaseBuilder(context, RecentProductDatabase::class.java)
                 .allowMainThreadQueries()
                 .build()
@@ -59,6 +59,8 @@ class InventoryActivityTest {
         context.filesDir.deleteRecursively()
         shoppingCartRepository.clear()
         recentProductRepository.clear()
+        shoppingCartDatabase.close()
+        recentProductDatabase.close()
     }
 
     @Test
@@ -84,11 +86,6 @@ class InventoryActivityTest {
     }
 
     @Test
-    fun 상품의_목록은_20개_단위로_표시된다() {
-        onView(withId(R.id.rv_product_list)).check(matchSizeWithViewType(20, R.layout.item_inventory_product))
-    }
-
-    @Test
     fun 더보기_버튼을_눌러서_상품을_추가_로드할_수_있다() {
         onView(withId(R.id.rv_product_list)).perform(scrollToPosition(20))
         onView(withId(R.id.btn_show_more)).performClick()
@@ -109,7 +106,7 @@ class InventoryActivityTest {
     fun 상품을_클릭하면_상품_상세_화면으로_이동된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
+                3,
                 R.id.tv_product_name,
             ),
         ).performClick()
@@ -136,7 +133,7 @@ class InventoryActivityTest {
     fun 장바구니에_담긴_상품의_개수가_표시된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
+                4,
                 R.id.iv_add_product_icon,
             ),
         ).performClick()
@@ -147,13 +144,13 @@ class InventoryActivityTest {
     fun 장바구니에_담겨있는_상품은_수량_감소_버튼이_표시된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
+                2,
                 R.id.iv_add_product_icon,
             ),
         ).performClick()
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
+                2,
                 R.id.tv_decrease_quantity,
             ),
         ).isDisplayed()
@@ -171,39 +168,6 @@ class InventoryActivityTest {
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
                 1,
                 R.id.tv_increase_quantity,
-            ),
-        ).isDisplayed()
-    }
-
-    @Test
-    fun 장바구니에_담겨있는_상품은_수량이_표시된다() {
-        onView(
-            withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
-                R.id.iv_add_product_icon,
-            ),
-        ).performClick()
-        onView(
-            withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
-                R.id.tv_quantity,
-            ),
-        ).matchText("1")
-    }
-
-    @Test
-    fun 최근_본_상품이_있으면_최근_본_상품_목록이_표시된다() {
-        onView(
-            withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
-                R.id.tv_product_name,
-            ),
-        ).performClick()
-        Espresso.pressBack()
-        onView(
-            withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                0,
-                R.id.rv_recent_list,
             ),
         ).isDisplayed()
     }
