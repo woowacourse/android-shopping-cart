@@ -16,7 +16,7 @@ import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.util.allInventoryProducts
 
-class InventoryRepositoryImplTest {
+class RemoteInventoryRepotioryImplTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 

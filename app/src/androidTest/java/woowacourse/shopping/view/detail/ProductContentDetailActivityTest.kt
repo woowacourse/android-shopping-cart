@@ -19,7 +19,7 @@ import woowacourse.shopping.util.matchText
 import woowacourse.shopping.util.performClick
 import woowacourse.shopping.util.inventoryItem
 
-class ProductDetailActivityTest {
+class ProductContentDetailActivityTest {
     private lateinit var scenario: ActivityScenario<ProductDetailActivity>
 
     @get:Rule
