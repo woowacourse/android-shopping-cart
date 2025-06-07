@@ -10,16 +10,16 @@ import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 fun Product.toEntity(): ProductEntity = ProductEntity(id, name, price, 0, imageUrl)
 
-fun Product.toUiModel(): ProductUiModel = ProductUiModel(this, 0)
-
-fun ProductEntity.toDomain(): Product = Product(id, name, price, imageUrl)
-
 fun CartProduct.toEntity(): CartItemEntity = CartItemEntity(id, name, price, quantity, imageUrl)
 
-fun CartItemEntity.toDomain(): CartProduct = CartProduct(id, name, price, quantity, imageUrl)
+fun RecentItem.toEntity(): RecentProductEntity = RecentProductEntity(id, name, imageUrl, timestamp)
+
+fun Product.toUiModel(): ProductUiModel = ProductUiModel(this, 0)
 
 fun CartProduct.toUiModel(): ProductUiModel = ProductUiModel(Product(id, name, price, imageUrl), quantity)
 
-fun ProductUiModel.toCartItem(): CartProduct = CartProduct(product.id, product.name, product.price, quantity, product.imageUrl)
+fun ProductEntity.toProduct(): Product = Product(id, name, price, imageUrl)
 
-fun RecentItem.toEntity(): RecentProductEntity = RecentProductEntity(id, name, imageUrl, timestamp)
+fun CartItemEntity.toCartProduct(): CartProduct = CartProduct(id, name, price, quantity, imageUrl)
+
+fun ProductUiModel.toCartProduct(): CartProduct = CartProduct(product.id, product.name, product.price, quantity, product.imageUrl)

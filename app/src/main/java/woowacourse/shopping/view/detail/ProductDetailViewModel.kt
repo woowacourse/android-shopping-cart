@@ -10,7 +10,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
-import woowacourse.shopping.data.toCartItem
+import woowacourse.shopping.data.toCartProduct
 import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.RecentItem
 import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
@@ -48,7 +48,7 @@ class ProductDetailViewModel(
             val existingQuantity = productItem.quantity
             val currentQuantity = cartItem?.quantity ?: 0
             val item = productItem.copy(quantity = existingQuantity + currentQuantity)
-            shoppingCartRepository.insert(item.toCartItem()) {}
+            shoppingCartRepository.insert(item.toCartProduct()) {}
         }
     }
 

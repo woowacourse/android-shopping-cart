@@ -10,7 +10,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
-import woowacourse.shopping.data.toCartItem
+import woowacourse.shopping.data.toCartProduct
 import woowacourse.shopping.data.toUiModel
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
@@ -61,7 +61,7 @@ class InventoryViewModel(
 
     fun increaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
-        shoppingCartRepository.insert(updatedProduct.toCartItem()) {
+        shoppingCartRepository.insert(updatedProduct.toCartProduct()) {
             loadCartCount()
             _inventoryUpdateEvent.postValue(updatedProduct)
         }
@@ -70,12 +70,12 @@ class InventoryViewModel(
     fun decreaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
         if (updatedProduct.quantity == 0) {
-            shoppingCartRepository.delete(product.toCartItem()) {
+            shoppingCartRepository.delete(product.toCartProduct()) {
                 loadCartCount()
                 _inventoryUpdateEvent.postValue(updatedProduct)
             }
         } else {
-            shoppingCartRepository.insert(updatedProduct.toCartItem()) {
+            shoppingCartRepository.insert(updatedProduct.toCartProduct()) {
                 loadCartCount()
                 _inventoryUpdateEvent.postValue(updatedProduct)
             }

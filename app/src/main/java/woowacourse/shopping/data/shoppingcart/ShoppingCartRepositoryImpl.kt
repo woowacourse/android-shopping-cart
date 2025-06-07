@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.shoppingcart
 
-import woowacourse.shopping.data.toDomain
+import woowacourse.shopping.data.toCartProduct
 import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
@@ -12,13 +12,13 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
         onResult: (CartProduct?) -> Unit,
     ) {
         thread {
-            onResult(cartItemDao.getOrNull(id)?.toDomain())
+            onResult(cartItemDao.getOrNull(id)?.toCartProduct())
         }
     }
 
     override fun getAll(onSuccess: (List<CartProduct>) -> Unit) {
         thread {
-            onSuccess(cartItemDao.getAll().map(CartItemEntity::toDomain))
+            onSuccess(cartItemDao.getAll().map(CartItemEntity::toCartProduct))
         }
     }
 
