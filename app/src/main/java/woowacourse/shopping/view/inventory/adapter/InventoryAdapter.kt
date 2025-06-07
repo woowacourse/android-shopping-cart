@@ -67,8 +67,10 @@ class InventoryAdapter(
 
     fun updateProduct(product: ProductUiModel) {
         items.forEachIndexed { index, item ->
-            if (item is ProductUiModel && item.product.id == product.product.id) items[index] = product
-            notifyItemChanged(index)
+            if (item is ProductUiModel && item.product.id == product.product.id) {
+                items[index] = product
+                notifyItemChanged(index)
+            }
         }
     }
 }

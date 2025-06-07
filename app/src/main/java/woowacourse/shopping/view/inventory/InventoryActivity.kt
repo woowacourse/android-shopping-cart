@@ -80,6 +80,7 @@ class InventoryActivity :
         val gridLayoutManager = GridLayoutManager(this@InventoryActivity, MAX_SPAN_SIZE)
         binding.rvProductList.apply {
             adapter = InventoryAdapter(this@InventoryActivity)
+            itemAnimator = null
             layoutManager = gridLayoutManager
         }
         gridLayoutManager.spanSizeLookup =
