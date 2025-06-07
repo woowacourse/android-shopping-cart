@@ -1,7 +1,5 @@
 package woowacourse.shopping.view.inventory
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContracts
@@ -127,12 +125,5 @@ class InventoryActivity :
     companion object {
         private const val MAX_SPAN_SIZE = 2
         private const val PRODUCT_SPAN_SIZE = 1
-
-        fun newIntent(context: Context): Intent {
-            return Intent(
-                context,
-                InventoryActivity::class.java,
-            ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        }
     }
 }

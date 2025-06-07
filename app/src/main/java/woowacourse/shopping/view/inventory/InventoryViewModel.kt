@@ -55,11 +55,6 @@ class InventoryViewModel(
         }
     }
 
-    fun reloadPage() {
-        _items.value = emptyList()
-        requestPage()
-    }
-
     fun increaseQuantity(product: ProductUiModel) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
         shoppingCartRepository.insert(updatedProduct.toCartItem()) {
