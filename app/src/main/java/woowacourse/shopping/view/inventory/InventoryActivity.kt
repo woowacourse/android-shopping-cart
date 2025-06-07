@@ -61,7 +61,7 @@ class InventoryActivity :
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.root.setOnClickListener {
-            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
+            onClickShoppingCart()
         }
         return true
     }
@@ -94,6 +94,10 @@ class InventoryActivity :
             }
             requestPage()
         }
+    }
+
+    override fun onClickShoppingCart() {
+        activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
     }
 
     override fun onSelectProduct(productId: Int) {
