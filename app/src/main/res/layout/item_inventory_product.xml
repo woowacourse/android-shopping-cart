@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel" />
+            name="item"
+            type="woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel" />
 
         <variable
             name="handler"
@@ -17,21 +17,82 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> handler.onProductSelected(product)}"
+        android:onClick="@{() -> handler.onSelectProduct(item.product.id)}"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
+            productImage="@{item.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
-            android:image="@{product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sample_product_image" />
+
+        <ImageView
+            android:id="@+id/iv_add_product_icon"
+            isGone="@{item.quantity > 0}"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:onClick="@{() -> handler.onIncreaseQuantity(item)}"
+            android:src="@drawable/icon_plus"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <LinearLayout
+            isGone="@{item.quantity == 0}"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image">
+
+            <TextView
+                android:id="@+id/tv_decrease_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/background_layout_product_counter_decrease"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="@{() -> handler.onDecreaseQuantity(item)}"
+                android:text="@string/button_minus"
+                android:textColor="@color/dark_gray"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@{String.valueOf(item.quantity)}"
+                android:textColor="@color/dark_gray"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/tv_increase_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/background_layout_product_counter_increase"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="@{() -> handler.onIncreaseQuantity(item)}"
+                android:text="@string/button_plus"
+                android:textColor="@color/dark_gray"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -40,7 +101,7 @@
             android:layout_marginHorizontal="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{item.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -51,11 +112,11 @@
 
         <TextView
             android:id="@+id/tv_product_price"
+            priceWithFormat="@{item.product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:price="@{product.price}"
-            android:textColor="@color/gray"
+            android:textColor="@color/dark_gray"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

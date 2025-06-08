@@ -1,11 +1,15 @@
 package woowacourse.shopping.view.shoppingcart
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
 
 interface ShoppingCartEventHandler {
-    fun onRemoveProduct(product: Product)
-
     fun onGoToPreviousPage()
 
     fun onGoToNextPage()
+
+    fun onIncreaseQuantity(product: CartProduct)
+
+    fun onDecreaseQuantity(product: CartProduct)
+
+    fun onRemoveProduct(product: CartProduct)
 }

@@ -1,9 +1,15 @@
 package woowacourse.shopping.view.inventory
 
-import woowacourse.shopping.view.inventory.item.InventoryItem
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
 
 interface InventoryEventHandler {
-    fun onProductSelected(product: InventoryItem.ProductUiModel)
+    fun onClickShoppingCart()
 
-    fun onLoadMoreProducts()
+    fun onSelectProduct(productId: Int)
+
+    fun onIncreaseQuantity(product: ProductUiModel)
+
+    fun onDecreaseQuantity(product: ProductUiModel)
+
+    fun onShowMore()
 }

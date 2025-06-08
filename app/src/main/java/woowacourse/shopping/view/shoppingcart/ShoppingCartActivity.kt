@@ -3,25 +3,39 @@ package woowacourse.shopping.view.shoppingcart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import android.view.MenuItem
+import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.shoppingcart.adapter.ShoppingCartAdapter
 
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
     ShoppingCartEventHandler {
-    private lateinit var viewModel: ShoppingCartViewModel
+    private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
+        initActionBar()
+        initRecyclerView()
+    }
 
-        val shoppingApplication = application as ShoppingApplication
-        val factory = ShoppingCartViewModel.createFactory(shoppingApplication.shoppingCartRepository)
-        viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initActionBar() {
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.shopping_cart_toolbar_title)
+        }
+    }
+
+    private fun initRecyclerView() {
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
             rvShoppingCartList.itemAnimator = null
@@ -30,16 +44,27 @@ class ShoppingCartActivity :
         }
 
         with(viewModel) {
+            val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
+
             products.observe(this@ShoppingCartActivity) { page ->
-                val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
-                adapter.updateProducts(page.items)
+                adapter.submitList(page.items)
             }
+
+            cartUpdateEvent.observe(this@ShoppingCartActivity) { item ->
+                adapter.updateCartProduct(item)
+            }
+
+            modifiedProductIds.observe(this@ShoppingCartActivity) { modifiedProductIds ->
+                val intent =
+                    Intent().putIntegerArrayListExtra(
+                        ActivityResult.CART_ITEM_MODIFIED.key,
+                        ArrayList(modifiedProductIds),
+                    )
+                setResult(ActivityResult.CART_ITEM_MODIFIED.hashCode(), intent)
+            }
+
             requestPage(0)
         }
-    }
-
-    override fun onRemoveProduct(product: Product) {
-        viewModel.removeProduct(product)
     }
 
     override fun onGoToPreviousPage() {
@@ -48,6 +73,18 @@ class ShoppingCartActivity :
 
     override fun onGoToNextPage() {
         viewModel.requestNextPage()
+    }
+
+    override fun onIncreaseQuantity(product: CartProduct) {
+        viewModel.increaseQuantity(product)
+    }
+
+    override fun onDecreaseQuantity(product: CartProduct) {
+        viewModel.decreaseQuantity(product)
+    }
+
+    override fun onRemoveProduct(product: CartProduct) {
+        viewModel.removeCartItem(product)
     }
 
     companion object {

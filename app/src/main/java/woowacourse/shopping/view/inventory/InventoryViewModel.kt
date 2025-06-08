@@ -4,34 +4,145 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.InventoryRepository
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.inventory.InventoryRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.data.toCartProduct
+import woowacourse.shopping.data.toUiModel
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import woowacourse.shopping.view.inventory.item.toUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.RecentProducts
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ShowMore
 
-class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
+class InventoryViewModel(
+    private val inventoryRepository: InventoryRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentProductRepository: RecentProductRepository,
+) : ViewModel() {
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     val items: LiveData<List<InventoryItem>> get() = _items
 
+    private val _inventoryUpdateEvent = MutableLiveData<ProductUiModel>()
+    val inventoryUpdateEvent: LiveData<ProductUiModel> = _inventoryUpdateEvent
+
+    private val _cartCount: MutableLiveData<Int> = MutableLiveData()
+    val cartCount: LiveData<Int> get() = _cartCount
+
     fun requestPage() {
-        val currentProducts = _items.value?.filterNot { item -> item == ShowMore } ?: emptyList()
-        val newPage = repository.getPage(PAGE_SIZE, currentProducts.size / PAGE_SIZE)
-        val newProducts: List<InventoryItem> = newPage.items.map(Product::toUiModel)
-        val newItems = currentProducts + newProducts + if (newPage.hasNext) listOf(ShowMore) else emptyList()
-        _items.value = newItems
+        val currentPageSize = _items.value?.filterIsInstance<ProductUiModel>()?.size ?: 0
+        inventoryRepository.getPage(PAGE_SIZE, currentPageSize / PAGE_SIZE) { page ->
+            updateInventoryProducts(page)
+            loadCartCount()
+        }
+    }
+
+    fun loadUpdatedProductInfo(updatedProductIds: List<Int>) {
+        loadCartCount()
+        updatedProductIds.forEach { id ->
+            shoppingCartRepository.getOrNull(id) { cartProduct ->
+                if (cartProduct == null) {
+                    inventoryRepository.getOrNull(id) { product ->
+                        if (product != null) {
+                            _inventoryUpdateEvent.postValue(product.toUiModel())
+                        }
+                    }
+                } else {
+                    _inventoryUpdateEvent.postValue(cartProduct.toUiModel())
+                }
+            }
+        }
+    }
+
+    fun increaseQuantity(product: ProductUiModel) {
+        val updatedProduct = product.copy(quantity = product.quantity + 1)
+        shoppingCartRepository.insert(updatedProduct.toCartProduct()) {
+            loadCartCount()
+            _inventoryUpdateEvent.postValue(updatedProduct)
+        }
+    }
+
+    fun decreaseQuantity(product: ProductUiModel) {
+        val updatedProduct = product.copy(quantity = product.quantity - 1)
+        if (updatedProduct.quantity == 0) {
+            shoppingCartRepository.delete(product.toCartProduct()) {
+                loadCartCount()
+                _inventoryUpdateEvent.postValue(updatedProduct)
+            }
+        } else {
+            shoppingCartRepository.insert(updatedProduct.toCartProduct()) {
+                loadCartCount()
+                _inventoryUpdateEvent.postValue(updatedProduct)
+            }
+        }
+    }
+
+    private fun loadCartCount() {
+        shoppingCartRepository.getTotalCount { totalCount ->
+            _cartCount.postValue(totalCount)
+        }
+    }
+
+    private fun updateInventoryProducts(newPage: Page<Product>) {
+        shoppingCartRepository.getAll { cartProducts ->
+            recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
+                val products = _items.value?.filterIsInstance<ProductUiModel>().orEmpty()
+                val productUiModels = matchProductsToCartProducts(newPage.items, cartProducts)
+                val newList =
+                    buildList {
+                        add(RecentProducts(recentProducts))
+                        addAll(products)
+                        addAll(productUiModels)
+                        if (newPage.hasNext) add(ShowMore)
+                    }
+                _items.postValue(newList)
+            }
+        }
+    }
+
+    private fun matchProductsToCartProducts(
+        products: List<Product>,
+        cartProducts: List<CartProduct>,
+    ): List<ProductUiModel> {
+        val idToCartProduct =
+            cartProducts.associateBy(
+                { cartItem -> cartItem.id },
+                { cartItem -> cartItem.toUiModel() },
+            )
+
+        val fetchedUiModels =
+            products.map { product ->
+                idToCartProduct[product.id] ?: product.toUiModel()
+            }
+
+        return fetchedUiModels
     }
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val RECENT_PRODUCTS_MAX_COUNT = 10
 
         @Suppress("UNCHECKED_CAST")
-        fun createFactory(inventoryRepository: InventoryRepository): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return (InventoryViewModel(inventoryRepository) as T)
+        val Factory: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = extras[APPLICATION_KEY] as ShoppingApplication
+                    return (
+                        InventoryViewModel(
+                            application.inventoryRepository,
+                            application.shoppingCartRepository,
+                            application.recentProductRepository,
+                        ) as T
+                    )
                 }
             }
-        }
     }
 }

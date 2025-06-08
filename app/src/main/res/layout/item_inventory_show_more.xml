@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="button"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem" />
+            name="item"
+            type="woowacourse.shopping.view.inventory.adapter.InventoryItem" />
 
         <variable
             name="handler"
@@ -16,10 +16,10 @@
         android:id="@+id/btn_show_more"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:backgroundTint="@color/pagination_enabled"
+        android:backgroundTint="@color/teal"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:onClick="@{() -> handler.onLoadMoreProducts()}"
+        android:onClick="@{() -> handler.onShowMore()}"
         android:text="@string/button_text_load_more"
         android:textSize="20sp"
         android:textStyle="bold"

@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.serialization)
     id("kotlin-kapt")
-    id("kotlin-parcelize")
 }
 
 android {
@@ -71,4 +71,10 @@ dependencies {
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     androidTestImplementation(libs.androidx.core.testing)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.okhttp)
+    implementation(libs.mockwebserver)
+    implementation(libs.kotlinx.serialization.json)
+    testImplementation(kotlin("test"))
 }

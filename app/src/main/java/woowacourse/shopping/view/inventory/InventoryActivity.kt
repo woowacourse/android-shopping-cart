@@ -2,69 +2,123 @@ package woowacourse.shopping.view.inventory
 
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ToolbarCartCounterBinding
+import woowacourse.shopping.view.ActivityResult
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.inventory.item.InventoryItemType
+import woowacourse.shopping.view.inventory.adapter.InventoryAdapter
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.adapter.InventoryItem.ViewType
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
     InventoryEventHandler {
-    private lateinit var viewModel: InventoryViewModel
+    private val viewModel: InventoryViewModel by viewModels { InventoryViewModel.Factory }
+
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                ActivityResult.CART_ITEM_ADDED.hashCode() -> {
+                    val addedProductId =
+                        result.data?.getIntExtra(ActivityResult.CART_ITEM_ADDED.key, 0) ?: 0
+                    viewModel.loadUpdatedProductInfo(listOf(addedProductId))
+                    onClickShoppingCart()
+                }
+
+                ActivityResult.CART_ITEM_MODIFIED.hashCode() -> {
+                    val modifiedProductIds =
+                        result.data?.getIntegerArrayListExtra(ActivityResult.CART_ITEM_MODIFIED.key)
+                    viewModel.loadUpdatedProductInfo(modifiedProductIds.orEmpty())
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val shoppingApplication = application as ShoppingApplication
-        val factory = InventoryViewModel.createFactory(shoppingApplication.inventoryRepository)
-        viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
-
-        setSupportActionBar(binding.toolbar as Toolbar)
         initRecyclerview()
+        initObserver()
+        if (savedInstanceState == null) viewModel.requestPage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+
+        val binding =
+            DataBindingUtil.inflate<ToolbarCartCounterBinding>(
+                layoutInflater,
+                R.layout.toolbar_cart_counter,
+                null,
+                false,
+            )
+        menu?.findItem(R.id.menu_item_shopping_cart)?.actionView = binding.root
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.root.setOnClickListener {
+            onClickShoppingCart()
+        }
         return true
     }
 
     private fun initRecyclerview() {
         val gridLayoutManager = GridLayoutManager(this@InventoryActivity, MAX_SPAN_SIZE)
-        gridLayoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (binding.rvProductList.adapter?.getItemViewType(position)) {
-                        InventoryItemType.PRODUCT.id -> PRODUCT_SPAN_SIZE
-                        InventoryItemType.SHOW_MORE.id -> MAX_SPAN_SIZE
-                        else -> throw IllegalStateException()
-                    }
-                }
-            }
-
         binding.rvProductList.apply {
             adapter = InventoryAdapter(this@InventoryActivity)
+            itemAnimator = null
             layoutManager = gridLayoutManager
         }
 
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val adapter = binding.rvProductList.adapter ?: return MAX_SPAN_SIZE
+                    val viewType = adapter.getItemViewType(position)
+                    return when (ViewType.entries[viewType]) {
+                        ViewType.PRODUCT -> PRODUCT_SPAN_SIZE
+                        ViewType.SHOW_MORE, ViewType.RECENT_PRODUCTS -> MAX_SPAN_SIZE
+                    }
+                }
+            }
+    }
+
+    private fun initObserver() {
         with(viewModel) {
-            requestPage()
+            val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
-                (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
+                adapter.submitList(items)
+            }
+            inventoryUpdateEvent.observe(this@InventoryActivity) { item ->
+                adapter.updateProduct(item)
             }
         }
     }
 
-    override fun onProductSelected(product: ProductUiModel) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
+    override fun onClickShoppingCart() {
+        val intent = ShoppingCartActivity.newIntent(this)
+        activityResultLauncher.launch(intent)
     }
 
-    override fun onLoadMoreProducts() {
+    override fun onSelectProduct(productId: Int) {
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, productId))
+    }
+
+    override fun onIncreaseQuantity(product: ProductUiModel) {
+        viewModel.increaseQuantity(product)
+    }
+
+    override fun onDecreaseQuantity(product: ProductUiModel) {
+        viewModel.decreaseQuantity(product)
+    }
+
+    override fun onShowMore() {
         viewModel.requestPage()
     }
 

@@ -1,0 +1,174 @@
+
+package woowacourse.shopping.view.inventory
+
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.recent.RecentProductDatabase
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
+import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.util.RecyclerViewMatcher.Companion.withRecyclerView
+import woowacourse.shopping.util.isDisplayed
+import woowacourse.shopping.util.isEllipsized
+import woowacourse.shopping.util.matchText
+import woowacourse.shopping.util.performClick
+import woowacourse.shopping.util.scrollToPosition
+import woowacourse.shopping.util.sizeGreaterThan
+
+@Suppress("FunctionName")
+class InventoryActivityTest {
+    @get:Rule
+    val activityScenarioRule = ActivityScenarioRule(InventoryActivity::class.java)
+    private lateinit var context: ShoppingApplication
+    private lateinit var shoppingCartDatabase: ShoppingCartDatabase
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var recentProductDatabase: RecentProductDatabase
+    private lateinit var recentProductRepository: RecentProductRepository
+
+    @Before
+    fun setUp() {
+        context = ApplicationProvider.getApplicationContext()
+
+        shoppingCartDatabase =
+            Room.inMemoryDatabaseBuilder(context, ShoppingCartDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+        shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingCartDatabase.cartItemDao())
+
+        recentProductDatabase =
+            Room.inMemoryDatabaseBuilder(context, RecentProductDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+        recentProductRepository = RecentProductRepositoryImpl(recentProductDatabase.recentProductDao())
+    }
+
+    @After
+    fun tearDown() {
+        context.cacheDir.deleteRecursively()
+        context.filesDir.deleteRecursively()
+        shoppingCartRepository.clear()
+        recentProductRepository.clear()
+        shoppingCartDatabase.close()
+        recentProductDatabase.close()
+    }
+
+    @Test
+    fun 상품의_목록이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_product_name,
+            ),
+        ).matchText("[병천아우내] 모듬순대")
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_product_price,
+            ),
+        ).matchText("11,900원")
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                0,
+                R.id.iv_product_image,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 더보기_버튼을_눌러서_상품을_추가_로드할_수_있다() {
+        onView(withId(R.id.rv_product_list)).perform(scrollToPosition(20))
+        onView(withId(R.id.btn_show_more)).performClick()
+        onView(withId(R.id.rv_product_list)).check(sizeGreaterThan(20))
+    }
+
+    @Test
+    fun 상품의_이름이_너무_길_경우_말줄임표로_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                2,
+                R.id.tv_product_name,
+            ),
+        ).check(isEllipsized())
+    }
+
+    @Test
+    fun 상품을_클릭하면_상품_상세_화면으로_이동된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                3,
+                R.id.tv_product_name,
+            ),
+        ).performClick()
+        onView(withId(R.id.product_detail)).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니_아이콘을_클릭하면_장바구니_화면으로_이동된다() {
+        onView(withId(R.id.menu_item_shopping_cart)).performClick()
+        onView(withId(R.id.rv_shopping_cart_list)).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담겨있지_않은_상품은_담기_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담긴_상품의_개수가_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                4,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(withId(R.id.tv_shopping_cart_quantity)).matchText("1")
+    }
+
+    @Test
+    fun 장바구니에_담겨있는_상품은_수량_감소_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                2,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                2,
+                R.id.tv_decrease_quantity,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담겨있는_상품은_수량_증가_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_increase_quantity,
+            ),
+        ).isDisplayed()
+    }
+}
