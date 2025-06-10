@@ -43,14 +43,14 @@ class DefaultProductsRepository(
     }
 
     override fun recordViewedProduct(product: Product) {
-        thread {
+        {
             recentViewedProductsDataSource.upsert(
                 RecentViewedProductEntity(
                     product.id,
                     LocalDateTime.now(),
                 ),
             )
-        }
+        }.runAsync { }
     }
 
     private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
