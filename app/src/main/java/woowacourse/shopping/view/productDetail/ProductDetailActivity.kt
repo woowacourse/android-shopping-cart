@@ -42,8 +42,8 @@ class ProductDetailActivity :
         handleEvents()
     }
 
-    private fun initViewModel(cartItem: Product) {
-        viewModel.updateProduct(cartItem)
+    private fun initViewModel(product: Product) {
+        viewModel.updateProduct(product)
     }
 
     private fun Intent.getProductExtra(): Product? =
