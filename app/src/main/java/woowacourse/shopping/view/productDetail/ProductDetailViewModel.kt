@@ -36,16 +36,16 @@ class ProductDetailViewModel(
         loadLatestViewedProduct()
     }
 
-    fun updateProduct(product: Product) {
+    fun loadProduct(product: Product) {
         _product.value = product
-        updateQuantity()
+        loadQuantity()
     }
 
     fun recordViewedProduct() {
         product.value?.let { productsRepository.recordViewedProduct(it) }
     }
 
-    fun updateQuantity() {
+    fun loadQuantity() {
         val product = product.value ?: return
         shoppingCartRepository.quantityOf(product) { result: Result<Int> ->
             if (result.getOrNull() != 0) {

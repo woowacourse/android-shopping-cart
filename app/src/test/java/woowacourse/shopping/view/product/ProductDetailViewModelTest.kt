@@ -19,7 +19,7 @@ class ProductDetailViewModelTest {
     fun setUp() {
         repository = FakeProductsRepository()
         viewModel = ProductDetailViewModel(repository)
-        viewModel.updateProduct(Product(0, "럭키", 1_000))
+        viewModel.loadProduct(Product(0, "럭키", 1_000))
     }
 
     @Test

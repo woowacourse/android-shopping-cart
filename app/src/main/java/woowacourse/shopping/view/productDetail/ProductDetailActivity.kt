@@ -48,7 +48,7 @@ class ProductDetailActivity :
     }
 
     private fun initViewModel(product: Product) {
-        viewModel.updateProduct(product)
+        viewModel.loadProduct(product)
     }
 
     private fun Intent.getProductExtra(): Product? =
