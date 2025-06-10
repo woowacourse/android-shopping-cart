@@ -23,8 +23,8 @@ class RecentViewedProductsAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun submitList(products: List<Product>) {
-        items = products
-        notifyDataSetChanged()
+    fun submitList(newItems: List<Product>) {
+        items = newItems
+        notifyItemRangeChanged(0, newItems.size)
     }
 }
