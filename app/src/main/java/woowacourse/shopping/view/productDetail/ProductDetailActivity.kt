@@ -41,10 +41,6 @@ class ProductDetailActivity :
         initViewModel(product)
         bindViewModel()
         handleEvents()
-        onBackPressedDispatcher.addCallback {
-            viewModel.recordViewedProduct()
-            finish()
-        }
     }
 
     private fun initViewModel(product: Product) {
@@ -76,6 +72,11 @@ class ProductDetailActivity :
                 ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
                     showToast(R.string.product_detail_add_shopping_cart_error_message)
             }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            viewModel.recordViewedProduct()
+            finish()
         }
     }
 
