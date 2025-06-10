@@ -25,7 +25,7 @@ object LocalProductsDataSource : ProductsDataSource {
 
     private fun insertAllIfEmpty() {
         thread {
-            if (dao.load().isEmpty()) {
+            if (dao.loadAll().isEmpty()) {
                 dao.insertAll(
                     listOf(
                         ProductEntity(id = 1, name = "럭키", price = 4000),
@@ -59,7 +59,7 @@ object LocalProductsDataSource : ProductsDataSource {
         }
     }
 
-    override fun load(): List<ProductEntity> = dao.load()
+    override fun load(): List<ProductEntity> = dao.loadAll()
 
     override fun getById(id: Long): ProductEntity? = dao.load(id)
 }
