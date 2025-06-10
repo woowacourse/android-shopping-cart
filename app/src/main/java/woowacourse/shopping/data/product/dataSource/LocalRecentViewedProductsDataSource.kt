@@ -2,8 +2,8 @@ package woowacourse.shopping.data.product.dataSource
 
 import android.content.Context
 import androidx.room.Room
+import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.product.dao.RecentViewedProductDao
-import woowacourse.shopping.data.product.database.RecentViewedProductDatabase
 import woowacourse.shopping.data.product.entity.RecentViewedProductEntity
 
 object LocalRecentViewedProductsDataSource : RecentViewedProductsDataSource {
@@ -14,11 +14,11 @@ object LocalRecentViewedProductsDataSource : RecentViewedProductsDataSource {
             Room
                 .databaseBuilder(
                     applicationContext,
-                    RecentViewedProductDatabase::class.java,
+                    ShoppingCartDatabase::class.java,
                     "recentViewedProducts",
                 ).build()
 
-        dao = db.dao()
+        dao = db.recentViewedProductDao()
     }
 
     override fun load(): List<RecentViewedProductEntity> = dao.load()

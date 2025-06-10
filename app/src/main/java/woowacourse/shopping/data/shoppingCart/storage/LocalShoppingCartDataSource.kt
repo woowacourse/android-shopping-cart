@@ -2,9 +2,9 @@ package woowacourse.shopping.data.shoppingCart.storage
 
 import android.content.Context
 import androidx.room.Room
+import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.product.entity.CartItemEntity
 import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.database.ShoppingCartDatabase
 
 object LocalShoppingCartDataSource : ShoppingCartDataSource {
     private lateinit var dao: ShoppingCartDao
@@ -18,7 +18,7 @@ object LocalShoppingCartDataSource : ShoppingCartDataSource {
                     "shoppingCart",
                 ).build()
 
-        dao = db.dao()
+        dao = db.shoppingCartDao()
     }
 
     override fun load(): List<CartItemEntity> = dao.load()

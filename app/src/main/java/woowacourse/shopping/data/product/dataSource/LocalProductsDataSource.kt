@@ -2,8 +2,8 @@ package woowacourse.shopping.data.product.dataSource
 
 import android.content.Context
 import androidx.room.Room
+import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.product.dao.ProductDao
-import woowacourse.shopping.data.product.database.ProductDatabase
 import woowacourse.shopping.data.product.entity.ProductEntity
 import kotlin.concurrent.thread
 
@@ -15,11 +15,11 @@ object LocalProductsDataSource : ProductsDataSource {
             Room
                 .databaseBuilder(
                     applicationContext,
-                    ProductDatabase::class.java,
+                    ShoppingCartDatabase::class.java,
                     "products",
                 ).build()
 
-        dao = db.dao()
+        dao = db.productDao()
         insertAllIfEmpty()
     }
 
