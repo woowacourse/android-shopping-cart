@@ -17,9 +17,9 @@ import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
 )
 @TypeConverters(LocalDateConverters::class)
 abstract class ShoppingCartDatabase : RoomDatabase() {
-    abstract fun productDao(): ProductDao
+    abstract val productDao: ProductDao
 
-    abstract fun recentViewedProductDao(): RecentViewedProductDao
+    abstract val recentViewedProductDao: RecentViewedProductDao
 
-    abstract fun shoppingCartDao(): ShoppingCartDao
+    abstract val shoppingCartDao: ShoppingCartDao
 }

@@ -1,24 +1,13 @@
 package woowacourse.shopping.data.product.dataSource
 
-import android.content.Context
-import androidx.room.Room
-import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.product.dao.RecentViewedProductDao
 import woowacourse.shopping.data.product.entity.RecentViewedProductEntity
 
 object LocalRecentViewedProductsDataSource : RecentViewedProductsDataSource {
     private lateinit var dao: RecentViewedProductDao
 
-    fun init(applicationContext: Context) {
-        val db =
-            Room
-                .databaseBuilder(
-                    applicationContext,
-                    ShoppingCartDatabase::class.java,
-                    "recentViewedProducts",
-                ).build()
-
-        dao = db.recentViewedProductDao()
+    fun init(recentViewedProductDao: RecentViewedProductDao) {
+        dao = recentViewedProductDao
     }
 
     override fun load(): List<RecentViewedProductEntity> = dao.load()

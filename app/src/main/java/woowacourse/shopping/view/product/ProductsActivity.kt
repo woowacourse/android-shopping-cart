@@ -10,9 +10,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.dataSource.LocalProductsDataSource
-import woowacourse.shopping.data.product.dataSource.LocalRecentViewedProductsDataSource
-import woowacourse.shopping.data.shoppingCart.storage.LocalShoppingCartDataSource
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
@@ -37,10 +34,6 @@ class ProductsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        LocalProductsDataSource.init(applicationContext)
-        LocalShoppingCartDataSource.init(applicationContext)
-        LocalRecentViewedProductsDataSource.init(applicationContext)
 
         initDataBinding()
         handleEventsFromViewModel()
