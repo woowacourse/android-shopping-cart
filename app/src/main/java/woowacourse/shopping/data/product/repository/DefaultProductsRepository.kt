@@ -12,7 +12,7 @@ import kotlin.concurrent.thread
 
 class DefaultProductsRepository(
     private val productsDataSource: ProductsDataSource = LocalProductsDataSource,
-    val recentViewedProductsDataSource: RecentViewedProductsDataSource = LocalRecentViewedProductsDataSource,
+    private val recentViewedProductsDataSource: RecentViewedProductsDataSource = LocalRecentViewedProductsDataSource,
 ) : ProductsRepository {
     override fun load(onLoad: (Result<List<Product>>) -> Unit) {
         { productsDataSource.load().map(ProductEntity::toDomain) }.runAsync(onLoad)
