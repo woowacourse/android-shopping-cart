@@ -25,6 +25,12 @@ class ProductsActivity : AppCompatActivity() {
         ProductsAdapter(::navigateToProductDetail, viewModel::updateProducts)
     }
 
+    private fun navigateToProductDetail(product: Product) {
+        viewModel.updateShoppingCart {
+            activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,9 +42,52 @@ class ProductsActivity : AppCompatActivity() {
         }
 
         initDataBinding()
-        handleEventsFromViewModel()
+        handleEvents()
         bindData()
+        initViews()
+    }
 
+    private fun initDataBinding() {
+        binding.adapter = productsAdapter
+        binding.onClickShoppingCartButton = ::navigateToShoppingCart
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
+
+    private fun navigateToShoppingCart() {
+        viewModel.updateShoppingCart {
+            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
+        }
+    }
+
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.loadAllProducts()
+            }
+        }
+
+    private fun handleEvents() {
+        viewModel.event.observe(this) { event: ProductsEvent ->
+            when (event) {
+                ProductsEvent.UPDATE_PRODUCT_FAILURE ->
+                    showToast(R.string.products_update_products_error_message)
+
+                ProductsEvent.UPDATE_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.products_update_shopping_cart_error_message)
+            }
+        }
+    }
+
+    private fun bindData() {
+        viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
+            productsAdapter.submitList(productsItems)
+        }
+    }
+
+    private fun initViews() {
         binding.products.layoutManager =
             GridLayoutManager(this, spanCount).apply {
                 spanSizeLookup =
@@ -65,52 +114,6 @@ class ProductsActivity : AppCompatActivity() {
                 4
             } else {
                 2
-            }
-        }
-
-    private fun initDataBinding() {
-        binding.adapter = productsAdapter
-        binding.onClickShoppingCartButton = ::navigateToShoppingCart
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-    }
-
-    private fun handleEventsFromViewModel() {
-        viewModel.event.observe(this) { event: ProductsEvent ->
-            when (event) {
-                ProductsEvent.UPDATE_PRODUCT_FAILURE ->
-                    showToast(R.string.products_update_products_error_message)
-
-                ProductsEvent.UPDATE_SHOPPING_CART_FAILURE ->
-                    showToast(R.string.products_update_shopping_cart_error_message)
-            }
-        }
-    }
-
-    private fun bindData() {
-        viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
-            productsAdapter.submitList(productsItems)
-        }
-    }
-
-    private fun navigateToShoppingCart() {
-        viewModel.updateShoppingCart {
-            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
-        }
-    }
-
-    private fun navigateToProductDetail(product: Product) {
-        viewModel.updateShoppingCart {
-            activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
-        }
-    }
-
-    private val activityResultLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                viewModel.loadAllProducts()
             }
         }
 }
