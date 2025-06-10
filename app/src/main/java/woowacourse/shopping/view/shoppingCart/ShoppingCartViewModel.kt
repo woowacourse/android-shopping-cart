@@ -18,27 +18,6 @@ class ShoppingCartViewModel(
     private val _shoppingCartItems: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val shoppingCartItems: LiveData<List<ShoppingCartItem>> get() = _shoppingCartItems
 
-    private val startInclusive: Int
-        get() =
-            (page.minus(1) * COUNT_PER_PAGE).coerceAtMost(
-                allShoppingCartItems.size,
-            )
-
-    private val endExclusive: Int
-        get() =
-            (page * COUNT_PER_PAGE).coerceAtMost(
-                allShoppingCartItems.size,
-            )
-
-    private val List<CartItem>.toShoppingCartItems: List<ShoppingCartItem>
-        get() {
-            val hasNext = endExclusive < allShoppingCartItems.size
-            val hasPrevious = page > FIRST_PAGE
-            val paginationItem = ShoppingCartItem.PaginationItem(page, hasNext, hasPrevious)
-
-            return map(ShoppingCartItem::ProductItem) + paginationItem
-        }
-
     private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
@@ -112,6 +91,27 @@ class ShoppingCartViewModel(
 
         loadShoppingCart()
     }
+
+    private val startInclusive: Int
+        get() =
+            (page.minus(1) * COUNT_PER_PAGE).coerceAtMost(
+                allShoppingCartItems.size,
+            )
+
+    private val endExclusive: Int
+        get() =
+            (page * COUNT_PER_PAGE).coerceAtMost(
+                allShoppingCartItems.size,
+            )
+
+    private val List<CartItem>.toShoppingCartItems: List<ShoppingCartItem>
+        get() {
+            val hasNext = endExclusive < allShoppingCartItems.size
+            val hasPrevious = page > FIRST_PAGE
+            val paginationItem = ShoppingCartItem.PaginationItem(page, hasNext, hasPrevious)
+
+            return map(ShoppingCartItem::ProductItem) + paginationItem
+        }
 
     companion object {
         private const val FIRST_PAGE = 1
