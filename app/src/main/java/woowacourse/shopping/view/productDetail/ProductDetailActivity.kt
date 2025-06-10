@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,10 @@ class ProductDetailActivity :
         initViewModel(product)
         bindViewModel()
         handleEvents()
+        onBackPressedDispatcher.addCallback {
+            viewModel.recordViewedProduct()
+            finish()
+        }
     }
 
     private fun initViewModel(product: Product) {
@@ -64,7 +69,7 @@ class ProductDetailActivity :
             when (event) {
                 ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> {
                     showToast(R.string.product_detail_add_shopping_cart_success_message)
-                    setResult(RESULT_OK)
+                    viewModel.recordViewedProduct()
                     finish()
                 }
 
@@ -76,6 +81,7 @@ class ProductDetailActivity :
 
     override fun onClose() {
         setResult(RESULT_OK)
+        viewModel.recordViewedProduct()
         finish()
     }
 
@@ -97,7 +103,6 @@ class ProductDetailActivity :
                 flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
             }
         startActivity(intent)
-        finish()
     }
 
     companion object {

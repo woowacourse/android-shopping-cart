@@ -38,8 +38,11 @@ class ProductDetailViewModel(
 
     fun updateProduct(product: Product) {
         _product.value = product
-        productsRepository.recordViewedProduct(product)
         updateQuantity()
+    }
+
+    fun recordViewedProduct() {
+        product.value?.let { productsRepository.recordViewedProduct(it) }
     }
 
     fun updateQuantity() {
