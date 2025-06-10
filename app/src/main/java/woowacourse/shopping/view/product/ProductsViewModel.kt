@@ -109,7 +109,7 @@ class ProductsViewModel(
             result
                 .onSuccess {
                 }.onFailure {
-                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                    _event.postValue(ProductsEvent.UPDATE_SHOPPING_CART_FAILURE)
                 }
             onUpdate()
         }
