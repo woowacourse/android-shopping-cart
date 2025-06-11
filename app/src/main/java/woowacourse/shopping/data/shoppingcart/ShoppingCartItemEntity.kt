@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.shoppingcart.database
+package woowacourse.shopping.data.shoppingcart
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

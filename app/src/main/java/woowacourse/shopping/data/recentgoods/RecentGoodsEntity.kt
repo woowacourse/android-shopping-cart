@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.recentgoods.database
+package woowacourse.shopping.data.recentgoods
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

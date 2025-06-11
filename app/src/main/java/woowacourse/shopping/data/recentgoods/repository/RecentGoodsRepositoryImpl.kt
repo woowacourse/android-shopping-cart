@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.recentgoods.repository
 
-import woowacourse.shopping.data.recentgoods.database.RecentGoodsDao
+import woowacourse.shopping.data.recentgoods.RecentGoodsDao
 import woowacourse.shopping.data.recentgoods.mapper.toEntity
 import woowacourse.shopping.data.util.doAsyncCatching
 import woowacourse.shopping.domain.model.Goods

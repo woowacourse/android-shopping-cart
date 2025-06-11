@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.shoppingcart.repository
 
-import woowacourse.shopping.data.shoppingcart.database.ShoppingCartDao
+import woowacourse.shopping.data.shoppingcart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingcart.mapper.toDomain
 import woowacourse.shopping.data.shoppingcart.mapper.toEntity
 import woowacourse.shopping.data.util.doAsyncCatching
