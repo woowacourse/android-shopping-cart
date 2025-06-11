@@ -2,9 +2,8 @@ package woowacourse.shopping
 
 import android.content.Context
 import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
-import woowacourse.shopping.data.recentgoods.database.RecentGoodsDatabase
 import woowacourse.shopping.data.recentgoods.repository.RecentGoodsRepositoryImpl
-import woowacourse.shopping.data.shoppingcart.database.ShoppingCartDatabase
+import woowacourse.shopping.data.shoppingcart.database.ShoppingDatabase
 import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.RecentGoodsRepository
@@ -19,10 +18,9 @@ object RepositoryProvider {
         private set
 
     fun init(context: Context) {
-        val shoppingCartDatabase = ShoppingCartDatabase.getDatabase(context)
-        val recentGoodsDatabase = RecentGoodsDatabase.getDatabase(context)
+        val shoppingDatabase = ShoppingDatabase.getDatabase(context)
         goodsRepository = GoodsRepositoryImpl()
-        shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingCartDatabase.shoppingCartDao())
-        recentGoodsRepository = RecentGoodsRepositoryImpl(recentGoodsDatabase.recentGoodsDao())
+        shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingDatabase.shoppingCartDao())
+        recentGoodsRepository = RecentGoodsRepositoryImpl(shoppingDatabase.recentGoodsDao())
     }
 }
