@@ -95,7 +95,7 @@ class ShoppingCartRepositoryImpl(
     override fun getTotalQuantity(onResult: (Result<Int>) -> Unit) {
         doAsyncCatching(
             block = {
-                dao.getAll().count()
+                dao.getAll().sumOf { it.quantity }
             },
             onResult = onResult,
         )
