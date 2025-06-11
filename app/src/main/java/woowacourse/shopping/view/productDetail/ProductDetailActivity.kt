@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,18 +33,18 @@ class ProductDetailActivity :
             insets
         }
 
-        initViewModel()
+        val product: Product =
+            intent.getProductExtra() ?: run {
+                showToast(R.string.product_not_provided_error_message)
+                return finish()
+            }
+        initViewModel(product)
         bindViewModel()
         handleEvents()
     }
 
-    private fun initViewModel() {
-        val product =
-            intent.getProductExtra() ?: run {
-                showToast(getString(R.string.product_not_provided_error_message))
-                return finish()
-            }
-        viewModel.updateProduct(product)
+    private fun initViewModel(product: Product) {
+        viewModel.loadProduct(product)
     }
 
     private fun Intent.getProductExtra(): Product? =
@@ -61,27 +61,49 @@ class ProductDetailActivity :
     }
 
     private fun handleEvents() {
-        viewModel.event.observe(this) { event: ProductDetailViewModel.Event ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ProductDetailViewModel.Event.ADD_SHOPPING_CART_SUCCESS ->
-                        R.string.product_detail_add_shopping_cart_success_message
-
-                    ProductDetailViewModel.Event.ADD_SHOPPING_CART_FAILURE ->
-                        R.string.product_detail_add_shopping_cart_error_message
+        viewModel.event.observe(this) { event: ProductDetailEvent ->
+            when (event) {
+                ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> {
+                    showToast(R.string.product_detail_add_shopping_cart_success_message)
+                    viewModel.recordViewedProduct()
+                    finish()
                 }
 
-            showToast(getString(messageResourceId))
+                ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.product_detail_add_shopping_cart_error_message)
+            }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            viewModel.recordViewedProduct()
+            finish()
         }
     }
 
     override fun onClose() {
+        setResult(RESULT_OK)
+        viewModel.recordViewedProduct()
         finish()
     }
 
     override fun onAddToShoppingCart() {
         viewModel.addToShoppingCart()
+    }
+
+    override fun onPlusProductQuantity() {
+        viewModel.plusProductQuantity()
+    }
+
+    override fun onMinusProductQuantity() {
+        viewModel.minusProductQuantity()
+    }
+
+    override fun onSelectLatestViewedProduct() {
+        val intent =
+            newIntent(this, viewModel.latestViewedProduct.value ?: return).apply {
+                flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+            }
+        startActivity(intent)
     }
 
     companion object {

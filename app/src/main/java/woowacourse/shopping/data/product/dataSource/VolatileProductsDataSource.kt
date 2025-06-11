@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.product.storage
+package woowacourse.shopping.data.product.dataSource
 
 import woowacourse.shopping.data.product.entity.ProductEntity
 
-object VolatileProductsStorage : ProductsStorage {
+object VolatileProductsDataSource : ProductsDataSource {
     private val products: List<ProductEntity> =
         listOf(
             ProductEntity(id = 1, name = "럭키", price = 4000),
@@ -33,4 +33,6 @@ object VolatileProductsStorage : ProductsStorage {
         )
 
     override fun load(): List<ProductEntity> = products
+
+    override fun getById(id: Long): ProductEntity? = products.firstOrNull { it.id == id }
 }

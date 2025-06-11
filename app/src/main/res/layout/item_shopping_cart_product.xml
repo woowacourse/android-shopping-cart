@@ -6,16 +6,12 @@
     <data>
 
         <variable
-            name="imageUrl"
-            type="String" />
+            name="productItem"
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
-
-        <variable
-            name="onRemoveProduct"
-            type="kotlin.jvm.functions.Function1" />
+            name="shoppingCartItemActionListener"
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartItemActionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +28,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{productItem.cartItem.name}"
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -45,7 +41,7 @@
             android:id="@+id/shoppingCartProductDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> onRemoveProduct.invoke(product)}"
+            android:onClick="@{() -> shoppingCartItemActionListener.onRemoveProduct(productItem)}"
             android:padding="16dp"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductName"
@@ -59,23 +55,86 @@
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
-            app:imageUrl="@{imageUrl}"
+            app:imageUrl="@{productItem.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/shoppingCartProductName"
             app:layout_constraintTop_toBottomOf="@id/shoppingCartProductName"
             tools:src="@drawable/product_image_example" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/shoppingCartProductQuantityStepper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_product_quantity_selector"
+            app:layout_constraintBottom_toTopOf="@id/shoppingCartProductPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/shoppingCartProductImage">
+
+            <TextView
+                android:id="@+id/shoppingCartProductQuantityMinusButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:onClick="@{() -> shoppingCartItemActionListener.onMinusProductQuantity(productItem)}"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="@string/product_quantity_minus"
+                android:textColor="@color/gray_5"
+                android:textSize="22sp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/shoppingCartProductQuantity"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="@{String.valueOf(productItem.quantity)}"
+                android:textColor="@color/gray_5"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductQuantityMinusButton"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/shoppingCartProductQuantityPlusButton"
+                app:layout_constraintStart_toEndOf="@id/shoppingCartProductQuantityMinusButton"
+                app:layout_constraintTop_toTopOf="@id/shoppingCartProductQuantityMinusButton"
+                app:layout_constraintVertical_chainStyle="spread"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/shoppingCartProductQuantityPlusButton"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:onClick="@{() -> shoppingCartItemActionListener.onPlusProductQuantity(productItem)}"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="@string/product_quantity_plus"
+                android:textColor="@color/gray_5"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductQuantityMinusButton"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/shoppingCartProductQuantity"
+                app:layout_constraintTop_toTopOf="@id/shoppingCartProductQuantityMinusButton" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
+            android:id="@+id/shoppingCartProductPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:gravity="end"
-            android:text="@{@string/product_price_format(product.price)}"
+            android:text="@{@string/product_price_format(productItem.cartItem.price)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/shoppingCartProductImage"
+            app:layout_constraintTop_toBottomOf="@id/shoppingCartProductQuantityStepper"
             tools:text="99,800원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

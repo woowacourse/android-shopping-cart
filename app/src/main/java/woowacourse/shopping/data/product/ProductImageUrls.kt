@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.product
 
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 
 object ProductImageUrls {
@@ -15,8 +16,6 @@ object ProductImageUrls {
             8L to "https://i.namu.wiki/i/GbfqspK0SdHUZd5sKj3z8KUn_EpcKkB0x_YTZu7eEXimuwFZFJxr5O9SUEaXwb7ryeWNsIgeXvuSVejFiVDgbw.webp",
         )
 
-    private const val DEFAULT_IMAGE_URL =
-        "https://www.nintendo.com/kr/switch/acbaa/assets/images/top/visual_logo__sp.png"
-
-    val Product.imageUrl: String get() = imageUrls[id] ?: DEFAULT_IMAGE_URL
+    val Product.imageUrl: String? get() = imageUrls[id]
+    val CartItem.imageUrl: String? get() = imageUrls[id]
 }

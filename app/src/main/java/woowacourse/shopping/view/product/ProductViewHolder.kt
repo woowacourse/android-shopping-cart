@@ -3,7 +3,6 @@ package woowacourse.shopping.view.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.product.Product
 
@@ -12,12 +11,26 @@ class ProductViewHolder(
     onSelectProduct: (Product) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onSelectProduct = onSelectProduct
+        binding.productItemActionListener =
+            object : ProductItemActionListener {
+                override fun onSelectProduct(item: ProductsItem.ProductItem) {
+                    onSelectProduct(item.product)
+                }
+
+                override fun onPlusProductQuantity(item: ProductsItem.ProductItem) {
+                    item.quantity++
+                    binding.invalidateAll()
+                }
+
+                override fun onMinusProductQuantity(item: ProductsItem.ProductItem) {
+                    item.quantity--
+                    binding.invalidateAll()
+                }
+            }
     }
 
     fun bind(item: ProductsItem.ProductItem) {
-        binding.product = item.product
-        binding.imageUrl = item.product.imageUrl
+        binding.productItem = item
     }
 
     companion object {

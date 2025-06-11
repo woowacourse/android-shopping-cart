@@ -3,6 +3,7 @@ package woowacourse.shopping.view.product
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,8 +21,14 @@ class ProductsActivity : AppCompatActivity() {
         ActivityProductsBinding.inflate(layoutInflater)
     }
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(::navigateToProductDetail, viewModel::updateProducts)
+    private val productsAdapter: ProductsAdapter by lazy {
+        ProductsAdapter(::navigateToProductDetail, viewModel::updateProducts)
+    }
+
+    private fun navigateToProductDetail(product: Product) {
+        viewModel.updateShoppingCart {
+            activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,15 +42,65 @@ class ProductsActivity : AppCompatActivity() {
         }
 
         initDataBinding()
-        handleEventsFromViewModel()
+        handleEvents()
         bindData()
+        initViews()
+    }
 
+    private fun initDataBinding() {
+        binding.adapter = productsAdapter
+        binding.onClickShoppingCartButton = ::navigateToShoppingCart
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
+
+    private fun navigateToShoppingCart() {
+        viewModel.updateShoppingCart {
+            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
+        }
+    }
+
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.loadAllProducts()
+            }
+        }
+
+    private fun handleEvents() {
+        viewModel.event.observe(this) { event: ProductsEvent ->
+            when (event) {
+                ProductsEvent.UPDATE_PRODUCT_FAILURE ->
+                    showToast(R.string.products_update_products_error_message)
+
+                ProductsEvent.UPDATE_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.products_update_shopping_cart_error_message)
+            }
+        }
+    }
+
+    private fun bindData() {
+        viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
+            productsAdapter.submitList(productsItems)
+        }
+    }
+
+    private fun initViews() {
         binding.products.layoutManager =
             GridLayoutManager(this, spanCount).apply {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int =
-                            when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                            when (
+                                ProductsItem.ItemType.from(
+                                    productsAdapter.getItemViewType(
+                                        position,
+                                    ),
+                                )
+                            ) {
+                                ProductsItem.ItemType.RECENT_VIEWED_PRODUCT -> spanCount
                                 ProductsItem.ItemType.PRODUCT -> 1
                                 ProductsItem.ItemType.MORE -> spanCount
                             }
@@ -59,34 +116,4 @@ class ProductsActivity : AppCompatActivity() {
                 2
             }
         }
-
-    private fun initDataBinding() {
-        binding.adapter = productAdapter
-        binding.onClickShoppingCartButton = ::navigateToShoppingCart
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-    }
-
-    private fun handleEventsFromViewModel() {
-        viewModel.event.observe(this) { event: ProductsViewModel.Event ->
-            when (event) {
-                ProductsViewModel.Event.UPDATE_PRODUCT_FAILURE ->
-                    showToast(getString(R.string.products_update_products_error_message))
-            }
-        }
-    }
-
-    private fun bindData() {
-        viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
-            productAdapter.submitList(productsItems)
-        }
-    }
-
-    private fun navigateToShoppingCart() {
-        startActivity(ShoppingCartActivity.newIntent(this))
-    }
-
-    private fun navigateToProductDetail(product: Product) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
-    }
 }

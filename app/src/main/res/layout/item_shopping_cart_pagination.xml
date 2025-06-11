@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="page"
-            type="int" />
+            name="paginationItem"
+            type="woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem" />
 
         <variable
             name="onShoppingCartPaginationListener"
@@ -16,14 +18,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="@{paginationItem.enabled ? View.VISIBLE : View.GONE}">
 
         <TextView
             android:id="@+id/shoppingCartPageCountMinusButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/background_shopping_cart_pagination_minus_button"
-            android:enabled="false"
+            android:enabled="@{paginationItem.previousEnabled}"
             android:gravity="center"
             android:onClick="@{() -> onShoppingCartPaginationListener.onMinusPage()}"
             android:paddingHorizontal="15dp"
@@ -41,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
-            android:text="@{String.valueOf(page)}"
+            android:text="@{String.valueOf(paginationItem.page)}"
             android:textColor="@color/gray_5"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartPageCountMinusButton"
@@ -56,6 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/background_shopping_cart_pagination_plus_button"
+            android:enabled="@{paginationItem.nextEnabled}"
             android:gravity="center"
             android:onClick="@{() -> onShoppingCartPaginationListener.onPlusPage()}"
             android:paddingHorizontal="15dp"

@@ -3,9 +3,9 @@ package woowacourse.shopping.view.shoppingCart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,7 +41,9 @@ class ShoppingCartActivity :
 
     private fun initDataBinding() {
         binding.adapter = shoppingCartProductAdapter
-        binding.onClickBackButton = ::finish
+        binding.onClickBackButton = {
+            viewModel.updateShoppingCart()
+        }
     }
 
     private fun bindData() {
@@ -52,17 +54,25 @@ class ShoppingCartActivity :
 
     private fun handleEvents() {
         viewModel.event.observe(this) { event: ShoppingCartEvent ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE ->
-                        R.string.shopping_cart_update_shopping_cart_error_message
+            when (event) {
+                ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.shopping_cart_load_shopping_cart_error_message)
 
-                    ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE ->
-                        R.string.shopping_cart_remove_shopping_cart_product_error_message
+                ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE ->
+                    showToast(R.string.shopping_cart_remove_shopping_cart_product_error_message)
+
+                ShoppingCartEvent.UPDATE_SHOPPING_CART_PRODUCT_SUCCESS -> {
+                    setResult(RESULT_OK)
+                    finish()
                 }
 
-            showToast(getString(messageResourceId))
+                ShoppingCartEvent.UPDATE_SHOPPING_CART_PRODUCT_FAILURE ->
+                    showToast(R.string.shopping_cart_update_shopping_cart_error_message)
+            }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            viewModel.updateShoppingCart()
         }
     }
 

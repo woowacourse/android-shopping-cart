@@ -3,28 +3,45 @@ package woowacourse.shopping.view.shoppingCart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
+import woowacourse.shopping.domain.product.CartItem
 
 class ShoppingCartProductViewHolder(
     private val binding: ItemShoppingCartProductBinding,
-    onRemoveProduct: (product: Product) -> Unit,
+    onRemoveProduct: (cartItem: CartItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onRemoveProduct = onRemoveProduct
+        binding.shoppingCartItemActionListener =
+            object : ShoppingCartItemActionListener {
+                override fun onRemoveProduct(item: ShoppingCartItem.ProductItem) {
+                    onRemoveProduct(item.cartItem)
+                }
+
+                override fun onPlusProductQuantity(item: ShoppingCartItem.ProductItem) {
+                    item.quantity++
+                    binding.invalidateAll()
+                }
+
+                override fun onMinusProductQuantity(item: ShoppingCartItem.ProductItem) {
+                    if (item.quantity == 1) {
+                        onRemoveProduct(item)
+                        return
+                    }
+
+                    item.quantity--
+                    binding.invalidateAll()
+                }
+            }
     }
 
-    fun bind(item: ProductItem) {
-        binding.product = item.product
-        binding.imageUrl = item.product.imageUrl
+    fun bind(item: ShoppingCartItem.ProductItem) {
+        binding.productItem = item
     }
 
     companion object {
         fun of(
             parent: ViewGroup,
-            onRemoveProduct: (Product) -> Unit,
+            onRemoveProduct: (CartItem) -> Unit,
         ): ShoppingCartProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingCartProductBinding.inflate(layoutInflater, parent, false)

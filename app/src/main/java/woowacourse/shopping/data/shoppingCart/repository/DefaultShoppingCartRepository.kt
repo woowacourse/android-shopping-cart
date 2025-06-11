@@ -1,39 +1,53 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
-import woowacourse.shopping.data.product.entity.ProductEntity
+import woowacourse.shopping.data.product.entity.CartItemEntity
+import woowacourse.shopping.data.product.entity.CartItemEntity.Companion.toEntity
 import woowacourse.shopping.data.product.entity.ProductEntity.Companion.toEntity
-import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
-import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
+import woowacourse.shopping.data.shoppingCart.storage.LocalShoppingCartDataSource
+import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartDataSource
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
-    private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
+    private val shoppingCartDataSource: ShoppingCartDataSource = LocalShoppingCartDataSource,
 ) : ShoppingCartRepository {
-    override fun load(onLoad: (Result<List<Product>>) -> Unit) {
-        thread {
-            val result = runCatching { shoppingCartStorage.load().map(ProductEntity::toDomain) }
-            onLoad(result)
-        }
+    override fun load(onLoad: (Result<List<CartItem>>) -> Unit) {
+        { shoppingCartDataSource.load().map(CartItemEntity::toDomain) }.runAsync(onLoad)
     }
 
-    override fun add(
-        product: Product,
+    override fun upsert(
+        cartItem: CartItem,
         onAdd: (Result<Unit>) -> Unit,
     ) {
-        thread {
-            val result = runCatching { shoppingCartStorage.add(product.toEntity()) }
-            onAdd(result)
-        }
+        { shoppingCartDataSource.upsert(cartItem.toEntity()) }.runAsync(onAdd)
     }
 
     override fun remove(
-        product: Product,
+        cartItem: CartItem,
         onRemove: (Result<Unit>) -> Unit,
     ) {
+        { shoppingCartDataSource.remove(cartItem.toEntity()) }.runAsync(onRemove)
+    }
+
+    override fun update(
+        cartItems: List<CartItem>,
+        onUpdate: (Result<Unit>) -> Unit,
+    ) {
+        { shoppingCartDataSource.update(cartItems.map { it.toEntity() }) }.runAsync(onUpdate)
+    }
+
+    override fun quantityOf(
+        product: Product,
+        onResult: (Result<Int>) -> Unit,
+    ) {
+        { shoppingCartDataSource.quantityOf(product.toEntity().id) }.runAsync(onResult)
+    }
+
+    private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
         thread {
-            val result = runCatching { shoppingCartStorage.remove(product.toEntity()) }
-            onRemove(result)
+            val result = runCatching(this)
+            onResult(result)
         }
     }
 }
