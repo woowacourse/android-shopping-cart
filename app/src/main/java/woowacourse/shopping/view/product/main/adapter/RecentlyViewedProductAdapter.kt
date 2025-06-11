@@ -8,24 +8,24 @@ import woowacourse.shopping.domain.Product
 
 class RecentlyViewedProductAdapter(
     private val navigateToProductDetail: (Product) -> Unit,
-) : RecyclerView.Adapter<ViewHolder>() {
+) : RecyclerView.Adapter<RecentlyViewedProductViewHolder>() {
     private var products: List<Product> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewHolder {
+    ): RecentlyViewedProductViewHolder {
         val binding =
             ItemRecentlyViewProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
             )
-        return ViewHolder(binding, navigateToProductDetail)
+        return RecentlyViewedProductViewHolder(binding, navigateToProductDetail)
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: RecentlyViewedProductViewHolder,
         position: Int,
     ) {
         holder.bind(products[position])
