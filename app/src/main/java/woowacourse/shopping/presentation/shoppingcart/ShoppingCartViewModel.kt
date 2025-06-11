@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.util.MutableSingleLiveData

@@ -4,7 +4,7 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingcart.mapper.toDomain
 import woowacourse.shopping.data.shoppingcart.mapper.toEntity
 import woowacourse.shopping.data.util.doAsyncCatching
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class ShoppingCartRepositoryImpl(

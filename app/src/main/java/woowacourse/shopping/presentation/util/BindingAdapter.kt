@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.goods.Goods
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.presentation.goods.list.GoodsAdapter
 import woowacourse.shopping.presentation.goods.list.RecentGoodsAdapter
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartAdapter

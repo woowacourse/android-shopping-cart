@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.shoppingcart
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.presentation.util.QuantityClickListener
 
 class ShoppingCartAdapter(

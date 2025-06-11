@@ -1,6 +1,6 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class FakeShoppingCartRepository : ShoppingCartRepository {

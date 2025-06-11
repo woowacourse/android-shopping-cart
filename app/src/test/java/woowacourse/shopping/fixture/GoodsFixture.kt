@@ -1,7 +1,7 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.domain.model.goods.Goods
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 
 const val NAME: String = "[병천아우내] 모듬순대"
 const val PRICE: Int = 11900

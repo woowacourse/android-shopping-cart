@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.util.QuantityClickListener
 import woowacourse.shopping.presentation.util.ShoppingCartEvent

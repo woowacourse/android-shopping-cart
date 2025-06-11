@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.goods.Goods
-import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
