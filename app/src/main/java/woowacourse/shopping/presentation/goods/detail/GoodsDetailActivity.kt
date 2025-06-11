@@ -17,7 +17,9 @@ import woowacourse.shopping.presentation.util.ShoppingCartEvent
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
     private val viewModel: GoodsDetailViewModel by viewModels {
-        GoodsDetailViewModel.FACTORY
+        GoodsDetailViewModelFactory(
+            intent.getLongExtra(EXTRA_GOODS, 0L)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +28,6 @@ class GoodsDetailActivity : BaseActivity() {
         setUpBinding()
         setUpClickListener()
         observeEvent()
-        viewModel.setGoods(intent.getLongExtra(EXTRA_GOODS, 0L))
     }
 
     private fun setUpBinding() {
@@ -56,6 +57,7 @@ class GoodsDetailActivity : BaseActivity() {
                     showToast(R.string.text_save_success)
                     finish()
                 }
+
                 ShoppingCartEvent.FAILURE -> {
                     showToast(R.string.text_save_failure)
                 }

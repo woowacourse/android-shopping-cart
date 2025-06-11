@@ -3,10 +3,6 @@ package woowacourse.shopping.presentation.goods.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.goods.Goods
 import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.domain.repository.GoodsRepository
@@ -17,6 +13,7 @@ import woowacourse.shopping.presentation.util.ShoppingCartEvent
 import woowacourse.shopping.presentation.util.SingleLiveData
 
 class GoodsDetailViewModel(
+    private val goodsId: Long,
     private val goodsRepository: GoodsRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
     private val recentGoodsRepository: RecentGoodsRepository,
@@ -35,19 +32,8 @@ class GoodsDetailViewModel(
         get() = _shoppingCartEvent
 
     init {
-        recentGoodsRepository.getLatestRecentGoodsId { result ->
-            result
-                .onSuccess { id ->
-                    if (id != null) {
-                        _recentGoods.postValue(goodsRepository.getGoodsById(id))
-                    }
-                }
-        }
-    }
-
-    fun setGoods(id: Long) {
-        _item.value = ShoppingCartItem(goodsRepository.getGoodsById(id))
-        addRecentGoods()
+        loadGoodsDetail()
+        loadRecentGoods()
     }
 
     fun increaseQuantity() {
@@ -72,23 +58,26 @@ class GoodsDetailViewModel(
         }
     }
 
+    private fun loadRecentGoods() {
+        recentGoodsRepository.getLatestRecentGoodsId { result ->
+            result
+                .onSuccess { id ->
+                    if (id != null) {
+                        _recentGoods.postValue(goodsRepository.getGoodsById(id))
+                    }
+                }
+        }
+    }
+
+    private fun loadGoodsDetail() {
+        _item.value = ShoppingCartItem(goodsRepository.getGoodsById(goodsId))
+        addRecentGoods()
+    }
+
     private fun addRecentGoods() {
         val currentItem = _item.value ?: return
         val currentTime = System.currentTimeMillis()
 
         recentGoodsRepository.addRecentGoods(currentTime, currentItem.goods) {}
-    }
-
-    companion object {
-        val FACTORY: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    GoodsDetailViewModel(
-                        goodsRepository = RepositoryProvider.goodsRepository,
-                        shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
-                        recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
-                    )
-                }
-            }
     }
 }
