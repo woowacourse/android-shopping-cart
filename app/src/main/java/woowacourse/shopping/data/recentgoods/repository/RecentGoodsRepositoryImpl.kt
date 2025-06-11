@@ -3,7 +3,7 @@ package woowacourse.shopping.data.recentgoods.repository
 import woowacourse.shopping.data.recentgoods.RecentGoodsDao
 import woowacourse.shopping.data.recentgoods.mapper.toEntity
 import woowacourse.shopping.data.util.doAsyncCatching
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 import woowacourse.shopping.domain.repository.RecentGoodsRepository
 
 class RecentGoodsRepositoryImpl(

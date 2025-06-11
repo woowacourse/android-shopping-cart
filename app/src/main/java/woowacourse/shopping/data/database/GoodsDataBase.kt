@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.database
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 
 object GoodsDataBase {
     @Suppress("ktlint:standard:max-line-length")

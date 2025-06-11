@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 class FakeShoppingCartRepository : ShoppingCartRepository {
     private val items = mutableListOf(SUNDAE)
 
-    override fun upsertItem(
+    override fun saveItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {
@@ -19,7 +19,7 @@ class FakeShoppingCartRepository : ShoppingCartRepository {
         onResult(Result.success(Unit))
     }
 
-    override fun addOrIncreaseItem(
+    override fun addOrIncreaseQuantity(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {

@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain.model
 
+import woowacourse.shopping.domain.model.goods.Goods
+
 data class ShoppingCartItem(
     val goods: Goods,
     val quantity: Int = DEFAULT_QUANTITY,

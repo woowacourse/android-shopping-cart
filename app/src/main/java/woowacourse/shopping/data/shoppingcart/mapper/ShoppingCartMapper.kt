@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.shoppingcart.mapper
 
 import woowacourse.shopping.data.shoppingcart.ShoppingCartItemEntity
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 import woowacourse.shopping.domain.model.ShoppingCartItem
 
 fun ShoppingCartItemEntity.toDomain(): ShoppingCartItem {

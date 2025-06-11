@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity

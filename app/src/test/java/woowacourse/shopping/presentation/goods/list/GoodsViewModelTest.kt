@@ -2,38 +2,47 @@ package woowacourse.shopping.presentation.goods.list
 
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.RecentGoodsRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.fixture.FakeGoodsRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.goods.FakeGoodsRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsViewModelTest {
     private lateinit var goodsViewModel: GoodsViewModel
-    private lateinit var repository: FakeGoodsRepository
+    private lateinit var fakeGoodsRepository: GoodsRepository
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var recentGoodsRepository: RecentGoodsRepository
 
     @BeforeEach
     fun setUp() {
-        repository = FakeGoodsRepository()
-        goodsViewModel = GoodsViewModel(repository)
+        fakeGoodsRepository = FakeGoodsRepository()
+        shoppingCartRepository = mockk(relaxed = true)
+        recentGoodsRepository = mockk(relaxed = true)
+        goodsViewModel = GoodsViewModel(fakeGoodsRepository, shoppingCartRepository, recentGoodsRepository)
+        goodsViewModel.initGoods()
     }
 
     @Test
     fun `상품 목록을 20개씩 가져온다`() {
         // then
-        goodsViewModel.goodsUiModels.getOrAwaitValue().size shouldBe 20
+        goodsViewModel.items.getOrAwaitValue().size shouldBe 20
     }
 
     @Test
     fun `상품 목록을 추가한다`() {
         // given
-        val before = goodsViewModel.goodsUiModels.getOrAwaitValue().size
+        val before = goodsViewModel.items.getOrAwaitValue().size
 
         // when
         goodsViewModel.addGoods()
-        val actual = goodsViewModel.goodsUiModels.getOrAwaitValue().size
+        val actual = goodsViewModel.items.getOrAwaitValue().size
 
         // then
         actual shouldBeGreaterThan before
@@ -52,7 +61,7 @@ class GoodsViewModelTest {
     fun `데이터가 존재하지 않을 경우 데이터를 추가할 수 없다`() {
         // given
         val emptyRepository = FakeGoodsRepository(emptyList())
-        val emptyViewModel = GoodsViewModel(emptyRepository)
+        val emptyViewModel = GoodsViewModel(emptyRepository, shoppingCartRepository, recentGoodsRepository)
 
         // when
         emptyViewModel.determineLoadMoreVisibility(false)

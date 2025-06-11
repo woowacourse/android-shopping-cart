@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 
 class RecentGoodsAdapter(
     private val clickListener: GoodsClickListener,

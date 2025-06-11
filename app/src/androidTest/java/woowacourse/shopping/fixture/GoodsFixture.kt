@@ -1,6 +1,6 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 
 const val NAME: String = "[병천아우내] 모듬순대"
 const val PRICE: Int = 11900

@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.goods.Goods
 
 interface RecentGoodsRepository {
     fun addRecentGoods(
