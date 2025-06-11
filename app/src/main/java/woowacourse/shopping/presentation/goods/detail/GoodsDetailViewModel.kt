@@ -29,19 +29,19 @@ class GoodsDetailViewModel(
     val recentGoods: LiveData<Goods>
         get() = _recentGoods
 
-    private val _shoppingCartEvent: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
+    private val _shoppingCartEvent: MutableSingleLiveData<ShoppingCartEvent> =
+        MutableSingleLiveData()
     val shoppingCartEvent: SingleLiveData<ShoppingCartEvent>
         get() = _shoppingCartEvent
 
     init {
         recentGoodsRepository.getLatestRecentGoodsId { result ->
-            result.onSuccess { id ->
-                if (id == null) {
-                    _recentGoods.postValue(null)
-                } else {
-                    _recentGoods.postValue(goodsRepository.getGoodsById(id))
+            result
+                .onSuccess { id ->
+                    if (id != null) {
+                        _recentGoods.postValue(goodsRepository.getGoodsById(id))
+                    }
                 }
-            }
         }
     }
 
@@ -62,11 +62,13 @@ class GoodsDetailViewModel(
         val currentItem = _item.value ?: return
 
         shoppingCartRepository.addOrIncreaseQuantity(currentItem) { result ->
-            result.onSuccess {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
+            result
+                .onSuccess {
+                    _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
+                }
+                .onFailure {
+                    _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+                }
         }
     }
 
