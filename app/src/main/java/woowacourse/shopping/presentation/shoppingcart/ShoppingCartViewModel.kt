@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.shoppingcart
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +39,17 @@ class ShoppingCartViewModel(
         MutableSingleLiveData()
     val shoppingCartEvent: SingleLiveData<ShoppingCartEvent>
         get() = _shoppingCartEvent
+
+    val showPageController = MediatorLiveData<Boolean>().apply {
+        fun updateVisibility() {
+            val currentPage = _page.value ?: DEFAULT_PAGE_VALUE
+            val hasNext = _hasNextPage.value ?: false
+            value = hasNext || currentPage != DEFAULT_PAGE_VALUE
+        }
+
+        addSource(_page) { updateVisibility() }
+        addSource(_hasNextPage) { updateVisibility() }
+    }
 
     init {
         updateState()
