@@ -44,8 +44,8 @@ class ProductDetailActivity : AppCompatActivity() {
                 this,
                 ProductDetailViewModel.provideFactory(product),
             )[ProductDetailViewModel::class.java]
-        binding.vm = viewModel
-        binding.lastViewedProduct.vm = viewModel
+        binding.viewModel = viewModel
+        binding.lastViewedProduct.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.onRecentProductEventListener =
             OnRecentProductEventListener { product ->

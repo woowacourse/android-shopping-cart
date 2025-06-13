@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="vm"
+            name="viewModel"
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
 
     </data>
@@ -17,7 +17,7 @@
         android:background="@drawable/style_product_edge"
         android:paddingHorizontal="12dp"
         android:paddingVertical="18dp"
-        app:visibility = "@{vm.recentProduct != null}">
+        app:visibility = "@{viewModel.recentProduct != null}">
         
         <TextView
             android:id="@+id/tv_last_viewed_product"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="@{vm.recentProduct.name}"
+            android:text="@{viewModel.recentProduct.name}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
