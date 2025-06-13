@@ -5,12 +5,12 @@ import woowacourse.shopping.domain.Product
 interface RecentlyProductsRepository {
     fun insert(
         product: Product,
-        callback: (() -> Unit)?,
+        onLoad: (Result<Unit>) -> Unit,
     )
 
-    fun getFirst(callback: (Long?) -> Unit)
+    fun getFirst(onLoad: (Result<Long?>) -> Unit)
 
-    fun getAll(callback: (List<Long>?) -> Unit)
+    fun getAll(onLoad: (Result<List<Long>?>) -> Unit)
 
-    fun deleteMostRecent()
+    fun deleteMostRecent(onLoad: (Result<Unit>) -> Unit)
 }

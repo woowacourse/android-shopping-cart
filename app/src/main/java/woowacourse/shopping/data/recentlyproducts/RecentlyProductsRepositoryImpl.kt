@@ -9,33 +9,36 @@ class RecentlyProductsRepositoryImpl(
 ) : RecentlyProductsRepository {
     override fun insert(
         product: Product,
-        callback: (() -> Unit)?,
+        onLoad: (Result<Unit>) -> Unit,
     ) {
-        val entity = product.toRecentEntity()
-        thread {
+        {
+            val entity = product.toRecentEntity()
             dao.insert(entity)
-            callback?.invoke()
-        }.join()
+        }.runAsync(onLoad)
     }
 
-    override fun getFirst(callback: (Long?) -> Unit) {
-        thread {
-            val recentProduct = dao.getRecent()
-            callback(recentProduct)
-        }
+    override fun getFirst(onLoad: (Result<Long?>) -> Unit) {
+        {
+            dao.getRecent()
+        }.runAsync(onLoad)
     }
 
-    override fun getAll(callback: (List<Long>?) -> Unit) {
-        var recentProducts: List<Long>? = null
-        thread {
-            recentProducts = dao.getAll()
-            callback(recentProducts)
-        }
+    override fun getAll(onLoad: (Result<List<Long>?>) -> Unit) {
+        {
+            dao.getAll()
+        }.runAsync(onLoad)
     }
 
-    override fun deleteMostRecent() {
-        thread {
+    override fun deleteMostRecent(onLoad: (Result<Unit>) -> Unit) {
+        {
             dao.deleteMostRecent()
+        }.runAsync(onLoad)
+    }
+
+    private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
+        thread {
+            val result = runCatching(this)
+            onResult(result)
         }
     }
 }
