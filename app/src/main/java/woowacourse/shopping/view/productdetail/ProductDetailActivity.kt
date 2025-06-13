@@ -9,15 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraCompat
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.viewmodel.productdetail.ProductDetailViewModel
+import woowacourse.shopping.viewmodel.productdetail.ProductDetailViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val viewModel: ProductDetailViewModel by viewModels {
+        val shoppingCartRepository = (application as App).shoppingCartRepository
+        ProductDetailViewModelFactory(shoppingCartRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

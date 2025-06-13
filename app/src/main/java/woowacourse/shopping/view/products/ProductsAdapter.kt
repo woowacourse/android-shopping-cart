@@ -38,8 +38,7 @@ class ProductsAdapter(
         when (holder) {
             is ProductViewHolder -> {
                 val productType = getItem(position) as ProductListViewType.ProductType
-                val quantity =
-                    holder.bind(productType, quantity)
+                holder.bind(productType)
             }
         }
     }

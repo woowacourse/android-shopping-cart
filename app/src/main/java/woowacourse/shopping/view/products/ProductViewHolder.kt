@@ -14,27 +14,24 @@ class ProductViewHolder(
         binding.productClickListener = productClickListener
 
         binding.btnFloatingPlus.setOnClickListener {
-            val product = binding.product ?: return@setOnClickListener
-            productClickListener.onAddClick(product, 1)
+            val item = binding.item ?: return@setOnClickListener
+            productClickListener.onAddClick(item.product, 1)
         }
 
         binding.quantityControl.tvMinus.setOnClickListener {
-            val product = binding.product ?: return@setOnClickListener
-            productClickListener.onAddClick(product, -1)
+            val item = binding.item ?: return@setOnClickListener
+            productClickListener.onAddClick(item.product, -1)
         }
 
         binding.quantityControl.tvPlus.setOnClickListener {
-            val product = binding.product ?: return@setOnClickListener
-            productClickListener.onAddClick(product, 1)
+            val item = binding.item ?: return@setOnClickListener
+            productClickListener.onAddClick(item.product, 1)
         }
     }
 
-    fun bind(
-        item: ProductListViewType.ProductType,
-        quantity: Int,
-    ) {
-        binding.product = item.product
-        updateQuantityUI(quantity)
+    fun bind(item: ProductListViewType.ProductType) {
+        binding.item = item
+        updateQuantityUI(item.quantity)
     }
 
     private fun updateQuantityUI(quantity: Int) {
@@ -44,7 +41,7 @@ class ProductViewHolder(
         } else {
             binding.btnFloatingPlus.visibility = View.GONE
             binding.quantityControl.root.visibility = View.VISIBLE
-            binding.quantityControl.tvQuantity.text = quantity.toString()
+            // binding.quantityControl.tvQuantity.text = quantity.toString()
         }
     }
 

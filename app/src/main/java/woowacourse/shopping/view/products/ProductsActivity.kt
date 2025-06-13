@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.model.products.CartState
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
@@ -71,7 +70,7 @@ class ProductsActivity : AppCompatActivity() {
                             cartViewModel.updateQuantity(product.id, quantity)
                         } else {
                             val currentQuantity = cartViewModel.updateQuantity(product.id, quantity)
-                            cartViewModel.updateQuantity(product.id, currentQuantity - 1)
+                            // cartViewModel.updateQuantity(product.id, currentQuantity - 1)
                         }
                     }
                 },
@@ -85,20 +84,20 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun observeViewModels() {
         productsViewModel.productsInShop.observe(this) { list ->
-            adapter.updateProductsView(list)
+            // adapter.updateProductsView(list)
         }
 
-        cartViewModel.cartState.observe(this) { cartState ->
-            adapter.updateCartState(cartState)
-
-            val itemCount = cartState?.items?.size ?: 0
-            binding.cartItemCount = itemCount
-        }
+//        cartViewModel.cartState.observe(this) { cartState ->
+//            adapter.updateCartState(cartState)
+//
+//            val itemCount = cartState?.items?.size ?: 0
+//            binding.cartItemCount = itemCount
+//        }
     }
 
     private fun refreshQuantities() {
-        val currentCartState = cartViewModel.cartState.value ?: CartState()
-        adapter.updateCartState(currentCartState)
+//        val currentCartState = cartViewModel.cartState.value ?: CartState()
+//        adapter.updateCartState(currentCartState)
     }
 
     private fun setupRecyclerView() {
