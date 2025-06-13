@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem" />
+
+        <variable
+            name="quantityClickListener"
+            type="woowacourse.shopping.presentation.util.QuantityClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_quantity_controller">
+
+        <TextView
+            android:id="@+id/tv_decrease"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:onClick="@{() -> quantityClickListener.decrease(item)}"
+            android:text="@string/sign_decrease"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="−" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@{String.valueOf(item.quantity)}"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_decrease"
+            app:layout_constraintStart_toEndOf="@id/tv_decrease"
+            app:layout_constraintTop_toTopOf="@id/tv_decrease"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/tv_increase"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:onClick="@{() -> quantityClickListener.increase(item)}"
+            android:includeFontPadding="false"
+            android:text="@string/sign_increase"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_quantity"
+            app:layout_constraintStart_toEndOf="@id/tv_quantity"
+            app:layout_constraintTop_toTopOf="@id/tv_quantity"
+            tools:text="+" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

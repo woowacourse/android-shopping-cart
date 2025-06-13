@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.fixture.createGoods
-import woowacourse.shopping.presentation.model.toUiModel
 
 class GoodsDetailActivityTest {
     private lateinit var scenario: ActivityScenario<GoodsDetailActivity>
@@ -24,7 +23,7 @@ class GoodsDetailActivityTest {
                 ApplicationProvider.getApplicationContext(),
                 GoodsDetailActivity::class.java,
             ).apply {
-                putExtra("goods", createGoods().toUiModel())
+                putExtra("goods", createGoods().id)
             }
 
         scenario = ActivityScenario.launch(intent)

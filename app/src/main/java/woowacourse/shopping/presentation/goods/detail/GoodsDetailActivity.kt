@@ -8,18 +8,17 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.util.getParcelableCompat
+import woowacourse.shopping.presentation.util.QuantityClickListener
+import woowacourse.shopping.presentation.util.ShoppingCartEvent
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
     private val viewModel: GoodsDetailViewModel by viewModels {
         GoodsDetailViewModelFactory(
-            intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS),
-            ShoppingCartRepositoryImpl(),
+            intent.getLongExtra(EXTRA_GOODS, 0L)
         )
     }
 
@@ -27,7 +26,8 @@ class GoodsDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
-        setUpGoodsSaveToast()
+        setUpClickListener()
+        observeEvent()
     }
 
     private fun setUpBinding() {
@@ -37,10 +37,36 @@ class GoodsDetailActivity : BaseActivity() {
         }
     }
 
-    private fun setUpGoodsSaveToast() {
-        viewModel.onGoodsAdded.observe(this) {
-            Toast.makeText(this, getString(R.string.text_save_goods), Toast.LENGTH_SHORT).show()
+    private fun setUpClickListener() {
+        binding.clickListener =
+            object : QuantityClickListener {
+                override fun increase(item: ShoppingCartItem) {
+                    viewModel.increaseQuantity()
+                }
+
+                override fun decrease(item: ShoppingCartItem) {
+                    viewModel.decreaseQuantity()
+                }
+            }
+    }
+
+    private fun observeEvent() {
+        viewModel.shoppingCartEvent.observe(this) { event ->
+            when (event) {
+                ShoppingCartEvent.SUCCESS -> {
+                    showToast(R.string.text_save_success)
+                    finish()
+                }
+
+                ShoppingCartEvent.FAILURE -> {
+                    showToast(R.string.text_save_failure)
+                }
+            }
         }
+    }
+
+    private fun showToast(stringRes: Int) {
+        Toast.makeText(this, getString(stringRes), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,10 +90,10 @@ class GoodsDetailActivity : BaseActivity() {
 
         fun newIntent(
             context: Context,
-            goodsUiModel: GoodsUiModel,
+            id: Long,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
-                putExtra(EXTRA_GOODS, goodsUiModel)
+                putExtra(EXTRA_GOODS, id)
             }
     }
 }

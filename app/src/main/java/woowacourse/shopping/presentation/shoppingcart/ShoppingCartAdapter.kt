@@ -3,18 +3,20 @@ package woowacourse.shopping.presentation.shoppingcart
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem
+import woowacourse.shopping.presentation.util.QuantityClickListener
 
 class ShoppingCartAdapter(
+    private val quantityClickListener: QuantityClickListener,
     private val clickListener: ShoppingCartClickListener,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private var items: List<GoodsUiModel> = emptyList()
+    private var items: List<ShoppingCartItem> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ShoppingCartViewHolder {
-        return ShoppingCartViewHolder(parent, clickListener)
+        return ShoppingCartViewHolder(parent, quantityClickListener, clickListener)
     }
 
     override fun getItemCount(): Int = items.size
@@ -27,8 +29,8 @@ class ShoppingCartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(goodsUiModels: List<GoodsUiModel>) {
-        items = goodsUiModels
+    fun updateItems(items: List<ShoppingCartItem>) {
+        this.items = items
         notifyDataSetChanged()
     }
 }

@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="goodsUiModel"
-            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
+            name="item"
+            type="woowacourse.shopping.domain.model.shoppingcart.ShoppingCartItem" />
+
+        <variable
+            name="quantityClickListener"
+            type="woowacourse.shopping.presentation.util.QuantityClickListener" />
 
         <variable
             name="goodsClickListener"
@@ -17,7 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> goodsClickListener.onGoodsClick(goodsUiModel)}"
+        android:onClick="@{() -> goodsClickListener.onGoodsClick(item.goods)}"
         android:padding="6dp">
 
         <ImageView
@@ -26,11 +32,35 @@
             android:layout_height="0dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
-            app:goodsImage="@{goodsUiModel.imageUrl}"
+            app:goodsImage="@{item.goods.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/view_quantity_controller"
+            layout="@layout/view_quantity_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="@{item.quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:item="@{item}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods"
+            app:layout_constraintStart_toStartOf="@id/iv_goods"
+            app:quantityClickListener="@{quantityClickListener}" />
+
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="@{() -> quantityClickListener.increase(item)}"
+            android:src="@drawable/btn_plus"
+            android:visibility="@{item.quantity == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods" />
 
         <TextView
             android:id="@+id/tv_goods_name"
@@ -40,10 +70,10 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{goodsUiModel.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:goodsName="@{item.goods}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_goods"
             tools:text="PET보틀-정사각형뭐시기뭐시기" />
@@ -53,9 +83,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{goodsUiModel.price}"
+            app:goodsPrice="@{item.goods}"
             app:layout_constraintStart_toStartOf="@id/tv_goods_name"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name"
             tools:text="10,000원" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain.model
+package woowacourse.shopping.domain.model.goods
 
 @JvmInline
 value class Price(val value: Int) {
