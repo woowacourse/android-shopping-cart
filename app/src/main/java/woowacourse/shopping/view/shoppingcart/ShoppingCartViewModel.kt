@@ -8,6 +8,8 @@ import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.utils.MutableSingleLiveData
+import woowacourse.shopping.utils.SingleLiveData
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -24,6 +26,9 @@ class ShoppingCartViewModel(
 
     private var _hasNext = MutableLiveData<Boolean>()
     val hasNext: LiveData<Boolean> = _hasNext
+
+    private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
     init {
         loadProducts()
@@ -42,24 +47,28 @@ class ShoppingCartViewModel(
                     cached(shoppingProducts)
                     checkHasNext()
                 }.onFailure {
+                    _event.postValue(ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE)
                 }
         }
     }
 
     fun addToShoppingCart(productId: Long) {
         shoppingCartRepository.increaseProduct(productId) { result: Result<Unit> ->
-            result.onSuccess {
-                shoppingProducts =
-                    shoppingProducts.map {
-                        if (it.productId == productId) it.copy(quantity = it.quantity?.plus(1)) else it
-                    }
-                cached(shoppingProducts)
-                checkCacheHasNext()
-            }
+            result
+                .onSuccess {
+                    shoppingProducts =
+                        shoppingProducts.map {
+                            if (it.productId == productId) it.copy(quantity = it.quantity?.plus(1)) else it
+                        }
+                    cached(shoppingProducts)
+                    checkCacheHasNext()
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.PLUS_CART_ITEM_QUANTITY_FAILURE)
+                }
         }
     }
 
-    fun removeToShoppingCart(productId: Long) {
+    fun removeFromShoppingCart(productId: Long) {
         shoppingCartRepository.decreaseProduct(productId) { result: Result<Unit> ->
             result
                 .onSuccess {
@@ -74,6 +83,7 @@ class ShoppingCartViewModel(
                     cached(shoppingProducts)
                     checkCacheHasNext()
                 }.onFailure {
+                    _event.postValue(ShoppingCartEvent.MINUS_CART_ITEM_QUANTITY_FAILURE)
                 }
         }
     }
@@ -101,6 +111,7 @@ class ShoppingCartViewModel(
                     cached(updatedShoppingProducts)
                     checkHasNext()
                 }.onFailure {
+                    _event.postValue(ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE)
                 }
         }
     }
@@ -119,6 +130,7 @@ class ShoppingCartViewModel(
                     validateCurrentPage()
                     checkCacheHasNext()
                 }.onFailure {
+                    _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
                 }
         }
     }
@@ -131,6 +143,7 @@ class ShoppingCartViewModel(
 
                     _hasNext.postValue(remainingItems > 0)
                 }.onFailure {
+                    _event.postValue(ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE)
                 }
         }
     }

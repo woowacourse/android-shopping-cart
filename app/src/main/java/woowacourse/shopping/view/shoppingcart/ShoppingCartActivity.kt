@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.utils.showToast
 import woowacourse.shopping.view.DefaultQuantityControlListener
 
 class ShoppingCartActivity : AppCompatActivity() {
@@ -43,7 +45,7 @@ class ShoppingCartActivity : AppCompatActivity() {
             SelectedProductAdapter(
                 DefaultQuantityControlListener(
                     onPlus = viewModel::addToShoppingCart,
-                    onMinus = viewModel::removeToShoppingCart,
+                    onMinus = viewModel::removeFromShoppingCart,
                 ),
             ) { product ->
                 viewModel.deleteProduct(product)
@@ -63,6 +65,22 @@ class ShoppingCartActivity : AppCompatActivity() {
 
         viewModel.hasNext.observe(this) { value ->
             binding.btnRight.isEnabled = value
+        }
+
+        viewModel.event.observe(this) { event: ShoppingCartEvent ->
+            when (event) {
+                ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.shopping_cart_load_shopping_cart_error_message)
+
+                ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE ->
+                    showToast(R.string.shopping_cart_remove_shopping_cart_product_error_message)
+
+                ShoppingCartEvent.PLUS_CART_ITEM_QUANTITY_FAILURE ->
+                    showToast(R.string.shopping_cart_update_shopping_cart_quantity_error_message)
+
+                ShoppingCartEvent.MINUS_CART_ITEM_QUANTITY_FAILURE ->
+                    showToast(R.string.shopping_cart_update_shopping_cart_quantity_error_message)
+            }
         }
     }
 

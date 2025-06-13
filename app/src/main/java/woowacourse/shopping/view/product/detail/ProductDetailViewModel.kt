@@ -9,6 +9,7 @@ import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.data.recentlyproducts.RecentlyProductsRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.SingleLiveData
 
 class ProductDetailViewModel(
@@ -16,11 +17,8 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val recentlyProductsRepository: RecentlyProductsRepository,
 ) : ViewModel() {
-    private val _navigateEvent = SingleLiveData<Unit>()
-    val navigateEvent: SingleLiveData<Unit> = _navigateEvent
-
-    private val _errorEvent = SingleLiveData<Unit>()
-    val errorEvent: SingleLiveData<Unit> = _errorEvent
+    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     private val _quantity = MutableLiveData(0)
     val quantity: LiveData<Int> = _quantity
@@ -32,9 +30,9 @@ class ProductDetailViewModel(
         shoppingCartRepository.insert(product.id, _quantity.value ?: 0) { result: Result<Unit> ->
             result
                 .onSuccess {
-                    _navigateEvent.postValue(Unit)
+                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
                 }.onFailure {
-                    _errorEvent.postValue(Unit)
+                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 }
         }
     }
@@ -53,16 +51,14 @@ class ProductDetailViewModel(
                 .onSuccess {
                     _recentProduct.postValue(it?.toProductDomain())
                 }.onFailure {
+                    _event.postValue(ProductDetailEvent.RECORD_RECENT_PRODUCT_FAILURE)
                 }
         }
     }
 
     fun deleteMostRecentProduct() {
         recentlyProductsRepository.deleteMostRecent { result ->
-            result
-                .onSuccess {
-                }.onFailure {
-                }
+            result.getOrNull()
         }
     }
 

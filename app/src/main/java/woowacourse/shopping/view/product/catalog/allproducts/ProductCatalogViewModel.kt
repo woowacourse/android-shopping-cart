@@ -11,6 +11,8 @@ import woowacourse.shopping.data.recentlyproducts.RecentlyProductsRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.utils.MutableSingleLiveData
+import woowacourse.shopping.utils.SingleLiveData
 import woowacourse.shopping.view.PagedResult
 
 class ProductCatalogViewModel(
@@ -29,6 +31,9 @@ class ProductCatalogViewModel(
     private var _shoppingCartProducts: MutableLiveData<List<ShoppingProduct>> = MutableLiveData()
     val shoppingCartProducts: LiveData<List<ShoppingProduct>> = _shoppingCartProducts
 
+    private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductsEvent> get() = _event
+
     private var currentPage = 0
 
     init {
@@ -42,6 +47,7 @@ class ProductCatalogViewModel(
                     _shoppingCartProducts.postValue(shoppingProducts)
                     initLoadProducts(shoppingProducts ?: emptyList())
                 }.onFailure {
+                    _event.postValue(ProductsEvent.LOAD_SHOPPING_CART_FAILURE)
                 }
         }
     }
@@ -55,6 +61,7 @@ class ProductCatalogViewModel(
                 .onSuccess { recentlyViewedProducts ->
                     _products.postValue(recentlyViewedProducts?.map { it.toProductDomain() } ?: emptyList())
                 }.onFailure {
+                    _event.postValue(ProductsEvent.LOAD_RECENT_PRODUCTS_FAILURE)
                 }
         }
 
@@ -98,6 +105,7 @@ class ProductCatalogViewModel(
                 .onSuccess {
                     loadCarts()
                 }.onFailure {
+                    _event.postValue(ProductsEvent.PLUS_CART_ITEM_FAILURE)
                 }
         }
     }
@@ -107,7 +115,9 @@ class ProductCatalogViewModel(
             result
                 .onSuccess {
                     loadCarts()
-                }.onFailure { }
+                }.onFailure {
+                    _event.postValue(ProductsEvent.MINUS_CART_ITEM_FAILURE)
+                }
         }
     }
 

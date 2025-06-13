@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.getSerializableExtraCompat
+import woowacourse.shopping.utils.showToast
 import woowacourse.shopping.view.DefaultQuantityControlListener
 import woowacourse.shopping.view.product.catalog.recentproducts.OnRecentProductEventListener
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
@@ -20,14 +20,6 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: ProductDetailViewModel
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val dialog by lazy {
-        AlertDialog
-            .Builder(this)
-            .setTitle(getString(R.string.error))
-            .setMessage(R.string.server_error_message)
-            .setPositiveButton(R.string.confirm, null)
-            .create()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +56,20 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.navigateEvent.observe(this) {
-            val intent = ShoppingCartActivity.newIntent(this)
-            startActivity(intent)
-        }
-        viewModel.errorEvent.observe(this) {
-            dialog.show()
+        viewModel.event.observe(this) { event: ProductDetailEvent ->
+            when (event) {
+                ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> {
+                    showToast(R.string.product_detail_add_shopping_cart_success_message)
+                    val intent = ShoppingCartActivity.newIntent(this)
+                    startActivity(intent)
+                }
+
+                ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.product_detail_add_shopping_cart_error_message)
+
+                ProductDetailEvent.RECORD_RECENT_PRODUCT_FAILURE ->
+                    showToast(R.string.product_detail_record_recent_products_error_message)
+            }
         }
         viewModel.quantity.observe(this) { value ->
             binding.initQuantityControl.quantity = value
