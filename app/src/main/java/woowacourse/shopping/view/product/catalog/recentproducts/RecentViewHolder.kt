@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.Product
 
 class RecentViewHolder(
     private val binding: ItemRecentlyProductBinding,
-    private val onRecentProductEventListener: OnRecentProductEventListener,
+    onRecentProductEventListener: OnRecentProductEventListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onClick = onRecentProductEventListener
