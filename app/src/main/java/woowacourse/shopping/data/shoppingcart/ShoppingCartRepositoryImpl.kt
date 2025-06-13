@@ -7,85 +7,94 @@ import kotlin.concurrent.thread
 class ShoppingCartRepositoryImpl(
     private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
-    override fun getAll(): List<ShoppingProduct> {
-        var result = listOf<ShoppingProduct>()
-        thread {
-            result = dao.getAll().toDomain()
-        }.join()
-        return result
+    override fun getAll(onLoad: (Result<List<ShoppingProduct>?>) -> Unit) {
+        { dao.getAll().toDomain() }.runAsync(onLoad)
     }
 
-    override fun getAllSize(): Int {
-        var result = 0
-        thread {
-            result = dao.count()
-        }.join()
-        return result
+    override fun getAllSize(onLoad: (Result<Int>) -> Unit) {
+        { dao.count() }.runAsync(onLoad)
     }
 
     override fun getPaged(
         limit: Int,
         offset: Int,
-    ): List<ShoppingProduct> {
-        var items = listOf<ShoppingProduct>()
-
-        thread {
-            items = dao.getPaged(limit, offset).toDomain()
-        }.join()
-
-        return items
+        onLoad: (productId: Result<List<ShoppingProduct>>) -> Unit,
+    ) {
+        { dao.getPaged(limit, offset).toDomain() }.runAsync(onLoad)
     }
 
     override fun insert(
         productId: Long,
         quantity: Int,
+        onLoad: (Result<Unit>) -> Unit,
     ) {
-        thread {
-            dao.insert(ShoppingCartEntity(productId = productId, quantity = quantity))
-        }.join()
+        {
+            val existing = dao.getByProductId(productId)
+            if (existing != null) {
+                dao.updateQuantity(productId, quantity)
+            } else {
+                dao.insert(ShoppingCartEntity(productId = productId, quantity = quantity))
+            }
+        }.runAsync(onLoad)
     }
 
-    override fun addProduct(productId: Long) {
-        thread {
+    override fun increaseProduct(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    ) {
+        {
             val existing = dao.getByProductId(productId)
             if (existing != null) {
                 dao.increaseQuantity(productId)
             } else {
                 dao.insert(ShoppingCartEntity(productId = productId, quantity = 1))
             }
-        }.join()
+        }.runAsync(onLoad)
     }
 
-    override fun removeProduct(productId: Long) {
-        thread {
+    override fun decreaseProduct(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    ) {
+        {
             val currentQuantity = dao.getQuantity(productId)
             if (currentQuantity > 1) {
                 dao.decreaseQuantity(productId)
             } else {
                 dao.delete(productId)
             }
-        }.join()
+        }.runAsync(onLoad)
     }
 
-    override fun get(productId: Long): ShoppingProduct? {
-        var shoppingProduct: ShoppingCartEntity? = null
-        thread {
-            shoppingProduct = dao.getByProductId(productId)
-        }.join()
-        return shoppingProduct?.toDomain()
+    override fun get(
+        productId: Long,
+        onLoad: (Result<ShoppingProduct?>) -> Unit,
+    ) {
+        {
+            dao.getByProductId(productId)?.toDomain()
+        }.runAsync(onLoad)
     }
 
-    override fun getQuantity(productId: Long): Int {
-        var quantity = 0
-        thread {
-            quantity = dao.getQuantity(productId)
-        }.join()
-        return quantity
+    override fun getQuantity(
+        productId: Long,
+        onLoad: (Result<Int>) -> Unit,
+    ) {
+        {
+            dao.getQuantity(productId)
+        }.runAsync(onLoad)
     }
 
-    override fun delete(productId: Long) {
+    override fun delete(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    ) {
+        { dao.delete(productId) }.runAsync(onLoad)
+    }
+
+    private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
         thread {
-            dao.delete(productId)
-        }.join()
+            val result = runCatching(this)
+            onResult(result)
+        }
     }
 }

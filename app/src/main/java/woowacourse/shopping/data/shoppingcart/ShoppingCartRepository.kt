@@ -6,24 +6,41 @@ interface ShoppingCartRepository {
     fun insert(
         productId: Long,
         quantity: Int,
+        onLoad: (Result<Unit>) -> Unit,
     )
 
-    fun get(productId: Long): ShoppingProduct?
+    fun get(
+        productId: Long,
+        onLoad: (Result<ShoppingProduct?>) -> Unit,
+    )
 
-    fun getAll(): List<ShoppingProduct>
+    fun getAll(onLoad: (Result<List<ShoppingProduct>?>) -> Unit)
 
-    fun getAllSize(): Int
+    fun getAllSize(onLoad: (Result<Int>) -> Unit)
 
-    fun addProduct(productId: Long)
+    fun increaseProduct(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    )
 
-    fun removeProduct(productId: Long)
+    fun decreaseProduct(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    )
 
-    fun getQuantity(productId: Long): Int
+    fun getQuantity(
+        productId: Long,
+        onLoad: (Result<Int>) -> Unit,
+    )
 
     fun getPaged(
         limit: Int,
         offset: Int,
-    ): List<ShoppingProduct>
+        onLoad: (Result<List<ShoppingProduct>>) -> Unit,
+    )
 
-    fun delete(productId: Long)
+    fun delete(
+        productId: Long,
+        onLoad: (Result<Unit>) -> Unit,
+    )
 }
