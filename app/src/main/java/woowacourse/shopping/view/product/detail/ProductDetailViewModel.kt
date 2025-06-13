@@ -42,7 +42,7 @@ class ProductDetailViewModel(
     }
 
     fun decreaseItemQuantity(productId: Long) {
-        _quantity.value = _quantity.value?.minus(1)
+        _quantity.value = _quantity.value?.minus(1)?.coerceAtLeast(MINIMUM_QUANTITY) ?: MINIMUM_QUANTITY
     }
 
     fun getLastViewedProduct() {
@@ -63,6 +63,8 @@ class ProductDetailViewModel(
     }
 
     companion object {
+        private const val MINIMUM_QUANTITY = 0
+
         fun provideFactory(
             product: Product,
             repository: ShoppingCartRepository = ShoppingProvider.shoppingCartRepository,
