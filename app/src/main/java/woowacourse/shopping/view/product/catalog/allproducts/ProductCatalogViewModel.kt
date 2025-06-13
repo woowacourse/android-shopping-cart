@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.map
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentlyproducts.RecentlyProductsRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.PagedResult
 
 class ProductCatalogViewModel(
@@ -19,31 +19,73 @@ class ProductCatalogViewModel(
     private val recentlyProductsRepository: RecentlyProductsRepository,
 ) : ViewModel() {
     private val pageResultProducts = MutableLiveData<PagedResult<Product>>()
+
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> = _products
 
-    val productItems: LiveData<List<ProductItem>> = pageResultProducts.map { it.toProductItems() }
+    private var _productItems: MutableLiveData<List<ProductItem>> = MutableLiveData()
+    val productItems: LiveData<List<ProductItem>> = _productItems
+
+    private var _shoppingCartProducts: MutableLiveData<List<ShoppingProduct>> = MutableLiveData()
+    val shoppingCartProducts: LiveData<List<ShoppingProduct>> = _shoppingCartProducts
 
     private var currentPage = 0
 
     init {
-        initLoadProducts()
+        loadCarts()
     }
 
-    private fun initLoadProducts() {
-        val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        pageResultProducts.value = result
-        currentPage++
-
-        recentlyProductsRepository.getAll { recentlyViewedProducts ->
-            _products.postValue(recentlyViewedProducts?.map { it.toProductDomain() } ?: emptyList())
+    private fun loadCarts() {
+        shoppingCartRepository.getAll { result: Result<List<ShoppingProduct>?> ->
+            result
+                .onSuccess { shoppingProducts: List<ShoppingProduct>? ->
+                    _shoppingCartProducts.postValue(shoppingProducts)
+                    initLoadProducts(shoppingProducts ?: emptyList())
+                }.onFailure {
+                }
         }
     }
 
-    fun loadProducts() {
+    private fun initLoadProducts(cartProducts: List<ShoppingProduct>) {
         val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        pageResultProducts.value = pageResultProducts.value?.plus(result)
+        pageResultProducts.postValue(result)
+
+        recentlyProductsRepository.getAll { result ->
+            result
+                .onSuccess { recentlyViewedProducts ->
+                    _products.postValue(recentlyViewedProducts?.map { it.toProductDomain() } ?: emptyList())
+                }.onFailure {
+                }
+        }
+
+        loadProductItem(result, cartProducts)
+    }
+
+    private fun loadProductItem(
+        pagedResult: PagedResult<Product>,
+        cartProducts: List<ShoppingProduct>,
+    ) {
+        val productItem: MutableList<ProductItem> =
+            pagedResult.items
+                .map {
+                    ProductItem.CatalogProduct(
+                        it,
+                        cartProducts.find { p -> p.productId == it.id }?.quantity ?: 0,
+                    )
+                }.toMutableList()
+        if (pagedResult.hasNext) {
+            productItem.add(ProductItem.LoadMore)
+        }
+        _productItems.postValue(productItem)
+    }
+
+    fun loadProducts() {
         currentPage++
+        val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
+
+        val newProductList = pageResultProducts.value?.plus(result) ?: result
+        pageResultProducts.postValue(newProductList)
+        loadProductItem(newProductList, shoppingCartProducts.value ?: emptyList())
     }
 
     fun addToRecentlyProduct(product: Product) {
@@ -51,35 +93,23 @@ class ProductCatalogViewModel(
     }
 
     fun addToShoppingCart(productId: Long) {
-        shoppingCartRepository.addProduct(productId)
-        pageResultProducts.value = pageResultProducts.value
+        shoppingCartRepository.increaseProduct(productId) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    loadCarts()
+                }.onFailure {
+                }
+        }
     }
 
     fun removeToShoppingCart(productId: Long) {
-        shoppingCartRepository.removeProduct(productId)
-        pageResultProducts.value = pageResultProducts.value
-    }
-
-    fun refreshShoppingCartState() {
-        pageResultProducts.value = pageResultProducts.value
-    }
-
-    private fun PagedResult<Product>.toProductItems(): List<ProductItem> {
-        val items =
-            this.items
-                .map {
-                    ProductItem.CatalogProduct(
-                        it,
-                        findQuantity(it.id),
-                    )
-                }.toMutableList<ProductItem>()
-        if (hasNext) {
-            items.add(ProductItem.LoadMore)
+        shoppingCartRepository.decreaseProduct(productId) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    loadCarts()
+                }.onFailure { }
         }
-        return items
     }
-
-    private fun findQuantity(productId: Long): Int = shoppingCartRepository.getQuantity(productId)
 
     companion object {
         private const val PRODUCT_SIZE_LIMIT = 20

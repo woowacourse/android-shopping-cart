@@ -49,11 +49,6 @@ class ProductCatalogActivity : AppCompatActivity() {
         initRecentRecyclerView()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.refreshShoppingCartState()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_shopping_cart, menu)
