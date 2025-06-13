@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="productId"
+            type="Long" />
+
+        <variable
+            name="quantity"
+            type="Integer" />
+
+        <variable
+            name="onClick"
+            type="woowacourse.shopping.view.product.OnQuantityControlListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/quantity_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/btn_quantity_minus"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:background="@drawable/style_left_quantity_arrow"
+            android:gravity="center"
+            android:text="@string/quantity_minus"
+            android:textSize="22sp"
+            android:onClick="@{() -> onClick.onQuantityControlMinusClick(productId)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text="@{quantity != null ? String.valueOf(quantity) : `0`}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@+id/btn_quantity_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0" />
+
+        <TextView
+            android:id="@+id/btn_quantity_plus"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:background="@drawable/style_right_quantity_arrow"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/quantity_plus"
+            android:textSize="22sp"
+            android:onClick="@{() -> onClick.onQuantityControlPlusClick(productId)}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

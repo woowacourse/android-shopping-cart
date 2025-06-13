@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
 
         <variable
-            name="onRemoveClick"
-            type="android.view.View.OnClickListener" />
+            name="shoppingProduct"
+            type="woowacourse.shopping.domain.ShoppingProduct" />
+
+        <variable
+            name="onRemoveProductListener"
+            type="woowacourse.shopping.view.shoppingcart.OnRemoveProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +33,7 @@
             android:src="@drawable/ic_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{onRemoveClick}"/>
+            android:onClick="@{() -> onRemoveProductListener.onClickCancel(shoppingProduct)}"/>
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -53,6 +56,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:src="@drawable/ic_launcher_foreground" />
+
+        <include
+            android:id="@+id/init_quantity_control"
+            layout="@layout/item_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_remove" />
 
         <TextView
             android:id="@+id/tv_product_price"

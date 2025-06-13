@@ -1,11 +1,12 @@
-package woowacourse.shopping.view.product.catalog
+package woowacourse.shopping.view.product.catalog.allproducts
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.view.product.OnProductListener
+import woowacourse.shopping.view.product.OnQuantityControlListener
 
 class ProductAdapter(
-    private val productsEventListener: OnProductListener,
+    private val categoryEventListener: OnCategoryEventListener,
+    private val onQuantityControlListener: OnQuantityControlListener,
     private val loadEventListener: OnLoadEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items = mutableListOf<ProductItem>()
@@ -15,7 +16,12 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, productsEventListener)
+            PRODUCT ->
+                ProductViewHolder.from(
+                    parent,
+                    onQuantityControlListener,
+                    categoryEventListener,
+                )
             LOAD_MORE -> LoadMoreViewHolder.from(parent, loadEventListener)
             else -> throw IllegalArgumentException()
         }
@@ -29,7 +35,7 @@ class ProductAdapter(
         when (getItemViewType(position)) {
             PRODUCT -> {
                 val productItem = items[position] as ProductItem.CatalogProduct
-                (holder as ProductViewHolder).bind(productItem.product)
+                (holder as ProductViewHolder).bind(productItem)
             }
             LOAD_MORE -> {}
         }
@@ -41,12 +47,24 @@ class ProductAdapter(
             is ProductItem.LoadMore -> LOAD_MORE
         }
 
-    fun addItems(newItems: List<ProductItem>) {
+    private fun appendItems(newItems: List<ProductItem>) {
         removeLoadMoreIfExists()
-
         val startIndex = items.size
-        items.addAll(newItems)
-        notifyItemRangeInserted(startIndex, newItems.size)
+        val itemsToAdd = newItems.drop(startIndex)
+        items.addAll(itemsToAdd)
+        notifyItemRangeInserted(startIndex, itemsToAdd.size)
+    }
+
+    private fun updateItems(newItems: List<ProductItem>) {
+        val oldItems = items.toList()
+
+        val commonSize = minOf(oldItems.size, newItems.size)
+        for (i in 0 until commonSize) {
+            if (oldItems[i] != newItems[i]) {
+                items[i] = newItems[i]
+                notifyItemChanged(i)
+            }
+        }
     }
 
     private fun removeLoadMoreIfExists() {
@@ -54,6 +72,14 @@ class ProductAdapter(
             val removeIndex = items.lastIndex
             items.removeAt(removeIndex)
             notifyItemRemoved(removeIndex)
+        }
+    }
+
+    fun updateProductItems(newItems: List<ProductItem>) {
+        if (this.items.size == newItems.size) {
+            updateItems(newItems)
+        } else {
+            appendItems(newItems)
         }
     }
 

@@ -1,37 +1,39 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.databinding.ItemSelectedProductBinding
 import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.view.product.OnQuantityControlListener
 
 class SelectedProductViewHolder(
     private val binding: ItemSelectedProductBinding,
-    eventListener: OnRemoveProductListener,
+    onQuantityControlListener: OnQuantityControlListener,
+    onRemoveProductListener: OnRemoveProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var currentItem: ShoppingProduct
-
     init {
-        binding.onRemoveClick =
-            OnClickListener { eventListener.onClickCancel(currentItem) }
+        binding.onRemoveProductListener = onRemoveProductListener
+        binding.initQuantityControl.onClick = onQuantityControlListener
     }
 
     fun bind(shoppingProduct: ShoppingProduct) {
-        currentItem = shoppingProduct
+        binding.shoppingProduct = shoppingProduct
         binding.product = shoppingProduct.productId.toProductDomain()
+        binding.initQuantityControl.quantity = shoppingProduct.quantity
+        binding.initQuantityControl.productId = shoppingProduct.productId
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: OnRemoveProductListener,
+            onQuantityControlListener: OnQuantityControlListener,
+            onRemoveProductListener: OnRemoveProductListener,
         ): SelectedProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemSelectedProductBinding.inflate(inflater, parent, false)
-            return SelectedProductViewHolder(binding, eventListener)
+            return SelectedProductViewHolder(binding, onQuantityControlListener, onRemoveProductListener)
         }
     }
 }

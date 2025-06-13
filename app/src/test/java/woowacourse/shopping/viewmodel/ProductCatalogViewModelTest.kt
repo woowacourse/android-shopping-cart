@@ -3,7 +3,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.fixture.FakeProductRepository
-import woowacourse.shopping.view.product.catalog.ProductCatalogViewModel
+import woowacourse.shopping.view.product.catalog.allproducts.ProductCatalogViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)

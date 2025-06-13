@@ -21,6 +21,24 @@ interface ShoppingCartDao {
     @Insert
     fun insert(product: ShoppingCartEntity)
 
-    @Query("DELETE from shopping_cart WHERE id == :shoppingCartId")
-    fun delete(shoppingCartId: Long)
+    @Query("SELECT * FROM shopping_cart WHERE product_id = :productId LIMIT 1")
+    fun getByProductId(productId: Long): ShoppingCartEntity?
+
+    @Query("UPDATE shopping_cart SET quantity = quantity + 1 WHERE product_id = :productId")
+    fun increaseQuantity(productId: Long)
+
+    @Query("UPDATE shopping_cart SET quantity = quantity - 1 WHERE product_id = :productId")
+    fun decreaseQuantity(productId: Long)
+
+    @Query("UPDATE shopping_cart SET quantity = quantity + :quantity WHERE product_id = :productId")
+    fun updateQuantity(
+        productId: Long,
+        quantity: Int,
+    )
+
+    @Query("DELETE from shopping_cart WHERE product_id == :productId")
+    fun delete(productId: Long)
+
+    @Query("SELECT quantity FROM shopping_cart WHERE product_id = :productId")
+    fun getQuantity(productId: Long): Int
 }

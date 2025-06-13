@@ -13,7 +13,14 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.utils.showToast
+import woowacourse.shopping.view.DefaultQuantityControlListener
+import woowacourse.shopping.view.product.catalog.allproducts.OnCategoryEventListener
+import woowacourse.shopping.view.product.catalog.allproducts.ProductAdapter
+import woowacourse.shopping.view.product.catalog.allproducts.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.view.product.catalog.allproducts.ProductCatalogViewModel
+import woowacourse.shopping.view.product.catalog.allproducts.ProductsEvent
+import woowacourse.shopping.view.product.catalog.recentproducts.RecentAdapter
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
@@ -22,6 +29,7 @@ class ProductCatalogActivity : AppCompatActivity() {
     private lateinit var viewModel: ProductCatalogViewModel
 
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentlyProductAdapter: RecentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +46,9 @@ class ProductCatalogActivity : AppCompatActivity() {
                 this,
                 ProductCatalogViewModel.provideFactory(),
             )[ProductCatalogViewModel::class.java]
-
-        initRecyclerView()
         initObservers()
+        initRecyclerView()
+        initRecentRecyclerView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,14 +65,39 @@ class ProductCatalogActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initRecentRecyclerView() {
+        recentlyProductAdapter =
+            RecentAdapter { product ->
+                navigateToProductDetail(product)
+            }
+
+        binding.rvRecentlyProducts.adapter = recentlyProductAdapter
+    }
+
     private fun initRecyclerView() {
         productAdapter =
             ProductAdapter(
-                productsEventListener = { product -> navigateToProductDetail(product) },
+                categoryEventListener =
+                    object : OnCategoryEventListener {
+                        override fun onItemClick(product: Product) {
+                            navigateToProductDetail(product)
+                            viewModel.addToRecentlyProduct(product)
+                        }
+
+                        override fun onInitPlusButtonClick(productId: Long) {
+                            viewModel.addToShoppingCart(productId)
+                        }
+                    },
+                onQuantityControlListener =
+                    DefaultQuantityControlListener(
+                        onPlus = viewModel::addToShoppingCart,
+                        onMinus = viewModel::removeToShoppingCart,
+                    ),
                 loadEventListener = viewModel::loadProducts,
             )
 
         binding.rvProducts.adapter = productAdapter
+
         val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
@@ -80,7 +113,27 @@ class ProductCatalogActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.productItems.observe(this) { value ->
-            productAdapter.addItems(value)
+            productAdapter.updateProductItems(value)
+        }
+
+        viewModel.products.observe(this) { value ->
+            recentlyProductAdapter.updateRecentProducts(value)
+        }
+
+        viewModel.event.observe(this) { event: ProductsEvent ->
+            when (event) {
+                ProductsEvent.LOAD_RECENT_PRODUCTS_FAILURE ->
+                    showToast(R.string.products_load_recent_products_error_message)
+
+                ProductsEvent.LOAD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.products_load_shopping_cart_error_message)
+
+                ProductsEvent.PLUS_CART_ITEM_FAILURE ->
+                    showToast(R.string.products_add_shopping_cart_error_message)
+
+                ProductsEvent.MINUS_CART_ITEM_FAILURE ->
+                    showToast(R.string.products_patch_shopping_cart_error_message)
+            }
         }
     }
 

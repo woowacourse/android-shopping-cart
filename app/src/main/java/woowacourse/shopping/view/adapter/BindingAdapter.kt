@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.adapter
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -14,4 +15,12 @@ fun ImageView.setImage(image: String?) {
         .placeholder(R.drawable.ic_launcher_foreground)
         .centerCrop()
         .into(this)
+}
+
+@BindingAdapter("visibility")
+fun setVisibility(
+    view: View,
+    isVisible: Boolean,
+) {
+    view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
