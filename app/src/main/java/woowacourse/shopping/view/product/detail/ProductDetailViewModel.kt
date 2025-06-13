@@ -29,12 +29,13 @@ class ProductDetailViewModel(
     val recentProduct: LiveData<Product> = _recentProduct
 
     fun addToShoppingCart() {
-        runCatching {
-            shoppingCartRepository.insert(product.id, _quantity.value ?: 0)
-        }.onSuccess {
-            _navigateEvent.value = Unit
-        }.onFailure {
-            _errorEvent.value = Unit
+        shoppingCartRepository.insert(product.id, _quantity.value ?: 0) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    _navigateEvent.postValue(Unit)
+                }.onFailure {
+                    _errorEvent.postValue(Unit)
+                }
         }
     }
 
@@ -47,13 +48,22 @@ class ProductDetailViewModel(
     }
 
     fun getLastViewedProduct() {
-        recentlyProductsRepository.getFirst {
-            _recentProduct.postValue(it?.toProductDomain())
+        recentlyProductsRepository.getFirst { result ->
+            result
+                .onSuccess {
+                    _recentProduct.postValue(it?.toProductDomain())
+                }.onFailure {
+                }
         }
     }
 
     fun deleteMostRecentProduct() {
-        recentlyProductsRepository.deleteMostRecent()
+        recentlyProductsRepository.deleteMostRecent { result ->
+            result
+                .onSuccess {
+                }.onFailure {
+                }
+        }
     }
 
     companion object {
