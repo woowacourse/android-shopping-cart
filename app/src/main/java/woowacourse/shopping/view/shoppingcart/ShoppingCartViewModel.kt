@@ -31,39 +31,51 @@ class ShoppingCartViewModel(
 
     private fun loadProducts() {
         val page = _currentPage.value ?: FIRST_PAGE_NUMBER
-        val result = shoppingCartRepository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
-        shoppingProducts = result
-        loadedPages.add(page)
-        cached()
-        checkHasNext()
+        shoppingCartRepository.getPaged(
+            SHOPPING_PRODUCT_SIZE_LIMIT,
+            _currentPage.value ?: FIRST_PAGE_NUMBER,
+        ) { result: Result<List<ShoppingProduct>> ->
+            result
+                .onSuccess { shoppingProducts: List<ShoppingProduct> ->
+                    this@ShoppingCartViewModel.shoppingProducts = shoppingProducts
+                    loadedPages.add(page)
+                    cached(shoppingProducts)
+                    checkHasNext()
+                }.onFailure {
+                }
+        }
     }
 
     fun addToShoppingCart(productId: Long) {
-        shoppingCartRepository.addProduct(productId)
-
-        shoppingProducts =
-            shoppingProducts.map {
-                if (it.productId == productId) it.copy(quantity = it.quantity?.plus(1)) else it
+        shoppingCartRepository.increaseProduct(productId) { result: Result<Unit> ->
+            result.onSuccess {
+                shoppingProducts =
+                    shoppingProducts.map {
+                        if (it.productId == productId) it.copy(quantity = it.quantity?.plus(1)) else it
+                    }
+                cached(shoppingProducts)
+                checkCacheHasNext()
             }
-
-        cached()
-        checkCacheHasNext()
+        }
     }
 
     fun removeToShoppingCart(productId: Long) {
-        shoppingCartRepository.removeProduct(productId)
-
-        shoppingProducts =
-            shoppingProducts.mapNotNull {
-                when {
-                    it.productId == productId && it.quantity!! > 1 -> it.copy(quantity = it.quantity!! - 1)
-                    it.productId == productId && it.quantity == 1 -> null
-                    else -> it
+        shoppingCartRepository.decreaseProduct(productId) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    shoppingProducts =
+                        shoppingProducts.mapNotNull {
+                            when {
+                                it.productId == productId && it.quantity!! > 1 -> it.copy(quantity = it.quantity!! - 1)
+                                it.productId == productId && it.quantity == 1 -> null
+                                else -> it
+                            }
+                        }
+                    cached(shoppingProducts)
+                    checkCacheHasNext()
+                }.onFailure {
                 }
-            }
-
-        cached()
-        checkCacheHasNext()
+        }
     }
 
     fun loadMoreShoppingProducts() {
@@ -72,42 +84,55 @@ class ShoppingCartViewModel(
         val page = _currentPage.value ?: FIRST_PAGE_NUMBER
 
         if (loadedPages.contains(page)) {
-            cached()
+            cached(shoppingProducts)
             checkCacheHasNext()
             return
         }
 
-        val result =
-            shoppingCartRepository.getPaged(
-                SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
-            )
-
-        shoppingProducts = shoppingProducts.plus(result)
-        loadedPages.add(page)
-        cached()
-        checkHasNext()
+        shoppingCartRepository.getPaged(
+            SHOPPING_PRODUCT_SIZE_LIMIT,
+            (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
+        ) { result: Result<List<ShoppingProduct>> ->
+            result
+                .onSuccess { newShoppingProducts: List<ShoppingProduct> ->
+                    val updatedShoppingProducts = shoppingProducts.plus(newShoppingProducts)
+                    shoppingProducts = updatedShoppingProducts
+                    loadedPages.add(page)
+                    cached(updatedShoppingProducts)
+                    checkHasNext()
+                }.onFailure {
+                }
+        }
     }
 
     fun loadPreviousShoppingProducts() {
         _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
-        cached()
+        cached(shoppingProducts)
         checkCacheHasNext()
     }
 
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
-        shoppingCartRepository.delete(shoppingProduct.productId)
-        shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
-        validateCurrentPage()
-        checkCacheHasNext()
+        shoppingCartRepository.delete(shoppingProduct.productId) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
+                    validateCurrentPage()
+                    checkCacheHasNext()
+                }.onFailure {
+                }
+        }
     }
 
     private fun checkHasNext() {
-        val resultSize = shoppingCartRepository.getAllSize()
+        shoppingCartRepository.getAllSize { result: Result<Int> ->
+            result
+                .onSuccess { it: Int ->
+                    val remainingItems = it - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
 
-        val remainingItems = resultSize - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
-
-        _hasNext.value = remainingItems > 0
+                    _hasNext.postValue(remainingItems > 0)
+                }.onFailure {
+                }
+        }
     }
 
     private fun checkCacheHasNext() {
@@ -115,20 +140,20 @@ class ShoppingCartViewModel(
 
         val remainingItems = resultSize - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
 
-        _hasNext.value = remainingItems > 0
+        _hasNext.postValue(remainingItems > 0)
     }
 
     private fun validateCurrentPage() {
-        cached()
+        cached(shoppingProducts)
         if (_cacheShoppingCartProduct.value == emptyList<Product>() && _currentPage.value != 0) {
             loadPreviousShoppingProducts()
         }
     }
 
-    private fun cached() {
+    private fun cached(shoppingProducts: List<ShoppingProduct>) {
         val offset = (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT
         val cache = shoppingProducts.getCache(SHOPPING_PRODUCT_SIZE_LIMIT, offset)
-        _cacheShoppingCartProduct.value = cache
+        _cacheShoppingCartProduct.postValue(cache)
     }
 
     private fun List<ShoppingProduct>.getCache(
