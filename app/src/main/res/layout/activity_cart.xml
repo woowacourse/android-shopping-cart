@@ -6,24 +6,9 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="cartVM"
             type="woowacourse.shopping.view.cart.CartViewModel" />
 
-        <variable
-            name="toPrevious"
-            type="kotlin.jvm.functions.Function0" />
-
-        <variable
-            name="toNext"
-            type="kotlin.jvm.functions.Function0" />
-
-        <variable
-            name="toBack"
-            type="kotlin.jvm.functions.Function0" />
-
-        <variable
-            name="currentPage"
-            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,7 +36,7 @@
             android:layout_marginStart="11dp"
             android:backgroundTint="@color/gray5"
             android:contentDescription="@string/product_ic_back_explain"
-            android:onClick="@{() -> toBack.invoke()}"
+            android:onClick="@{() -> cartVM.onExitClicked()}"
             android:src="@drawable/ic_back"
             app:layout_constraintBottom_toBottomOf="@id/tb_cart"
             app:layout_constraintStart_toStartOf="@id/tb_cart"
@@ -87,8 +72,8 @@
             android:layout_marginVertical="50dp"
             android:background="@drawable/round_btn_cart_previous"
             android:contentDescription="@null"
-            android:enabled="@{viewModel.hasPrevious}"
-            android:onClick="@{()-> toPrevious.invoke()}"
+            android:enabled="@{cartVM.hasPrevious}"
+            android:onClick="@{()-> cartVM.minusPage()}"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_cart_page"
@@ -100,7 +85,7 @@
             style="@style/CartPageStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_page(viewModel.currentPage)}"
+            android:text="@{@string/cart_page(cartVM.currentPage)}"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintEnd_toStartOf="@id/btn_cart_next"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -115,8 +100,8 @@
             android:layout_marginVertical="50dp"
             android:background="@drawable/round_btn_cart_next"
             android:contentDescription="@null"
-            android:enabled="@{viewModel.hasNext}"
-            android:onClick="@{()-> toNext.invoke()}"
+            android:enabled="@{cartVM.hasNext}"
+            android:onClick="@{()-> cartVM.plusPage()}"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintEnd_toEndOf="parent"

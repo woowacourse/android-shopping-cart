@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="onClick"
-            type="kotlin.jvm.functions.Function0" />
+            name="vm"
+            type="woowacourse.shopping.view.product.main.ProductViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,14 +43,26 @@
             android:id="@+id/ib_cart"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
             android:backgroundTint="@color/gray5"
             android:contentDescription="@string/product_ic_cart_explain"
-            android:onClick="@{() -> onClick.invoke()}"
+            android:onClick="@{() -> vm.onNavigateToCartClicked()}"
             android:src="@drawable/ic_cart"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
-            app:layout_constraintEnd_toEndOf="@id/tb_product"
+            app:layout_constraintEnd_toStartOf="@id/tv_cart_items_count"
             app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title" />
+
+        <TextView
+            android:id="@+id/tv_cart_items_count"
+            style="@style/ProductCartItemsCountStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_cart_items_count"
+            android:text="@{vm.cartItemsCount}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title"
+            tools:text="99+" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
@@ -59,9 +71,6 @@
             android:clipToPadding="false"
             android:contentDescription="@string/product_list_explain"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="8dp"
             android:paddingBottom="8dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

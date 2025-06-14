@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.cartRepository.CartRepository
+import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.domain.CartItem
 
 class CartViewModel(
@@ -26,6 +26,12 @@ class CartViewModel(
     private val _hasNext: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasNext: LiveData<Boolean> get() = _hasNext
 
+    private val _exitEvent = MutableLiveData<Unit>()
+    val exitEvent: LiveData<Unit> get() = _exitEvent
+
+    private val _removePosition = MutableLiveData<Int>()
+    val removePosition: LiveData<Int> get() = _removePosition
+
     private var totalProductsCount = 0
     private var totalPage = 0
     private var offset = 0
@@ -34,6 +40,10 @@ class CartViewModel(
     init {
         fetchInfo()
         fetchData()
+    }
+
+    fun onExitClicked() {
+        _exitEvent.value = Unit
     }
 
     fun fetchInfo() {
@@ -57,8 +67,12 @@ class CartViewModel(
         }
     }
 
-    fun deleteProduct(cartItem: CartItem) {
-        cartRepository.deleteProduct(cartItem.cartItemId)
+    fun deleteProduct(
+        cartItem: CartItem,
+        position: Int,
+    ) {
+        _removePosition.value = position
+        cartRepository.deleteProduct(cartItem.product.id)
         val currentProducts =
             _products.value
                 ?.filterNot { it == cartItem } ?: emptyList()
@@ -83,7 +97,6 @@ class CartViewModel(
             totalProductsCount -= 1
             totalPage = calculateTotalPages(totalProductsCount)
             minusPage()
-            fetchData()
         } else {
             _products.value = currentProducts
             pageCache[_currentPage.value ?: 1] = currentProducts
@@ -114,10 +127,37 @@ class CartViewModel(
                 _currentPage.value = (_currentPage.value ?: 1) - 1
             }
         }
+        fetchData()
     }
 
     fun plusPage() {
         _currentPage.value = (_currentPage.value ?: 1) + 1
+        fetchData()
+    }
+
+    fun increaseProductCount(cartItem: CartItem) {
+        updateProductCount(cartItem, cartItem.count + 1)
+    }
+
+    fun decreaseProductCount(cartItem: CartItem) {
+        if (cartItem.count > 1) {
+            updateProductCount(cartItem, cartItem.count - 1)
+        }
+    }
+
+    private fun updateProductCount(
+        cartItem: CartItem,
+        newCount: Int,
+    ) {
+        val updatedItem = cartItem.copy(count = newCount)
+        cartRepository.updateCartItem(updatedItem)
+        val updatedList =
+            _products.value?.map {
+                if (it.product.id == cartItem.product.id) updatedItem else it
+            } ?: return
+
+        _products.value = updatedList
+        pageCache[_currentPage.value ?: 1] = updatedList
     }
 
     private fun calculateTotalPages(totalCount: Int): Int = if (totalCount == 0) 0 else (totalCount - 1) / LIMIT_COUNT + 1

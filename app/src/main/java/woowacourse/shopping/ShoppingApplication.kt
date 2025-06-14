@@ -1,27 +1,51 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.cartRepository.CartDatabase
-import woowacourse.shopping.data.cartRepository.CartRepository
-import woowacourse.shopping.data.cartRepository.CartRepositoryImpl
-import woowacourse.shopping.data.productsRepository.ProductRepository
-import woowacourse.shopping.data.productsRepository.ProductRepositoryImpl
-import woowacourse.shopping.data.storage.CartStorageImpl
-import woowacourse.shopping.data.storage.DummyProducts
+import woowacourse.shopping.data.repository.cart.CartRepository
+import woowacourse.shopping.data.repository.cart.CartRepositoryImpl
+import woowacourse.shopping.data.repository.products.catalog.ProductRepository
+import woowacourse.shopping.data.repository.products.catalog.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepository
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepositoryImpl
+import woowacourse.shopping.data.source.cart.CartDatabase
+import woowacourse.shopping.data.source.cart.CartStorage
+import woowacourse.shopping.data.source.cart.CartStorageImpl
+import woowacourse.shopping.data.source.products.catalog.DummyProducts
+import woowacourse.shopping.data.source.products.catalog.ProductStorage
+import woowacourse.shopping.data.source.products.recentlyviewed.RecentlyViewedDatabase
+import woowacourse.shopping.data.source.products.recentlyviewed.RecentlyViewedStorage
+import woowacourse.shopping.data.source.products.recentlyviewed.RecentlyViewedStorageImpl
 
 class ShoppingApplication : Application() {
     val cartDatabase: CartDatabase by lazy {
         CartDatabase.initialize(this)
     }
-    val cartStorageImpl: CartStorageImpl by lazy {
+    val recentlyViewedDatabase: RecentlyViewedDatabase by lazy {
+        RecentlyViewedDatabase.initialize(this)
+    }
+    val cartStorage: CartStorage by lazy {
         CartStorageImpl.initialize(cartDatabase.cartDao())
+    }
+    val productStorage: ProductStorage by lazy {
+        DummyProducts
+    }
+    val recentlyViewedStorage: RecentlyViewedStorage by lazy {
+        RecentlyViewedStorageImpl.initialize(recentlyViewedDatabase.recentlyViewedDao())
+    }
+    val recentlyViewedRepository: RecentlyViewedRepository by lazy {
+        RecentlyViewedRepositoryImpl.initialize(recentlyViewedStorage, productStorage)
     }
     val productRepository: ProductRepository by lazy {
         ProductRepositoryImpl.initialize(
-            storage = DummyProducts,
+            storage = productStorage,
         )
     }
-    val cartRepository: CartRepository by lazy { CartRepositoryImpl.initialize(cartStorageImpl) }
+    val cartRepository: CartRepository by lazy {
+        CartRepositoryImpl.initialize(
+            cartStorage,
+            productStorage,
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()

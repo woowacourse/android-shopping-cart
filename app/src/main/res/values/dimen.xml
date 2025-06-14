@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="font_size_xsmall">12sp</dimen>
     <dimen name="font_size_small">16sp</dimen>
     <dimen name="font_size_normal">18sp</dimen>
     <dimen name="font_size_large">20sp</dimen>
     <dimen name="font_size_xlarge">24sp</dimen>
+    <dimen name="font_size_2xlarge">36sp</dimen>
+    <dimen name="spacing_12dp">12dp</dimen>
+    <dimen name="spacing_20dp">20dp</dimen>
+    <dimen name="spacing_0dp">0dp</dimen>
 </resources>

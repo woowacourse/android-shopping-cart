@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="productCountVM"
+            type="woowacourse.shopping.view.component.ProductCountViewModel" />
+
+        <variable
             name="position"
             type="int" />
 
@@ -16,6 +20,14 @@
         <variable
             name="toDelete"
             type="kotlin.jvm.functions.Function2" />
+
+        <variable
+            name="decrease"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="increase"
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +46,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{cartItem.name}"
+            android:text="@{cartItem.product.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="맥심 마일드" />
@@ -47,7 +59,7 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
-            app:imageUrl="@{cartItem.imageUrl}"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name" />
@@ -64,12 +76,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_cart_product_name" />
 
+        <include
+            android:id="@+id/i_cart_count_control"
+            style="@style/ProductDetailPriceStyle"
+            layout="@layout/component_product_count_no_vm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cartItem="@{cartItem}"
+            app:decrease="@{decrease}"
+            app:increase="@{increase}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_cart_product"
+            app:layout_constraintWidth_percent="0.36"
+            app:productCount="@{cartItem.count}" />
+
         <TextView
             android:id="@+id/tv_cart_product_price"
             style="@style/CartPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_price(cartItem.price)}"
+            android:text="@{@string/cart_price(cartItem.product.price * cartItem.count)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
             app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
             tools:text="100,000원" />

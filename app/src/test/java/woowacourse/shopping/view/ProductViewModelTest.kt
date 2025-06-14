@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.ProductViewModel
+import woowacourse.shopping.view.product.main.ProductViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductViewModelTest {

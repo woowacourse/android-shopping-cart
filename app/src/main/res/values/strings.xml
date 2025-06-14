@@ -7,6 +7,7 @@
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
     <string name="product_show_more">더보기</string>
+    <string name="product_add_cart">+</string>
 
     <!--  상품 상세 페이지  -->
     <string name="detail_product_price_text">가격</string>
@@ -21,4 +22,11 @@
     <string name="cart_page">%d</string>
     <string name="product_ic_back_explain">상품 목록으로 이동하는 버튼입니다.</string>
     <string name="cart_product_delete">상품이 삭제되었습니다.</string>
+    <string name="product_count_minus">-</string>
+    <string name="product_count_plus">+</string>
+    <string name="minimum_product_count">최소 수량은 1입니다</string>
+    <string name="recently_viewed_item">마지막으로 본 상품</string>
+    <string name="recently_view_product_description">최근 본 상품의 사진입니다</string>
+    <string name="recently_viewed_products_description">최근 본 상품 목록입니다.</string>
+    <string name="recently_viewed_products_title">최근 본 상품</string>
 </resources>
