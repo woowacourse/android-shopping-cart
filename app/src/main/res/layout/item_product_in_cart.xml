@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.products.Product" />
+            name="model"
+            type="woowacourse.shopping.model.products.ShoppingCartItem" />
 
         <variable
             name="onProductRemoveClickListener"
@@ -26,7 +26,7 @@
             android:id="@+id/product_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{product.title}"
+            android:text="@{model.product.title}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -35,7 +35,7 @@
 
         <ImageButton
             android:id="@+id/remove_product_btn"
-            android:onClick="@{() -> onProductRemoveClickListener.onRemoveClick(product)}"
+            android:onClick="@{() -> onProductRemoveClickListener.onRemoveClick(model.product.id)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -50,16 +50,28 @@
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
             android:contentDescription="@null"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{model.product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@id/product_title"
             app:layout_constraintTop_toBottomOf="@id/product_title" />
+
+        <include
+            layout="@layout/item_quantity"
+            android:id="@+id/quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_title"
+            app:quantity="@{model.quantity}"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price_format,product.price)}"
+            android:text="@{String.format(@string/product_price_format, model.product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

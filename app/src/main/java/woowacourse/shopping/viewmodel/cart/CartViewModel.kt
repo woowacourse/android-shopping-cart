@@ -3,88 +3,112 @@ package woowacourse.shopping.viewmodel.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.view.cart.Cart
+import woowacourse.shopping.model.products.ShoppingCartItem
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.ShoppingCartRepository
 
 class CartViewModel(
-    private val cart: Cart,
+    private val shoppingCartRepository: ShoppingCartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
-    private val _productsInCart = MutableLiveData(cart.productsInCart)
-    val productsInCart: LiveData<MutableList<Product>> get() = _productsInCart
+    private val _currentPageItems = MutableLiveData<List<ShoppingCartItem>>()
+    val currentPageItems: LiveData<List<ShoppingCartItem>> get() = _currentPageItems
 
-    private val _pageCount = MutableLiveData(1)
+    private val _pageCount = MutableLiveData(0)
     val pageCount: LiveData<Int> get() = _pageCount
 
-    private val _loadedItems = MutableLiveData<List<Product>>()
-    val loadedItems: LiveData<List<Product>> get() = _loadedItems
-    private val pageSize = 5
-
     init {
-        loadPage(1)
+//        refreshCartState()
     }
 
-    fun removeToCart(product: Product) {
-        cart.remove(product)
-        _productsInCart.value = cart.productsInCart
-        loadPage(_pageCount.value ?: 1)
-    }
+    fun loadPage() {
+        val pageCount = _pageCount.value ?: 0
+        shoppingCartRepository.singlePage(pageCount, PAGE_SIZE) { shoppingCart ->
 
-    fun loadNextPage() {
-        val nextPage = (_pageCount.value ?: 1) + 1
-        val maxPage = ((cart.productsInCart.size - 1) / pageSize) + 1
+            val cartIds = shoppingCart.map { it.productId }
+            val products = productRepository.getProductsById(cartIds)
 
-        if (nextPage <= maxPage) {
-            loadPage(nextPage)
+            val items =
+                products.map { product ->
+                    val shoppingCart = shoppingCart.find { it.productId == product.id }
+                    ShoppingCartItem(product, shoppingCart?.quantity ?: 0)
+                }
+            // _currentPageItems.value = items
+            _currentPageItems.postValue(items)
         }
     }
 
-    fun loadPreviousPage() {
-        val prevPage = (_pageCount.value ?: 1) - 1
-        if (prevPage >= 1) {
-            loadPage(prevPage)
-        }
+    fun updateQuantity(
+        productId: Int,
+        quantity: Int,
+    ) {
+        // 현재 아이템 목록 가져오기
+        val currentItems = _currentPageItems.value ?: return
+
+        // DB 업데이트
+        shoppingCartRepository.updateCart(productId, quantity)
+
+        // 변경할 아이템의 인덱스
+        val index = currentItems.indexOfFirst { it.product.id == productId }
+
+        // 불변 리스트이므로 가변 리스트로 새로운 객체 생성
+        val mutableItems = currentItems.toMutableList()
+
+        // 변경할 인덱스의 아이템 수량 수정
+        mutableItems[index] = currentItems[index].copy(quantity = quantity)
+
+        // 라이브 데이터 업데이트
+        _currentPageItems.value = mutableItems
     }
 
-    fun isFirstPage(pageCount: Int): Boolean = (pageCount == 1)
+    fun removeFromCart(productId: Int) {
+        val currentItems = _currentPageItems.value ?: return
+        shoppingCartRepository.removeCart(productId)
 
-    fun isLastPage(pageCount: Int): Boolean {
-        val totalPageCount = (cart.productsInCart.size + pageSize - 1) / pageSize
-        return pageCount == totalPageCount
+        val index = currentItems.indexOfFirst { it.product.id == productId }
+        val mutableItems = currentItems.toMutableList()
+        mutableItems.removeAt(index)
+        _currentPageItems.value = mutableItems
     }
 
-    fun isOnlyOnePage(): Boolean = cart.productsInCart.size <= 5
-
-    private fun loadPage(page: Int) {
-        val maxPage = ((cart.productsInCart.size - 1) / pageSize) + 1
-        if (page < 1 || page > maxPage) return
-
-        val start = (page - 1) * pageSize
-        val end = minOf(start + pageSize, cart.productsInCart.size)
-
-        val items = cart.productsInCart.subList(start, end)
-        _loadedItems.postValue(items)
-        _pageCount.value = page
-    }
+//    fun loadNextPage() {
+//        val cartState = _cartState.value ?: CartState()
+//        val allItems = cartState.getAllShoppingCartItem()
+//        val totalPages = (allItems.size + pageSize - 1) / pageSize
+//        val currentPage = _pageCount.value ?: 1
+//
+//        if (currentPage < totalPages) {
+//            loadPage(currentPage + 1)
+//        }
+//    }
+//
+//    fun loadPreviousPage() {
+//        val currentPage = _pageCount.value ?: 1
+//        if (currentPage > 1) {
+//            loadPage(currentPage - 1)
+//        }
+//    }
+//
+//    fun isFirstPage(): Boolean = (_pageCount.value ?: 1) == 1
+//
+//    fun isLastPage(): Boolean {
+//        val cartState = _cartState.value ?: CartState()
+//        val allItems = cartState.getAllShoppingCartItem()
+//        val totalPages = if (allItems.isEmpty()) 1 else (allItems.size + pageSize - 1) / pageSize
+//        return (_pageCount.value ?: 1) == totalPages
+//    }
+//
+//    fun isOnlyOnePage(): Boolean {
+//        val cartState = _cartState.value ?: CartState()
+//        return cartState.getAllShoppingCartItem().size <= pageSize
+//    }
+//
+//    fun refreshCartState() {
+//        _cartState.value = shoppingCartRepository.getCurrentState()
+//        loadPage(1)
+//    }
 
     companion object {
-        val Factory: ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
-                    extras.createSavedStateHandle()
-
-                    return CartViewModel(
-                        Cart,
-                    ) as T
-                }
-            }
+        private const val PAGE_SIZE = 5
     }
 }

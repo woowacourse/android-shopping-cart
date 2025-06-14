@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,21 +12,48 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.viewmodel.cart.CartViewModel
+import woowacourse.shopping.viewmodel.cart.CartViewModelFactory
 import woowacourse.shopping.viewmodel.products.ProductsViewModel
 
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
     private lateinit var adapter: ProductsAdapter
-    private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
+
+    private val productsViewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
+    private val cartViewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            (application as App).shoppingCartRepository,
+            (application as App).productRepository,
+        )
+    }
+
+    private val cartLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+//                cartViewModel.refreshCartState()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
+
+        setupAdapter()
+        observeViewModels()
+        setupRecyclerView()
+        setupClickListeners()
+    }
+
+    private fun setupAdapter() {
         adapter =
             ProductsAdapter(
                 object : ProductsClickListener {
@@ -33,31 +61,48 @@ class ProductsActivity : AppCompatActivity() {
                         val intent = ProductDetailActivity.newIntent(this@ProductsActivity, product)
                         startActivity(intent)
                     }
+
+                    override fun onAddClick(
+                        product: Product,
+                        quantity: Int,
+                    ) {
+                        if (quantity > 0) {
+                            cartViewModel.updateQuantity(product.id, quantity)
+                        } else {
+                            val currentQuantity = cartViewModel.updateQuantity(product.id, quantity)
+                            // cartViewModel.updateQuantity(product.id, currentQuantity - 1)
+                        }
+                    }
                 },
                 object : LoadMoreClickListener {
                     override fun onClick() {
-                        viewModel.loadNextPage()
+                        productsViewModel.loadNextPage()
                     }
                 },
             )
+    }
 
-        viewModel.productsInShop.observe(this) { list ->
-            adapter.updateProductsView(list)
+    private fun observeViewModels() {
+        productsViewModel.productsInShop.observe(this) { list ->
+            // adapter.updateProductsView(list)
         }
 
-        binding.cartImageBtn.setOnClickListener {
-            val intent = CartActivity.newIntent(this@ProductsActivity)
-            startActivity(intent)
-        }
+//        cartViewModel.cartState.observe(this) { cartState ->
+//            adapter.updateCartState(cartState)
+//
+//            val itemCount = cartState?.items?.size ?: 0
+//            binding.cartItemCount = itemCount
+//        }
+    }
+
+    private fun refreshQuantities() {
+//        val currentCartState = cartViewModel.cartState.value ?: CartState()
+//        adapter.updateCartState(currentCartState)
+    }
+
+    private fun setupRecyclerView() {
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
-
         binding.rvProducts.adapter = adapter
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         binding.rvProducts.layoutManager =
             GridLayoutManager(this, 2).apply {
@@ -72,6 +117,20 @@ class ProductsActivity : AppCompatActivity() {
                         }
                     }
             }
+    }
+
+    private fun setupClickListeners() {
+        binding.cartImageBtn.setOnClickListener {
+            val intent = CartActivity.newIntent(this@ProductsActivity)
+            cartLauncher.launch(intent)
+        }
+
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
     companion object {

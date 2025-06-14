@@ -1,35 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="cartItemCount"
+            type="int" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context=".view.products.ProductsActivity">
 
-        <androidx.appcompat.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/products_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray_5"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/app_name"
             app:titleTextColor="@color/white">
 
-            <ImageButton
-                android:id="@+id/cart_image_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:backgroundTint="@android:color/transparent"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_cart" />
-        </androidx.appcompat.widget.Toolbar>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp">
+
+
+                <ImageButton
+                    android:id="@+id/cart_image_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/actionBarItemBackground"
+                    android:contentDescription="장바구니"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_cart" />
+
+
+                <TextView
+                    android:id="@+id/toolbar_cart_badge_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/ic_circle"
+                    android:gravity="center"
+                    android:minWidth="18dp"
+                    android:minHeight="18dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="@{String.valueOf(cartItemCount)}"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="@{cartItemCount > 0 ? View.VISIBLE : View.GONE}"
+                    tools:text="2"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"

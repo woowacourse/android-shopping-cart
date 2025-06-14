@@ -4,25 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.model.products.ShoppingCartItem
 
 class CartAdapter(
-    private val itemsInCart: MutableList<Product> = mutableListOf(),
-    private val onProductRemoveClickListener: OnProductRemoveClickListener,
+    private val onProductRemove: (Int) -> Unit,
+    private val onQuantityChange: (Int, Int) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    private var itemsInCart: List<ShoppingCartItem> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
-        val holder =
-            ItemProductInCartBinding.inflate(
-                inflater,
-                parent,
-                false,
-            )
-        return CartViewHolder(holder, onProductRemoveClickListener)
+        val binding = ItemProductInCartBinding.inflate(inflater, parent, false)
+        return CartViewHolder(binding, onProductRemove, onQuantityChange)
     }
 
     override fun getItemCount(): Int = itemsInCart.size
@@ -34,9 +30,8 @@ class CartAdapter(
         holder.bind(itemsInCart[position])
     }
 
-    fun updateProductsView(items: List<Product>) {
-        itemsInCart.clear()
-        itemsInCart.addAll(items)
+    fun updateCartItemsView(items: List<ShoppingCartItem>) {
+        itemsInCart = items
         notifyDataSetChanged()
     }
 }

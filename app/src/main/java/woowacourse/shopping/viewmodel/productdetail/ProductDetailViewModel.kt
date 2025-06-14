@@ -1,35 +1,36 @@
 package woowacourse.shopping.viewmodel.productdetail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.view.cart.Cart
+import woowacourse.shopping.model.products.ShoppingCartItem
+import woowacourse.shopping.repository.ShoppingCartRepository
 
 class ProductDetailViewModel(
-    private val cart: Cart,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    fun addToCart(product: Product) {
-        cart.add(product)
+    private val _shoppingCartItem = MutableLiveData<ShoppingCartItem>()
+    val shoppingCartItem: LiveData<ShoppingCartItem> get() = _shoppingCartItem
+
+    fun addToCart() {}
+
+    fun loadProduct(product: Product) {
+        _shoppingCartItem.value = ShoppingCartItem(product, 1)
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
-                    extras.createSavedStateHandle()
+    fun increaseQuantity() {
+        val currentShoppingCartItem = _shoppingCartItem.value ?: return
+        val currentQuantity = _shoppingCartItem.value?.quantity ?: 1
 
-                    return ProductDetailViewModel(
-                        Cart,
-                    ) as T
-                }
-            }
+        _shoppingCartItem.value = currentShoppingCartItem.copy(quantity = currentQuantity + 1)
+    }
+
+    fun decreaseQuantity() {
+        val currentShoppingCartItem = _shoppingCartItem.value ?: return
+        val current = _shoppingCartItem.value?.quantity ?: 1
+        if (current > 1) {
+            _shoppingCartItem.value = currentShoppingCartItem.copy(quantity = current - 1)
+        }
     }
 }

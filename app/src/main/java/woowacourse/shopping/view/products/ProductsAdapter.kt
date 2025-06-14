@@ -1,18 +1,16 @@
 package woowacourse.shopping.view.products
 
-import android.util.Log
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 
 class ProductsAdapter(
     private val productClickListener: ProductsClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var product: List<ProductListViewType> = emptyList()
-
+) : ListAdapter<ProductListViewType, RecyclerView.ViewHolder>(ProductDiffUtil()) {
     override fun getItemViewType(position: Int): Int =
-        when (product[position]) {
+        when (getItem(position)) {
             is ProductListViewType.ProductType -> R.layout.item_product
             is ProductListViewType.LoadMoreType -> R.layout.item_load_more
         }
@@ -22,26 +20,26 @@ class ProductsAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_product -> ProductViewHolder.create(parent, productClickListener)
+            R.layout.item_product ->
+                ProductViewHolder.create(
+                    parent,
+                    productClickListener,
+                )
+
             R.layout.item_load_more -> LoadMoreViewHolder.create(parent, loadMoreClickListener)
 
             else -> throw IllegalArgumentException("지원하지 않는 타입입니다")
         }
-
-    override fun getItemCount(): Int = product.size
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(product[position] as ProductListViewType.ProductType)
+            is ProductViewHolder -> {
+                val productType = getItem(position) as ProductListViewType.ProductType
+                holder.bind(productType)
+            }
         }
-    }
-
-    fun updateProductsView(list: List<ProductListViewType>?) {
-        Log.d("TAG", "updateProductsView: $list")
-        product = list.orEmpty()
-        notifyDataSetChanged()
     }
 }
