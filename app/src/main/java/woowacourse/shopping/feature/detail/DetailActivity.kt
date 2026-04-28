@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.core.component.ShoppingAppBar
+import woowacourse.shopping.core.data.CartRepository
 import woowacourse.shopping.core.data.ProductData
 import woowacourse.shopping.core.model.Money
 import woowacourse.shopping.core.model.Product
@@ -55,17 +56,20 @@ class DetailActivity : ComponentActivity() {
         setContent {
             val id = this.intent.getStringExtra("id")
             require(id != null) {
-                Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
                 this.finish()
             }
             val product = ProductData.getProductById(id)
             AndroidshoppingTheme {
                 DetailScreen(
-                    product = product!!,
+                    product = product,
                     onAddProductToCart = {
-                        val intent = Intent(this, ShoppingActivity::class.java)
-                        intent.putExtra("id", id)
-                        startActivity(intent)
+                        if (CartRepository.addItem(product)) {
+                            val intent = Intent(this, ShoppingActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, "장바구니 등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier,
                 )

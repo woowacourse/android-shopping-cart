@@ -50,5 +50,5 @@ object ProductData {
             ),
         ).toImmutableList()
 
-    fun getProductById(id: String): Product? = products.firstOrNull { it.id == id }
+    fun getProductById(id: String): Product = products.first { it.id == id }
 }
