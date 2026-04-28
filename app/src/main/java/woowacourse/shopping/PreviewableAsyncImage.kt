@@ -11,22 +11,20 @@ import coil3.compose.AsyncImage
 @Composable
 fun PreviewableAsyncImage(
     imageUrl: String,
-    title: String,
+    description: String,
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
     AsyncImage(
         model = imageUrl,
-        contentDescription = title,
+        contentDescription = description,
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f),
-        placeholder = if (isPreview) {
-            painterResource(R.drawable.ic_launcher_background)
-        } else {
-            null
-        },
-        error = if (isPreview) {
+        placeholder =
+        painterResource(R.drawable.ic_launcher_background),
+        error =
+        if (isPreview) {
             painterResource(R.drawable.ic_launcher_background)
         } else {
             null
