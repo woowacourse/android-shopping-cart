@@ -4,12 +4,6 @@ import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class Money(private val amount: Int) {
-    init {
-        require(amount >= 0) { "가격은 0원 이상이어야 합니다." }
-    }
-}
-
 class MoneyTest {
     @Test
     fun `가격이 0원 이상이어야 한다`() {
