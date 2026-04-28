@@ -1,57 +1,56 @@
 package woowacourse.shopping.repository.inmemory
 
-import woowacourse.shopping.R
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
 object InMemoryProductRepository : ProductRepository {
-    val BOTTLE_SQUARE_500ML = Product(
-        name = "PET보틀 -정사각(500ml)",
-        price = Money(41_000),
-        imageResource = R.drawable.bottle_square_500
-    )
-
-    val BOTTLE_SQUARE_370ML = Product(
-        name = "PET보틀 -정사각(370ml)",
-        price = Money(41_000),
-        imageResource = R.drawable.bottle_square_370
-    )
-
-    val BOTTLE_FLAT_260ML = Product(
-        name = "PET보틀-납작(260ml)",
-        price = Money(61_800),
-        imageResource = R.drawable.bottle_flat_260
-    )
-
-    val SWEET_CORN = Product(
-        name = "[든든] 동원 스위트콘",
-        price = Money(99_800),
-        imageResource = R.drawable.sweet_corn
-    )
-
-    val BOTTLE_JAR_400ML = Product(
-        name = "PET보틀-단지(400ml)",
-        price = Money(12_000),
-        imageResource = R.drawable.bottle_jar_400
-    )
-
-
-    val BOTTLE_JAR_200ML = Product(
-        name = "PET보틀-단지(200ml)",
+    val DARAM = Product(
+        name = "다람",
         price = Money(10_000),
-        imageResource = R.drawable.bottle_jar_200
+        imageUrl = "https://i.namu.wiki/i/MVXBZRYvGBlNoYN2ZzV9Ttk68Euao5BK_eK4FpCF30TjqAH4FmkkLWlB-jJcnejeoSpo5lsIqqU1abloNZ4mdw.webp"
     )
 
-    private val products = Products(
+    val BBOYAMI = Product(
+        name = "뽀야미",
+        price = Money(11_000),
+        imageUrl = "https://i.namu.wiki/i/Fl6hgrl84FWyeRUFM42oScLecflbDFrnMvgNmTo15v7WZpFj_m_EQ7XAK7EX-0G8x7l10E4NqLaTUFL5J6LZCQ.webp"
+    )
+
+    val BANILLA = Product(
+        name = "바닐라",
+        price = Money(12_000),
+        imageUrl = "https://i.namu.wiki/i/cjd1kMdYSIteKb_SQyWcrfz6WEEpLQi1RsvUPoEsPxWrVGZKoRBGhBTz0F2y9-6ws0XPD9jQgCfhQgYioHNJrw.webp"
+    )
+
+    val APPLE = Product(
+        name = "애플",
+        price = Money(13_000),
+        imageUrl = "https://i.namu.wiki/i/dmM9VlFuGbkvS3b4B9uEcNntBb7egFMySJi9MFSY2_u8DvDEC0W1sysET0UJjPanUz1hiZPQ-s7nWNdYR4Kzgw.webp"
+    )
+
+    val SYANTI = Product(
+        name = "샤니",
+        price = Money(14_000),
+        imageUrl = "https://i.namu.wiki/i/uxeGhj6C7SKpvwV_ViQMn_wVojVACIUWpFzPw7ukBjcDaEwt8l32a4un10JhT-nBsY2uayXLkrfg1vzCncXwTw.webp"
+    )
+
+
+    val GLLUMIN = Product(
+        name = "글루민",
+        price = Money(15_000),
+        imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp"
+    )
+
+    val products = Products(
         listOf(
-            BOTTLE_SQUARE_500ML,
-            BOTTLE_SQUARE_370ML,
-            BOTTLE_FLAT_260ML,
-            BOTTLE_JAR_400ML,
-            BOTTLE_JAR_200ML,
-            SWEET_CORN
+            DARAM,
+            BBOYAMI,
+            BANILLA,
+            APPLE,
+            GLLUMIN,
+             SYANTI
         )
     )
 
