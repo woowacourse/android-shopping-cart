@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.productlist
 
 import ProductListAppBar
 import androidx.compose.foundation.layout.Box

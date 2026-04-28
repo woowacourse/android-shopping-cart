@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.productlist
 
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Column
