@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.CartProducts
@@ -31,5 +32,38 @@ class CartProductTest {
         val cartProducts2 = cartProducts1.remove(targetId)
 
         assertTrue(cartProducts2.products.contains(newProduct).not())
+    }
+
+    @Test
+    fun `상품을 id로 검색 한다`() {
+        val newProduct = Product(
+            imageUri = "image",
+            name = "twohander",
+            price = 10000)
+        val cartProducts1 = CartProducts(products = listOf(newProduct))
+        val targetId = newProduct.uuid
+
+        val foundProduct = cartProducts1.findWithId(targetId)
+
+        assertEquals(newProduct, foundProduct)
+    }
+
+    @Test
+    fun `id 검색에 실패했다면 null을 반환한다`() {
+        val newProduct = Product(
+            imageUri = "image",
+            name = "twohander",
+            price = 10000)
+        val newProduct2 = Product(
+            imageUri = "image",
+            name = "samuel",
+            price = 50
+        )
+        val cartProducts1 = CartProducts(products = listOf(newProduct))
+        val targetId = newProduct2.uuid
+
+        val foundProduct = cartProducts1.findWithId(targetId)
+
+        assertEquals(null, foundProduct)
     }
 }
