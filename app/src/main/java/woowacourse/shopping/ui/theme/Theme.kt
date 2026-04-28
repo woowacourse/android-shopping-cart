@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package woowacourse.shopping.ui.theme
 
 import android.os.Build
