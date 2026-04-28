@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package woowacourse.shopping
 
 import android.content.Intent
@@ -12,16 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -29,7 +31,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AndroidshoppingTheme {
+            AndroidShoppingTheme {
                 Scaffold(
                     topBar = this::TopBar,
                     modifier = Modifier.fillMaxSize(),
@@ -55,7 +57,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun TopBar() {
         TopAppBar(
-            title = { Text(text = "Shopping", color = Color.White) },
+            title = { Text(text = "Shopping") },
             actions = {
                 IconButton(onClick = {
                     startActivity(Intent(this@MainActivity, ShoppingCartActivity::class.java))
@@ -69,9 +71,9 @@ class MainActivity : ComponentActivity() {
             },
             colors =
                 TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Gray,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
         )
     }
-
 }
