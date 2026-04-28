@@ -3,10 +3,6 @@ package woowacourse.shopping.domain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class CartItem(private val product: Product, private val quantity: Quantity) {
-    fun isSame(other: Product): Boolean = product.isSame(other)
-}
-
 class CartItemTest {
     @Test
     fun `입력받은 상품의 id가 CartItem 의 상품 id 와 같으면 true를 반환한다`() {
