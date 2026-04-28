@@ -8,13 +8,13 @@ class ProductsTest {
     val product1 = Product(
         name = "새우깡",
         price = Money(3100),
-        imageResource = 1
+        imageUrl = ""
     )
 
     val product2 = Product(
         name = "아이셔",
         price = Money(1300),
-        imageResource = 2
+        imageUrl = ""
     )
 
     @Test
