@@ -58,4 +58,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
