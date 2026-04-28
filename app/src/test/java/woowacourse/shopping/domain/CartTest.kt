@@ -3,12 +3,6 @@ package woowacourse.shopping.domain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class Cart(private val cartItems: List<CartItem> = emptyList()) {
-    fun plusCartItem(cartItem: CartItem): Cart = Cart(cartItems + cartItem)
-
-    fun isContains(product: Product): Boolean = cartItems.any { it.isSame(product) }
-}
-
 class CartTest {
     @Test
     fun `상품을 추가하면 추가된 Cart 를 반환한다`() {
