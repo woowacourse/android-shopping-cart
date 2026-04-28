@@ -36,18 +36,6 @@ fun ShoppingItem(
 }
 
 @Composable
-private fun ProductImage(
-    imageUri: String,
-    modifier: Modifier = Modifier,
-) {
-    AsyncImage(
-        model = imageUri,
-        contentDescription = "상품 사진",
-        modifier = modifier,
-    )
-}
-
-@Composable
 private fun ProductInfo(
     name: String,
     price: Int,
