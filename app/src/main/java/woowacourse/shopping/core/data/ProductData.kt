@@ -49,4 +49,6 @@ object ProductData {
                 imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2026/03/[9200000006937]_20260304125026093.jpg",
             ),
         ).toImmutableList()
+
+    fun getProductById(id: String): Product? = products.firstOrNull { it.id == id }
 }

@@ -1,8 +1,10 @@
 package woowacourse.shopping.feature.shopping
 
 import android.R.attr.data
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
@@ -30,18 +32,18 @@ import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.data.ProductData
 import woowacourse.shopping.core.model.Product
+import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.shopping.ui.ProductCard
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mockData = ProductData.products
         enableEdgeToEdge()
         setContent {
             AndroidshoppingTheme {
                 ShoppingScreen(
-                    data = mockData,
+                    data = ProductData.products,
                 )
             }
         }
@@ -89,6 +91,7 @@ fun ShoppingContents(
     products: ImmutableList<Product>,
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalActivity.current
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -100,9 +103,14 @@ fun ShoppingContents(
             key = { product -> product.id },
         ) { product ->
             ProductCard(
-                product.imageUrl,
-                product.name,
-                product.price,
+                onClick = {
+                    val intent = Intent(activity, DetailActivity::class.java)
+                    intent.putExtra("id", product.id)
+                    activity?.startActivity(intent)
+                },
+                imageUrl = product.imageUrl,
+                productName = product.name,
+                price = product.price,
             )
         }
     }

@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.shopping.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,18 +16,24 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.core.model.Money
 import woowacourse.shopping.core.model.ProductName
-import woowacourse.shopping.ui.theme.Gray5
-import java.text.DecimalFormat
+import woowacourse.shopping.core.util.formattedPrice
+import woowacourse.shopping.ui.theme.Gray50
 
 @Composable
 fun ProductCard(
+    onClick: () -> Unit,
     imageUrl: String,
     productName: ProductName,
     price: Money,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable {
+                    onClick()
+                },
     ) {
         AsyncImage(
             model = imageUrl,
@@ -48,14 +55,9 @@ fun ProductCard(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             lineHeight = 20.sp,
-            color = Gray5,
+            color = Gray50,
         )
     }
-}
-
-private fun formattedPrice(value: Int): String {
-    val decimal = DecimalFormat("#,###원")
-    return decimal.format(value)
 }
 
 @Preview(showBackground = true)
@@ -65,5 +67,6 @@ private fun ProductCardPreview() {
         imageUrl = "",
         productName = ProductName("커피"),
         price = Money(1000),
+        onClick = {},
     )
 }

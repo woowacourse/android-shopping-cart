@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="title_activity_shopping">ShoppingActivity</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

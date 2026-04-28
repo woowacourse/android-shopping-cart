@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.ui.theme.Gray5
+import woowacourse.shopping.ui.theme.Gray50
 
 @Composable
 fun ShoppingAppBar(
@@ -28,7 +28,7 @@ fun ShoppingAppBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(Gray5)
+                .background(Gray50)
                 .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
         contents()
