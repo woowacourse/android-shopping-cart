@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.theme
+package woowacourse.shopping.core.designsystem.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
