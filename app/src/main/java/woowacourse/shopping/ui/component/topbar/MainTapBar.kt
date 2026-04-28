@@ -28,10 +28,9 @@ fun MainTapBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier =
-            modifier
-                .background(Color(0xFF555555))
-                .padding(start = 26.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
+        modifier = modifier
+            .background(Color(0xFF555555))
+            .padding(start = 26.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -46,10 +45,9 @@ fun MainTapBar(
             painter = painterResource(iconResources),
             contentDescription = "$title 화면 메뉴 버튼",
             tint = Color.White,
-            modifier =
-                Modifier
-                    .size(24.dp)
-                    .clickable(onClick = onIconClick),
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(onClick = onIconClick),
         )
     }
 }
