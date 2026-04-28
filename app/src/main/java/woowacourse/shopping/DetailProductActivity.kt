@@ -41,6 +41,12 @@ class DetailProductActivity : ComponentActivity() {
                         val product = MemoryProductRepository.getProduct(productId)
                         Button(onClick = {
                             MemoryShoppingCartRepository.add(product)
+                            startActivity(
+                                Intent(
+                                    this@DetailProductActivity,
+                                    MainActivity::class.java
+                                )
+                            )
                         }, modifier = Modifier.padding(innerPadding)) {
                             Text("${product.title}, ${product.price}")
                         }
