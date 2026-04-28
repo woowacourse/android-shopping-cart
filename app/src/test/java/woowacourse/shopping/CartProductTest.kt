@@ -27,8 +27,8 @@ class CartProductTest {
             price = 10000
         )
         val cartProducts1 = CartProducts(products = listOf(newProduct))
-
-        val cartProducts2 = cartProducts1.remove(newProduct)
+        val targetId = newProduct.uuid
+        val cartProducts2 = cartProducts1.remove(targetId)
 
         assertTrue(cartProducts2.products.contains(newProduct).not())
     }
