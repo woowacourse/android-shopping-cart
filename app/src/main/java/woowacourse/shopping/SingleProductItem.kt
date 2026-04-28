@@ -2,12 +2,15 @@ package woowacourse.shopping
 
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +25,8 @@ fun SingleProductItem(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        PreviewableAsyncImage(imageUrl = imageUrl, title = title)
+        PreviewableAsyncImage(imageUrl = imageUrl, description = title)
+        Spacer(modifier = Modifier.height(9.dp))
         Text(
             title,
             fontWeight = FontWeight.W700,
@@ -36,7 +40,11 @@ fun SingleProductItem(
             "${
                 DecimalFormat("#,###").format(money)
             }원",
+            fontWeight = FontWeight.W400,
+            fontSize = 16.sp,
+            color = Color(0xff555555),
         )
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
