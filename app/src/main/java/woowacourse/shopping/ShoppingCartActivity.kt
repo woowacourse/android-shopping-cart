@@ -8,7 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -34,6 +36,12 @@ class ShoppingCartActivity : ComponentActivity() {
                     topBar = this::TopBar,
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
+                    val shoppingCartItems = MemoryShoppingCartRepository.getShoppingItems()
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        shoppingCartItems.forEach { item ->
+                            Text("${item.product.title}, ${item.product.price}")
+                        }
+                    }
                 }
             }
         }

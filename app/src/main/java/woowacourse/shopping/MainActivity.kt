@@ -36,19 +36,18 @@ class MainActivity : ComponentActivity() {
                     topBar = this::TopBar,
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
-                    ProductItem(
-                        product =
-                            Product(
-                                id = 1,
-                                title = "동원 스위트콘",
-                                price = 99_800,
-                                imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-                            ),
-                        modifier =
-                            Modifier.padding(innerPadding).clickable(onClick = {
-                                startActivity(Intent(this, DetailProductActivity::class.java))
-                            }),
-                    )
+                    val products = MemoryProductRepository.getProducts()
+                    products.forEach { product ->
+                        ProductItem(
+                            product = product,
+                            modifier =
+                                Modifier.padding(innerPadding).clickable(onClick = {
+                                    val intent = Intent(this, DetailProductActivity::class.java)
+                                    intent.putExtra("productId", product.id)
+                                    startActivity(intent)
+                                }),
+                        )
+                    }
                 }
             }
         }

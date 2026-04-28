@@ -9,11 +9,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -33,6 +36,17 @@ class DetailProductActivity : ComponentActivity() {
                     topBar = this::TopBar,
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
+                    val productId = intent.getLongExtra("productId", -1)
+                    if (productId != -1L) {
+                        val product = MemoryProductRepository.getProduct(productId)
+                        Button(onClick = {
+                            MemoryShoppingCartRepository.add(product)
+                        }, modifier = Modifier.padding(innerPadding)) {
+                            Text("${product.title}, ${product.price}")
+                        }
+                    } else {
+                        Text("상품을 찾을 수 없습니다")
+                    }
                 }
             }
         }
