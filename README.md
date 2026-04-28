@@ -73,8 +73,9 @@
     - [x] 입력받은 상품의 id가 CartItem 의 상품 id 와 같으면 true를 반환한다
     - [x] 입력받은 상품의 id가 CartItem 의 상품 id 와 다르면 false를 반환한다
 - Cart
-    - [ ] 상품을 추가하면 추가된 Cart 를 반환한다
-    - [ ] product 로 상품을 검색할 수 있다
+    - [x] 상품을 추가하면 추가된 Cart 를 반환한다
+    - [x] product가 존재한다면 true를 반환한다
+    - [x] product가 존재하지 않는다면 false를 반환한다
 
 ---
 
