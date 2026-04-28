@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="cart_description">장바구니 아이콘</string>
 </resources>
