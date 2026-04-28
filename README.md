@@ -10,7 +10,7 @@
 
 ## 상품 (Product)
 - 상품명 (ProductName), 가격(Money), 이미지 링크(String), id(UUID)를 가진다.
-- [ ] 동일한 id를 가진 상품은 동일 상품이다.
+- [x] 동일한 id를 가진 상품은 동일 상품이다.
 
 ## 장바구니(Cart)
 - 장바구니에 등록된 상품 (List<CartItem>)을 관리한다.
