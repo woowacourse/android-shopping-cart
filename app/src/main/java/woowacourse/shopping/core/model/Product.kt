@@ -3,7 +3,7 @@ package woowacourse.shopping.core.model
 import java.util.UUID
 
 class Product(
-    private val id: UUID = UUID.randomUUID(),
+    val id: String = UUID.randomUUID().toString(),
     val name: ProductName,
     val price: Money,
     val imageUrl: String,

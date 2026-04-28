@@ -1,0 +1,69 @@
+package woowacourse.shopping.feature.shopping.ui
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import woowacourse.shopping.core.model.Money
+import woowacourse.shopping.core.model.ProductName
+import woowacourse.shopping.ui.theme.Gray5
+import java.text.DecimalFormat
+
+@Composable
+fun ProductCard(
+    imageUrl: String,
+    productName: ProductName,
+    price: Money,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "상품 이미지",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
+        )
+        Text(
+            text = productName.name,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 24.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Black,
+        )
+        Text(
+            text = formattedPrice(price.amount),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 20.sp,
+            color = Gray5,
+        )
+    }
+}
+
+private fun formattedPrice(value: Int): String {
+    val decimal = DecimalFormat("#,###원")
+    return decimal.format(value)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProductCardPreview() {
+    ProductCard(
+        imageUrl = "",
+        productName = ProductName("커피"),
+        price = Money(1000),
+    )
+}
