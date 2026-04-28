@@ -1,7 +1,9 @@
 package woowacourse.shopping.domain
 
+import java.util.UUID
+
 data class Product(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val price: Int,
     val imageUrl: String,
