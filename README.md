@@ -70,8 +70,8 @@
     - [x] 수량이 1개 미만이면 오류가 발생한다
     - [x] 수량을 더하면 더해진 새 Quantity를 반환한다
 - CartItem
-    - [ ] 입력받은 상품의 id가 CartItem 의 상품 id 와 같으면 true를 반환한다
-    - [ ] 입력받은 상품의 id가 CartItem 의 상품 id 와 다르면 false를 반환한다
+    - [x] 입력받은 상품의 id가 CartItem 의 상품 id 와 같으면 true를 반환한다
+    - [x] 입력받은 상품의 id가 CartItem 의 상품 id 와 다르면 false를 반환한다
 - Cart
     - [ ] 상품을 추가하면 추가된 Cart 를 반환한다
     - [ ] product 로 상품을 검색할 수 있다
