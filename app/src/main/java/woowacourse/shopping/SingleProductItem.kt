@@ -2,21 +2,17 @@ package woowacourse.shopping
 
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 
 @Composable
 fun SingleProductItem(
@@ -25,25 +21,8 @@ fun SingleProductItem(
     money: Int,
     modifier: Modifier = Modifier,
 ) {
-    val isPreview = LocalInspectionMode.current
     Column(modifier = modifier.fillMaxWidth()) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            placeholder = if (isPreview) {
-                painterResource(R.drawable.ic_launcher_background)
-            } else {
-                null
-            },
-            error = if (isPreview) {
-                painterResource(R.drawable.ic_launcher_background)
-            } else {
-                null
-            },
-        )
+        PreviewableAsyncImage(imageUrl = imageUrl, title = title)
         Text(
             title,
             fontWeight = FontWeight.W700,
