@@ -12,9 +12,7 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
-fun CartScreen(
-    cartStateHolder: CartStateHolder,
-) {
+fun CartScreen(cartStateHolder: CartStateHolder) {
     val cartItems = cartStateHolder.cartItems
 
     Scaffold(
