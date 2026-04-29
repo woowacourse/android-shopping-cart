@@ -22,8 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
@@ -145,8 +143,6 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         onDismiss = { },
         productDetailStateHolder = ProductDetailStateHolder(
-            productRepository = ProductRepositoryImpl(),
-            cartRepository = CartRepositoryImpl(),
             targetProductId = "1",
         ),
     )

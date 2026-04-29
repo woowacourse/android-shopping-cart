@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.ui.component.topbar.MainTapBar
 
 @Composable
@@ -62,7 +61,7 @@ fun ProductScreen(
 @Composable
 fun ProductScreenPreview() {
     ProductScreen(
-        productStateHolder = ProductStateHolder(ProductRepositoryImpl()),
+        productStateHolder = ProductStateHolder(),
         onIconClick = { },
     )
 }
