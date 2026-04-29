@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.shopping.ui
 
+import android.R.attr.onClick
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +15,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import woowacourse.shopping.core.model.Money
-import woowacourse.shopping.core.model.ProductName
 import woowacourse.shopping.core.util.formattedPrice
 import woowacourse.shopping.ui.theme.Gray50
 
@@ -23,8 +22,8 @@ import woowacourse.shopping.ui.theme.Gray50
 fun ProductCard(
     onClick: () -> Unit,
     imageUrl: String,
-    productName: ProductName,
-    price: Money,
+    productName: String,
+    price: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -42,7 +41,7 @@ fun ProductCard(
             modifier = Modifier.fillMaxSize(),
         )
         Text(
-            text = productName.name,
+            text = productName,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 24.sp,
@@ -51,7 +50,7 @@ fun ProductCard(
             color = Color.Black,
         )
         Text(
-            text = formattedPrice(price.amount),
+            text = formattedPrice(price),
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             lineHeight = 20.sp,
@@ -65,8 +64,8 @@ fun ProductCard(
 private fun ProductCardPreview() {
     ProductCard(
         imageUrl = "",
-        productName = ProductName("커피"),
-        price = Money(1000),
+        productName = "커피",
+        price = 1000,
         onClick = {},
     )
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.cart.ui
 
-import android.R.attr.name
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import woowacourse.shopping.core.model.Money
-import woowacourse.shopping.core.model.ProductName
 import woowacourse.shopping.core.util.formattedPrice
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Gray50
@@ -33,9 +30,9 @@ import woowacourse.shopping.ui.theme.Gray50
 @Composable
 fun CartCard(
     onDeleteItem: () -> Unit,
-    productName: ProductName,
+    productName: String,
     imageUrl: String,
-    price: Money,
+    price: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -54,7 +51,7 @@ fun CartCard(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = productName.name,
+                text = productName,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 24.sp,
@@ -89,7 +86,7 @@ fun CartCard(
                         .width(136.dp),
             )
             Text(
-                text = formattedPrice(price.amount),
+                text = formattedPrice(price),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 lineHeight = 26.sp,

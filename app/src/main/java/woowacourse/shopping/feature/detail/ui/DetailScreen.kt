@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,16 +32,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.core.component.ShoppingAppBar
-import woowacourse.shopping.core.model.Money
-import woowacourse.shopping.core.model.Product
-import woowacourse.shopping.core.model.ProductName
+import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.core.util.formattedPrice
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
 
 @Composable
 fun DetailScreen(
-    product: Product,
+    product: ProductUiModel,
     onAddProductToCart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -98,8 +97,8 @@ fun DetailScreen(
 @Composable
 private fun DetailContent(
     imageUrl: String,
-    productName: ProductName,
-    price: Money,
+    productName: String,
+    price: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -116,7 +115,7 @@ private fun DetailContent(
                     .aspectRatio(0.8f),
         )
         Text(
-            text = productName.name,
+            text = productName,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -137,7 +136,7 @@ private fun DetailContent(
                 lineHeight = 24.sp,
             )
             Text(
-                text = formattedPrice(price.amount),
+                text = formattedPrice(price),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
                 lineHeight = 26.sp,
@@ -153,10 +152,11 @@ private fun DetailScreenPreview() {
     DetailScreen(
         onAddProductToCart = {},
         product =
-            Product(
+            ProductUiModel(
+                id = "id",
                 imageUrl = "",
-                name = ProductName("Test"),
-                price = Money(10000),
+                name = "Test",
+                price = 10000,
             ),
     )
 }
@@ -166,7 +166,7 @@ private fun DetailScreenPreview() {
 private fun DetailContentPreview() {
     DetailContent(
         imageUrl = "",
-        productName = ProductName("Test"),
-        price = Money(10000),
+        productName = "Test",
+        price = 10000,
     )
 }

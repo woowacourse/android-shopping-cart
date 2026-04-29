@@ -25,13 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
-import woowacourse.shopping.core.model.Product
-import woowacourse.shopping.feature.cart.model.CartItem
+import woowacourse.shopping.core.uimodel.CartItemUiModel
 
 @Composable
 fun CartScreen(
-    onDeleteItem: (Product) -> Unit,
-    cartItems: ImmutableList<CartItem>,
+    onDeleteItem: (String) -> Unit,
+    cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current
@@ -76,8 +75,8 @@ fun CartScreen(
 
 @Composable
 private fun CartContent(
-    onDeleteItem: (Product) -> Unit,
-    cartItems: ImmutableList<CartItem>,
+    onDeleteItem: (String) -> Unit,
+    cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -94,7 +93,7 @@ private fun CartContent(
                 price = product.price,
                 imageUrl = product.imageUrl,
                 onDeleteItem = {
-                    onDeleteItem(product)
+                    onDeleteItem(product.id)
                 },
             )
         }
