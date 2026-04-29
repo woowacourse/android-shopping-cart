@@ -53,7 +53,7 @@ fun ProductDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Text(
-                    title,
+                    text = title,
                     fontWeight = FontWeight.W700,
                     fontSize = 24.sp,
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 18.dp),
@@ -66,12 +66,12 @@ fun ProductDetailScreen(
                         .padding(vertical = 16.dp, horizontal = 18.dp),
                 ) {
                     Text(
-                        stringResource(R.string.product_detail_price),
+                        text = stringResource(R.string.product_detail_price),
                         fontWeight = FontWeight.W400,
                         fontSize = 20.sp,
                     )
                     Text(
-                        price,
+                        text = price,
                         fontWeight = FontWeight.W400,
                         fontSize = 20.sp,
                     )
