@@ -3,6 +3,7 @@ package woowacourse.shopping.data
 import io.kotest.matchers.equals.shouldEqual
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 
 class ProductRepositoryImplTest {
     @Test

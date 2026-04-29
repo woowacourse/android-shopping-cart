@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.screens.cart
 
-import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartStateHolder(

@@ -1,9 +1,9 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.source
 
 import woowacourse.shopping.domain.Product
 
-object ProductDataSource {
-    val products = listOf(
+object ProductDataSourceImpl : ProductDataSource {
+    override val products = listOf(
         Product(
             id = "1",
             name = "bolt",

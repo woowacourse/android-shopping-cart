@@ -1,12 +1,12 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.source
 
 import woowacourse.shopping.domain.CartItem
 
-object CartDataSource {
+object CartDataSourceImpl : CartDataSource {
     private val _items: MutableList<CartItem> = mutableListOf()
-    val items get() = _items.toList()
+    override val items get() = _items.toList()
 
-    fun add(cartItem: CartItem) {
+    override fun add(cartItem: CartItem) {
         val idx = _items.indexOfFirst { it.product == cartItem.product }
 
         if (idx == -1) {
@@ -17,7 +17,7 @@ object CartDataSource {
         _items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
     }
 
-    fun deleteItem(id: String) {
+    override fun deleteItem(id: String) {
         _items.removeIf { it.product.id == id }
     }
 }
