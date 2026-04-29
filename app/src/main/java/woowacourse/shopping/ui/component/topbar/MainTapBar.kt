@@ -29,6 +29,7 @@ fun MainTapBar(
 ) {
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .background(Color(0xFF555555))
             .padding(start = 26.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

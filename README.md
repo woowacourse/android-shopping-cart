@@ -31,8 +31,8 @@
 
 ## 상품 스크린(ProductScreen)
 
-- [ ]  메인 탑바를 표시한다. (Shopping, CartIcon)
-- [ ]  상품 카드들을 표시한다.
+- [x]  메인 탑바를 표시한다. (Shopping, CartIcon)
+- [x]  상품 카드들을 표시한다.
 
 ### 상품 카드(ProductCard)
 

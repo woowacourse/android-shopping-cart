@@ -3,6 +3,8 @@ package woowacourse.shopping.ui.screens.product
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -32,7 +34,9 @@ fun ProductCard(
         AsyncImage(
             model = imageUrl,
             contentDescription = "$name 이미지 입니다용",
-            modifier = Modifier.size(154.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
             contentScale = ContentScale.Crop,
         )
 
