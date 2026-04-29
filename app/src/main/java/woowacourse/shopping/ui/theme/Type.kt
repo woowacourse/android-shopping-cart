@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.cart.ui.theme
+package woowacourse.shopping.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

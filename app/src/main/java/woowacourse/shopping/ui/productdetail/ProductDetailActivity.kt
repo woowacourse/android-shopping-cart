@@ -11,7 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
+import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class ProductDetailActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            AndroidshoppingcartTheme {
+            ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val cartRepo = InMemoryCartRepository
 
