@@ -31,7 +31,7 @@ fun CartItemCard(
     imageUrl: String,
     name: String,
     price: Int,
-    onDismiss: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -57,7 +57,7 @@ fun CartItemCard(
                 contentDescription = "$name 장바구니에서 제거",
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable(onClick = onDismiss)
+                    .clickable(onClick = onDelete)
                     .padding(12.dp),
                 tint = Color(0xFFAAAAAA),
             )
@@ -92,7 +92,7 @@ private fun CartItemCardPreview() {
         imageUrl = "",
         name = "우주선",
         price = 10_000_000,
-        onDismiss = { },
+        onDelete = { },
         modifier = Modifier.padding(5.dp),
     )
 }
