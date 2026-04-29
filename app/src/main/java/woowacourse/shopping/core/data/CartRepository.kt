@@ -16,4 +16,8 @@ object CartRepository {
             return false
         }
     }
+
+    fun deleteItem(product: Product) {
+        cart = cart.deleteItem(product)
+    }
 }

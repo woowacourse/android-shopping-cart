@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.data.ProductData
 import woowacourse.shopping.core.model.Product
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.shopping.ui.ProductCard
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -55,6 +57,7 @@ fun ShoppingScreen(
     data: ImmutableList<Product>,
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalActivity.current
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -71,7 +74,13 @@ fun ShoppingScreen(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "쇼핑 카트",
                         tint = Color.White,
-                        modifier = Modifier.size(24.dp),
+                        modifier =
+                            Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    val intent = Intent(activity, CartActivity::class.java)
+                                    activity?.startActivity(intent)
+                                },
                     )
                 },
                 modifier = modifier.fillMaxWidth(),

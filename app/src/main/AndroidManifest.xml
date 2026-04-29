@@ -15,6 +15,11 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
+            android:name=".feature.cart.CartActivity"
+            android:exported="false"
+            android:label="@string/title_activity_cart"
+            android:theme="@style/Theme.Shopping" />
+        <activity
             android:name=".feature.detail.DetailActivity"
             android:exported="false"
             android:label="@string/title_activity_detail"

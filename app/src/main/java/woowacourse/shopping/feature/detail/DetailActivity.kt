@@ -44,7 +44,7 @@ import woowacourse.shopping.core.model.Money
 import woowacourse.shopping.core.model.Product
 import woowacourse.shopping.core.model.ProductName
 import woowacourse.shopping.core.util.formattedPrice
-import woowacourse.shopping.feature.shopping.ShoppingActivity
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
@@ -65,7 +65,7 @@ class DetailActivity : ComponentActivity() {
                     product = product,
                     onAddProductToCart = {
                         if (CartRepository.addItem(product)) {
-                            val intent = Intent(this, ShoppingActivity::class.java)
+                            val intent = Intent(this, CartActivity::class.java)
                             startActivity(intent)
                         } else {
                             Toast.makeText(this, "장바구니 등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
