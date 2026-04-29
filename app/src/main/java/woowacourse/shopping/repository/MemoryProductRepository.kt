@@ -3,8 +3,8 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.Product
 
 object MemoryProductRepository : ProductRepository {
-    private val products: Set<Product> =
-        setOf(
+    private val products: List<Product> =
+        listOf(
             Product(
                 id = 1,
                 title = "동원 스위트콘",

@@ -8,8 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.remember
 import woowacourse.shopping.repository.MemoryProductRepository
 import woowacourse.shopping.ui.ProductListScreen
+import woowacourse.shopping.ui.pagination.ProductPaginationStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,8 +21,12 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
+                val productPaginationStateHolder =
+                    remember {
+                        ProductPaginationStateHolder(MemoryProductRepository.getProducts())
+                    }
                 ProductListScreen(
-                    products = MemoryProductRepository.getProducts(),
+                    products = productPaginationStateHolder.getItems(),
                     onProductClick = { productId ->
                         val intent = Intent(this, DetailProductActivity::class.java)
                         intent.putExtra("productId", productId)
@@ -29,6 +35,7 @@ class ProductListActivity : ComponentActivity() {
                     onNavigateToCartClick = {
                         startActivity(Intent(this, ShoppingCartActivity::class.java))
                     },
+                    onMoreProductClick = productPaginationStateHolder::nextPage,
                 )
             }
         }
