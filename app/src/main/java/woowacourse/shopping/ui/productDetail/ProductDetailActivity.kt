@@ -12,35 +12,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.mock.MockData
+import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
 
 class ProductDetailActivity : ComponentActivity() {
+    private val productRepository: ProductRepository = ProductRepositoryMockImpl()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val productId = intent.getStringExtra("PRODUCT_ID")
+
+        val product = productRepository.getProduct(productId)
+
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
-                    product = MockData.products[0],
+                    product = product,
                 )
             }
         }
     }
-}
-
-@Composable
-fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Greeting("Android")
 }
