@@ -22,14 +22,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
 fun ProductDetailScreen(
-    product: Product,
+    productDetailStateHolder: ProductDetailStateHolder,
     onDismiss: () -> Unit,
 ) {
+    val product = productDetailStateHolder.product
+
     Scaffold(
         topBar = {
             DismissTopBar(
@@ -140,11 +143,11 @@ private fun AddCartButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        product = Product(
-            name = "암소타이어드 섬바리핼미",
-            price = 10000,
-            imageUrl = "",
-        ),
         onDismiss = { },
+        productDetailStateHolder = ProductDetailStateHolder(
+            productRepository = ProductRepositoryImpl(),
+            cartRepository = CartRepositoryImpl(),
+            targetProductId = "1",
+        ),
     )
 }
