@@ -30,5 +30,6 @@ fun ProductAppBar(modifier: Modifier = Modifier) {
             titleContentColor = Color.White,
             actionIconContentColor = Color.White,
         ),
+        modifier = modifier,
     )
 }
