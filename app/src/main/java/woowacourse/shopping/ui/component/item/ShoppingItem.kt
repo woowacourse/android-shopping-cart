@@ -43,7 +43,8 @@ private fun ProductInfo(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = 9.dp),
+            .padding(horizontal = 9.dp)
+            .width(154.dp),
     ) {
         Text(
             text = name,
