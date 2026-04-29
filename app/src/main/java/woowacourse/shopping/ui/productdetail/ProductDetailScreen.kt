@@ -31,13 +31,16 @@ fun ProductDetailScreen(
     imageUrl: String,
     title: String,
     price: String,
+    onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         containerColor = Color.White,
         modifier = modifier.fillMaxSize(),
         topBar = {
-            ProductAppBar()
+            ProductAppBar(
+                onCloseClick = onCloseClick,
+            )
         },
     ) { innerPadding ->
         Box(
@@ -108,5 +111,6 @@ private fun ProductScreenPreview() {
         imageUrl = "",
         title = "프리뷰",
         price = "1,000원",
+        onCloseClick = {},
     )
 }

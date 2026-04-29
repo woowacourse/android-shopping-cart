@@ -9,18 +9,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.constants.MockData
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun ProductListScreen(onProductClick: () -> Unit = {}) {
+fun ProductListScreen(
+    onProductClick: () -> Unit,
+    onCartIconClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         containerColor = Color.White,
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
-            ProductListAppBar()
+            ProductListAppBar(onCartIconClick = onCartIconClick)
         },
     ) { innerPadding ->
         Box(

@@ -28,13 +28,16 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.constants.MockData
 
 @Composable
-fun CartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(
+    onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         containerColor = Color.White,
         modifier = modifier
             .fillMaxSize(),
         topBar = {
-            CartAppBar()
+            CartAppBar(onCloseClick = onCloseClick)
         },
     ) { innerPadding ->
         Column(
@@ -132,5 +135,7 @@ private fun CartItemList(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen()
+    CartScreen(
+        onCloseClick = {},
+    )
 }

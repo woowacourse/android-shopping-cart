@@ -17,6 +17,9 @@ class ProductDetailActivity : ComponentActivity() {
                     imageUrl = "",
                     title = "임시",
                     price = "1,000원",
+                    onCloseClick = {
+                        finish()
+                    },
                 )
             }
         }

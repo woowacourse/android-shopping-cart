@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -15,15 +16,22 @@ import woowacourse.shopping.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductAppBar(modifier: Modifier = Modifier) {
+fun ProductAppBar(
+    onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     TopAppBar(
         title = {},
         actions = {
-            Icon(
-                painter = painterResource(R.drawable.close),
-                contentDescription = stringResource(R.string.close_description),
-                modifier = Modifier.padding(end = 10.dp),
-            )
+            IconButton(
+                onClick = onCloseClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.close),
+                    contentDescription = stringResource(R.string.close_description),
+                    modifier = Modifier.padding(end = 10.dp),
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(0xFF555555),
