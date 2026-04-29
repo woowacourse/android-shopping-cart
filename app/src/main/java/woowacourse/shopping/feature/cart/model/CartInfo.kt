@@ -1,6 +1,9 @@
 package woowacourse.shopping.feature.cart.model
 
 import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import woowacourse.shopping.domain.model.cart.CartItems
 
 @Stable
 data class CartInfo(
@@ -18,3 +21,13 @@ data class CartInfo(
         )
     }
 }
+
+fun CartItems.toUiModel(): ImmutableList<CartInfo> =
+    items.map { cartItem ->
+        CartInfo(
+            id = cartItem.product.id,
+            productImageUrl = cartItem.product.imageUrl,
+            productName = cartItem.product.productTitle.value,
+            price = "%,d원".format(cartItem.product.price.value),
+        )
+    }.toImmutableList()

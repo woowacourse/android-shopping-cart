@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.productDetail.model
 
 import androidx.compose.runtime.Stable
+import woowacourse.shopping.domain.model.product.Product
 
 @Stable
 data class ProductInfo(
@@ -16,3 +17,9 @@ data class ProductInfo(
         )
     }
 }
+
+fun Product.toUiModel(): ProductInfo = ProductInfo(
+    productImageUrl = imageUrl,
+    productName = productTitle.value,
+    price = "%,d원".format(price.value),
+)
