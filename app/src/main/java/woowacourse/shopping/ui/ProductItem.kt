@@ -37,8 +37,6 @@ fun ProductItem(
 ) {
     val context = LocalContext.current
 
-
-
     Card(
         colors =
             CardDefaults.cardColors(
@@ -48,9 +46,6 @@ fun ProductItem(
         modifier = modifier.clickable{
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra("woowacourse.shopping.product_id", product.productId.toString())
-                putExtra("woowacourse.shopping.product_name", product.productName)
-                putExtra("woowacourse.shopping.image_url", product.imageUrl)
-                putExtra("woowacourse.shopping.price", product.price.value)
             }
             context.startActivity(intent)
         },

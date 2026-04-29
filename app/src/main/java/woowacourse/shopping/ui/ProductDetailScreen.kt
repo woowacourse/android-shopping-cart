@@ -15,10 +15,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,9 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.theme.buttonColor
 import woowacourse.shopping.ui.theme.dividerColor
 import woowacourse.shopping.ui.theme.topAppBarColor
@@ -41,10 +47,13 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    product: Product,
+    product: Product?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,63 +77,72 @@ fun ProductDetailScreen(
             )
         },
         containerColor = Color.White,
+        snackbarHost = { SnackbarHost(snackbarHostState)}
     ) { innerPadding ->
         Box(
             modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Column(modifier = modifier.fillMaxWidth()) {
-                AsyncImage(
-                    model = product.imageUrl,
-                    contentDescription = product.productName,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
-                    Text(
-                        text = product.productName,
-                        fontWeight = FontWeight.W700,
-                        fontSize = 24.sp,
-                        color = Color.Black
+            if (product != null) {
+                Column(modifier = modifier.fillMaxWidth()) {
+                    AsyncImage(
+                        model = product.imageUrl,
+                        contentDescription = product.productName,
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
+                    Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
+                        Text(
+                            text = product.productName,
+                            fontWeight = FontWeight.W700,
+                            fontSize = 24.sp,
+                            color = Color.Black
+                        )
+                    }
+                    HorizontalDivider(color = dividerColor, thickness = 1.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp, vertical = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "가격",
+                            fontWeight = FontWeight.W400,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "${intFormatter(product.price.value)}원",
+                            fontWeight = FontWeight.W400,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                    }
                 }
-                HorizontalDivider(color = dividerColor, thickness = 1.dp)
-                Row(
+                Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 18.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .align(Alignment.BottomCenter),
+                    onClick = {
+                        CartRepository.addProduct(product)
+                        scope.launch {
+                            snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
+                        }
+                    },
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = buttonColor
+                    )
                 ) {
                     Text(
-                        text = "가격",
-                        fontWeight = FontWeight.W400,
+                        text = "장바구니 담기",
+                        fontWeight = FontWeight.W700,
                         fontSize = 20.sp,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "${intFormatter(product.price.value)}원",
-                        fontWeight = FontWeight.W400,
-                        fontSize = 20.sp,
-                        color = Color.Black
+                        color = Color.White
                     )
                 }
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                onClick = {},
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonColor
-                )
-            ) {
-                Text(
-                    text = "장바구니 담기",
-                    fontWeight = FontWeight.W700,
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
             }
         }
     }

@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui
 
+import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,19 +19,24 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
-    sampleData: ProductFixture,
+    products: Products,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,7 +52,13 @@ fun ProductListScreen(
                         modifier =
                             Modifier
                                 .padding(20.dp)
-                                .size(24.dp),
+                                .size(24.dp)
+                                .clickable {
+                                    val intent = Intent(context, CartActivity::class.java).apply {
+
+                                    }
+                                    context.startActivity(intent)
+                                }
                     )
                 },
                 colors =
@@ -64,7 +77,7 @@ fun ProductListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(sampleData.productList) { product ->
+                items(products.products) { product ->
                     ProductItem(product)
                 }
             }
@@ -76,6 +89,6 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     ProductListScreen(
-        sampleData = ProductFixture,
+        products = Products(ProductFixture.productList),
     )
 }
