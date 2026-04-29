@@ -38,20 +38,26 @@ import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
+import kotlin.math.min
 
 @Composable
 fun CartScreen(
     cart: Cart,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
-        headerContent = { CartHeader() },
+        headerContent = { CartHeader(onClose) },
         bodyContent = { CartBody(cart) },
+        modifier = modifier
     )
 }
 
 @Composable
-private fun CartHeader(modifier: Modifier = Modifier) {
+private fun CartHeader(
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxSize(),
@@ -60,7 +66,9 @@ private fun CartHeader(modifier: Modifier = Modifier) {
         Icon(
             painter = painterResource(R.drawable.ic_arrow_left),
             contentDescription = "뒤로가기 버튼",
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier
+                .size(40.dp)
+                .clickable(onClick = onClose),
             tint = Color.White
         )
         Spacer(Modifier.padding(12.dp))
@@ -79,6 +87,7 @@ private fun CartBody(
     cart: Cart,
     modifier: Modifier = Modifier,
 ) {
+    var currentPage = 0
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -88,7 +97,7 @@ private fun CartBody(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val products = cart.cartProducts
-        products.products.forEach {
+        products.getPartedItem(currentPage).forEach {
             CartItem(
                 product = it,
                 onDelete = {},
@@ -160,12 +169,19 @@ private fun Cart.isPageable(): Boolean {
     return cartProducts.size() > 5
 }
 
+private fun CartProducts.getPartedItem(page: Int, pageSize: Int = 5): List<Product> {
+    val fromIndex = page * pageSize
+    val toIndex = min(fromIndex + pageSize, products.size)
+    return products.subList(fromIndex, toIndex)
+}
+
 
 @Preview
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        Cart(
+        onClose = {},
+        cart = Cart(
             cartProducts = CartProducts(
                 listOf(
                     Product(
