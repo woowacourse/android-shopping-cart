@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.productlist
 
-import android.icu.text.DecimalFormat
+import android.R.attr.text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.sp
 fun SingleProductItem(
     imageUrl: String,
     title: String,
-    money: Int,
+    price: String,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         PreviewableAsyncImage(imageUrl = imageUrl, description = title)
         Spacer(modifier = Modifier.height(9.dp))
         Text(
-            title,
+            text = title,
             fontWeight = FontWeight.W700,
             fontSize = 18.sp,
             lineHeight = 24.sp,
@@ -37,9 +37,7 @@ fun SingleProductItem(
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
-            "${
-                DecimalFormat("#,###").format(money)
-            }원",
+            text = price,
             fontWeight = FontWeight.W400,
             fontSize = 16.sp,
             color = Color(0xff555555),
@@ -54,7 +52,7 @@ private fun PreviewSingleProduct() {
     SingleProductItem(
         imageUrl = "asd",
         title = "Pet보틀-정사각형 50000ml",
-        money = 12000,
+        price = "12,000원",
         modifier = Modifier
             .width(160.dp)
             .padding(horizontal = 16.dp),

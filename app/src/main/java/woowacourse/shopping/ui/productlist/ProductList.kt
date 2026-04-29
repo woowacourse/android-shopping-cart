@@ -30,7 +30,7 @@ fun ProductList(
             SingleProductItem(
                 imageUrl = it.imageUrl,
                 title = it.name,
-                money = it.price,
+                price = it.price,
             )
         }
     }
