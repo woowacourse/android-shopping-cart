@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,9 +50,9 @@ import woowacourse.shopping.repository.cart.MemoryCartRepository
 fun CartScreen(
     modifier: Modifier = Modifier,
     viewModel: CartViewModel,
-    onBackClick: () -> Unit = {},
 ) {
     val cartUiState by viewModel.uiState.collectAsState()
+    val activity = LocalActivity.current
 
     Scaffold(
         containerColor = Color(0xFFF6F6F6),
@@ -66,7 +67,9 @@ fun CartScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = {
+                        activity?.finish()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "뒤로 가기",

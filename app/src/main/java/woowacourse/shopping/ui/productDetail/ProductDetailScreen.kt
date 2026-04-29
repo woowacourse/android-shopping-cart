@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,12 +41,15 @@ import woowacourse.shopping.mock.MockData
 fun ProductDetailScreen(
     product: Product,
     modifier: Modifier = Modifier,
-    onCloseClick: () -> Unit = {},
     onAddToCartClick: () -> Unit = {},
 ) {
+    val activity = LocalActivity.current
+
     Scaffold(
         containerColor = Color.White,
-        topBar = { ProductDetailTopBar(onCloseClick = onCloseClick) },
+        topBar = { ProductDetailTopBar(onCloseClick = {
+            activity?.finish()
+        }) },
         bottomBar = { ProductDetailBottomBar(onAddToCartClick = onAddToCartClick) },
     ) { paddingValues ->
         ProductDetailContent(
@@ -204,7 +208,6 @@ private fun ProductImage(
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         product = MockData.productInfo,
-        onCloseClick = {},
         onAddToCartClick = {},
     )
 }

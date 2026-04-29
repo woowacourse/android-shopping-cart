@@ -18,17 +18,12 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val intent = Intent(this, ProductListActivity::class.java)
-
                 CartScreen(
                     modifier = Modifier.padding(innerPadding),
                     viewModel =
                         CartViewModel(
                             MemoryCartRepository(),
-                        ),
-                    onBackClick = {
-                        startActivity(intent)
-                    },
+                        )
                 )
             }
         }
