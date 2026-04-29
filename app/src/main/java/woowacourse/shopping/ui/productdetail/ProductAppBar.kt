@@ -21,7 +21,7 @@ fun ProductAppBar(modifier: Modifier = Modifier) {
         actions = {
             Icon(
                 painter = painterResource(R.drawable.close),
-                contentDescription = stringResource(R.string.cart_description),
+                contentDescription = stringResource(R.string.close_description),
                 modifier = Modifier.padding(end = 10.dp),
             )
         },

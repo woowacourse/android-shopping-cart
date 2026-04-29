@@ -4,6 +4,7 @@
 
     <string name="cart_description">장바구니 아이콘</string>
     <string name="left_arrow_description">뒤로가기 아이콘</string>
+    <string name="close_description">닫기 아이콘</string>
 
     <string name="product_detail_price">가격</string>
     <string name="product_detail_select">장바구니 담기</string>
