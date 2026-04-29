@@ -5,8 +5,8 @@ import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
 import woowacourse.shopping.mock.MockData
 
-class MemoryCartRepository : CartRepository {
-    private var cart: Cart = Cart(cartItems = CartItems(MockData.cartItems))
+object MemoryCartRepository : CartRepository {
+    private var cart: Cart = Cart(cartItems = CartItems(mutableListOf()))
 
     override suspend fun getCart(): Cart = cart
 

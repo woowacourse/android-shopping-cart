@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.CartRepository
 import kotlin.math.ceil
 import kotlin.math.max
@@ -20,6 +21,13 @@ class CartViewModel(
 
     init {
         loadCart()
+    }
+
+    fun removeCartItem(cartItem: CartItem) {
+        viewModelScope.launch {
+            cartRepository.removeCartItem(cartItem)
+            loadCart()
+        }
     }
 
     fun goToNextPage() {

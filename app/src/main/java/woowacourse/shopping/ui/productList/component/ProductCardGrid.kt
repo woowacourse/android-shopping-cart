@@ -123,7 +123,7 @@ fun ProductInfoColumn(
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            String.format("%,d", price) + "원",
+            String.format("%,d원", price),
             fontSize = 16.sp,
             color = Color.Gray,
         )

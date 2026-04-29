@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,84 +59,81 @@ fun CartScreen(
     val cartUiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
 
-    Scaffold(
-        containerColor = Color(0xFFF6F6F6),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Cart",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        TopAppBar(
+            modifier = Modifier.height(56.dp),
+            title = {
+                Text(
+                    text = "Cart",
+                    fontSize = 20.sp,
+                )
+            },
+            actions = {
+                IconButton(
+                    onClick = {
                         activity?.finish()
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "뒤로 가기",
-                            tint = Color.White,
-                        )
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xFF5B5B5B),
-                        scrolledContainerColor = Color(0xFF5B5B5B),
-                        navigationIconContentColor = Color.White,
-                        titleContentColor = Color.White,
-                        actionIconContentColor = Color.White,
-                    ),
-            )
-        },
-    ) { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-        ) {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 4.dp),
-            ) {
-                items(cartUiState.cartItems) { cartItem ->
-                    CartItemCard(
-                        cartItem = cartItem,
-                        onRemoveClick = { },
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "뒤로 가기",
+                        tint = Color.White,
                     )
                 }
-            }
+            },
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF555555),
+                    scrolledContainerColor = Color.Unspecified,
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White,
+                ),
+            windowInsets = WindowInsets(0, 0, 0, 0),
+        )
 
-            if (cartUiState.totalPages > 1) {
-                PageNavigator(
-                    currentPage = cartUiState.currentPage,
-                    hasPrevious = cartUiState.hasPrevious,
-                    hasNext = cartUiState.hasNext,
-                    onPreviousClick = { viewModel.goToPreviousPage() },
-                    onNextClick = { viewModel.goToNextPage() },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(bottom = 4.dp),
+        ) {
+            items(cartUiState.cartItems) { cartItem ->
+                CartItemCard(
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                    cartItem = cartItem,
+                    onRemoveClick = {
+                        viewModel.removeCartItem(cartItem)
+                    },
                 )
             }
+        }
+
+        if (cartUiState.totalPages > 1) {
+            PageNavigator(
+                currentPage = cartUiState.currentPage,
+                hasPrevious = cartUiState.hasPrevious,
+                hasNext = cartUiState.hasNext,
+                onPreviousClick = { viewModel.goToPreviousPage() },
+                onNextClick = { viewModel.goToNextPage() },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+            )
         }
     }
 }
 
 @Composable
 private fun CartItemCard(
+    modifier: Modifier = Modifier,
     cartItem: CartItem,
     onRemoveClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         shape = RoundedCornerShape(2.dp),
         border = BorderStroke(1.dp, Color(0xFFD0D0D0)),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -156,7 +158,7 @@ private fun CartItemCard(
                     modifier = Modifier.size(28.dp),
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
+                        imageVector = Default.Close,
                         contentDescription = "삭제",
                         tint = Color(0xFFB0B0B0),
                     )
@@ -175,7 +177,7 @@ private fun CartItemCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = cartItem.product.price.toString(),
+                    text = String.format("%,d원", cartItem.product.price.value),
                     fontSize = 16.sp,
                     color = Color(0xFF777777),
                     fontWeight = FontWeight.Medium,
@@ -254,7 +256,7 @@ private fun ProductImage(
 @Preview(showBackground = true)
 @Composable
 private fun CartScreenPreview() {
-    val viewModel = CartViewModel(MemoryCartRepository())
+    val viewModel = CartViewModel(MemoryCartRepository)
 
     CartScreen(
         viewModel = viewModel,
