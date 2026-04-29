@@ -26,7 +26,7 @@ class CartActivity : ComponentActivity() {
                         cart = InMemoryCartRepository.showAll(),
                         modifier = Modifier.padding(innerPadding),
                         onBackClick = ::finish,
-                        onDeleteClick = {}
+                        onDeleteClick =  { }
                     )
                 }
             }
