@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
-fun CartScreen(cartItems: List<CartItem>) {
+fun CartScreen(
+    cartStateHolder: CartStateHolder,
+) {
+    val cartItems = cartStateHolder.cartItems
+
     Scaffold(
         topBar = {
             NavigateUpTopBar(
@@ -38,7 +40,9 @@ fun CartScreen(cartItems: List<CartItem>) {
                     imageUrl = it.product.imageUrl,
                     name = it.product.name,
                     price = it.product.price,
-                    onDelete = { },
+                    onDelete = {
+                        cartStateHolder.deleteCartItem(it.product.id)
+                    },
                 )
             }
         }
@@ -48,24 +52,5 @@ fun CartScreen(cartItems: List<CartItem>) {
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen(
-        cartItems = listOf(
-            CartItem(
-                product = Product(
-                    name = "과자",
-                    price = 100,
-                    imageUrl = "",
-                ),
-                quantity = 2,
-            ),
-            CartItem(
-                product = Product(
-                    name = "아이스크림",
-                    price = 1000,
-                    imageUrl = "",
-                ),
-                quantity = 100,
-            ),
-        ),
-    )
+    CartScreen(cartStateHolder = CartStateHolder())
 }
