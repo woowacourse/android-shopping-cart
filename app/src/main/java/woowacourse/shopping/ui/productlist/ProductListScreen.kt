@@ -15,7 +15,7 @@ import woowacourse.shopping.constants.MockData
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ProductListScreen() {
+fun ProductListScreen(onProductClick: () -> Unit = {}) {
     Scaffold(
         containerColor = Color.White,
         modifier = Modifier.fillMaxSize(),
@@ -30,6 +30,7 @@ fun ProductListScreen() {
         ) {
             ProductList(
                 products = MockData.MOCK_PRODUCTS,
+                onProductClick = onProductClick,
             )
         }
     }

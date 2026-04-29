@@ -17,7 +17,6 @@ fun PreviewableAsyncImage(
 ) {
     val isPreview = LocalInspectionMode.current
     AsyncImage(
-
         model = imageUrl,
         contentDescription = description,
         contentScale = ContentScale.Crop,

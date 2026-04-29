@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productlist
 import android.R.attr.text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +26,11 @@ fun SingleProductItem(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        PreviewableAsyncImage(imageUrl = imageUrl, description = title)
+        PreviewableAsyncImage(
+            imageUrl = imageUrl,
+            description = title,
+            modifier = Modifier.aspectRatio(1f),
+        )
         Spacer(modifier = Modifier.height(9.dp))
         Text(
             text = title,

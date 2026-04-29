@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,20 +39,19 @@ fun ProductDetailScreen(
         topBar = {
             ProductAppBar()
         },
-        bottomBar = {
-            CartPutButton()
-        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(innerPadding),
         ) {
             Column {
                 PreviewableAsyncImage(
                     imageUrl = imageUrl,
                     description = title,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
                 )
                 Text(
                     text = title,
@@ -78,6 +78,7 @@ fun ProductDetailScreen(
                     )
                 }
             }
+            CartPutButton(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }

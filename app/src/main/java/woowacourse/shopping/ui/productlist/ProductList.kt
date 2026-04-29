@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productlist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @Composable
 fun ProductList(
     products: List<ProductUiModel>,
+    onProductClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -31,6 +33,9 @@ fun ProductList(
                 imageUrl = it.imageUrl,
                 title = it.name,
                 price = it.price,
+                modifier = Modifier.clickable(
+                    onClick = onProductClick,
+                ),
             )
         }
     }
