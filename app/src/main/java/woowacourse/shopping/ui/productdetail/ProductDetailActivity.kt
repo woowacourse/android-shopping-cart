@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 
 class ProductDetailActivity : ComponentActivity() {
@@ -25,7 +24,7 @@ class ProductDetailActivity : ComponentActivity() {
             intent.getParcelableExtra("PRODUCT")
         }
 
-        if(receivedProduct == null) {
+        if (receivedProduct == null) {
             finish()
             return
         }
@@ -34,12 +33,14 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingcartTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val cartRepo = InMemoryCartRepository
+
                     ProductDetailScreen(
                         product = receivedProduct,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
                         onAddToCart = { product, _ ->
-                            InMemoryCartRepository.add(product)
+                            cartRepo.add(product)
                             finish()
                         }
                     )
