@@ -8,14 +8,10 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -25,17 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.data.ProductData
 import woowacourse.shopping.core.model.Product
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.detail.DetailActivity
-import woowacourse.shopping.feature.shopping.ui.ProductCard
+import woowacourse.shopping.feature.shopping.ui.ShoppingContents
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
@@ -93,42 +86,4 @@ fun ShoppingScreen(
             modifier = Modifier.padding(innerPadding),
         )
     }
-}
-
-@Composable
-fun ShoppingContents(
-    products: ImmutableList<Product>,
-    modifier: Modifier = Modifier,
-) {
-    val activity = LocalActivity.current
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = modifier.padding(20.dp),
-    ) {
-        items(
-            items = products,
-            key = { product -> product.id },
-        ) { product ->
-            ProductCard(
-                onClick = {
-                    val intent = Intent(activity, DetailActivity::class.java)
-                    intent.putExtra("id", product.id)
-                    activity?.startActivity(intent)
-                },
-                imageUrl = product.imageUrl,
-                productName = product.name,
-                price = product.price,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun ShoppingScreenPreview() {
-    ShoppingScreen(
-        data = emptyList<Product>().toImmutableList(),
-    )
 }
