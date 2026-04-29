@@ -26,6 +26,7 @@ class ProductDetailActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
+                        onClose = { finish() },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

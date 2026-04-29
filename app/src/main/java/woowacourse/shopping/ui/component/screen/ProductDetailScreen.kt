@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.component.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,16 +31,23 @@ import woowacourse.shopping.ui.component.item.ProductImage
 import woowacourse.shopping.ui.component.item.toPriceString
 
 @Composable
-fun ProductDetailScreen(product: Product, modifier: Modifier = Modifier) {
+fun ProductDetailScreen(
+    onClose: () -> Unit,
+    product: Product,
+    modifier: Modifier = Modifier
+) {
     CommonFrame(
-        headerContent = { ProductDetailHeader() },
+        headerContent = { ProductDetailHeader(onClose) },
         bodyContent = { ProductDetailBody(product) },
         modifier = modifier
     )
 }
 
 @Composable
-private fun ProductDetailHeader(modifier: Modifier = Modifier) {
+private fun ProductDetailHeader(
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = Modifier
             .fillMaxSize(),
@@ -49,7 +57,9 @@ private fun ProductDetailHeader(modifier: Modifier = Modifier) {
         Icon(
             painter = painterResource(R.drawable.ic_close),
             contentDescription = "닫기 버튼",
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier
+                .size(16.dp)
+                .clickable(onClick = onClose),
             tint = Color.White
         )
     }
@@ -131,7 +141,8 @@ private fun ProductDetailInfo(
 @Composable
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        Product(
+        onClose = {},
+        product = Product(
             imageUri = "emptyUri",
             name = "우유",
             price = 100
