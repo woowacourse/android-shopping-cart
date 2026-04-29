@@ -24,13 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.uimodel.CartItemUiModel
 
 @Composable
 fun CartScreen(
+    state: CartStateHolder,
     onDeleteItem: (String) -> Unit,
-    cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current
@@ -60,11 +61,19 @@ fun CartScreen(
                 },
             )
         },
+        bottomBar = {
+            CartPageSection(
+                page = state.page + 1,
+                onNext = { state.nextPage() },
+                onPrevious = { state.previousPage() },
+                isCanMoveNext = state.isCanMoveNext,
+            )
+        },
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         CartContent(
             onDeleteItem = onDeleteItem,
-            cartItems = cartItems,
+            cartItems = state.currentCartItems.toImmutableList(),
             modifier =
                 Modifier
                     .fillMaxSize()

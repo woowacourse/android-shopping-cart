@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.cart.stateholder
+package woowacourse.shopping.feature.cart.bridge
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

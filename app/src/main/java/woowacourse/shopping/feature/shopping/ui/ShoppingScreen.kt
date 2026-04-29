@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
@@ -112,7 +113,9 @@ private fun ShoppingContents(
                 )
             }
             if (isCanLoadMore) {
-                item {
+                item(
+                    span = { GridItemSpan(2) },
+                ) {
                     LoadButton(
                         onClick = onLoad,
                     )
