@@ -32,7 +32,7 @@
 - [ ] 카트에 담았다면 상품 목록 화면으로 돌아간다
 - [ ] 카트에 담기 성공했다면 "장바구니에 담았습니다" Snackbar를 노출한다
 - [ ] `x` 버튼을 누르면 ShoppingItemsScreen 으로 돌아간다
-- [ ] 이미지 로딩으로 Coil을 사용한다
+- [x] 이미지 로딩으로 Coil을 사용한다
 
 #### CartScreen
 - [ ] 뒤로가기 버튼을 누르면 ShoppingItemsScreen 으로 돌아간다
