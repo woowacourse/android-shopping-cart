@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.repository.MemoryShoppingCartRepository
 import woowacourse.shopping.ui.ShoppingCartScreen
+import woowacourse.shopping.ui.pagination.ShoppingCartPaginationStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,8 +25,12 @@ class ShoppingCartActivity : ComponentActivity() {
         setContent {
             var shoppingCartItems by remember { mutableStateOf(MemoryShoppingCartRepository.getShoppingItems()) }
             AndroidShoppingTheme {
+                val shoppingCartPaginationStateHolder =
+                    remember(shoppingCartItems) {
+                        ShoppingCartPaginationStateHolder(shoppingCartItems)
+                    }
                 ShoppingCartScreen(
-                    shoppingCartItems = shoppingCartItems,
+                    shoppingCartItems = shoppingCartPaginationStateHolder.getItems(),
                     onBackClick = {
                         startActivity(Intent(this, ProductListActivity::class.java))
                     },
@@ -33,6 +38,11 @@ class ShoppingCartActivity : ComponentActivity() {
                         MemoryShoppingCartRepository.remove(shoppingCartItem)
                         shoppingCartItems = MemoryShoppingCartRepository.getShoppingItems()
                     },
+                    currentPage = shoppingCartPaginationStateHolder.currentPage,
+                    canMoveToPreviousPage = shoppingCartPaginationStateHolder.canMoveToPreviousPage(),
+                    canMoveToNextPage = shoppingCartPaginationStateHolder.canMoveToNextPage(),
+                    onBeforePageClick = shoppingCartPaginationStateHolder::beforePage,
+                    onNextPageClick = shoppingCartPaginationStateHolder::nextPage,
                 )
             }
         }

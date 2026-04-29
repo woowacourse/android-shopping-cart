@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,12 +42,18 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ShoppingCartScreen(
     shoppingCartItems: List<ShoppingCartItem>,
     onBackClick: () -> Unit,
     onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
+    currentPage: Int,
+    canMoveToPreviousPage: Boolean,
+    canMoveToNextPage: Boolean,
+    onBeforePageClick: () -> Unit,
+    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -56,17 +67,32 @@ fun ShoppingCartScreen(
         Column(
             modifier =
                 Modifier
+                    .fillMaxSize()
                     .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            shoppingCartItems.forEach { shoppingCartItem ->
-                ShoppingCartItems(
-                    shoppingCartItem = shoppingCartItem,
-                    onRemoveShoppingItemClick = onRemoveShoppingItemClick,
-                )
+            Column(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                shoppingCartItems.forEach { shoppingCartItem ->
+                    ShoppingCartItems(
+                        shoppingCartItem = shoppingCartItem,
+                        onRemoveShoppingItemClick = onRemoveShoppingItemClick,
+                    )
+                }
             }
+            AnglePager(
+                currentPage = currentPage,
+                canMoveToPreviousPage = canMoveToPreviousPage,
+                canMoveToNextPage = canMoveToNextPage,
+                onBeforePageClick = onBeforePageClick,
+                onNextPageClick = onNextPageClick,
+            )
         }
     }
 }
@@ -163,6 +189,100 @@ private fun ShoppingCartTopBar(
             ),
         modifier = modifier,
     )
+}
+
+@Composable
+private fun AnglePager(
+    currentPage: Int,
+    canMoveToPreviousPage: Boolean,
+    canMoveToNextPage: Boolean,
+    onBeforePageClick: () -> Unit,
+    onNextPageClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val pagerButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = Color.Gray,
+        )
+
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(56.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Button(
+            enabled = canMoveToPreviousPage,
+            onClick = onBeforePageClick,
+            modifier = Modifier.size(42.dp),
+            shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp),
+            colors = pagerButtonColors,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.left_icon),
+                contentDescription = "이전 페이지",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp),
+            )
+        }
+
+        Text(
+            text = (currentPage + 1).toString(),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 12.dp),
+        )
+
+        Button(
+            enabled = canMoveToNextPage,
+            onClick = onNextPageClick,
+            modifier = Modifier.size(42.dp),
+            shape = RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp),
+            colors = pagerButtonColors,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.right_icon),
+                contentDescription = "다음 페이지",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp),
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ShoppingCartScreenPreview() {
+    AndroidShoppingTheme {
+        ShoppingCartScreen(
+            shoppingCartItems =
+                listOf(
+                    ShoppingCartItem(
+                        id = 1,
+                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                    ),
+                    ShoppingCartItem(
+                        id = 1,
+                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                    ),
+                    ShoppingCartItem(
+                        id = 1,
+                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                    ),
+                ),
+            onBackClick = { },
+            onRemoveShoppingItemClick = { },
+            currentPage = 1,
+            canMoveToPreviousPage = true,
+            canMoveToNextPage = true,
+            onBeforePageClick = { },
+            onNextPageClick = { },
+        )
+    }
 }
 
 @Composable

@@ -1,0 +1,22 @@
+package woowacourse.shopping.ui.pagination
+
+import woowacourse.shopping.model.ShoppingCartItem
+
+class ShoppingCartPaginationStateHolder(
+    shoppingCartItems: List<ShoppingCartItem>,
+) : PaginationStateHolder<ShoppingCartItem>(shoppingCartItems) {
+    override val pageSize: Int = 5
+
+    override fun getPageRange(): IntRange {
+        val exclusiveEndPage = currentPage + 1
+        return currentPage..exclusiveEndPage
+    }
+
+    fun beforePage() {
+        updateCurrentPage(currentPage - 1)
+    }
+
+    fun nextPage() {
+        updateCurrentPage(currentPage + 1)
+    }
+}

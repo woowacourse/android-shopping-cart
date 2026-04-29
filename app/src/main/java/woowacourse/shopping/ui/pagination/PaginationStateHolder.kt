@@ -43,4 +43,8 @@ abstract class PaginationStateHolder<T : Any>(
         if (pageCount == 0) return
         currentPage = page.coerceIn(initialPage..<pageCount)
     }
+
+    fun canMoveToPreviousPage(): Boolean = currentPage > initialPage
+
+    fun canMoveToNextPage(): Boolean = pageCount > 0 && currentPage < pageCount - 1
 }
