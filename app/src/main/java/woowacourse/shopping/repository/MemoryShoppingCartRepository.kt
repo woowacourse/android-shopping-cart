@@ -3,7 +3,7 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 
-object MemoryShoppingCartRepository : ShoppingCartRepository {
+class MemoryShoppingCartRepository : ShoppingCartRepository {
     private val items: MutableList<ShoppingCartItem> = mutableListOf()
     private var nextShoppingCartItemId: Long = 0L
 

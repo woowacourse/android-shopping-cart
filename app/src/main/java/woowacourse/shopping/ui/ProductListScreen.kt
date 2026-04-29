@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.preparedProducts
 import woowacourse.shopping.repository.MemoryProductRepository
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
@@ -188,7 +189,7 @@ private fun ProductItemPreview() {
 private fun ProductListScreenPreview() {
     AndroidShoppingTheme {
         ProductListScreen(
-            products = MemoryProductRepository.getProducts(),
+            products = MemoryProductRepository(preparedProducts).getProducts(),
             onProductClick = {},
             onNavigateToCartClick = {},
             onMoreProductClick = { },

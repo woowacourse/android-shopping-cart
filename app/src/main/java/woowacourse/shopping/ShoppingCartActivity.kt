@@ -12,18 +12,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.repository.MemoryShoppingCartRepository
 import woowacourse.shopping.ui.ShoppingCartScreen
 import woowacourse.shopping.ui.pagination.ShoppingCartPaginationStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ShoppingCartActivity : ComponentActivity() {
+    private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var shoppingCartItems by remember { mutableStateOf(MemoryShoppingCartRepository.getShoppingItems()) }
+            var shoppingCartItems by remember { mutableStateOf(shoppingCartRepository.getShoppingItems()) }
             AndroidShoppingTheme {
                 val shoppingCartPaginationStateHolder =
                     remember(shoppingCartItems) {
@@ -35,8 +36,8 @@ class ShoppingCartActivity : ComponentActivity() {
                         startActivity(Intent(this, ProductListActivity::class.java))
                     },
                     onRemoveShoppingItemClick = { shoppingCartItem ->
-                        MemoryShoppingCartRepository.remove(shoppingCartItem)
-                        shoppingCartItems = MemoryShoppingCartRepository.getShoppingItems()
+                        shoppingCartRepository.remove(shoppingCartItem)
+                        shoppingCartItems = shoppingCartRepository.getShoppingItems()
                     },
                     currentPage = shoppingCartPaginationStateHolder.currentPage,
                     canMoveToPreviousPage = shoppingCartPaginationStateHolder.canMoveToPreviousPage(),

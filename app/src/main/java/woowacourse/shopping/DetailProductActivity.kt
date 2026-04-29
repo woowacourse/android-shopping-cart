@@ -9,13 +9,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import woowacourse.shopping.repository.MemoryProductRepository
-import woowacourse.shopping.repository.MemoryShoppingCartRepository
 import woowacourse.shopping.ui.DetailProductScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class DetailProductActivity : ComponentActivity() {
+    private val productRepository = ShoppingApplication.productRepository
+    private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,11 +24,11 @@ class DetailProductActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 val productId = intent.getLongExtra("productId", -1)
                 if (productId != -1L) {
-                    val product = MemoryProductRepository.getProduct(productId)
+                    val product = productRepository.getProduct(productId)
                     DetailProductScreen(
                         product = product,
                         onAddToCartClick = {
-                            MemoryShoppingCartRepository.add(product)
+                            shoppingCartRepository.add(product)
                             startActivity(
                                 Intent(
                                     this@DetailProductActivity,

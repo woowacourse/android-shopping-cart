@@ -12,11 +12,11 @@ import woowacourse.shopping.repository.ShoppingCartRepository
 
 class ShoppingCartRepositoryTest {
     private val product = Product(1, "동원 스위트콘", 99_800, "")
-    private val shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
 
     @BeforeEach
     fun setUp() {
-        clearShoppingCart()
+        shoppingCartRepository = MemoryShoppingCartRepository()
     }
 
     @Test
@@ -58,10 +58,5 @@ class ShoppingCartRepositoryTest {
         shouldThrow<IllegalArgumentException> {
             shoppingCartRepository.remove(ShoppingCartItem(1, product))
         }
-    }
-
-    private fun clearShoppingCart() {
-        val items = shoppingCartRepository.getShoppingItems().toList()
-        items.forEach(MemoryShoppingCartRepository::remove)
     }
 }
