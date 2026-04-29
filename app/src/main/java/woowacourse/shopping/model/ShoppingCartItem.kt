@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.model
 
 class ShoppingCartItem(
     private val id: Long,

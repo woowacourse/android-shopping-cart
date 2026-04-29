@@ -7,22 +7,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import woowacourse.shopping.repository.MemoryProductRepository
+import woowacourse.shopping.repository.MemoryShoppingCartRepository
+import woowacourse.shopping.ui.DetailProductScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,52 +21,33 @@ class DetailProductActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                Scaffold(
-                    topBar = this::TopBar,
-                    modifier = Modifier.fillMaxSize(),
-                ) { innerPadding ->
-                    val productId = intent.getLongExtra("productId", -1)
-                    if (productId != -1L) {
-                        val product = MemoryProductRepository.getProduct(productId)
-                        Button(onClick = {
+                val productId = intent.getLongExtra("productId", -1)
+                if (productId != -1L) {
+                    val product = MemoryProductRepository.getProduct(productId)
+                    DetailProductScreen(
+                        product = product,
+                        onAddToCartClick = {
                             MemoryShoppingCartRepository.add(product)
                             startActivity(
                                 Intent(
                                     this@DetailProductActivity,
-                                    MainActivity::class.java
-                                )
+                                    ProductListActivity::class.java,
+                                ),
                             )
-                        }, modifier = Modifier.padding(innerPadding)) {
-                            Text("${product.title}, ${product.price}")
-                        }
-                    } else {
-                        Text("상품을 찾을 수 없습니다")
-                    }
+                        },
+                        onBackClick = {
+                            startActivity(
+                                Intent(
+                                    this@DetailProductActivity,
+                                    ShoppingCartActivity::class.java,
+                                ),
+                            )
+                        },
+                    )
+                } else {
+                    Text("상품을 찾을 수 없습니다")
                 }
             }
         }
-    }
-
-    @Composable
-    private fun TopBar() {
-        TopAppBar(
-            title = {},
-            actions = {
-                IconButton(onClick = {
-                    startActivity(Intent(this@DetailProductActivity, MainActivity::class.java))
-                }) {
-                    Image(
-                        painter = painterResource(R.drawable.close_icon),
-                        contentDescription = "상세페이지 닫기",
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-        )
     }
 }

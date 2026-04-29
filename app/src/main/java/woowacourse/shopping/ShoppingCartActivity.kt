@@ -7,25 +7,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import woowacourse.shopping.repository.MemoryShoppingCartRepository
+import woowacourse.shopping.ui.ShoppingCartScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,51 +22,19 @@ class ShoppingCartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            var shoppingCartItems by remember { mutableStateOf(MemoryShoppingCartRepository.getShoppingItems()) }
             AndroidShoppingTheme {
-                Scaffold(
-                    topBar = this::TopBar,
-                    modifier = Modifier.fillMaxSize(),
-                ) { innerPadding ->
-                    val shoppingCartItems by MemoryShoppingCartRepository.getShoppingItems().collectAsState()
-                    Column(modifier = Modifier.padding(innerPadding)) {
-                        shoppingCartItems.forEach { item ->
-                            Text("${item.product.title}, ${item.product.price}")
-                            Button(onClick = {
-                                MemoryShoppingCartRepository.remove(item)
-                            }){
-                                Text("삭제")
-                            }
-                        }
-                    }
-                }
+                ShoppingCartScreen(
+                    shoppingCartItems = shoppingCartItems,
+                    onBackClick = {
+                        startActivity(Intent(this, ProductListActivity::class.java))
+                    },
+                    onRemoveShoppingItemClick = { shoppingCartItem ->
+                        MemoryShoppingCartRepository.remove(shoppingCartItem)
+                        shoppingCartItems = MemoryShoppingCartRepository.getShoppingItems()
+                    },
+                )
             }
         }
-    }
-
-    @Composable
-    private fun TopBar() {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Cart",
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    startActivity(Intent(this@ShoppingCartActivity, MainActivity::class.java))
-                }) {
-                    Image(
-                        painter = painterResource(R.drawable.back_icon),
-                        contentDescription = "상세페이지 닫기",
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-        )
     }
 }

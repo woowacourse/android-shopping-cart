@@ -25,7 +25,7 @@
             android:label="@string/title_activity_detail_product"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ProductListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
