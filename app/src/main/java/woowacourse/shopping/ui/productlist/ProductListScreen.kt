@@ -14,7 +14,7 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
-    onProductClick: () -> Unit,
+    onProductClick: (String) -> Unit,
     onCartIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     productUiModels: List<ProductUiModel>,

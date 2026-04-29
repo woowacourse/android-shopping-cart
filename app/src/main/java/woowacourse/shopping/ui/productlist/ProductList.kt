@@ -15,7 +15,7 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @Composable
 fun ProductList(
     products: List<ProductUiModel>,
-    onProductClick: () -> Unit = {},
+    onProductClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -31,10 +31,12 @@ fun ProductList(
         ) {
             SingleProductItem(
                 imageUrl = it.imageUrl,
-                title = it.name,
+                title = it.title,
                 price = it.price,
                 modifier = Modifier.clickable(
-                    onClick = onProductClick,
+                    onClick = {
+                        onProductClick(it.id)
+                    },
                 ),
             )
         }

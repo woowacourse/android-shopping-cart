@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.state
 
 import android.icu.text.DecimalFormat
 
-data class ProductUiModel(val name: String, val price: String, val imageUrl: String, val id: String) {
+data class ProductUiModel(val title: String, val price: String, val imageUrl: String, val id: String) {
     companion object {
         fun of(
             name: String,
@@ -14,7 +14,7 @@ data class ProductUiModel(val name: String, val price: String, val imageUrl: Str
                 DecimalFormat("#,###").format(price)
             }원"
             return ProductUiModel(
-                name = name,
+                title = name,
                 price = formattedPrice,
                 imageUrl = imageUrl,
                 id = id,
