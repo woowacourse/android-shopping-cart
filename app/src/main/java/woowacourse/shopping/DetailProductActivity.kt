@@ -39,7 +39,7 @@ class DetailProductActivity : ComponentActivity() {
                             startActivity(
                                 Intent(
                                     this@DetailProductActivity,
-                                    ShoppingCartActivity::class.java,
+                                    ProductListActivity::class.java,
                                 ),
                             )
                         },

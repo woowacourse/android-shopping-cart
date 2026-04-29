@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,6 +62,7 @@ fun DetailProductScreen(
             AsyncImage(
                 model = product.imageUrl,
                 contentDescription = "${product.title} 상품 이미지",
+                contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
                         .fillMaxWidth()
