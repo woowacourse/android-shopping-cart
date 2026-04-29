@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui
 
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,8 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,7 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -88,13 +94,18 @@ private fun ShoppingCartItems(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(shoppingCartItem.product.title)
+            Text(
+                shoppingCartItem.product.title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             Image(
-                painter = painterResource(R.drawable.close_icon),
+                painter = painterResource(R.drawable.remove_icon),
                 contentDescription = "장바구니 삭제",
                 modifier =
                     Modifier
-                        .size(22.dp)
+                        .size(16.dp)
                         .clickable { onRemoveShoppingItemClick(shoppingCartItem) },
             )
         }
@@ -104,13 +115,22 @@ private fun ShoppingCartItems(
                     .fillMaxWidth()
                     .padding(top = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
         ) {
             AsyncImage(
                 model = shoppingCartItem.product.imageUrl,
                 contentDescription = "상품 이미지",
-                modifier = Modifier.size(56.dp),
+                contentScale = ContentScale.Crop,
+                modifier =
+                    Modifier
+                        .width(136.dp)
+                        .height(72.dp)
+                        .padding(bottom = 8.dp)
+                        .background(MaterialTheme.colorScheme.surfaceContainer),
             )
-            Text(shoppingCartItem.product.price.toString())
+            Text(
+                text = DecimalFormat("#,###원").format(shoppingCartItem.product.price),
+            )
         }
     }
 }
