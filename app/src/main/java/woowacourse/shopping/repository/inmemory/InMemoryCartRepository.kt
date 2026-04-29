@@ -1,0 +1,22 @@
+package woowacourse.shopping.repository.inmemory
+
+import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.repository.CartRepository
+
+object InMemoryCartRepository : CartRepository {
+    private val items = mutableMapOf<Product, Int>()
+
+    override fun add(item: Product) {
+        items.merge(item, 1, Int::plus)
+    }
+
+    override fun delete(item: Product) {
+        require(items.containsKey(item)) { "해당 상품은 장바구니에 존재하지 않습니다." }
+
+        items.merge(item, 1, Int::minus)
+        if (items.getValue(item) == 0) items.remove(item)
+    }
+
+    override fun showAll() = Cart(items.toMap())
+}
