@@ -2,6 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.dto.response.toDomainModel
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductItems
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -12,5 +13,11 @@ class ProductRepositoryImpl(
         val productResult = dataSource.getProducts()
         val productItems = productResult.map { it.toDomainModel() }
         return ProductItems(productItems)
+    }
+
+    override fun getProduct(id: String): Product {
+        val result = dataSource.getProduct(id)
+        val product = result.toDomainModel()
+        return product
     }
 }

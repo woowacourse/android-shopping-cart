@@ -3,7 +3,13 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.dto.response.ProductResponseDto
 
 object DummyProductDataSourceImpl: ProductDataSource {
-    override fun getProducts(): List<ProductResponseDto> = listOf(
+    override fun getProducts(): List<ProductResponseDto> = products
+
+    override fun getProduct(id: String): ProductResponseDto {
+        return products.find { it.id == id }?: throw IllegalArgumentException("상품이 존재하지 않습니다.")
+    }
+
+    val products = listOf(
         ProductResponseDto(
             id = "product-1",
             imageUrl = "https://picsum.photos/id/1/200/200",
