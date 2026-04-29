@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.constants.MockData
 
@@ -16,6 +17,7 @@ import woowacourse.shopping.constants.MockData
 @Composable
 fun ProductListScreen() {
     Scaffold(
+        containerColor = Color.White,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ProductListAppBar()

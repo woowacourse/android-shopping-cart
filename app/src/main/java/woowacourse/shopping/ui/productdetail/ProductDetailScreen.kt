@@ -33,6 +33,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
+        containerColor = Color.White,
         modifier = modifier.fillMaxSize(),
         topBar = {
             ProductAppBar()
