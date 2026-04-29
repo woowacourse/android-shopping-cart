@@ -22,12 +22,17 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ShoppingItem
+import java.util.UUID
 
 @Composable
-fun CatalogScreen(catalog: List<Product>, modifier: Modifier = Modifier) {
+fun CatalogScreen(
+    catalog: List<Product>,
+    onItemClick: (UUID) -> Unit,
+    modifier: Modifier = Modifier
+) {
     CommonFrame(
         headerContent = { CatalogHeader() },
-        bodyContent = { CatalogBody(catalog) },
+        bodyContent = { CatalogBody(catalog, onItemClick) },
         modifier = modifier,
     )
 }
@@ -58,6 +63,7 @@ private fun CatalogHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun CatalogBody(
     catalog: List<Product>,
+    onItemClick: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -66,7 +72,10 @@ private fun CatalogBody(
         contentPadding = PaddingValues(12.dp),
     ) {
         items(catalog.size) { item ->
-            ShoppingItem(catalog[item])
+            ShoppingItem(
+                product = catalog[item],
+                onClick = onItemClick
+            )
         }
     }
 }
@@ -98,5 +107,5 @@ private fun CatalogScreenPreview() {
 
     )
 
-    CatalogScreen(catalog)
+    CatalogScreen(catalog, {})
 }

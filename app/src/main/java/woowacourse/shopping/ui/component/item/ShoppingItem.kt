@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.component.item
 
 import android.icu.text.DecimalFormat
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -18,16 +19,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.domain.Product
+import java.util.UUID
 
 @Composable
 fun ShoppingItem(
     product: Product,
+    onClick: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .width(154.dp)
-            .height(206.dp),
+            .height(206.dp)
+            .clickable(
+                onClick = {
+                    onClick(product.uuid)
+                },
+            ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ProductImage(product.imageUri, Modifier.size(154.dp))
@@ -77,6 +85,7 @@ private fun ShoppingItemPreview() {
             imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
             name = "매우매우긴상품명입니다",
             price = 1000000000,
-        )
+        ),
+        onClick = {},
     )
 }

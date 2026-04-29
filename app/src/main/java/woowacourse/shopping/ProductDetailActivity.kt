@@ -1,6 +1,5 @@
 package woowacourse.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,26 +8,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.MockCatalog.catalog
-import woowacourse.shopping.ui.component.screen.CatalogScreen
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import java.util.UUID
 
-class MainActivity : ComponentActivity() {
+class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val productId = UUID.fromString(intent.getStringExtra("id"))
+        val product = MockCatalog.findProductById(productId)
+
         enableEdgeToEdge()
-
-        val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
-
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CatalogScreen(
-                        catalog = catalog,
-                        onItemClick = { id ->
-                            productDetailIntent.putExtra("id", id.toString())
-                            startActivity(productDetailIntent)
-                        },
+                    ProductDetailScreen(
+                        product = product,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

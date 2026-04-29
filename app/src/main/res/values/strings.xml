@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="title_activity_product_detail">ProductDetailActivity</string>
+    <string name="title_activity_cart">CartActivity</string>
 </resources>
