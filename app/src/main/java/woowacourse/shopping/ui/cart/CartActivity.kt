@@ -1,0 +1,36 @@
+package woowacourse.shopping.ui.cart
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
+import woowacourse.shopping.repository.cart.MemoryCartRepository
+import woowacourse.shopping.ui.productList.ProductListActivity
+
+class CartActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val intent = Intent(this, ProductListActivity::class.java)
+
+                CartScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    viewModel =
+                        CartViewModel(
+                            MemoryCartRepository(),
+                        ),
+                    onBackClick = {
+                        startActivity(intent)
+                    },
+                )
+            }
+        }
+    }
+}
