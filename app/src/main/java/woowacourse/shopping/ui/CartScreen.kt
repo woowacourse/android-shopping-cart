@@ -3,12 +3,10 @@ package woowacourse.shopping.ui
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -19,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,12 +27,10 @@ import woowacourse.shopping.R
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.theme.topAppBarColor
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun CartScreen(
-    onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current as? Activity
@@ -75,8 +70,7 @@ fun CartScreen(
             LazyColumn() {
                 items(CartRepository.getProducts()) { productAndCount ->
                     CartItem(
-                        productAndCount = productAndCount,
-                        onDelete = { productId -> onDelete(productId) }
+                        productAndCount = productAndCount
                     )
                 }
             }
@@ -88,7 +82,5 @@ fun CartScreen(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen(
-        onDelete = { Uuid.random() }
-    )
+    CartScreen()
 }
