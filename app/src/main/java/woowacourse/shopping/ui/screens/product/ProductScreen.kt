@@ -13,15 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductDataSource
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.ui.component.topbar.MainTapBar
 
 @Composable
 fun ProductScreen(
-    products: List<Product> = ProductDataSource.products,
+    productStateHolder: ProductStateHolder,
     onIconClick: () -> Unit,
 ) {
+    val products = productStateHolder.products
+
     Scaffold(
         topBar = {
             MainTapBar(
@@ -61,38 +62,7 @@ fun ProductScreen(
 @Composable
 fun ProductScreenPreview() {
     ProductScreen(
-        products = listOf(
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-            Product(
-                name = "안녕",
-                price = 10000,
-                imageUrl = "TODO()",
-            ),
-        ),
+        productStateHolder = ProductStateHolder(ProductRepositoryImpl()),
         onIconClick = { },
     )
 }
