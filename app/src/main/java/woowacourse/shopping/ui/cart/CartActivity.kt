@@ -7,12 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.ui.theme.AndroidshoppingcartTheme
 
 class CartActivity : ComponentActivity() {
@@ -22,11 +22,17 @@ class CartActivity : ComponentActivity() {
         setContent {
             AndroidshoppingcartTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CartScreen (
-                        cart = InMemoryCartRepository.showAll(),
+                    val cartRepo = InMemoryCartRepository
+                    var cart by remember { mutableStateOf(cartRepo.showAll()) }
+
+                    CartScreen(
+                        cart = cart,
                         modifier = Modifier.padding(innerPadding),
                         onBackClick = ::finish,
-                        onDeleteClick =  { }
+                        onDeleteClick = {
+                            cartRepo.delete(it)
+                            cart = cartRepo.showAll()
+                        }
                     )
                 }
             }
