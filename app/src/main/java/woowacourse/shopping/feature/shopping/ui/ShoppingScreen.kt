@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -25,17 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
-import woowacourse.shopping.feature.shopping.bridge.ShoppingBridge
 
 @Composable
 fun ShoppingScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
-    val shoppingBridge = remember { ShoppingBridge() }
-    val products = shoppingBridge.products
+    val state = remember { ShoppingStateHolder() }
+    val products = state.currentProducts
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -67,8 +70,10 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         ShoppingContents(
-            products = products,
+            products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
+            onLoad = { state.addProducts() },
+            isCanLoadMore = state.isCanLoadMore,
         )
     }
 }
@@ -76,29 +81,43 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun ShoppingContents(
     products: ImmutableList<ProductUiModel>,
+    onLoad: () -> Unit,
+    isCanLoadMore: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = modifier.padding(20.dp),
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(
-            items = products,
-            key = { product -> product.id },
-        ) { product ->
-            ProductCard(
-                onClick = {
-                    val intent = Intent(activity, DetailActivity::class.java)
-                    intent.putExtra("id", product.id)
-                    activity?.startActivity(intent)
-                },
-                imageUrl = product.imageUrl,
-                productName = product.name,
-                price = product.price,
-            )
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = modifier,
+        ) {
+            items(
+                items = products,
+                key = { product -> product.id },
+            ) { product ->
+                ProductCard(
+                    onClick = {
+                        val intent = Intent(activity, DetailActivity::class.java)
+                        intent.putExtra("id", product.id)
+                        activity?.startActivity(intent)
+                    },
+                    imageUrl = product.imageUrl,
+                    productName = product.name,
+                    price = product.price,
+                )
+            }
+            if (isCanLoadMore) {
+                item {
+                    LoadButton(
+                        onClick = onLoad,
+                    )
+                }
+            }
         }
     }
 }
