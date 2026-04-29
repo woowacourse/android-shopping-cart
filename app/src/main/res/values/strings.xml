@@ -2,4 +2,6 @@
     <string name="app_name">Shopping</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_product">ProductActivity</string>
+    <string name="title_activity_producy_detail">ProducyDetailActivity</string>
+    <string name="title_activity_cart">CartActivity</string>
 </resources>

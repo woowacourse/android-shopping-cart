@@ -15,6 +15,16 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
+            android:name=".ui.screens.cart.CartActivity"
+            android:exported="false"
+            android:label="@string/title_activity_cart"
+            android:theme="@style/Theme.Shopping" />
+        <activity
+            android:name=".ui.screens.productdetail.ProductDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_producy_detail"
+            android:theme="@style/Theme.Shopping" />
+        <activity
             android:name=".ui.screens.product.ProductActivity"
             android:exported="false"
             android:label="@string/title_activity_product"

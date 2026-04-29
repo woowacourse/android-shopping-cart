@@ -19,6 +19,7 @@ import woowacourse.shopping.ui.component.topbar.MainTapBar
 fun ProductScreen(
     productStateHolder: ProductStateHolder,
     onIconClick: () -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     val products = productStateHolder.products
 
@@ -49,7 +50,7 @@ fun ProductScreen(
                     imageUrl = it.imageUrl,
                     name = it.name,
                     price = it.price,
-                    onClick = {},
+                    onClick = { onItemClick(it.id) },
                     modifier = Modifier,
                 )
             }
@@ -63,5 +64,6 @@ fun ProductScreenPreview() {
     ProductScreen(
         productStateHolder = ProductStateHolder(),
         onIconClick = { },
+        onItemClick = { },
     )
 }
