@@ -14,6 +14,7 @@ class CartActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 CartScreen(
                     cartStateHolder = CartStateHolder(),
+                    onNavigateUp = { finish() },
                 )
             }
         }

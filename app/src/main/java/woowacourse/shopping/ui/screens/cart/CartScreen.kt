@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
@@ -12,16 +13,20 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
-fun CartScreen(cartStateHolder: CartStateHolder) {
+fun CartScreen(
+    cartStateHolder: CartStateHolder,
+    onNavigateUp: () -> Unit,
+) {
     val cartItems = cartStateHolder.cartItems
 
     Scaffold(
         topBar = {
             NavigateUpTopBar(
                 title = "Cart",
-                onNavigateUp = { },
+                onNavigateUp = onNavigateUp,
             )
         },
+        modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
 
         LazyColumn(
@@ -50,5 +55,8 @@ fun CartScreen(cartStateHolder: CartStateHolder) {
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen(cartStateHolder = CartStateHolder())
+    CartScreen(
+        cartStateHolder = CartStateHolder(),
+        onNavigateUp = { },
+    )
 }
