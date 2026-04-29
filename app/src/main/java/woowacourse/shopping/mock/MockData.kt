@@ -1,5 +1,6 @@
 package woowacourse.shopping.mock
 
+import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.product.ImageUrl
 import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
@@ -26,6 +27,19 @@ object MockData {
                     ),
                 price = Price(10000),
                 id = index.toString(),
+            )
+        }
+
+    val cartItems =
+        List(11) { index ->
+            CartItem(
+                product =
+                    Product(
+                        id = index.toString(),
+                        name = ProductName("케로로 ${index + 1}"),
+                        imageUrl = ImageUrl("https://picsum.photos/seed/product$index/200/200"),
+                        price = Price((index + 1) * 10000),
+                    ),
             )
         }
 }

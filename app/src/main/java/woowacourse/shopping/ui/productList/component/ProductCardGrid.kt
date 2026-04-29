@@ -1,8 +1,8 @@
-package woowacourse.shopping.composable
+package woowacourse.shopping.ui.productList.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,8 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,16 +32,17 @@ import woowacourse.shopping.domain.product.Product
 fun ProductCardGrid(
     products: List<Product>,
     modifier: Modifier = Modifier,
+    onProductClick: (Product) -> Unit = {},
+    onMoreClick: () -> Unit = {},
+    currentProductCount: Int = 0,
 ) {
-    var maxProductCount by remember { mutableStateOf(20) }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(
-            items = products.take(maxProductCount),
+            items = products.take(currentProductCount),
             key = { item -> item.id },
         ) { item ->
             ProductCard(
@@ -54,9 +53,12 @@ fun ProductCardGrid(
                 imageUrl = item.imageUrl.value,
                 productName = item.name.value,
                 price = item.price.value,
+                onClick = {
+                    onProductClick(item)
+                },
             )
         }
-        if (maxProductCount < products.size) {
+        if (currentProductCount < products.size) {
             item(
                 span = { GridItemSpan(2) },
             ) {
@@ -70,7 +72,7 @@ fun ProductCardGrid(
                                 shape = RoundedCornerShape(size = 45.dp),
                             ),
                 ) {
-                    maxProductCount += 20
+                    onMoreClick()
                 }
             }
         }
@@ -83,23 +85,24 @@ private fun ProductCard(
     productName: String = "",
     price: Int = 0,
     imageUrl: String = "https://img.freepik.com/free-vector/graident-ai-robot-vectorart_78370-4114.jpg?semt=ais_hybrid&w=740&q=80",
+    onClick: () -> Unit = {},
 ) {
-    Box {
-        Column {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = "상품 이미지",
-                modifier = modifier,
-                contentScale = ContentScale.Crop,
-            )
-            ProductInfoColumn(
-                modifier =
-                    Modifier
-                        .padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
-                productName = productName,
-                price = price,
-            )
-        }
+    Column(
+        modifier = Modifier.clickable { onClick() },
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "상품 이미지",
+            modifier = modifier,
+            contentScale = ContentScale.Crop,
+        )
+        ProductInfoColumn(
+            modifier =
+                Modifier
+                    .padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
+            productName = productName,
+            price = price,
+        )
     }
 }
 

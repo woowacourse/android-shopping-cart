@@ -1,4 +1,4 @@
-package woowacourse.shopping.composable
+package woowacourse.shopping.ui.productList.component
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
