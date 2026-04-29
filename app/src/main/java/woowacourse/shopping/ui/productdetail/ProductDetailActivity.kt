@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 
@@ -37,7 +38,10 @@ class ProductDetailActivity : ComponentActivity() {
                         product = receivedProduct,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
-                        onAddToCart = { _, _ -> }
+                        onAddToCart = { product, _ ->
+                            InMemoryCartRepository.add(product)
+                            finish()
+                        }
                     )
                 }
             }
