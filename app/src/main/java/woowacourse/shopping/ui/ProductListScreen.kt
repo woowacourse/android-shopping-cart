@@ -54,9 +54,7 @@ fun ProductListScreen(
                                 .padding(20.dp)
                                 .size(24.dp)
                                 .clickable {
-                                    val intent = Intent(context, CartActivity::class.java).apply {
-
-                                    }
+                                    val intent = Intent(context, CartActivity::class.java)
                                     context.startActivity(intent)
                                 }
                     )
