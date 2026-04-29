@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import woowacourse.shopping.constants.MockData
+import woowacourse.shopping.ui.state.ProductUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,6 +17,7 @@ fun ProductListScreen(
     onProductClick: () -> Unit,
     onCartIconClick: () -> Unit,
     modifier: Modifier = Modifier,
+    productUiModels: List<ProductUiModel>,
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -31,7 +32,7 @@ fun ProductListScreen(
                 .padding(innerPadding),
         ) {
             ProductList(
-                products = MockData.MOCK_PRODUCTS,
+                products = productUiModels,
                 onProductClick = onProductClick,
             )
         }

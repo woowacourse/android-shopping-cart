@@ -1,59 +1,52 @@
 package woowacourse.shopping.constants
 
-import woowacourse.shopping.ui.state.ProductUiModel
+import woowacourse.shopping.domain.Money
+import woowacourse.shopping.domain.Product
 
 object MockData {
     private const val IMAGE_BASE_URL =
         "https://github.com/CommitTheKermit/android-shopping-cart/blob/step1/images/product_image"
     private const val IMAGE_URL_SUFFIX = ".png?raw=true"
 
-    val MOCK_PRODUCTS: List<ProductUiModel> = listOf(
-        ProductUiModel.of(
-            id = "1",
+    val MOCK_PRODUCTS: List<Product> = listOf(
+        Product(
             name = "Pet보틀-정사각형 500ml",
-            price = 1_200,
+            price = Money(1_200),
             imageUrl = "${IMAGE_BASE_URL}0$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "2",
+        Product(
             name = "유리병-라운드 350ml",
-            price = 2_500,
+            price = Money(2_500),
             imageUrl = "${IMAGE_BASE_URL}1$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "3",
+        Product(
             name = "알루미늄캔-슬림 250ml",
-            price = 1_800,
+            price = Money(1_800),
             imageUrl = "${IMAGE_BASE_URL}2$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "4",
+        Product(
             name = "종이팩-사각 1L",
-            price = 3_400,
+            price = Money(3_400),
             imageUrl = "${IMAGE_BASE_URL}3$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "5",
+        Product(
             name = "파우치-스탠딩 200ml",
-            price = 990,
+            price = Money(990),
             imageUrl = "${IMAGE_BASE_URL}4$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "6",
+        Product(
             name = "Pet보틀-슬림 1.5L",
-            price = 2_100,
+            price = Money(2_100),
             imageUrl = "${IMAGE_BASE_URL}0$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "7",
+        Product(
             name = "유리병-각진 750ml",
-            price = 5_800,
+            price = Money(5_800),
             imageUrl = "${IMAGE_BASE_URL}1$IMAGE_URL_SUFFIX",
         ),
-        ProductUiModel.of(
-            id = "8",
+        Product(
             name = "알루미늄캔-스탠다드 355ml",
-            price = 2_300,
+            price = Money(2_300),
             imageUrl = "${IMAGE_BASE_URL}2$IMAGE_URL_SUFFIX",
         ),
     )

@@ -126,7 +126,7 @@ private fun CartItemList(modifier: Modifier = Modifier) {
             SingleCartItem(
                 imageUrl = it.imageUrl,
                 title = it.name,
-                price = it.price,
+                price = it.priceAmount().toString(),
             )
         }
     }
