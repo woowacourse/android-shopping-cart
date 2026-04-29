@@ -1,23 +1,18 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.data.dto.response.toDomainModel
+import woowacourse.shopping.data.DUMMY_PRODUCTS
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductItems
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductRepositoryImpl(
-    private val dataSource: ProductDataSource
-) : ProductRepository {
+object ProductRepositoryImpl : ProductRepository {
+
     override fun getProducts(): ProductItems {
-        val productResult = dataSource.getProducts()
-        val productItems = productResult.map { it.toDomainModel() }
-        return ProductItems(productItems)
+        return ProductItems(DUMMY_PRODUCTS)
     }
 
     override fun getProduct(id: String): Product {
-        val result = dataSource.getProduct(id)
-        val product = result.toDomainModel()
-        return product
+        return DUMMY_PRODUCTS.find { it.id == id }
+            ?: throw IllegalArgumentException("상품이 존재하지 않습니다.")
     }
 }
