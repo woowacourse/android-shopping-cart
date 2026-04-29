@@ -26,7 +26,7 @@ fun ProductScreen(
                 iconResources = R.drawable.ic_cart,
                 onIconClick = onIconClick,
             )
-        }
+        },
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -45,11 +45,10 @@ fun ProductScreen(
                     name = it.name,
                     price = it.price,
                     onClick = {},
-                    modifier = Modifier
+                    modifier = Modifier,
                 )
             }
         }
-
     }
 }
 
@@ -61,32 +60,32 @@ fun ProductScreenPreview() {
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
             Product(
                 name = "안녕",
                 price = 10000,
-                imageUrl = "TODO()"
+                imageUrl = "TODO()",
             ),
         ),
         onIconClick = { },
