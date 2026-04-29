@@ -13,14 +13,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.ui.cart.ui.theme.AndroidshoppingcartTheme
+import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AndroidshoppingcartTheme {
+            ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val cartRepo = InMemoryCartRepository
                     var cart by remember { mutableStateOf(cartRepo.showAll()) }
