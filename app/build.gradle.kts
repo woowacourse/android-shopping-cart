@@ -62,4 +62,7 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+
+    // Suspend Test
+    testImplementation(libs.kotlinx.coroutines.test)
 }
