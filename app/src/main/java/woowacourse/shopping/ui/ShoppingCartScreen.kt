@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package woowacourse.shopping.ui
 
 import android.icu.text.DecimalFormat
