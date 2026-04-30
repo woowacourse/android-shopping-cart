@@ -31,6 +31,8 @@ class CartStateHolder(
     }
 
     suspend fun getPrevPage() {
+        if (curPage == 1) return
+
         cartItems = cartRepository.getCartItemByPage(--curPage)
         isLast = cartRepository.isLastPage(curPage)
     }
