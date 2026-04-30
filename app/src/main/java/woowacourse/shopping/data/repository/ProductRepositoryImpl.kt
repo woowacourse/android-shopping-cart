@@ -17,6 +17,8 @@ object ProductRepositoryImpl : ProductRepository {
         return ProductItems(result)
     }
 
+    override fun getProductCount(): Int = DUMMY_PRODUCTS.size
+
     override fun getProduct(id: String): Product {
         return DUMMY_PRODUCTS.find { it.id == id }
             ?: throw IllegalArgumentException("상품이 존재하지 않습니다.")
