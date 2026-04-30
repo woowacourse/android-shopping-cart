@@ -9,7 +9,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.cart.CartActivity
@@ -27,10 +30,12 @@ class MainActivity : ComponentActivity() {
 
         var cartItems = emptyList<ProductUiModel>()
         val productListStateHolder = ProductListStateHolder()
-        var productUiModels = mutableStateOf(
-            productListStateHolder.fetchProducts()
-                .map(productListStateHolder::toProductUiModel),
-        )
+        val productUiModels: MutableState<List<ProductUiModel>> = mutableStateOf(emptyList())
+
+        lifecycleScope.launch {
+            productUiModels.value = productListStateHolder.fetchProducts()
+                .map(productListStateHolder::toProductUiModel)
+        }
 
         val detailLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -68,8 +73,10 @@ class MainActivity : ComponentActivity() {
                     productUiModels = productUiModels.value,
                     isEnd = productListStateHolder.isEndList(),
                     onLoading = {
-                        productUiModels.value = productListStateHolder.fetchProducts()
-                            .map(productListStateHolder::toProductUiModel)
+                        lifecycleScope.launch {
+                            productUiModels.value = productListStateHolder.fetchProducts()
+                                .map(productListStateHolder::toProductUiModel)
+                        }
                     },
                     onProductClick = { id ->
                         detailLauncher.launch(
