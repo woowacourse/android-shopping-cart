@@ -120,7 +120,7 @@ private fun CartTopAppBar(
                 fontSize = 20.sp,
             )
         },
-        actions = {
+        navigationIcon = {
             IconButton(
                 onClick = onClick,
             ) {
