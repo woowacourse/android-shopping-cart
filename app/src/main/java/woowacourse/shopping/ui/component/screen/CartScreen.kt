@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,19 +37,33 @@ import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
+import woowacourse.shopping.ui.stateholder.CartStateHolder
 import java.util.UUID
 import kotlin.math.min
 
 @Composable
 fun CartScreen(
     cart: Cart,
+    currentPage: Int,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
     onClose: () -> Unit,
     onDelete: (UUID) -> Unit,
+    previousEnable: Boolean,
+    nextEnable: Boolean,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { CartHeader(onClose) },
-        bodyContent = { CartBody(cart = cart, onDelete = onDelete) },
+        bodyContent = { CartBody(
+            cart = cart,
+            onDelete = onDelete,
+            currentPage = currentPage,
+            onPrevious = onPrevious,
+            previousEnable = previousEnable,
+            nextEnable = nextEnable,
+            onNext = onNext,
+        ) },
         modifier = modifier
     )
 }
@@ -87,10 +100,14 @@ private fun CartHeader(
 @Composable
 private fun CartBody(
     cart: Cart,
+    currentPage: Int,
     onDelete: (UUID) -> Unit,
+    onPrevious: () -> Unit = {},
+    onNext: () -> Unit = {},
+    previousEnable: Boolean,
+    nextEnable: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    var currentPage = 0
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -108,13 +125,26 @@ private fun CartBody(
             )
         }
         if (cart.isPageable()) {
-            PagingBtn(1)
+            PagingBtn(
+                currentPage = currentPage,
+                onPrevious = onPrevious,
+                previousEnable = previousEnable,
+                nextEnable = nextEnable,
+                onNext = onNext,
+            )
         }
     }
 }
 
 @Composable
-fun PagingBtn(currentPage: Int, modifier: Modifier = Modifier) {
+fun PagingBtn(
+    currentPage: Int,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
+    previousEnable: Boolean,
+    nextEnable: Boolean,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .padding(vertical = 30.dp)
@@ -132,16 +162,17 @@ fun PagingBtn(currentPage: Int, modifier: Modifier = Modifier) {
             fontWeight = FontWeight(500),
             color = Color.White,
             modifier = Modifier
-                .background(color = Color(0xFFAAAAAA))
+                .background(color = btnAvailable(previousEnable))
                 .fillMaxHeight()
                 .width(42.dp)
                 .clickable(
-                    onClick = { }
+                    onClick = onPrevious,
+                    enabled = previousEnable
                 )
                 .wrapContentSize(Alignment.Center)
         )
         Text(
-            text = currentPage.toString(),
+            text = (currentPage + 1).toString(),
             fontSize = 22.sp,
             fontWeight = FontWeight(500),
             color = Color(0xFF555555),
@@ -160,13 +191,16 @@ fun PagingBtn(currentPage: Int, modifier: Modifier = Modifier) {
                 .fillMaxHeight()
                 .width(42.dp)
                 .clickable(
-                    onClick = { }
+                    onClick = onNext,
+                    enabled = nextEnable
                 )
-                .background(color = Color(0xFF04C09E))
+                .background(color = btnAvailable(nextEnable))
                 .wrapContentHeight(Alignment.CenterVertically)
         )
     }
 }
+
+private fun btnAvailable(btnFlag: Boolean): Color = if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
 private fun Cart.isPageable(): Boolean {
     return cartProducts.size() > 5
@@ -183,8 +217,13 @@ private fun CartProducts.getPartedItem(page: Int, pageSize: Int = 5): List<Produ
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
+        currentPage = 0,
         onClose = {},
         onDelete = {},
+        onPrevious = {},
+        onNext = {},
+        previousEnable = false,
+        nextEnable = false,
         cart = Cart(
             cartProducts = CartProducts(
                 listOf(
