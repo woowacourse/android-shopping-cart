@@ -19,18 +19,18 @@ class CartActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val state = retainCartStateHolder()
+                    val stateHolder = retainCartStateHolder()
                     CartScreen(
-                        cartItems = state.uiState.cartItems,
+                        cartItems = stateHolder.uiState.cartItems,
                         onBackClick = { finish() },
-                        onCartDeleteClick = state::removeFromCart,
+                        onCartDeleteClick = stateHolder::removeFromCart,
                         modifier = Modifier.padding(innerPadding),
-                        isLastPage = state.uiState.isLastPage,
-                        isFirstPage = state.uiState.isFirstPage,
-                        pageCount = state.uiState.displayPageNumber,
-                        isShowControls = state.uiState.showControls,
-                        onNextClick = state::nextPage,
-                        onPreviousClick = state::prevPage,
+                        isLastPage = stateHolder.uiState.isLastPage,
+                        isFirstPage = stateHolder.uiState.isFirstPage,
+                        pageCount = stateHolder.uiState.displayPageNumber,
+                        isShowControls = stateHolder.uiState.showControls,
+                        onNextClick = stateHolder::nextPage,
+                        onPreviousClick = stateHolder::prevPage,
                     )
                 }
             }

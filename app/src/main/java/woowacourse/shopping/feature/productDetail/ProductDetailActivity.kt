@@ -20,12 +20,12 @@ class ProductDetailActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val productId = intent.getStringExtra(PRODUCT_ID) ?: ""
-                    val state = retainProductDetailStateHolder(productId)
+                    val stateHolder = retainProductDetailStateHolder(productId)
 
                     ProductDetailScreen(
-                        productInfo = state.productInfo,
+                        productInfo = stateHolder.productInfo,
                         onCloseClick = { finish() },
-                        onAddCartClick = state::addToCart,
+                        onAddCartClick = stateHolder::addToCart,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
