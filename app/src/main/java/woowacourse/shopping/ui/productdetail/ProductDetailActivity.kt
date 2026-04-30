@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.ui.productdetail.stateholder.ProductDetailStateHolder
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.productlist.ProductDetailScreen
-import woowacourse.shopping.ui.state.ProductUiModel
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +17,12 @@ class ProductDetailActivity : ComponentActivity() {
 
         val id = intent.getStringExtra(EXTRA_PRODUCT_ID)
         val holder = ProductDetailStateHolder()
-        lateinit var productModel: ProductUiModel
-        runCatching { holder.getProductUiModel(id) }
-            .onSuccess { productModel = it }
-            .onFailure { this.finish() }
+
+        val productModel = id?.let { holder.getProductUiModel(it) }
+        if (productModel == null) {
+            finish()
+            return
+        }
 
         setContent {
             AndroidshoppingcartTheme {
