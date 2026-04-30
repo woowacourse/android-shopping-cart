@@ -18,23 +18,26 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.uimodel.CartItemUiModel
+import woowacourse.shopping.core.uimodel.ProductUiModel
+import woowacourse.shopping.feature.cart.bridge.CartBridge
 
 @Composable
-fun CartScreen(
-    state: CartStateHolder,
-    onDeleteItem: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun CartScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
+    val state = remember { CartStateHolder() }
+    val cartBridge = remember { CartBridge() }
+
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -74,7 +77,10 @@ fun CartScreen(
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         CartContent(
-            onDeleteItem = onDeleteItem,
+            onDeleteItem = {
+                cartBridge.removeFromCart(it)
+                state.getCartItems()
+            },
             cartItems = state.currentCartItems.toImmutableList(),
             modifier =
                 Modifier
@@ -109,4 +115,43 @@ private fun CartContent(
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun CartScreenPreview() {
+    CartScreen()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CartContentPreview() {
+    CartContent(
+        onDeleteItem = {},
+        cartItems =
+            listOf(
+                CartItemUiModel(
+                    product =
+                        ProductUiModel(
+                            id = "1",
+                            name = "커피",
+                            imageUrl = "",
+                            price = 1000,
+                        ),
+                    quantity = 1,
+                    totalPrice = 1000,
+                ),
+                CartItemUiModel(
+                    product =
+                        ProductUiModel(
+                            id = "2",
+                            name = "커피",
+                            imageUrl = "",
+                            price = 1000,
+                        ),
+                    quantity = 1,
+                    totalPrice = 1000,
+                ),
+            ).toImmutableList(),
+    )
 }

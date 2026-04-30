@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -78,6 +79,7 @@ fun DetailScreen(
             Box(
                 modifier =
                     Modifier
+                        .navigationBarsPadding()
                         .fillMaxWidth()
                         .height(48.dp)
                         .background(Green40)
@@ -136,6 +138,7 @@ private fun DetailContent(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
+            modifier = Modifier.padding(horizontal = 18.dp),
         )
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Gray40)
         Row(

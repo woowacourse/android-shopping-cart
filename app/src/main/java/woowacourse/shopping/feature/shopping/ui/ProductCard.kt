@@ -1,9 +1,8 @@
 package woowacourse.shopping.feature.shopping.ui
 
-import android.R.attr.onClick
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +37,7 @@ fun ProductCard(
             model = imageUrl,
             contentDescription = "상품 이미지",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
         )
         Text(
             text = productName,
