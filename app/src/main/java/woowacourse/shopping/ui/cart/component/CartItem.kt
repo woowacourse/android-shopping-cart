@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui
+package woowacourse.shopping.ui.cart.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -31,15 +31,16 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductAndCount
-import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartItem(
     productAndCount: ProductAndCount,
+    onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -78,7 +79,7 @@ fun CartItem(
                         Modifier
                             .size(16.dp)
                             .clickable {
-                                CartRepository.deleteProduct(productId = productAndCount.productId)
+                                onDelete(productAndCount.productId)
                             },
                     colorFilter = ColorFilter.tint(topAppBarColor)
                 )
@@ -122,5 +123,6 @@ private fun CartItemPreview() {
             ),
             count = 1
         ),
+        onDelete = {}
     )
 }

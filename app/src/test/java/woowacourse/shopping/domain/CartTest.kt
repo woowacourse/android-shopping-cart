@@ -19,7 +19,7 @@ class CartTest {
     fun `잗바구니에 상품을 추가할 수 있다`() {
         val cart = Cart()
 
-        val newCart = cart.addProduct(product)
+        val newCart = cart.addProductToCart(product)
 
         assertThat(newCart.productAndCounts.size).isEqualTo(1)
     }
@@ -28,7 +28,7 @@ class CartTest {
     fun `각 상품에 대한 정보를 정상적으로 받아온다`() {
         val cart = Cart()
 
-        val newCart = cart.addProduct(product)
+        val newCart = cart.addProductToCart(product)
 
         assertThat(newCart.productAndCounts[0].product).isEqualTo(product)
     }
