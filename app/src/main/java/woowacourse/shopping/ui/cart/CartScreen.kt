@@ -32,6 +32,9 @@ fun CartScreen(
     cartItems: List<ProductUiModel>,
     onCloseClick: () -> Unit,
     onDelete: (String) -> Unit,
+    page: Int,
+    onLeftClick: () -> Unit,
+    onRightClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -55,14 +58,23 @@ fun CartScreen(
                 onDelete = onDelete,
             )
             Spacer(modifier = Modifier.height(40.dp))
-            PageNavigator()
+            PageNavigator(
+                page = page,
+                onLeftClick = onLeftClick,
+                onRightClick = onRightClick,
+            )
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
 @Composable
-private fun PageNavigator(modifier: Modifier = Modifier) {
+private fun PageNavigator(
+    page: Int,
+    onLeftClick: () -> Unit,
+    onRightClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -72,18 +84,18 @@ private fun PageNavigator(modifier: Modifier = Modifier) {
     ) {
         PageButton(
             text = "<",
-            onClick = { },
+            onClick = onLeftClick,
             isEnable = false,
         )
 
         Text(
-            text = "1",
+            text = page.toString(),
             fontSize = 22.sp,
         )
 
         PageButton(
             text = ">",
-            onClick = { },
+            onClick = onRightClick,
             isEnable = true,
         )
     }
@@ -151,5 +163,8 @@ private fun CartScreenPreview() {
         cartItems = emptyList(),
         onCloseClick = {},
         onDelete = {},
+        onLeftClick = {},
+        onRightClick = {},
+        page = 0,
     )
 }

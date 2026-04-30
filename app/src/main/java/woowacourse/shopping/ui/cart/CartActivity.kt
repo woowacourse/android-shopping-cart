@@ -7,8 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import woowacourse.shopping.ui.cart.stateholder.CartStateHolder
 import woowacourse.shopping.ui.cart.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.state.ProductUiModel
 
@@ -18,29 +17,33 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val stateHolder = CartStateHolder(
+            intent.getParcelableArrayListExtra("extra_cart_items", ProductUiModel::class.java)
+                ?: emptyList<ProductUiModel>(),
+        )
         setContent {
-
-            var cartItems = remember {
-                mutableStateOf(
-                    intent.getParcelableArrayListExtra("extra_cart_items", ProductUiModel::class.java)
-                        ?: emptyList<ProductUiModel>(),
-                )
-            }
 
             AndroidshoppingcartTheme {
                 CartScreen(
-                    cartItems = cartItems.value,
+                    cartItems = stateHolder.cartItems,
                     onCloseClick = { finish() },
                     onDelete = { id ->
-                        cartItems.value = cartItems.value.filter { it.id != id }
+                        stateHolder.deleteCartItem(id)
                         setResult(
                             RESULT_OK,
                             Intent()
                                 .putParcelableArrayListExtra(
-                                    "deleted_cart_list", ArrayList(cartItems.value),
+                                    "deleted_cart_list", ArrayList(stateHolder.totalCartItems),
                                 ),
                         )
                     },
+                    onLeftClick = {
+                        stateHolder.onLeftClick()
+                    },
+                    onRightClick = {
+                        stateHolder.onRightClick()
+                    },
+                    page = stateHolder.page,
                 )
             }
         }
