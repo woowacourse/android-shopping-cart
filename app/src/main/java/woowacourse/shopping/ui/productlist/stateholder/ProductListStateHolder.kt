@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productlist.stateholder
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.compose.runtime.mutableStateListOf
 import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.domain.Cart
@@ -14,14 +13,23 @@ class ProductListStateHolder {
 
     var cart = Cart()
 
-    fun getAllProducts(): List<Product> {
-        if (_products.size % PAGE_SIZE != 0) {
-            return products // 더 이상 추가할 상품이 없을 때
-        }
+    // 60 45 currentPage
+    // 20 20 1
+    // 40 40 2
+    // 60 45 3
+    // 끝
+
+    fun isEndList(): Boolean {
+        return _products.size >= MockData.MOCK_PRODUCTS.size
+    }
+
+    fun fetchProducts(): List<Product> {
+        val toOffset = minOf(_products.size + PAGE_SIZE, MockData.MOCK_PRODUCTS.size)
+
         _products.addAll(
             MockData.MOCK_PRODUCTS.subList(
                 fromIndex = _products.size,
-                toIndex = _products.size + PAGE_SIZE,
+                toIndex = toOffset,
             ),
         )
 

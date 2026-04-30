@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.productlist
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.ui.state.ProductUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,8 +17,10 @@ import woowacourse.shopping.ui.state.ProductUiModel
 fun ProductListScreen(
     onProductClick: (String) -> Unit,
     onCartIconClick: () -> Unit,
+    onLoading: () -> Unit,
     modifier: Modifier = Modifier,
     productUiModels: List<ProductUiModel>,
+    isEnd: Boolean,
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -26,7 +29,7 @@ fun ProductListScreen(
             ProductListAppBar(onCartIconClick = onCartIconClick)
         },
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding),
@@ -34,7 +37,22 @@ fun ProductListScreen(
             ProductList(
                 products = productUiModels,
                 onProductClick = onProductClick,
+                modifier = Modifier.weight(1f),
+                onLoading = onLoading,
+                isEnd = isEnd,
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewProductListScreen() {
+    ProductListScreen(
+        onProductClick = { },
+        onCartIconClick = { },
+        onLoading = {},
+        productUiModels = emptyList(),
+        isEnd = false,
+    )
 }

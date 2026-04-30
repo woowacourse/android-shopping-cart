@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.mutableStateOf
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.cart.CartActivity
@@ -26,8 +27,10 @@ class MainActivity : ComponentActivity() {
 
         var cartItems = emptyList<ProductUiModel>()
         val productListStateHolder = ProductListStateHolder()
-        val productUiModels = productListStateHolder.getAllProducts()
-            .map(productListStateHolder::toProductUiModel)
+        var productUiModels = mutableStateOf(
+            productListStateHolder.fetchProducts()
+                .map(productListStateHolder::toProductUiModel),
+        )
 
         val detailLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -62,7 +65,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 ProductListScreen(
-                    productUiModels = productUiModels,
+                    productUiModels = productUiModels.value,
+                    isEnd = productListStateHolder.isEndList(),
+                    onLoading = {
+                        productUiModels.value = productListStateHolder.fetchProducts()
+                            .map(productListStateHolder::toProductUiModel)
+                    },
                     onProductClick = { id ->
                         detailLauncher.launch(
                             Intent(this, ProductDetailActivity::class.java)
@@ -75,6 +83,7 @@ class MainActivity : ComponentActivity() {
                                 .putParcelableArrayListExtra("extra_cart_items", ArrayList(cartItems)),
                         )
                     },
+
                 )
             }
         }
