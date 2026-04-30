@@ -1,14 +1,16 @@
 package woowacourse.shopping.domain
 
 import java.util.Collections.emptyList
+import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+
+val CART_PAGE_SIZE = 5
 
 @OptIn(ExperimentalUuidApi::class)
 data class Cart(
     val productAndCounts: List<ProductAndCount> = emptyList(),
 ) {
-    val _productAndCounts = productAndCounts.toMutableList()
     fun addProductToCart(product: Product): Cart {
         val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
         if (index!=-1) {
@@ -29,4 +31,12 @@ data class Cart(
                     it.productId == productId
                 },
         )
+
+    fun getProductAndCounts(page:Int, pageSize:Int = CART_PAGE_SIZE):List<ProductAndCount>{
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + CART_PAGE_SIZE, productAndCounts.size)
+        return productAndCounts.subList(fromIndex,toIndex)
+    }
 }
+
+
