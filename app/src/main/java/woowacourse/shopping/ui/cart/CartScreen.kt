@@ -25,25 +25,27 @@ fun CartScreen(
     cart: Cart,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onDeleteClick: (Product) -> Unit
+    onDeleteClick: (Product) -> Unit,
 ) {
     val cartItemsSize = cart.items.size
     val totalPages = (cartItemsSize - 1) / PAGE_SIZE + 1
 
     var currentPage by remember { mutableIntStateOf(1) }
-    val pagedItems = remember(cart, currentPage) {
-        cart.items.toList()
-            .drop((currentPage - 1) * PAGE_SIZE)
-            .take(PAGE_SIZE)
-            .toMap()
-    }
+    val pagedItems =
+        remember(cart, currentPage) {
+            cart.items
+                .toList()
+                .drop((currentPage - 1) * PAGE_SIZE)
+                .take(PAGE_SIZE)
+                .toMap()
+        }
 
     LaunchedEffect(totalPages) {
         currentPage = currentPage.coerceAtMost(totalPages)
     }
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         CartHeader(onBackClick = onBackClick)
 
@@ -52,12 +54,13 @@ fun CartScreen(
             showPagination = cartItemsSize >= PAGE_SIZE + 1,
             currentPage = currentPage,
             totalPages = totalPages,
-            modifier = Modifier
-                .padding(top = 8.dp, start = 18.dp, end = 18.dp)
-                .weight(1f),
+            modifier =
+                Modifier
+                    .padding(top = 8.dp, start = 18.dp, end = 18.dp)
+                    .weight(1f),
             onDeleteClick = onDeleteClick,
             onPreviousClick = { currentPage = (currentPage - 1).coerceAtLeast(1) },
-            onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) }
+            onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) },
         )
     }
 }

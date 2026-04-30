@@ -30,12 +30,12 @@ fun CartItemBody(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(items = products.toList(), key = { it.id }) { product ->
             CartItemUnit(
                 product = product,
-                onDeleteClick = { onDeleteClick(product) }
+                onDeleteClick = { onDeleteClick(product) },
             )
         }
 
@@ -47,7 +47,7 @@ fun CartItemBody(
                     currentPage = currentPage,
                     totalPages = totalPages,
                     onPreviousClick = onPreviousClick,
-                    onNextClick = onNextClick
+                    onNextClick = onNextClick,
                 )
             }
         }
@@ -58,17 +58,18 @@ fun CartItemBody(
 @Preview(showBackground = true)
 private fun CartItemBodyPreview() {
     CartItemBody(
-        cart = Cart(
-            mapOf(
-                Pair(InMemoryProductRepository.APPLE, 1),
-                Pair(InMemoryProductRepository.BBOYAMI, 1)
-            )
-        ),
+        cart =
+            Cart(
+                mapOf(
+                    Pair(InMemoryProductRepository.APPLE, 1),
+                    Pair(InMemoryProductRepository.BBOYAMI, 1),
+                ),
+            ),
         onDeleteClick = {},
         showPagination = true,
         currentPage = 1,
         totalPages = 5,
         onPreviousClick = {},
-        onNextClick = {}
+        onNextClick = {},
     )
 }

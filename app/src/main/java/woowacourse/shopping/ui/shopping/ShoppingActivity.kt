@@ -42,14 +42,15 @@ class ShoppingActivity : ComponentActivity() {
                             startActivity(Intent(this, CartActivity::class.java))
                         },
                         onProductClick = {
-                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra("PRODUCT", it)
-                            }
+                            val intent =
+                                Intent(this, ProductDetailActivity::class.java).apply {
+                                    putExtra("PRODUCT", it)
+                                }
                             startActivity(intent)
                         },
                         onMoreClick = {
                             visibleCount = minOf(visibleCount + PAGE_SIZE, productRepo.size)
-                        }
+                        },
                     )
                 }
             }

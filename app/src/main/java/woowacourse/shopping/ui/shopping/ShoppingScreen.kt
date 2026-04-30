@@ -24,18 +24,19 @@ fun ShoppingScreen(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ShoppingHeader(onCartClick = onCartClick)
 
         ShoppingBody(
             products = products,
             showMoreButton = hasNext,
-            modifier = Modifier
-                .padding(20.dp)
-                .weight(1f),
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .weight(1f),
             onProductClick = onProductClick,
-            onMoreClick = onMoreClick
+            onMoreClick = onMoreClick,
         )
     }
 }
@@ -48,6 +49,6 @@ private fun ShoppingScreenPreview() {
         hasNext = true,
         onCartClick = {},
         onProductClick = {},
-        onMoreClick = {}
+        onMoreClick = {},
     )
 }

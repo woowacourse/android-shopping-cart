@@ -17,12 +17,13 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val receivedProduct = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("PRODUCT", Product::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra("PRODUCT")
-        }
+        val receivedProduct =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra("PRODUCT", Product::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra("PRODUCT")
+            }
 
         if (receivedProduct == null) {
             finish()
@@ -42,7 +43,7 @@ class ProductDetailActivity : ComponentActivity() {
                         onAddToCart = { product, _ ->
                             cartRepo.add(product)
                             finish()
-                        }
+                        },
                     )
                 }
             }

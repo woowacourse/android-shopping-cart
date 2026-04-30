@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Cart(
-    val items: Map<Product, Int>
-): Parcelable
+    val items: Map<Product, Int>,
+) : Parcelable

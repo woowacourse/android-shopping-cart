@@ -17,7 +17,7 @@ fun ProductDetailScreen(
     product: Product,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
-    onAddToCart: (Product, Int) -> Unit
+    onAddToCart: (Product, Int) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProductDetailHeader(onCloseClick = onCloseClick)
@@ -37,6 +37,6 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         product = product,
         onCloseClick = {},
-        onAddToCart = { _, _ -> }
+        onAddToCart = { _, _ -> },
     )
 }

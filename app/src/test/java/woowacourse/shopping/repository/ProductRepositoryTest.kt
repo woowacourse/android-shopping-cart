@@ -4,7 +4,6 @@ package woowacourse.shopping.repository
 
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
-import kotlin.math.exp
 
 class ProductRepositoryTest {
     val repo: ProductRepository = InMemoryProductRepository

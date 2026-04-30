@@ -22,18 +22,19 @@ fun ProductDetailHeader(
     onCloseClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = Color.DarkGray)
-            .padding(20.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(color = Color.DarkGray)
+                .padding(20.dp),
         horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "닫기",
             modifier = Modifier.clickable(onClick = onCloseClick),
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }

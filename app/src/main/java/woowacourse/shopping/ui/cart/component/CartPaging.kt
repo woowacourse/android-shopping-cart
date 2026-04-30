@@ -34,11 +34,12 @@ fun CartPaging(
     val isNextEnabled = currentPage < totalPages
 
     Row(
-        modifier = modifier
-            .width(129.dp)
-            .height(42.dp),
+        modifier =
+            modifier
+                .width(129.dp)
+                .height(42.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ArrowButton(
             isEnabled = isPreviousEnabled,
@@ -55,7 +56,7 @@ fun CartPaging(
         Text(
             text = "$currentPage",
             color = Color.Black,
-            style = ShoppingTypography.titleMedium
+            style = ShoppingTypography.titleMedium,
         )
 
         ArrowButton(
@@ -77,15 +78,16 @@ private fun ArrowButton(
     isEnabled: Boolean,
     roundedCornerShape: RoundedCornerShape,
     onClick: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .width(42.dp)
-            .height(42.dp)
-            .clip(roundedCornerShape)
-            .background(if (isEnabled) Color(0xFF04C09E) else Color.Gray)
-            .clickable(enabled = isEnabled, onClick = onClick),
+        modifier =
+            Modifier
+                .width(42.dp)
+                .height(42.dp)
+                .clip(roundedCornerShape)
+                .background(if (isEnabled) Color(0xFF04C09E) else Color.Gray)
+                .clickable(enabled = isEnabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         content()
@@ -97,7 +99,7 @@ private fun ArrowButton(
 private fun CartPagingPreview() {
     CartPaging(
         currentPage = 1,
-        totalPages = 2
+        totalPages = 2,
     )
 }
 
@@ -111,10 +113,10 @@ private fun ArrowButtonPreview1() {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "다음",
-                tint = Color.White
+                tint = Color.White,
             )
         },
-        onClick = {}
+        onClick = {},
     )
 }
 
@@ -128,9 +130,9 @@ private fun ArrowButtonPreview2() {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "다음",
-                tint = Color.White
+                tint = Color.White,
             )
         },
-        onClick = {}
+        onClick = {},
     )
 }

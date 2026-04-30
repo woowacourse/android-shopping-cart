@@ -36,15 +36,16 @@ import woowacourse.shopping.ui.ShoppingTypography
 fun CartItemUnit(
     product: Product,
     modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color.White)
-            .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-            .padding(18.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White)
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                .padding(18.dp),
     ) {
         NameAndCloseIcon(product = product, onClick = onDeleteClick)
 
@@ -58,13 +59,14 @@ fun CartItemUnit(
 private fun NameAndCloseIcon(
     product: Product,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = product.name,
@@ -77,7 +79,7 @@ private fun NameAndCloseIcon(
             imageVector = Icons.Default.Close,
             contentDescription = "닫기",
             modifier = Modifier.clickable(onClick = onClick),
-            tint = Color.Gray
+            tint = Color.Gray,
         )
     }
 }
@@ -86,30 +88,32 @@ private fun NameAndCloseIcon(
 @Composable
 private fun ImageAndPrice(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val price = product.price.value
     val formatted = String.format("%,d", price)
 
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         AsyncImage(
             model = product.imageUrl,
             contentDescription = "이미지",
-            modifier = Modifier
-                .width(136.dp)
-                .height(72.dp),
-            contentScale = ContentScale.Crop
+            modifier =
+                Modifier
+                    .width(136.dp)
+                    .height(72.dp),
+            contentScale = ContentScale.Crop,
         )
         Text(
             text = "$formatted 원",
             color = Color.DarkGray,
             style = ShoppingTypography.productPrice,
-            modifier = Modifier.padding(start = 6.dp)
+            modifier = Modifier.padding(start = 6.dp),
         )
     }
 }

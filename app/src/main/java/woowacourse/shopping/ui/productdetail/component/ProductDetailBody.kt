@@ -26,17 +26,17 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 @Composable
 fun ProductDetailBody(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         AsyncImage(
             model = product.imageUrl,
             contentDescription = "이미지",
             modifier = Modifier.height(360.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
         ProductLabel(product)
     }
@@ -46,7 +46,7 @@ fun ProductDetailBody(
 @Composable
 private fun ProductLabel(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val price = product.price.value
     val formatted = String.format("%,d", price)
@@ -59,14 +59,15 @@ private fun ProductLabel(
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(start = 18.dp, top = 16.dp, bottom = 17.dp)
+            modifier = Modifier.padding(start = 18.dp, top = 16.dp, bottom = 17.dp),
         )
         HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "가격",

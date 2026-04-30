@@ -22,7 +22,7 @@ fun ShoppingBody(
     showMoreButton: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
-    onMoreClick: () -> Unit
+    onMoreClick: () -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 154.dp),
@@ -35,7 +35,7 @@ fun ShoppingBody(
         }
 
         if (showMoreButton) {
-            item(span = { GridItemSpan(maxLineSpan) } ) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     MoreButton(
                         modifier = Modifier,
@@ -54,6 +54,6 @@ private fun ShoppingBodyPreview() {
         products = InMemoryProductRepository.products,
         showMoreButton = true,
         onProductClick = {},
-        onMoreClick = {}
+        onMoreClick = {},
     )
 }

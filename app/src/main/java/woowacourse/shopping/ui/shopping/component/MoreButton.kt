@@ -13,15 +13,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MoreButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier.padding(10.dp),
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF04C09E),
-            contentColor = Color.White
-        )
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF04C09E),
+                contentColor = Color.White,
+            ),
     ) {
         Text("더보기")
     }
