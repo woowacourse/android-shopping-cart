@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
@@ -90,7 +91,7 @@ fun DetailProductScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.price),
+                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.price.toInt()),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -144,7 +145,7 @@ private fun DetailProductScreenPreview() {
                 Product(
                     id = 1,
                     title = "동원 스위트콘",
-                    price = 99_800,
+                    price = Price(99_800),
                     imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                 ),
             onAddToCartClick = {},

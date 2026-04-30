@@ -15,6 +15,7 @@ class ProductTest {
         sameIdProduct: Product,
     ) {
         product shouldBe sameIdProduct
+        product.hashCode() shouldBe sameIdProduct.hashCode()
     }
 
     @Test
@@ -23,17 +24,18 @@ class ProductTest {
             Product(
                 id = 1,
                 title = "동원 스위트콘",
-                price = 20_560,
+                price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
             )
         val differentPriceProduct =
             Product(
                 id = 2,
                 title = "동원 스위트콘",
-                price = 20_560,
+                price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
             )
         product shouldNotBe differentPriceProduct
+        product.hashCode() shouldNotBe differentPriceProduct.hashCode()
     }
 
     companion object {
@@ -44,13 +46,13 @@ class ProductTest {
                     Product(
                         id = 1,
                         title = "동원 스위트콘",
-                        price = 20_560,
+                        price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                     Product(
                         id = 1,
                         title = "동원 스위트콘",
-                        price = 20_560,
+                        price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                 ),
@@ -58,13 +60,13 @@ class ProductTest {
                     Product(
                         id = 1,
                         title = "동원 스위트콘 2.95kg",
-                        price = 20_560,
+                        price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                     Product(
                         id = 1,
                         title = "동원 스위트콘 340g",
-                        price = 20_560,
+                        price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                 ),
@@ -72,13 +74,13 @@ class ProductTest {
                     Product(
                         id = 1,
                         title = "동원 스위트콘 340g",
-                        price = 39_920,
+                        price = Price(39_920),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                     Product(
                         id = 1,
                         title = "동원 스위트콘 340g",
-                        price = 20_560,
+                        price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                 ),

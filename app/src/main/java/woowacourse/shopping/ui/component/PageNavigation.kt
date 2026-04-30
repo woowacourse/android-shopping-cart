@@ -53,12 +53,13 @@ fun PageNavigation(
             enabled = canMoveToPreviousPage,
             onClick = onBeforePageClick,
             modifier = Modifier.size(42.dp),
-            shape = RoundedCornerShape(
-                topStart = 4.dp,
-                bottomStart = 4.dp,
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = 4.dp,
+                    bottomStart = 4.dp,
+                ),
             colors = pagerButtonColors,
-            contentPadding =  PaddingValues(0.dp),
+            contentPadding = PaddingValues(0.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.left_icon),
@@ -78,12 +79,13 @@ fun PageNavigation(
             enabled = canMoveToNextPage,
             onClick = onNextPageClick,
             modifier = Modifier.size(42.dp),
-            shape = RoundedCornerShape(
-                topEnd = 4.dp,
-                bottomEnd = 4.dp,
-            ),
+            shape =
+                RoundedCornerShape(
+                    topEnd = 4.dp,
+                    bottomEnd = 4.dp,
+                ),
             colors = pagerButtonColors,
-            contentPadding =  PaddingValues(0.dp),
+            contentPadding = PaddingValues(0.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.right_icon),

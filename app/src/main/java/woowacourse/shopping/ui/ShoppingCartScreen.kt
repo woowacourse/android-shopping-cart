@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
@@ -100,13 +101,11 @@ private fun ShoppingCartItems(
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(4.dp),
-                )
-                .border(
+                ).border(
                     color = MaterialTheme.colorScheme.outline,
                     width = 1.dp,
                     shape = RoundedCornerShape(4.dp),
-                )
-                .padding(12.dp),
+                ).padding(12.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -148,7 +147,7 @@ private fun ShoppingCartItems(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(shoppingCartItem.product.price),
+                text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(shoppingCartItem.product.price.toInt()),
             )
         }
     }
@@ -193,15 +192,15 @@ private fun ShoppingCartScreenPreview() {
                 listOf(
                     ShoppingCartItem(
                         id = 1,
-                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                        product = Product(1, "동원 스위트콘", Price(99_800), ""),
                     ),
                     ShoppingCartItem(
                         id = 1,
-                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                        product = Product(1, "동원 스위트콘", Price(99_800), ""),
                     ),
                     ShoppingCartItem(
                         id = 1,
-                        product = Product(1, "동원 스위트콘", 99_800, ""),
+                        product = Product(1, "동원 스위트콘", Price(99_800), ""),
                     ),
                 ),
             onBackClick = { },
@@ -217,7 +216,7 @@ private fun ShoppingCartItemsPreview() {
         shoppingCartItem =
             ShoppingCartItem(
                 id = 1,
-                product = Product(1, "동원 스위트콘", 99_800, ""),
+                product = Product(1, "동원 스위트콘", Price(99_800), ""),
             ),
         onRemoveShoppingItemClick = {},
     )

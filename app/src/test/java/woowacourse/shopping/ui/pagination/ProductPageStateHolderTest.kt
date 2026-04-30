@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.pagination
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 
 class ProductPageStateHolderTest {
@@ -18,7 +19,7 @@ class ProductPageStateHolderTest {
                     List(itemSize) {
                         Product(
                             id = 1L,
-                            price = 10_000,
+                            price = Price(10_000),
                             title = "호날두",
                             imageUrl = "",
                         )

@@ -8,4 +8,6 @@ class ShoppingCartItem(
         if (other !is ShoppingCartItem) return false
         return id == other.id
     }
+
+    override fun hashCode(): Int = id.hashCode()
 }
