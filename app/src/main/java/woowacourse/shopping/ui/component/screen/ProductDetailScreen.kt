@@ -32,13 +32,14 @@ import woowacourse.shopping.ui.component.item.toPriceString
 
 @Composable
 fun ProductDetailScreen(
+    onAddRequest: () -> Unit,
     onClose: () -> Unit,
     product: Product,
     modifier: Modifier = Modifier
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
-        bodyContent = { ProductDetailBody(product) },
+        bodyContent = { ProductDetailBody(onAddRequest, product) },
         modifier = modifier
     )
 }
@@ -67,6 +68,7 @@ private fun ProductDetailHeader(
 
 @Composable
 private fun ProductDetailBody(
+    onAddRequest: () -> Unit,
     product: Product,
     modifier: Modifier = Modifier,
 ) {
@@ -78,7 +80,7 @@ private fun ProductDetailBody(
         ProductDetailInfo(product)
 
         TextButton(
-            onClick = { /* 카트에 담기 버튼 클릭 시 동작 */ },
+            onClick = onAddRequest,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -141,6 +143,7 @@ private fun ProductDetailInfo(
 @Composable
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
+        onAddRequest = {},
         onClose = {},
         product = Product(
             imageUri = "emptyUri",

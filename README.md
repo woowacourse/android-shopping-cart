@@ -21,15 +21,15 @@
 ### UI
 #### CatalogScreen
 - [x] LazyVerticalGrid를 사용한다
-- [ ] 카트 아이콘을 클릭하면 CartScreen으로 이동한다
+- [x] 카트 아이콘을 클릭하면 CartScreen으로 이동한다
 - [ ] 상품 목록에서 스크롤을 20개 했을 때 더보기 버튼을 눌러 추가 20개를 로드할 수 있다
 **ShoppingItem**
 - [x] 아이템을 클릭하면 해당 Item의 DetailScreen으로 이동한다
 - [x] 이미지 로딩으로 Coil을 사용한다
 
 #### ProductDetailScreen
-- [ ] 카트에 담기 버튼을 클릭하면 해당 Item을 카트에 추가한다
-- [ ] 카트에 담았다면 상품 목록 화면으로 돌아간다
+- [x] 카트에 담기 버튼을 클릭하면 해당 Item을 카트에 추가한다
+- [x] 카트에 담았다면 상품 목록 화면으로 돌아간다
 - [ ] 카트에 담기 성공했다면 "장바구니에 담았습니다" Snackbar를 노출한다
 - [x] `x` 버튼을 누르면 ShoppingItemsScreen 으로 돌아간다
 - [x] 이미지 로딩으로 Coil을 사용한다

@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.component.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,17 +29,21 @@ import java.util.UUID
 fun CatalogScreen(
     catalog: List<Product>,
     onItemClick: (UUID) -> Unit,
+    onCartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CommonFrame(
-        headerContent = { CatalogHeader() },
+        headerContent = { CatalogHeader(onCartClick) },
         bodyContent = { CatalogBody(catalog, onItemClick) },
         modifier = modifier,
     )
 }
 
 @Composable
-private fun CatalogHeader(modifier: Modifier = Modifier) {
+private fun CatalogHeader(
+    onCartClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -55,7 +60,9 @@ private fun CatalogHeader(modifier: Modifier = Modifier) {
             painter = painterResource(R.drawable.ic_cart),
             contentDescription = "장바구니 아이콘",
             tint = Color.White,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(onClick = onCartClick)
         )
     }
 }
@@ -107,5 +114,5 @@ private fun CatalogScreenPreview() {
 
     )
 
-    CatalogScreen(catalog, {})
+    CatalogScreen(catalog, {}, {})
 }

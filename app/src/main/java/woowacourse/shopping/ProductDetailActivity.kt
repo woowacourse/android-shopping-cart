@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import java.util.UUID
@@ -26,6 +25,11 @@ class ProductDetailActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
+                        onAddRequest = {
+                            intent.putExtra("id", product.uuid.toString())
+                            setResult(RESULT_OK, intent)
+                            finish()
+                        },
                         onClose = { finish() },
                         modifier = Modifier.padding(innerPadding),
                     )
