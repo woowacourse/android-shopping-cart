@@ -41,6 +41,18 @@ class ProductListStateHolder {
         return cart.plusCartItem(cartItem)
     }
 
+    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart {
+        return Cart(
+            cart.cartItems.filter { cartItem ->
+                uiModels.any { it.id == cartItem.product.id }
+            },
+        )
+    }
+
+    fun toProductUiModels(): List<ProductUiModel> {
+        return cart.cartItems.map { toProductUiModel(it.product) }
+    }
+
     companion object {
         const val PAGE_SIZE = 20
     }

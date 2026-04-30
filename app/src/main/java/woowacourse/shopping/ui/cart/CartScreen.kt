@@ -29,10 +29,12 @@ import woowacourse.shopping.ui.state.ProductUiModel
 
 @Composable
 fun CartScreen(
-    cartItems: List<ProductUiModel> = emptyList(),
+    cartItems: List<ProductUiModel>,
     onCloseClick: () -> Unit,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     Scaffold(
         containerColor = Color.White,
         modifier = modifier
@@ -50,6 +52,7 @@ fun CartScreen(
             CartItemList(
                 cartItems,
                 modifier = Modifier.weight(1f),
+                onDelete = onDelete,
             )
             Spacer(modifier = Modifier.height(40.dp))
             PageNavigator()
@@ -116,6 +119,7 @@ private fun PageButton(
 @Composable
 private fun CartItemList(
     cartItems: List<ProductUiModel>,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -132,6 +136,9 @@ private fun CartItemList(
                 imageUrl = it.imageUrl,
                 title = it.title,
                 price = it.price,
+                onDelete = {
+                    onDelete(it.id)
+                },
             )
         }
     }
@@ -141,6 +148,8 @@ private fun CartItemList(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
+        cartItems = emptyList(),
         onCloseClick = {},
+        onDelete = {},
     )
 }

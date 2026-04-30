@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ fun SingleCartItem(
     imageUrl: String,
     title: String,
     price: String,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -56,12 +58,16 @@ fun SingleCartItem(
                 fontWeight = FontWeight.W700,
                 fontSize = 18.sp,
             )
-            Icon(
-                painter = painterResource(R.drawable.close),
-                contentDescription = stringResource(R.string.close_description),
-                tint = Color(0xffaaaaaa),
-                modifier = Modifier.padding(end = 10.dp),
-            )
+            IconButton(
+                onClick = onDelete,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.close),
+                    contentDescription = stringResource(R.string.close_description),
+                    tint = Color(0xffaaaaaa),
+                    modifier = Modifier.padding(end = 10.dp),
+                )
+            }
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,5 +97,6 @@ private fun CartItemPreview() {
         imageUrl = "",
         title = "프리뷰",
         price = "1,000원",
+        onDelete = {},
     )
 }
