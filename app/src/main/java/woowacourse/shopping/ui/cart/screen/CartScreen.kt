@@ -19,16 +19,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.cart.component.CartItem
-import woowacourse.shopping.ui.cart.component.CartTopAppBar
-import woowacourse.shopping.ui.cart.component.Pagination
+import woowacourse.shopping.ui.cart.component.cartItem
+import woowacourse.shopping.ui.cart.component.cartTopAppBar
+import woowacourse.shopping.ui.cart.component.pagination
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun CartScreen(
-    modifier: Modifier = Modifier
-) {
+fun cartScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current as? Activity
     var cartProducts = CartRepository.getCartProducts()
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
@@ -36,8 +34,8 @@ fun CartScreen(
 
     Scaffold(
         topBar = {
-            CartTopAppBar(
-                onClick = { context?.finish() }
+            cartTopAppBar(
+                onClick = { context?.finish() },
             )
         },
         containerColor = Color.White,
@@ -45,10 +43,10 @@ fun CartScreen(
         Box(modifier = modifier.padding(innerPadding)) {
             Column {
                 LazyColumn(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     items(CartRepository.getProductAndCounts(currentPageIndex)) { productAndCount ->
-                        CartItem(
+                        cartItem(
                             productAndCount = productAndCount,
                             onDelete = { id ->
                                 CartRepository.deleteProduct(productId = id)
@@ -59,13 +57,12 @@ fun CartScreen(
                                 if (currentPageIndex > updatedLastPageIndex) {
                                     currentPageIndex = updatedLastPageIndex
                                 }
-                            }
+                            },
                         )
                     }
-
                 }
                 if (cartProducts.size > 5) {
-                    Pagination(
+                    pagination(
                         pageMoveToLeft = { if (currentPageIndex > 0) currentPageIndex-- },
                         pageMoveToLeftButtonEnabled = currentPageIndex > 0,
                         currentPageIndex = currentPageIndex,
@@ -78,11 +75,9 @@ fun CartScreen(
     }
 }
 
-
-
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun CartScreenPreview() {
-    CartScreen()
+private fun cartScreenPreview() {
+    cartScreen()
 }

@@ -20,34 +20,34 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.productdetail.component.MintButton
-import woowacourse.shopping.ui.productdetail.component.ProductDetail
-import woowacourse.shopping.ui.productdetail.component.ProductDetailTopAppBar
+import woowacourse.shopping.ui.productdetail.component.mintButton
+import woowacourse.shopping.ui.productdetail.component.productDetail
+import woowacourse.shopping.ui.productdetail.component.productDetailTopAppBar
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailScreen(
+fun productDetailScreen(
     product: Product?,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { ProductDetailTopAppBar(onClose) },
+        topBar = { productDetailTopAppBar(onClose) },
         containerColor = Color.White,
-        snackbarHost = { SnackbarHost(snackbarHostState)}
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             if (product != null) {
-                ProductDetail(product)
-                MintButton(
+                productDetail(product)
+                mintButton(
                     onClick = {
                         CartRepository.addProduct(product)
                         scope.launch {
@@ -55,26 +55,27 @@ fun ProductDetailScreen(
                         }
                     },
                     text = "장바구니 담기",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
                 )
             }
         }
     }
 }
 
-
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun ProductDetailScreenPreview() {
-    ProductDetailScreen(
-        product = Product(
-            imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-            productName = "[든든] 동원 스위트콘",
-            price = Price(99800),
-        ),
-        onClose = {}
+private fun productDetailScreenPreview() {
+    productDetailScreen(
+        product =
+            Product(
+                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
+                productName = "[든든] 동원 스위트콘",
+                price = Price(99800),
+            ),
+        onClose = {},
     )
 }

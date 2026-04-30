@@ -19,28 +19,30 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 
 @Composable
-fun Pagination(
+fun pagination(
     pageMoveToLeft: () -> Unit,
     pageMoveToLeftButtonEnabled: Boolean,
     currentPageIndex: Int,
     pageMoveToRight: () -> Unit,
     pageMoveToRightButtonEnabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        PageMoveButton(
+        pageMoveButton(
             onClick = pageMoveToLeft,
-            shape = RoundedCornerShape(
-                topStart = 4.dp,
-                topEnd = 0.dp,
-                bottomStart = 4.dp,
-                bottomEnd = 0.dp
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = 4.dp,
+                    topEnd = 0.dp,
+                    bottomStart = 4.dp,
+                    bottomEnd = 0.dp,
+                ),
             enabled = pageMoveToLeftButtonEnabled,
         ) {
             Image(
@@ -50,7 +52,7 @@ fun Pagination(
             )
         }
         Box(
-            modifier = Modifier.size(42.dp)
+            modifier = Modifier.size(42.dp),
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
@@ -59,20 +61,21 @@ fun Pagination(
                 fontSize = 22.sp,
             )
         }
-        PageMoveButton(
+        pageMoveButton(
             onClick = pageMoveToRight,
-            shape = RoundedCornerShape(
-                topStart = 0.dp,
-                topEnd = 4.dp,
-                bottomStart = 0.dp,
-                bottomEnd = 4.dp
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 4.dp,
+                    bottomStart = 0.dp,
+                    bottomEnd = 4.dp,
+                ),
             enabled = pageMoveToRightButtonEnabled,
         ) {
             Image(
                 painter = painterResource(R.drawable.next_icon),
                 contentDescription = "nextIcon",
-                modifier = Modifier.size(width = 12.dp, height = 19.dp)
+                modifier = Modifier.size(width = 12.dp, height = 19.dp),
             )
         }
     }
@@ -80,8 +83,8 @@ fun Pagination(
 
 @Preview
 @Composable
-private fun PaginationPreview() {
-    Pagination(
+private fun paginationPreview() {
+    pagination(
         pageMoveToLeft = {},
         pageMoveToLeftButtonEnabled = true,
         currentPageIndex = 1,

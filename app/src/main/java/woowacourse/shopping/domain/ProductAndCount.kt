@@ -6,7 +6,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 data class ProductAndCount(
     val product: Product,
-    private val count: Int
+    private val count: Int,
 ) {
     fun increaseQuantity(): ProductAndCount = copy(count = count + 1)
 

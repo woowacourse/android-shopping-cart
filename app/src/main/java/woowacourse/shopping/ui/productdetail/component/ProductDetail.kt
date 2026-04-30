@@ -17,33 +17,35 @@ import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.ui.productdetail.component.productPrice
 import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun ProductDetail(
+fun productDetail(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         AsyncImage(
             model = product.imageUrl,
             contentDescription = product.productName,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
         )
         Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
             Text(
                 text = product.productName,
                 fontWeight = FontWeight.W700,
                 fontSize = 24.sp,
-                color = Color.Black
+                color = Color.Black,
             )
         }
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
-        ProductPrice(
-            price = product.price.value
+        productPrice(
+            price = product.price.value,
         )
     }
 }
@@ -51,10 +53,13 @@ fun ProductDetail(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun ProductDetailPreview() {
-    ProductDetail(product = Product(
-        imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-        productName = "[든든] 동원 스위트콘",
-        price = Price(99800),
-    ),)
+private fun productDetailPreview() {
+    productDetail(
+        product =
+            Product(
+                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
+                productName = "[든든] 동원 스위트콘",
+                price = Price(99800),
+            ),
+    )
 }

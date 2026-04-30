@@ -19,9 +19,7 @@ import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListTopAppBar(
-    onClick: () -> Unit
-) {
+fun productListTopAppBar(onClick: () -> Unit) {
     TopAppBar(
         title = {
             Text(
@@ -36,7 +34,7 @@ fun ProductListTopAppBar(
                     Modifier
                         .padding(20.dp)
                         .size(24.dp)
-                        .clickable { onClick() }
+                        .clickable { onClick() },
             )
         },
         colors =
@@ -49,6 +47,6 @@ fun ProductListTopAppBar(
 
 @Preview
 @Composable
-private fun ProductListTopAppBarPreview() {
-    ProductListTopAppBar(onClick = {})
+private fun productListTopAppBarPreview() {
+    productListTopAppBar(onClick = {})
 }

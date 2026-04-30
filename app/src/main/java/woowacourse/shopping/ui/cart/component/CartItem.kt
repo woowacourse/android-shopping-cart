@@ -38,12 +38,11 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun CartItem(
+fun cartItem(
     productAndCount: ProductAndCount,
     onDelete: (Uuid) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
     Card(
         colors =
             CardDefaults.cardColors(
@@ -51,26 +50,28 @@ fun CartItem(
             ),
         shape = RectangleShape,
         modifier = modifier.padding(18.dp),
-        border = BorderStroke(
-            width = 1.dp,
-            color = topAppBarColor
-        )
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = topAppBarColor,
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 18.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 18.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = productAndCount.productName,
                     fontWeight = FontWeight.W700,
                     fontSize = 18.sp,
-                    color = topAppBarColor
+                    color = topAppBarColor,
                 )
                 Image(
                     painter = painterResource(id = R.drawable.x_icon),
@@ -81,28 +82,27 @@ fun CartItem(
                             .clickable {
                                 onDelete(productAndCount.productId)
                             },
-                    colorFilter = ColorFilter.tint(topAppBarColor)
+                    colorFilter = ColorFilter.tint(topAppBarColor),
                 )
             }
-            Spacer(modifier= Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
             ) {
                 AsyncImage(
                     model = productAndCount.product.imageUrl,
                     contentDescription = productAndCount.product.productName,
-                    modifier = Modifier.size(136.dp,72.dp),
+                    modifier = Modifier.size(136.dp, 72.dp),
                 )
-                Box{
+                Box {
                     Text(
                         modifier = Modifier.align(Alignment.BottomEnd),
                         text = "${intFormatter(productAndCount.product.price.value)}원",
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,
                         color = topAppBarColor,
-
                     )
                 }
             }
@@ -113,16 +113,17 @@ fun CartItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun CartItemPreview() {
-    CartItem(
-        productAndCount = ProductAndCount(
-            Product(
-                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-                productName = "[든든] 동원 스위트콘",
-                price = Price(99800),
+private fun cartItemPreview() {
+    cartItem(
+        productAndCount =
+            ProductAndCount(
+                Product(
+                    imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
+                    productName = "[든든] 동원 스위트콘",
+                    price = Price(99800),
+                ),
+                count = 1,
             ),
-            count = 1
-        ),
-        onDelete = {}
+        onDelete = {},
     )
 }

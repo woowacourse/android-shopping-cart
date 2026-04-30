@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.ui.cart.screen.CartScreen
-import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import woowacourse.shopping.ui.cart.screen.cartScreen
+import woowacourse.shopping.ui.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 
 class CartActivity : ComponentActivity() {
@@ -16,8 +16,8 @@ class CartActivity : ComponentActivity() {
 
         @OptIn(ExperimentalUuidApi::class)
         setContent {
-            AndroidshoppingTheme {
-                CartScreen()
+            androidshoppingTheme {
+                cartScreen()
             }
         }
     }

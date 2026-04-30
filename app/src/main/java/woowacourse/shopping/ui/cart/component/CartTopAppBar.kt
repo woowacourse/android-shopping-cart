@@ -21,18 +21,17 @@ import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartTopAppBar(
-    onClick: () -> Unit
-) {
+fun cartTopAppBar(onClick: () -> Unit) {
     TopAppBar(
         navigationIcon = {
             Image(
                 painter = painterResource(R.drawable.arrow_left_alt_24px),
                 contentDescription = "leftArrowIcon",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable { onClick() },
-                colorFilter = ColorFilter.tint(Color.White)
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clickable { onClick() },
+                colorFilter = ColorFilter.tint(Color.White),
             )
         },
         title = {
@@ -40,7 +39,7 @@ fun CartTopAppBar(
                 text = "Cart",
                 fontWeight = FontWeight.W500,
                 fontSize = 20.sp,
-                color = Color.White
+                color = Color.White,
             )
         },
         colors =
@@ -53,6 +52,6 @@ fun CartTopAppBar(
 
 @Preview
 @Composable
-private fun CartTopAppBarPreview() {
-    CartTopAppBar(onClick = {})
+private fun cartTopAppBarPreview() {
+    cartTopAppBar(onClick = {})
 }

@@ -31,7 +31,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun ProductItem(
+fun productItem(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
@@ -43,12 +43,14 @@ fun ProductItem(
                 containerColor = Color.White,
             ),
         shape = RectangleShape,
-        modifier = modifier.clickable{
-            val intent = Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra("woowacourse.shopping.product_id", product.productId.toString())
-            }
-            context.startActivity(intent)
-        },
+        modifier =
+            modifier.clickable {
+                val intent =
+                    Intent(context, ProductDetailActivity::class.java).apply {
+                        putExtra("woowacourse.shopping.product_id", product.productId.toString())
+                    }
+                context.startActivity(intent)
+            },
     ) {
         Column {
             AsyncImage(
@@ -79,12 +81,11 @@ fun ProductItem(
     }
 }
 
-
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun ProductItemPreview() {
-    ProductItem(
+private fun productItemPreview() {
+    productItem(
         product =
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",

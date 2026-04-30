@@ -15,33 +15,34 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.util.intFormatter
 
 @Composable
-fun ProductPrice(
+fun productPrice(
     price: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 18.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "가격",
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
-            color = Color.Black
+            color = Color.Black,
         )
         Text(
             text = "${intFormatter(price)}원",
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
-            color = Color.Black
+            color = Color.Black,
         )
     }
 }
 
 @Preview
 @Composable
-private fun ProductPricePreview() {
-    ProductPrice(100)
+private fun productPricePreview() {
+    productPrice(100)
 }

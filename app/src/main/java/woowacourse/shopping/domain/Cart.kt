@@ -13,7 +13,7 @@ data class Cart(
 ) {
     fun addProductToCart(product: Product): Cart {
         val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
-        if (index!=-1) {
+        if (index != -1) {
             val existProductAndCount = productAndCounts[index]
             val newProductAndCount = existProductAndCount.increaseQuantity()
             val updated = productAndCounts.toMutableList()
@@ -32,11 +32,12 @@ data class Cart(
                 },
         )
 
-    fun getProductAndCounts(page:Int, pageSize:Int = CART_PAGE_SIZE):List<ProductAndCount>{
+    fun getProductAndCounts(
+        page: Int,
+        pageSize: Int = CART_PAGE_SIZE,
+    ): List<ProductAndCount> {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + CART_PAGE_SIZE, productAndCounts.size)
-        return productAndCounts.subList(fromIndex,toIndex)
+        return productAndCounts.subList(fromIndex, toIndex)
     }
 }
-
-

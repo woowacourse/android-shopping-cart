@@ -5,28 +5,29 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
-import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import woowacourse.shopping.ui.productdetail.screen.productDetailScreen
+import woowacourse.shopping.ui.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class ProductDetailActivity : ComponentActivity() {
-
     @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         @OptIn(ExperimentalUuidApi::class)
-        val productId = requireNotNull(intent.getStringExtra("woowacourse.shopping.product_id")).let(
-            Uuid.Companion::parse)
+        val productId =
+            requireNotNull(intent.getStringExtra("woowacourse.shopping.product_id")).let(
+                Uuid.Companion::parse,
+            )
         val product = Products(ProductFixture.productList).findProductById(productId)
 
         setContent {
-            AndroidshoppingTheme {
-                ProductDetailScreen(
+            androidshoppingTheme {
+                productDetailScreen(
                     product = product,
-                    onClose = { finish() }
+                    onClose = { finish() },
                 )
             }
         }

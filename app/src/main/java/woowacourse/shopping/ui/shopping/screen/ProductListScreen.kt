@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.productdetail.component.MintButton
-import woowacourse.shopping.ui.shopping.component.ProductItem
-import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
+import woowacourse.shopping.ui.productdetail.component.mintButton
+import woowacourse.shopping.ui.shopping.component.productItem
+import woowacourse.shopping.ui.shopping.component.productListTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen(
+fun productListScreen(
     products: Products,
     modifier: Modifier = Modifier,
 ) {
@@ -41,11 +41,11 @@ fun ProductListScreen(
 
     Scaffold(
         topBar = {
-            ProductListTopAppBar(
+            productListTopAppBar(
                 onClick = {
                     val intent = Intent(context, CartActivity::class.java)
                     context.startActivity(intent)
-                }
+                },
             )
         },
         containerColor = Color.White,
@@ -58,11 +58,11 @@ fun ProductListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(visibleProducts) { product ->
-                    ProductItem(product)
+                    productItem(product)
                 }
                 if (products.hasNextPage(currentPage = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        MintButton(
+                        mintButton(
                             onClick = {
                                 currentPageIndex++
                             },
@@ -72,15 +72,14 @@ fun ProductListScreen(
                     }
                 }
             }
-
         }
     }
 }
 
 @Preview
 @Composable
-private fun ProductListScreenPreview() {
-    ProductListScreen(
+private fun productListScreenPreview() {
+    productListScreen(
         products = Products(ProductFixture.productList),
     )
 }
