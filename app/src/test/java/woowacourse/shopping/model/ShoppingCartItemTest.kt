@@ -1,10 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.model
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartItemTest {
     private val product = Product(1, "동원 스위트콘", 99_800, "")

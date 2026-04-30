@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.repository
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
-import woowacourse.shopping.repository.MemoryShoppingCartRepository
-import woowacourse.shopping.repository.ShoppingCartRepository
 
 class ShoppingCartRepositoryTest {
     private val product = Product(1, "동원 스위트콘", 99_800, "")

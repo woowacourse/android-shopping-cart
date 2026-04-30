@@ -1,10 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.pagination
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.pagination.ProductPageStateHolder
 
 class ProductPageStateHolderTest {
     @ParameterizedTest

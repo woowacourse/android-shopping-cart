@@ -1,11 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.repository
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.MemoryProductRepository
-import woowacourse.shopping.repository.ProductRepository
 
 class ProductRepositoryTest {
     private val product = Product(1, "A", 1_000, "")

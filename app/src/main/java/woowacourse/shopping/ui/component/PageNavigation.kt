@@ -101,7 +101,7 @@ fun PageNavigation(
 @Composable
 private fun PageNavigationPreview(
     @PreviewParameter(PageNavigationPreviewProvider::class)
-    state: PageNavigationPreviewState
+    state: PageNavigationPreviewState,
 ) {
     AndroidShoppingTheme {
         PageNavigation(
@@ -110,7 +110,7 @@ private fun PageNavigationPreview(
             canMoveToNextPage = state.canMoveToNextPage,
             onBeforePageClick = {},
             onNextPageClick = {},
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }
@@ -118,26 +118,26 @@ private fun PageNavigationPreview(
 private data class PageNavigationPreviewState(
     val currentPage: Int,
     val canMoveToPreviousPage: Boolean,
-    val canMoveToNextPage: Boolean
+    val canMoveToNextPage: Boolean,
 )
 
 private class PageNavigationPreviewProvider : PreviewParameterProvider<PageNavigationPreviewState> {
-
-    override val values = sequenceOf(
-        PageNavigationPreviewState(
-            currentPage = 1,
-            canMoveToPreviousPage = false,
-            canMoveToNextPage = true
-        ),
-        PageNavigationPreviewState(
-            currentPage = 2,
-            canMoveToPreviousPage = true,
-            canMoveToNextPage = true
-        ),
-        PageNavigationPreviewState(
-            currentPage = 5,
-            canMoveToPreviousPage = true,
-            canMoveToNextPage = false
+    override val values =
+        sequenceOf(
+            PageNavigationPreviewState(
+                currentPage = 1,
+                canMoveToPreviousPage = false,
+                canMoveToNextPage = true,
+            ),
+            PageNavigationPreviewState(
+                currentPage = 2,
+                canMoveToPreviousPage = true,
+                canMoveToNextPage = true,
+            ),
+            PageNavigationPreviewState(
+                currentPage = 5,
+                canMoveToPreviousPage = true,
+                canMoveToNextPage = false,
+            ),
         )
-    )
 }

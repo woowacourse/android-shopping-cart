@@ -1,10 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.pagination
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
-import woowacourse.shopping.ui.pagination.ShoppingCartPageStateHolder
 
 class ShoppingCartPageStateHolderTest {
     private val product = Product(1, "동원 스위트콘", 99_800, "")
