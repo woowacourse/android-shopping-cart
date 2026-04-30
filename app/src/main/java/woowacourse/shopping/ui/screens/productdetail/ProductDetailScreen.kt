@@ -40,7 +40,6 @@ fun ProductDetailScreen(
         },
         modifier = Modifier
             .systemBarsPadding(),
-
     ) { innerPadding ->
         Column(
             modifier = Modifier
