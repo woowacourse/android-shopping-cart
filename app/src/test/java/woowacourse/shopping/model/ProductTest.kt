@@ -23,14 +23,14 @@ class ProductTest {
         val product =
             Product(
                 id = 1,
-                title = "동원 스위트콘",
+                title = ProductTitle("동원 스위트콘"),
                 price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
             )
         val differentPriceProduct =
             Product(
                 id = 2,
-                title = "동원 스위트콘",
+                title = ProductTitle("동원 스위트콘"),
                 price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
             )
@@ -45,27 +45,13 @@ class ProductTest {
                 Arguments.of(
                     Product(
                         id = 1,
-                        title = "동원 스위트콘",
+                        title = ProductTitle("동원 스위트콘"),
                         price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                     Product(
                         id = 1,
-                        title = "동원 스위트콘",
-                        price = Price(20_560),
-                        imageUrl = "https://www.coupang.com/vp/products/8402186124",
-                    ),
-                ),
-                Arguments.of(
-                    Product(
-                        id = 1,
-                        title = "동원 스위트콘 2.95kg",
-                        price = Price(20_560),
-                        imageUrl = "https://www.coupang.com/vp/products/8402186124",
-                    ),
-                    Product(
-                        id = 1,
-                        title = "동원 스위트콘 340g",
+                        title = ProductTitle("동원 스위트콘"),
                         price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
@@ -73,13 +59,27 @@ class ProductTest {
                 Arguments.of(
                     Product(
                         id = 1,
-                        title = "동원 스위트콘 340g",
+                        title = ProductTitle("동원 스위트콘 2.95kg"),
+                        price = Price(20_560),
+                        imageUrl = "https://www.coupang.com/vp/products/8402186124",
+                    ),
+                    Product(
+                        id = 1,
+                        title = ProductTitle("동원 스위트콘 340g"),
+                        price = Price(20_560),
+                        imageUrl = "https://www.coupang.com/vp/products/8402186124",
+                    ),
+                ),
+                Arguments.of(
+                    Product(
+                        id = 1,
+                        title = ProductTitle("동원 스위트콘 340g"),
                         price = Price(39_920),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),
                     Product(
                         id = 1,
-                        title = "동원 스위트콘 340g",
+                        title = ProductTitle("동원 스위트콘 340g"),
                         price = Price(20_560),
                         imageUrl = "https://www.coupang.com/vp/products/8402186124",
                     ),

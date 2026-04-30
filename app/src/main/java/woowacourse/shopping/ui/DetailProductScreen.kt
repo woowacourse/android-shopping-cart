@@ -36,6 +36,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
@@ -62,7 +63,7 @@ fun DetailProductScreen(
         ) {
             AsyncImage(
                 model = product.imageUrl,
-                contentDescription = stringResource(R.string.product_image_content_description, product.title),
+                contentDescription = stringResource(R.string.product_image_content_description, product.getTitle()),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -71,7 +72,7 @@ fun DetailProductScreen(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = product.title,
+                text = product.getTitle(),
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -91,7 +92,7 @@ fun DetailProductScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.price.toInt()),
+                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.getPrice()),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -144,7 +145,7 @@ private fun DetailProductScreenPreview() {
             product =
                 Product(
                     id = 1,
-                    title = "동원 스위트콘",
+                    title = ProductTitle("동원 스위트콘"),
                     price = Price(99_800),
                     imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                 ),

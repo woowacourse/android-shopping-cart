@@ -5,9 +5,10 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductTitle
 
 class ProductRepositoryTest {
-    private val product = Product(1, "A", Price(1_000), "")
+    private val product = Product(1, ProductTitle("A"), Price(1_000), "")
     private val productRepository: ProductRepository = MemoryProductRepository(products = listOf(product))
 
     @Test

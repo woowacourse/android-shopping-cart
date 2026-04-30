@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductTitle
 
 class ProductPageStateHolderTest {
     @ParameterizedTest
@@ -20,7 +21,7 @@ class ProductPageStateHolderTest {
                         Product(
                             id = 1L,
                             price = Price(10_000),
-                            title = "호날두",
+                            title = ProductTitle("호날두"),
                             imageUrl = "",
                         )
                     },

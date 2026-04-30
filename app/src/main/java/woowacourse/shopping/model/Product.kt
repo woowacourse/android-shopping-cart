@@ -2,8 +2,8 @@ package woowacourse.shopping.model
 
 class Product(
     val id: Long,
-    val title: String,
-    val price: Price,
+    private val title: ProductTitle,
+    private val price: Price,
     val imageUrl: String,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -12,4 +12,8 @@ class Product(
     }
 
     override fun hashCode(): Int = id.hashCode()
+
+    fun getPrice(): Int = price.toInt()
+
+    fun getTitle(): String = title.toString()
 }
