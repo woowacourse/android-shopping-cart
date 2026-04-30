@@ -4,11 +4,17 @@ import woowacourse.shopping.data.DUMMY_PRODUCTS
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductItems
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.math.min
 
 object ProductRepositoryImpl : ProductRepository {
+    override fun getProducts(page: Int, pageSize: Int): ProductItems {
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + pageSize, DUMMY_PRODUCTS.size)
 
-    override fun getProducts(): ProductItems {
-        return ProductItems(DUMMY_PRODUCTS)
+        if (fromIndex > toIndex) return ProductItems(emptyList())
+
+        val result = DUMMY_PRODUCTS.subList(fromIndex, toIndex)
+        return ProductItems(result)
     }
 
     override fun getProduct(id: String): Product {
