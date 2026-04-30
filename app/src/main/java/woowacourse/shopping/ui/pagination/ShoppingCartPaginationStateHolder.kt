@@ -4,7 +4,7 @@ import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartPaginationStateHolder(
     shoppingCartItems: List<ShoppingCartItem>,
-) : PaginationStateHolder<ShoppingCartItem>(shoppingCartItems) {
+) : DataLoadStateHolder<ShoppingCartItem>(shoppingCartItems) {
     override val pageSize: Int = 5
 
     override fun getPageRange(): IntRange {
@@ -19,4 +19,8 @@ class ShoppingCartPaginationStateHolder(
     fun nextPage() {
         updateCurrentPage(currentPage + 1)
     }
+
+    fun canMoveToPreviousPage(): Boolean = isInPageRange(currentPage - 1)
+
+    fun canMoveToNextPage(): Boolean = isInPageRange(currentPage + 1)
 }

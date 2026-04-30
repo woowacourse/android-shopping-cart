@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class PaginationStateHolder<T : Any>(
+abstract class DataLoadStateHolder<T : Any>(
     items: List<T>,
 ) {
     protected abstract val pageSize: Int
@@ -39,12 +39,10 @@ abstract class PaginationStateHolder<T : Any>(
         )
     }
 
-    fun updateCurrentPage(page: Int) {
+    protected fun isInPageRange(page: Int): Boolean = page in (initialPage..<pageCount)
+
+    protected fun updateCurrentPage(page: Int) {
         if (pageCount == 0) return
         currentPage = page.coerceIn(initialPage..<pageCount)
     }
-
-    fun canMoveToPreviousPage(): Boolean = currentPage > initialPage
-
-    fun canMoveToNextPage(): Boolean = pageCount > 0 && currentPage < pageCount - 1
 }

@@ -2,9 +2,9 @@ package woowacourse.shopping.ui.pagination
 
 import woowacourse.shopping.model.Product
 
-class ProductPaginationStateHolder(
+class ProductDataLoadStateHolder(
     products: List<Product>,
-) : PaginationStateHolder<Product>(products) {
+) : DataLoadStateHolder<Product>(products) {
     override val pageSize: Int = 3
 
     override fun getPageRange(): IntRange {

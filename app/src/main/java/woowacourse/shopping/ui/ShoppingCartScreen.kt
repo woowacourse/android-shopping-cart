@@ -49,12 +49,8 @@ fun ShoppingCartScreen(
     shoppingCartItems: List<ShoppingCartItem>,
     onBackClick: () -> Unit,
     onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
-    currentPage: Int,
-    canMoveToPreviousPage: Boolean,
-    canMoveToNextPage: Boolean,
-    onBeforePageClick: () -> Unit,
-    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
+    bottomContent: @Composable () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -62,6 +58,7 @@ fun ShoppingCartScreen(
                 onBackClick = onBackClick,
             )
         },
+        bottomBar = bottomContent,
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
         Column(
@@ -86,13 +83,6 @@ fun ShoppingCartScreen(
                     )
                 }
             }
-            AnglePager(
-                currentPage = currentPage,
-                canMoveToPreviousPage = canMoveToPreviousPage,
-                canMoveToNextPage = canMoveToNextPage,
-                onBeforePageClick = onBeforePageClick,
-                onNextPageClick = onNextPageClick,
-            )
         }
     }
 }
@@ -192,7 +182,7 @@ private fun ShoppingCartTopBar(
 }
 
 @Composable
-private fun AnglePager(
+fun AnglePager(
     currentPage: Int,
     canMoveToPreviousPage: Boolean,
     canMoveToNextPage: Boolean,
@@ -276,12 +266,15 @@ private fun ShoppingCartScreenPreview() {
                 ),
             onBackClick = { },
             onRemoveShoppingItemClick = { },
-            currentPage = 1,
-            canMoveToPreviousPage = true,
-            canMoveToNextPage = true,
-            onBeforePageClick = { },
-            onNextPageClick = { },
-        )
+        ) {
+            AnglePager(
+                currentPage = 4,
+                canMoveToPreviousPage = true,
+                canMoveToNextPage = true,
+                onBeforePageClick = { },
+                onNextPageClick = { },
+            )
+        }
     }
 }
 

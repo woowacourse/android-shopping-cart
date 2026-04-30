@@ -5,7 +5,6 @@ package woowacourse.shopping.ui
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,9 +17,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +45,7 @@ fun ProductListScreen(
     onNavigateToCartClick: () -> Unit,
     onProductClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    onMoreProductClick: () -> Unit,
+    bottomContent: (@Composable () -> Unit)? = null,
 ) {
     Scaffold(
         topBar = {
@@ -79,24 +75,11 @@ fun ProductListScreen(
                 )
             }
 
-            item(
-                span = { GridItemSpan(maxLineSpan) },
-            ) {
-                Button(
-                    onClick = onMoreProductClick,
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            contentColor = MaterialTheme.colorScheme.onBackground,
-                            containerColor = Color.Transparent,
-                        ),
-                    modifier =
-                        Modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(10.dp),
-                        ),
+            if (bottomContent != null) {
+                item(
+                    span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    Text("더보기")
+                    bottomContent()
                 }
             }
         }
@@ -192,7 +175,6 @@ private fun ProductListScreenPreview() {
             products = MemoryProductRepository(preparedProducts).getProducts(),
             onProductClick = {},
             onNavigateToCartClick = {},
-            onMoreProductClick = { },
         )
     }
 }
