@@ -14,7 +14,7 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 ProductDetailScreen(
-                    productDetailStateHolder = ProductDetailStateHolder(targetProductId = productId),
+                    productId = productId,
                     onDismiss = { finish() },
                 )
             }

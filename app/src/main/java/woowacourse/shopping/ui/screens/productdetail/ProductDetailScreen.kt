@@ -15,6 +15,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -27,7 +28,8 @@ import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
 fun ProductDetailScreen(
-    productDetailStateHolder: ProductDetailStateHolder,
+    productId: String,
+    productDetailStateHolder: ProductDetailStateHolder = remember { ProductDetailStateHolder(targetProductId = productId) },
     onDismiss: () -> Unit,
 ) {
     val product = productDetailStateHolder.product
@@ -147,9 +149,7 @@ private fun AddCartButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
+        productId = "",
         onDismiss = { },
-        productDetailStateHolder = ProductDetailStateHolder(
-            targetProductId = "1",
-        ),
     )
 }
