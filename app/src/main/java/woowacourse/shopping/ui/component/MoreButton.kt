@@ -14,7 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MoreButton(onClick: () -> Unit) {
+fun MoreButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onClick,
         colors =
@@ -23,7 +26,7 @@ fun MoreButton(onClick: () -> Unit) {
                 containerColor = Color.Transparent,
             ),
         modifier =
-            Modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).border(
+            modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).border(
                 width = 1.dp,
                 color = Color.Black,
                 shape = RoundedCornerShape(10.dp),

@@ -60,23 +60,16 @@ fun ShoppingCartScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                shoppingCartItems.forEach { shoppingCartItem ->
-                    ShoppingCartItems(
-                        shoppingCartItem = shoppingCartItem,
-                        onRemoveShoppingItemClick = onRemoveShoppingItemClick,
-                    )
-                }
+            shoppingCartItems.forEach { shoppingCartItem ->
+                ShoppingCartItems(
+                    shoppingCartItem = shoppingCartItem,
+                    onRemoveShoppingItemClick = onRemoveShoppingItemClick,
+                )
             }
         }
     }
