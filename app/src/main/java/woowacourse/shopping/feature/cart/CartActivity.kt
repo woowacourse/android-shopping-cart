@@ -21,7 +21,7 @@ class CartActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val state = retainCartStateHolder()
                     CartScreen(
-                        cartItems = state.cartItems,
+                        cartItems = state.uiState.cartItems,
                         onBackClick = { finish() },
                         onCartDeleteClick = state::removeFromCart,
                         modifier = Modifier.padding(innerPadding)

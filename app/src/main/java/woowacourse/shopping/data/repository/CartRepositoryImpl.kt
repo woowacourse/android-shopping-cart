@@ -6,8 +6,11 @@ import kotlin.math.min
 
 object CartRepositoryImpl : CartRepository {
     private var currentCart = CartItems()
+    override fun getCartItems(): CartItems = currentCart
 
-    override fun getCartItems(page: Int, pageSize: Int): CartItems {
+    override fun getCartItemCount(): Int = currentCart.items.size
+
+    override fun getPagingCartItems(page: Int, pageSize: Int): CartItems {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, currentCart.items.size)
 
