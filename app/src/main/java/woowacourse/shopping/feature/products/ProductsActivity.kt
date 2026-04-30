@@ -19,12 +19,14 @@ class ProductsActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val state = retainProductsStateHolder()
+                    val stateHolder = retainProductsStateHolder()
+
                     ProductsScreen(
-                        products = state.products,
+                        products = stateHolder.products,
+                        isLastPage = stateHolder.isLastPage,
                         onCartClick = { startActivity(CartActivity.newIntent(this)) },
-                        onProductClick = { startActivity(ProductDetailActivity.newIntent(this, it))
-                        },
+                        onProductClick = { startActivity(ProductDetailActivity.newIntent(this, it)) },
+                        onLoadClick = stateHolder::getProducts,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
