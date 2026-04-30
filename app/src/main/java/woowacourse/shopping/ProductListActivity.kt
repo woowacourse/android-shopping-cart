@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.ProductListScreen
+import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class ProductListActivity : ComponentActivity() {

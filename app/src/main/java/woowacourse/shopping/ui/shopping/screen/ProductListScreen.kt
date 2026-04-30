@@ -1,33 +1,33 @@
-package woowacourse.shopping.ui
+package woowacourse.shopping.ui.shopping.screen
 
 import android.content.Intent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.R
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.theme.topAppBarColor
+import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.shopping.component.ProductItem
+import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,49 +36,43 @@ fun ProductListScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    var currentPageIndex by rememberSaveable { mutableStateOf(0) }
+    val visibleProducts = products.getProducts(page = currentPageIndex)
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Shopping",
-                    )
-                },
-                actions = {
-                    Image(
-                        painter = painterResource(id = R.drawable.shopping_cart_icon),
-                        contentDescription = "shoppingCart",
-                        modifier =
-                            Modifier
-                                .padding(20.dp)
-                                .size(24.dp)
-                                .clickable {
-                                    val intent = Intent(context, CartActivity::class.java)
-                                    context.startActivity(intent)
-                                }
-                    )
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = topAppBarColor,
-                        titleContentColor = Color.White,
-                    ),
+            ProductListTopAppBar(
+                onClick = {
+                    val intent = Intent(context, CartActivity::class.java)
+                    context.startActivity(intent)
+                }
             )
         },
         containerColor = Color.White,
     ) { innerPadding ->
-        Box(modifier = modifier.padding(innerPadding)) {
+        Column(modifier = modifier.padding(innerPadding)) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(20.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(products.products) { product ->
+                items(visibleProducts) { product ->
                     ProductItem(product)
                 }
+                if (products.hasNextPage(currentPage = currentPageIndex)) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        MintButton(
+                            onClick = {
+                                currentPageIndex++
+                            },
+                            text = "더보기",
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
             }
+
         }
     }
 }

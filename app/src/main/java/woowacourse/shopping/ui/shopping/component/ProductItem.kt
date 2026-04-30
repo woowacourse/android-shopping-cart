@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui
+package woowacourse.shopping.ui.shopping.component
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
