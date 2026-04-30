@@ -36,11 +36,11 @@ fun ProductDetailScreen(
         topBar = {
             DismissTopBar(
                 onDismiss = onDismiss,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .systemBarsPadding(),
             )
         },
+        modifier = Modifier
+            .systemBarsPadding(),
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
