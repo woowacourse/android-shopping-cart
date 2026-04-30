@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
+import java.util.UUID
 
 @Composable
 fun CartItem(
     product: Product,
-    onDelete : () -> Unit,
+    onDelete : (UUID) -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(
@@ -51,7 +52,8 @@ fun CartItem(
             ) {
                 ProductName(product.name)
                 CloseBtn(
-                    onDelete
+                    product = product,
+                    onClick = onDelete
                 )
             }
 
@@ -86,7 +88,8 @@ private fun ProductName(
 
 @Composable
 private fun CloseBtn(
-    onClick: () -> Unit,
+    product: Product,
+    onClick: (UUID) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Icon(
@@ -94,7 +97,9 @@ private fun CloseBtn(
         contentDescription = "삭제 버튼",
         modifier = modifier
             .size(16.dp)
-            .clickable(onClick = onClick)
+            .clickable(
+                onClick = { onClick(product.uuid) }
+            )
     )
 }
 

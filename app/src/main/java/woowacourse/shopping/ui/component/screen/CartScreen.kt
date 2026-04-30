@@ -38,17 +38,19 @@ import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
+import java.util.UUID
 import kotlin.math.min
 
 @Composable
 fun CartScreen(
     cart: Cart,
     onClose: () -> Unit,
+    onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { CartHeader(onClose) },
-        bodyContent = { CartBody(cart) },
+        bodyContent = { CartBody(cart = cart, onDelete = onDelete) },
         modifier = modifier
     )
 }
@@ -85,6 +87,7 @@ private fun CartHeader(
 @Composable
 private fun CartBody(
     cart: Cart,
+    onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var currentPage = 0
@@ -100,7 +103,7 @@ private fun CartBody(
         products.getPartedItem(currentPage).forEach {
             CartItem(
                 product = it,
-                onDelete = {},
+                onDelete = onDelete,
                 modifier = Modifier.padding(top = 24.dp)
             )
         }
@@ -181,6 +184,7 @@ private fun CartProducts.getPartedItem(page: Int, pageSize: Int = 5): List<Produ
 private fun CartScreenPreview() {
     CartScreen(
         onClose = {},
+        onDelete = {},
         cart = Cart(
             cartProducts = CartProducts(
                 listOf(
