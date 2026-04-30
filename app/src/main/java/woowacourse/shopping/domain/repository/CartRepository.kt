@@ -7,7 +7,10 @@ interface CartRepository {
 
     fun getCartItemCount(): Int
 
-    fun getPagingCartItems(page: Int, pageSize: Int = 5): CartItems
+    fun getPagingCartItems(
+        page: Int,
+        pageSize: Int = 5,
+    ): CartItems
 
     fun saveCartItems(cartItems: CartItems)
 }

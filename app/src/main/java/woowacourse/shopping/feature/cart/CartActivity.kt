@@ -38,7 +38,6 @@ class CartActivity : ComponentActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context): Intent =
-            Intent(context, CartActivity::class.java)
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

@@ -15,13 +15,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BasicTopAppBar(
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.DarkGray)
-            .padding(vertical = 16.dp, horizontal = 26.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray)
+                .padding(vertical = 16.dp, horizontal = 26.dp),
     ) {
         content()
     }

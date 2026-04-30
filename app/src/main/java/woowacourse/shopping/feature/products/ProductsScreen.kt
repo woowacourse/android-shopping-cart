@@ -28,12 +28,13 @@ fun ProductsScreen(
     onCartClick: () -> Unit,
     onProductClick: (id: String) -> Unit,
     onLoadClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         ProductsTopAppBar(onClick = onCartClick)
 
@@ -45,13 +46,13 @@ fun ProductsScreen(
         ) {
             items(
                 items = products,
-                key = { it.id }
+                key = { it.id },
             ) {
                 ProductItem(
                     productImageUrl = it.productImageUrl,
                     productName = it.productName,
                     price = it.price,
-                    onClick = {onProductClick(it.id)}
+                    onClick = { onProductClick(it.id) },
                 )
             }
 
@@ -65,21 +66,21 @@ fun ProductsScreen(
 @Preview
 @Composable
 private fun ProductsScreenPreview() {
-    val products = List(50) {
-        ShoppingProductInfo(
-            id = it.toString(),
-            productImageUrl = "",
-            productName = "$it 번 상품",
-            price = "$it 원",
-        )
-    }.toImmutableList()
+    val products =
+        List(50) {
+            ShoppingProductInfo(
+                id = it.toString(),
+                productImageUrl = "",
+                productName = "$it 번 상품",
+                price = "$it 원",
+            )
+        }.toImmutableList()
 
     ProductsScreen(
         products = products,
         isLastPage = false,
         onCartClick = {},
         onProductClick = {},
-        onLoadClick = {}
+        onLoadClick = {},
     )
 }
-

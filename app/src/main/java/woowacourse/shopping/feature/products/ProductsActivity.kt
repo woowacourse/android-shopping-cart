@@ -27,7 +27,7 @@ class ProductsActivity : ComponentActivity() {
                         onCartClick = { startActivity(CartActivity.newIntent(this)) },
                         onProductClick = { startActivity(ProductDetailActivity.newIntent(this, it)) },
                         onLoadClick = stateHolder::getProducts,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }

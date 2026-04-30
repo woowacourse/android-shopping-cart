@@ -7,7 +7,10 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 object ProductRepositoryImpl : ProductRepository {
-    override fun getProducts(page: Int, pageSize: Int): ProductItems {
+    override fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): ProductItems {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, DUMMY_PRODUCTS.size)
 
@@ -19,8 +22,7 @@ object ProductRepositoryImpl : ProductRepository {
 
     override fun getProductCount(): Int = DUMMY_PRODUCTS.size
 
-    override fun getProduct(id: String): Product {
-        return DUMMY_PRODUCTS.find { it.id == id }
+    override fun getProduct(id: String): Product =
+        DUMMY_PRODUCTS.find { it.id == id }
             ?: throw IllegalArgumentException("상품이 존재하지 않습니다.")
-    }
 }

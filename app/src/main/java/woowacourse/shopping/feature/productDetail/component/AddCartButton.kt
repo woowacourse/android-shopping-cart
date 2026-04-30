@@ -24,10 +24,11 @@ fun AddCartButton(
         onClick = onClick,
         enabled = enabled,
         shape = RectangleShape,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.LightGreen,
-            contentColor = Color.White,
-        )
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = Color.LightGreen,
+                contentColor = Color.White,
+            ),
     ) {
         Text(
             text = "장바구니 담기",

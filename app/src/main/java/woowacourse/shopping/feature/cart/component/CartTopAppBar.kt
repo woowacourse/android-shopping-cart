@@ -22,28 +22,28 @@ import woowacourse.shopping.core.designsystem.component.BasicTopAppBar
 @Composable
 fun CartTopAppBar(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicTopAppBar(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(21.dp)
+            horizontalArrangement = Arrangement.spacedBy(21.dp),
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_left_arrow_24),
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier.clickable(onClick = onClick)
+                modifier = Modifier.clickable(onClick = onClick),
             )
 
             Text(
                 text = "Cart",
                 color = Color.White,
                 fontWeight = FontWeight.W500,
-                fontSize = 20.sp
+                fontSize = 20.sp,
             )
         }
     }

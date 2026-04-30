@@ -26,7 +26,7 @@ class ProductDetailActivity : ComponentActivity() {
                         productInfo = stateHolder.productInfo,
                         onCloseClick = { finish() },
                         onAddCartClick = stateHolder::addToCart,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
@@ -36,7 +36,10 @@ class ProductDetailActivity : ComponentActivity() {
     companion object {
         private const val PRODUCT_ID = "product_id"
 
-        fun newIntent(context: Context, productId: String): Intent =
+        fun newIntent(
+            context: Context,
+            productId: String,
+        ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
             }

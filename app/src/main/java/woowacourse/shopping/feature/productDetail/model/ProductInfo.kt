@@ -10,16 +10,18 @@ data class ProductInfo(
     val price: String,
 ) {
     companion object {
-        val PREVIEW = ProductInfo(
-            productImageUrl = "",
-            productName = "리자몽",
-            price = "10,000원",
-        )
+        val PREVIEW =
+            ProductInfo(
+                productImageUrl = "",
+                productName = "리자몽",
+                price = "10,000원",
+            )
     }
 }
 
-fun Product.toUiModel(): ProductInfo = ProductInfo(
-    productImageUrl = imageUrl,
-    productName = productTitle.value,
-    price = "%,d원".format(price.value),
-)
+fun Product.toUiModel(): ProductInfo =
+    ProductInfo(
+        productImageUrl = imageUrl,
+        productName = productTitle.value,
+        price = "%,d원".format(price.value),
+    )

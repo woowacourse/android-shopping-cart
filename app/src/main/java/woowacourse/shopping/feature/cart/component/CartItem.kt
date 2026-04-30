@@ -32,49 +32,50 @@ fun CartItem(
     productUrl: String,
     price: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(
-                width = Dp.Hairline,
-                color = Color.Black,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .padding(vertical = 18.dp, horizontal = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .border(
+                    width = Dp.Hairline,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(4.dp),
+                ).padding(vertical = 18.dp, horizontal = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = productName,
                 color = Color.Black,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.W700
+                fontWeight = FontWeight.W700,
             )
 
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_close_16),
                 tint = Color.LightGray,
                 contentDescription = null,
-                modifier = Modifier.clickable(onClick = onClick)
+                modifier = Modifier.clickable(onClick = onClick),
             )
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             NetworkImage(
                 imageUrl = productUrl,
-                modifier = Modifier
-                    .widthIn(max = 136.dp)
-                    .aspectRatio(136f / 72f)
+                modifier =
+                    Modifier
+                        .widthIn(max = 136.dp)
+                        .aspectRatio(136f / 72f),
             )
 
             Text(
@@ -93,6 +94,6 @@ private fun CartItemPreview() {
         productName = "리자몽",
         productUrl = "",
         price = "10,000원",
-        onClick = {}
+        onClick = {},
     )
 }

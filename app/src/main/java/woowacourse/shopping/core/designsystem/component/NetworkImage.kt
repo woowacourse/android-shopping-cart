@@ -24,7 +24,7 @@ fun NetworkImage(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
-    shape: Shape = RectangleShape
+    shape: Shape = RectangleShape,
 ) {
     val isPreviewMode = LocalInspectionMode.current
 

@@ -15,17 +15,17 @@ import woowacourse.shopping.core.designsystem.component.BasicTopAppBar
 @Composable
 fun ProductDetailTopAppBar(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicTopAppBar(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Spacer(Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.icon_close_16),
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier.clickable(onClick = onClick)
+            modifier = Modifier.clickable(onClick = onClick),
         )
     }
 }

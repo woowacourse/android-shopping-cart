@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -19,16 +18,16 @@ import woowacourse.shopping.core.designsystem.component.BasicTopAppBar
 @Composable
 fun ProductsTopAppBar(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicTopAppBar(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = "Shopping",
             color = Color.White,
             fontSize = 20.sp,
-            fontWeight = FontWeight.W500
+            fontWeight = FontWeight.W500,
         )
 
         Spacer(Modifier.weight(1f))
@@ -37,7 +36,7 @@ fun ProductsTopAppBar(
             imageVector = ImageVector.vectorResource(R.drawable.icon_cart_24),
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier.clickable(onClick = onClick)
+            modifier = Modifier.clickable(onClick = onClick),
         )
     }
 }

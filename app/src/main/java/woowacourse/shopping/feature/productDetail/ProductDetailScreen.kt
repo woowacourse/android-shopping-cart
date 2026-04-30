@@ -21,30 +21,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.core.designsystem.component.NetworkImage
 import woowacourse.shopping.feature.productDetail.component.AddCartButton
 import woowacourse.shopping.feature.productDetail.component.ProductDetailTopAppBar
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
-import woowacourse.shopping.core.designsystem.component.NetworkImage
 
 @Composable
 fun ProductDetailScreen(
     productInfo: ProductInfo,
     onCloseClick: () -> Unit,
     onAddCartClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         ProductDetailTopAppBar(onClick = onCloseClick)
 
         NetworkImage(
             imageUrl = productInfo.productImageUrl,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
         )
 
         Spacer(Modifier.height(16.dp))
@@ -56,25 +58,27 @@ fun ProductDetailScreen(
             fontWeight = FontWeight.W700,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
         )
 
         Spacer(Modifier.height(16.dp))
 
         HorizontalDivider(
             thickness = Dp.Hairline,
-            color = Color.LightGray
+            color = Color.LightGray,
         )
 
         Spacer(Modifier.height(16.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "가격",
@@ -105,6 +109,6 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productInfo = ProductInfo.PREVIEW,
         onCloseClick = {},
-        onAddCartClick = {}
+        onAddCartClick = {},
     )
 }

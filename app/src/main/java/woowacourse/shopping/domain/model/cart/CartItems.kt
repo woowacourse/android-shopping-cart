@@ -11,14 +11,15 @@ data class CartItems(
     fun add(newItem: CartItem): CartItems {
         val existingItem = _items.find { it.product.id == newItem.product.id }
 
-        val newItems = if (existingItem != null) {
-            _items.map { cartItem ->
-                if (cartItem.product.id != newItem.product.id) return@map cartItem
-                cartItem.copy(quantity = Quantity(cartItem.quantity.value + newItem.quantity.value))
+        val newItems =
+            if (existingItem != null) {
+                _items.map { cartItem ->
+                    if (cartItem.product.id != newItem.product.id) return@map cartItem
+                    cartItem.copy(quantity = Quantity(cartItem.quantity.value + newItem.quantity.value))
+                }
+            } else {
+                _items + newItem
             }
-        } else {
-            _items + newItem
-        }
 
         return CartItems(newItems)
     }
@@ -28,4 +29,3 @@ data class CartItems(
         return CartItems(newItems)
     }
 }
-

@@ -3,7 +3,6 @@ package woowacourse.shopping.data.repository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-
 class ProductRepositoryImplTest {
     private val repository = ProductRepositoryImpl
 

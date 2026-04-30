@@ -16,12 +16,12 @@ import woowacourse.shopping.core.designsystem.theme.LightGreen
 @Composable
 fun LoadButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGreen)
+        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGreen),
     ) {
         Text(
             text = "더보기",

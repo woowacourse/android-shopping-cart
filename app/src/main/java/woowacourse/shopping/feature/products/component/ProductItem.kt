@@ -25,17 +25,18 @@ fun ProductItem(
     productName: String,
     price: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .clickable(onClick = onClick)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .clickable(onClick = onClick),
     ) {
         NetworkImage(
             imageUrl = productImageUrl,
-            modifier = Modifier.aspectRatio(1f)
+            modifier = Modifier.aspectRatio(1f),
         )
 
         Spacer(Modifier.height(8.dp))
@@ -47,18 +48,20 @@ fun ProductItem(
             fontWeight = FontWeight.W700,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp),
         )
         Text(
             text = price,
             color = Color.Black,
             fontSize = 16.sp,
             maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp),
         )
     }
 }
@@ -70,7 +73,6 @@ fun ProductItemPreview() {
         productImageUrl = "",
         productName = "리자몽은 강력한 불꽃과 비행 능력을 지닌 포켓몬으로, 전투에서 뛰어난 공격력과 카리스마를 발휘하며 많은 트레이너들에게 사랑받는 존재이다.",
         price = "10,000원",
-        onClick = {}
+        onClick = {},
     )
 }
-

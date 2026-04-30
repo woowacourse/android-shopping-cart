@@ -33,29 +33,31 @@ fun CartScreen(
     onCartDeleteClick: (id: String) -> Unit,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CartTopAppBar(onClick = onBackClick)
 
         Column(
-            modifier = Modifier
-                .padding(vertical = 24.dp, horizontal = 18.dp)
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            modifier =
+                Modifier
+                    .padding(vertical = 24.dp, horizontal = 18.dp)
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             cartItems.forEach { cartInfo ->
                 CartItem(
                     productName = cartInfo.productName,
                     productUrl = cartInfo.productImageUrl,
                     price = cartInfo.price,
-                    onClick = { onCartDeleteClick(cartInfo.id) }
+                    onClick = { onCartDeleteClick(cartInfo.id) },
                 )
             }
         }
@@ -68,7 +70,7 @@ fun CartScreen(
                 onPreviousClick = onPreviousClick,
                 pageText = pageCount.toString(),
                 isPreviousEnabled = !isFirstPage,
-                isNextEnabled = !isLastPage
+                isNextEnabled = !isLastPage,
             )
             Spacer(Modifier.height(36.dp))
         }

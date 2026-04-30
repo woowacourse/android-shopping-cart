@@ -11,9 +11,10 @@ data class ShoppingProductInfo(
     val price: String,
 )
 
-fun Product.toUiModel(): ShoppingProductInfo = ShoppingProductInfo(
-    id = id,
-    productImageUrl = imageUrl,
-    productName = productTitle.value,
-    price = "%,d원".format(price.value),
-)
+fun Product.toUiModel(): ShoppingProductInfo =
+    ShoppingProductInfo(
+        id = id,
+        productImageUrl = imageUrl,
+        productName = productTitle.value,
+        price = "%,d원".format(price.value),
+    )

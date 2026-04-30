@@ -31,33 +31,34 @@ fun CartPageButton(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
         NextPageButton(
             enabled = isPreviousEnabled,
             onClick = onPreviousClick,
             text = "<",
-            buttonShape = RoundedCornerShape(
-                topStart = 4.dp,
-                bottomStart = 4.dp,
-                topEnd = 0.dp,
-                bottomEnd = 0.dp
-            )
+            buttonShape =
+                RoundedCornerShape(
+                    topStart = 4.dp,
+                    bottomStart = 4.dp,
+                    topEnd = 0.dp,
+                    bottomEnd = 0.dp,
+                ),
         )
         Text(
             text = pageText,
             fontSize = 22.sp,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
         NextPageButton(
             enabled = isNextEnabled,
             onClick = onNextClick,
             text = ">",
-            buttonShape = RoundedCornerShape(
-                topStart = 0.dp,
-                bottomStart = 0.dp,
-                topEnd = 4.dp,
-                bottomEnd = 4.dp
-            )
+            buttonShape =
+                RoundedCornerShape(
+                    topStart = 0.dp,
+                    bottomStart = 0.dp,
+                    topEnd = 4.dp,
+                    bottomEnd = 4.dp,
+                ),
         )
     }
 }
@@ -67,21 +68,20 @@ private fun NextPageButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
-    text: String ,
-    buttonShape: RoundedCornerShape
+    text: String,
+    buttonShape: RoundedCornerShape,
 ) {
     Box(
-        modifier = modifier
-            .clip(
-                shape = buttonShape
-            )
-            .background(if (enabled) Color.LightGreen else Color.Gray)
-            .clickable(
-                enabled = enabled,
-                onClick = onClick
-            )
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .clip(
+                    shape = buttonShape,
+                ).background(if (enabled) Color.LightGreen else Color.Gray)
+                .clickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                ).padding(vertical = 12.dp, horizontal = 16.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
@@ -91,7 +91,6 @@ private fun NextPageButton(
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

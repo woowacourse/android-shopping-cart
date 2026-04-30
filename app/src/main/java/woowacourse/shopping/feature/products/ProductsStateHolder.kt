@@ -12,7 +12,7 @@ import woowacourse.shopping.feature.products.model.ShoppingProductInfo
 import woowacourse.shopping.feature.products.model.toUiModel
 
 class ProductsStateHolder(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) {
     private val totalCount = productRepository.getProductCount()
     private var pageCount = 0
@@ -28,9 +28,12 @@ class ProductsStateHolder(
     }
 
     fun getProducts(pageSize: Int = 20) {
-        val currentProducts = productRepository.getProducts(pageCount, pageSize).items
-            .map { it.toUiModel() }
-            .toImmutableList()
+        val currentProducts =
+            productRepository
+                .getProducts(pageCount, pageSize)
+                .items
+                .map { it.toUiModel() }
+                .toImmutableList()
 
         if (currentProducts.isEmpty()) return
 
@@ -41,6 +44,7 @@ class ProductsStateHolder(
 }
 
 @Composable
-fun retainProductsStateHolder(): ProductsStateHolder = retain {
-    ProductsStateHolder(ProductRepositoryImpl)
-}
+fun retainProductsStateHolder(): ProductsStateHolder =
+    retain {
+        ProductsStateHolder(ProductRepositoryImpl)
+    }
