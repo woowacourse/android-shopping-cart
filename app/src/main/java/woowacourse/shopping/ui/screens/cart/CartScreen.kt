@@ -1,15 +1,28 @@
 package woowacourse.shopping.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
@@ -28,27 +41,97 @@ fun CartScreen(
         },
         modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
-
-        LazyColumn(
+        Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(vertical = 24.dp, horizontal = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+                .padding(bottom = 50.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(
-                items = cartItems,
-                key = { it.product.id },
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding)
+                    .padding(vertical = 24.dp, horizontal = 18.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
-                CartItemCard(
-                    imageUrl = it.product.imageUrl,
-                    name = it.product.name,
-                    price = it.product.price,
-                    onDelete = {
-                        cartStateHolder.deleteCartItem(it.product.id)
-                    },
-                )
+                items(
+                    items = cartItems,
+                    key = { it.product.id },
+                ) {
+                    CartItemCard(
+                        imageUrl = it.product.imageUrl,
+                        name = it.product.name,
+                        price = it.product.price,
+                        onDelete = {
+                            cartStateHolder.deleteCartItem(it.product.id)
+                        },
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            CartPagination(
+                curPage = 1,
+                isLastPage = false,
+                onPrevClick = {},
+                onNextClick = {},
+            )
         }
+    }
+}
+
+@Composable
+private fun CartPagination(
+    curPage: Int,
+    isLastPage: Boolean,
+    modifier: Modifier = Modifier,
+    onPrevClick: () -> Unit,
+    onNextClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PaginationButton(
+            enabled = curPage != 1,
+            onClick = onPrevClick,
+        ) {
+            Text(text = "<", fontSize = 22.sp)
+        }
+
+        Text(text = curPage.toString(), color = Color.Black, fontSize = 22.sp)
+
+        PaginationButton(
+            enabled = !isLastPage,
+            onClick = onNextClick,
+        ) {
+            Text(text = ">", fontSize = 22.sp)
+        }
+    }
+}
+
+@Composable
+private fun PaginationButton(
+    enabled: Boolean,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        shape = RoundedCornerShape(4.dp),
+        contentPadding = PaddingValues(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = Color.White,
+            containerColor = Color(0xff04C09E),
+            disabledContainerColor = Color(0xffAAAAAA),
+            disabledContentColor = Color.White,
+        ),
+    ) {
+        content()
     }
 }
 
