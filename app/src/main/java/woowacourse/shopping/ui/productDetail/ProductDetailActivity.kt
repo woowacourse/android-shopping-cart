@@ -21,16 +21,16 @@ import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
 import woowacourse.shopping.ui.cart.CartActivity
 
 class ProductDetailActivity : ComponentActivity() {
-    private val productRepository: ProductRepository = ProductRepositoryMockImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val productId = intent.getStringExtra("PRODUCT_ID")
-
-        val product = productRepository.getProduct(productId)
-
-        val viewModel = ProductDetailViewModel(product = product, cartRepository = MemoryCartRepository)
+        val viewModel = ProductDetailViewModel(
+            productId = productId!!,
+            productRepository = ProductRepositoryMockImpl(),
+            cartRepository = MemoryCartRepository
+        )
 
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -38,7 +38,6 @@ class ProductDetailActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding),
                     viewModel = viewModel,
                     onAddToCartClick = {
-                        // 장바구니 담기 로직 추가
                         viewModel.addToCart()
                         val intent = Intent(this, CartActivity::class.java)
                         startActivity(intent)

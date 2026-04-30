@@ -43,6 +43,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.mock.MockData
 import woowacourse.shopping.repository.cart.MemoryCartRepository
+import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +52,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     onAddToCartClick: () -> Unit = {},
 ) {
-    val productDetailState by viewModel.productDetailUiState.collectAsState()
+    val productDetailState by viewModel.productDetailState.collectAsState()
     val product = productDetailState.product
 
     val activity = LocalActivity.current
@@ -60,7 +61,9 @@ fun ProductDetailScreen(
         modifier = modifier
     ) {
         ProductDetailTopBar(
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             onCloseClick = {
                 activity?.finish()
             }
@@ -82,7 +85,7 @@ fun ProductDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductDetailTopBar(modifier: Modifier = Modifier,onCloseClick: () -> Unit) {
+private fun ProductDetailTopBar(modifier: Modifier = Modifier, onCloseClick: () -> Unit) {
     TopAppBar(
         modifier = modifier,
         title = { Text(text = "") },
@@ -224,7 +227,11 @@ private fun ProductImage(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        viewModel = ProductDetailViewModel(MockData.productInfo, MemoryCartRepository),
+        viewModel = ProductDetailViewModel(
+            "0",
+            ProductRepositoryMockImpl(),
+            MemoryCartRepository
+        ),
         onAddToCartClick = {},
     )
 }

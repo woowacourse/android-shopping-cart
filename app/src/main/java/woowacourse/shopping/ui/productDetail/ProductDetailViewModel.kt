@@ -16,15 +16,25 @@ data class ProductDetailUiState(
 )
 
 class ProductDetailViewModel(
-    val product: Product,
+    val productId: String,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository
 ): ViewModel() {
+
+    lateinit var product: Product
+
+    init {
+        viewModelScope.launch {
+            product = productRepository.getProduct(productId)
+        }
+    }
+
     private val _productDetailUiState = MutableStateFlow(ProductDetailUiState(product))
-    val productDetailUiState: StateFlow<ProductDetailUiState> = _productDetailUiState.asStateFlow()
+    val productDetailState: StateFlow<ProductDetailUiState> = _productDetailUiState.asStateFlow()
 
     fun addToCart() {
         viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = product))
+            cartRepository.addCartItem(CartItem(product = productDetailState.value.product))
         }
     }
 }
