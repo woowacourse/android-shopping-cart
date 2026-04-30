@@ -2,7 +2,6 @@
 
 package woowacourse.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,21 +28,9 @@ class DetailProductActivity : ComponentActivity() {
                         product = product,
                         onAddToCartClick = {
                             shoppingCartRepository.add(product)
-                            startActivity(
-                                Intent(
-                                    this@DetailProductActivity,
-                                    ProductListActivity::class.java,
-                                ),
-                            )
+                            this.finish()
                         },
-                        onBackClick = {
-                            startActivity(
-                                Intent(
-                                    this@DetailProductActivity,
-                                    ProductListActivity::class.java,
-                                ),
-                            )
-                        },
+                        onBackClick = this::finish,
                     )
                 } else {
                     Text("상품을 찾을 수 없습니다")

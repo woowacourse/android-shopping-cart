@@ -2,7 +2,6 @@
 
 package woowacourse.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,9 +32,7 @@ class ShoppingCartActivity : ComponentActivity() {
                     }
                 ShoppingCartScreen(
                     shoppingCartItems = shoppingCartPaginationStateHolder.getItems(),
-                    onBackClick = {
-                        startActivity(Intent(this, ProductListActivity::class.java))
-                    },
+                    onBackClick = this::finish,
                     onRemoveShoppingItemClick = { shoppingCartItem ->
                         shoppingCartRepository.remove(shoppingCartItem)
                         shoppingCartItems = shoppingCartRepository.getShoppingItems()
