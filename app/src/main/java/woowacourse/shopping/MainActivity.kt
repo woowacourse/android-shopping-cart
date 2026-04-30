@@ -27,7 +27,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        var cartItems = emptyList<ProductUiModel>()
         val productListStateHolder = ProductListStateHolder()
         val productUiModels: MutableState<List<ProductUiModel>> = mutableStateOf(emptyList())
 
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     quantity = Quantity(1),
                 ),
             )
-            cartItems = productListStateHolder.toProductUiModels()
+            productListStateHolder.uiModels = productListStateHolder.toProductUiModels()
             Toast.makeText(this, "장바구니에 추가되었습니다", Toast.LENGTH_SHORT).show()
         }
 
@@ -61,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 ?: return@registerForActivityResult
 
             productListStateHolder.cart = productListStateHolder.replaceCartItems(deletedCartItems)
-            cartItems = productListStateHolder.toProductUiModels()
+            productListStateHolder.uiModels = productListStateHolder.toProductUiModels()
         }
 
         setContent {
@@ -79,7 +78,7 @@ class MainActivity : ComponentActivity() {
                         detailLauncher.launch(ProductDetailActivity.newIntent(this, id))
                     },
                     onCartIconClick = {
-                        cartLauncher.launch(CartActivity.newIntent(this, cartItems))
+                        cartLauncher.launch(CartActivity.newIntent(this, productListStateHolder.uiModels))
                     },
 
                 )

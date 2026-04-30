@@ -14,6 +14,8 @@ class ProductListStateHolder {
 
     var cart = Cart()
 
+    var uiModels = emptyList<ProductUiModel>()
+
     fun isEndList(): Boolean {
         return _products.size >= MockData.MOCK_PRODUCTS.size
     }
