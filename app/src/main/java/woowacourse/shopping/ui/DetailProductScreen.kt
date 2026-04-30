@@ -36,6 +36,12 @@ import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
+private const val PRODUCT_IMAGE_DESCRIPTION_SUFFIX = "상품 이미지"
+private const val PRICE_LABEL = "가격"
+private const val ADD_TO_CART_BUTTON_TEXT = "장바구니에 담기"
+private const val CLOSE_DETAIL_DESCRIPTION = "상세페이지 닫기"
+private const val PRICE_FORMAT_PATTERN = "#,###원"
+
 @Composable
 fun DetailProductScreen(
     product: Product,
@@ -60,7 +66,7 @@ fun DetailProductScreen(
         ) {
             AsyncImage(
                 model = product.imageUrl,
-                contentDescription = "${product.title} 상품 이미지",
+                contentDescription = "${product.title} $PRODUCT_IMAGE_DESCRIPTION_SUFFIX",
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -85,11 +91,11 @@ fun DetailProductScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "가격",
+                    text = PRICE_LABEL,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = DecimalFormat("#,###원").format(product.price),
+                    text = DecimalFormat(PRICE_FORMAT_PATTERN).format(product.price),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -102,7 +108,7 @@ fun DetailProductScreen(
                         .height(48.dp),
                 shape = RectangleShape,
             ) {
-                Text("장바구니에 담기")
+                Text(ADD_TO_CART_BUTTON_TEXT)
             }
         }
     }
@@ -120,7 +126,7 @@ private fun DetailProductTopBar(
             IconButton(onClick = onBackClick) {
                 Image(
                     painter = painterResource(R.drawable.close_icon),
-                    contentDescription = "상세페이지 닫기",
+                    contentDescription = CLOSE_DETAIL_DESCRIPTION,
                     modifier = Modifier.size(16.dp),
                 )
             }

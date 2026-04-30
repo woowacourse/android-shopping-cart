@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+private const val MORE_BUTTON_TEXT = "더보기"
+
 @Composable
 fun MoreButton(
     onClick: () -> Unit,
@@ -26,12 +28,15 @@ fun MoreButton(
                 containerColor = Color.Transparent,
             ),
         modifier =
-            modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).border(
-                width = 1.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(10.dp),
-            ),
+            modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(10.dp),
+                ),
     ) {
-        Text("더보기")
+        Text(MORE_BUTTON_TEXT)
     }
 }

@@ -21,6 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 
+private const val PREVIOUS_PAGE_DESCRIPTION = "이전 페이지"
+private const val NEXT_PAGE_DESCRIPTION = "다음 페이지"
+
 @Composable
 fun PageNavigation(
     currentPage: Int,
@@ -48,13 +51,16 @@ fun PageNavigation(
             enabled = canMoveToPreviousPage,
             onClick = onBeforePageClick,
             modifier = Modifier.size(42.dp),
-            shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp),
+            shape = RoundedCornerShape(
+                topStart = 4.dp,
+                bottomStart = 4.dp,
+            ),
             colors = pagerButtonColors,
-            contentPadding = PaddingValues(0.dp),
+            contentPadding =  PaddingValues(0.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.left_icon),
-                contentDescription = "이전 페이지",
+                contentDescription = PREVIOUS_PAGE_DESCRIPTION,
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )
@@ -70,13 +76,16 @@ fun PageNavigation(
             enabled = canMoveToNextPage,
             onClick = onNextPageClick,
             modifier = Modifier.size(42.dp),
-            shape = RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp),
+            shape = RoundedCornerShape(
+                topEnd = 4.dp,
+                bottomEnd = 4.dp,
+            ),
             colors = pagerButtonColors,
-            contentPadding = PaddingValues(0.dp),
+            contentPadding =  PaddingValues(0.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.right_icon),
-                contentDescription = "다음 페이지",
+                contentDescription = NEXT_PAGE_DESCRIPTION,
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )

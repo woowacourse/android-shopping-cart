@@ -26,7 +26,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +37,11 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.preparedProducts
 import woowacourse.shopping.repository.MemoryProductRepository
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
+
+private const val TOP_BAR_TITLE = "Shopping"
+private const val CART_ICON_DESCRIPTION = "장바구니 아이콘"
+private const val PRODUCT_IMAGE_DESCRIPTION_SUFFIX = "상품 이미지"
+private const val PRICE_FORMAT_PATTERN = "#,###원"
 
 @Composable
 fun ProductListScreen(
@@ -96,7 +100,7 @@ private fun ProductItem(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = "${product.title} 상품 이미지",
+            contentDescription = "${product.title} $PRODUCT_IMAGE_DESCRIPTION_SUFFIX",
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -117,8 +121,8 @@ private fun ProductItem(
                 ),
         )
         Text(
-            text = DecimalFormat("#,###원").format(product.price),
-            color = Color(0xFF555555),
+            text = DecimalFormat(PRICE_FORMAT_PATTERN).format(product.price),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier =
                 Modifier.padding(
                     horizontal = 7.5.dp,
@@ -134,12 +138,12 @@ private fun ProductListTopBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(text = "Shopping") },
+        title = { Text(text = TOP_BAR_TITLE) },
         actions = {
             IconButton(onClick = onNavigateToCartClick) {
                 Image(
                     painter = painterResource(R.drawable.shopping_cart_icon),
-                    contentDescription = "장바구니 아이콘",
+                    contentDescription = CART_ICON_DESCRIPTION,
                     modifier = Modifier.size(22.dp),
                 )
             }

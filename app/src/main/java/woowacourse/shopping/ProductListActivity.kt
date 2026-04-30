@@ -18,6 +18,10 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 class ProductListActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
 
+    companion object {
+        const val EXTRA_PRODUCT_ID = "productId"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,7 +35,7 @@ class ProductListActivity : ComponentActivity() {
                     products = productPaginationStateHolder.getItems(),
                     onProductClick = { productId ->
                         val intent = Intent(this, DetailProductActivity::class.java)
-                        intent.putExtra("productId", productId)
+                        intent.putExtra(EXTRA_PRODUCT_ID, productId)
                         startActivity(intent)
                     },
                     onNavigateToCartClick = {

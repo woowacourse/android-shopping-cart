@@ -16,13 +16,18 @@ class DetailProductActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
     private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
 
+    companion object {
+        private const val INVALID_PRODUCT_ID = -1L
+        private const val PRODUCT_NOT_FOUND_MESSAGE = "상품을 찾을 수 없습니다"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                val productId = intent.getLongExtra("productId", -1)
-                if (productId != -1L) {
+                val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
+                if (productId != INVALID_PRODUCT_ID) {
                     val product = productRepository.getProduct(productId)
                     DetailProductScreen(
                         product = product,
@@ -33,7 +38,7 @@ class DetailProductActivity : ComponentActivity() {
                         onBackClick = this::finish,
                     )
                 } else {
-                    Text("상품을 찾을 수 없습니다")
+                    Text(PRODUCT_NOT_FOUND_MESSAGE)
                 }
             }
         }

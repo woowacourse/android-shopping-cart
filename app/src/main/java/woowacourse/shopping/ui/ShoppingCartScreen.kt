@@ -39,6 +39,12 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
+private const val CART_TOP_BAR_TITLE = "Cart"
+private const val BACK_ICON_DESCRIPTION = "상세페이지 닫기"
+private const val REMOVE_ITEM_DESCRIPTION = "장바구니 삭제"
+private const val PRODUCT_IMAGE_DESCRIPTION = "상품 이미지"
+private const val PRICE_FORMAT_PATTERN = "#,###원"
+
 @Composable
 fun ShoppingCartScreen(
     shoppingCartItems: List<ShoppingCartItem>,
@@ -60,7 +66,11 @@ fun ShoppingCartScreen(
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                    ),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Column(
@@ -95,11 +105,13 @@ private fun ShoppingCartItems(
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(4.dp),
-                ).border(
+                )
+                .border(
                     color = MaterialTheme.colorScheme.outline,
                     width = 1.dp,
                     shape = RoundedCornerShape(4.dp),
-                ).padding(12.dp),
+                )
+                .padding(12.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -114,7 +126,7 @@ private fun ShoppingCartItems(
             )
             Image(
                 painter = painterResource(R.drawable.remove_icon),
-                contentDescription = "장바구니 삭제",
+                contentDescription = REMOVE_ITEM_DESCRIPTION,
                 modifier =
                     Modifier
                         .size(16.dp)
@@ -131,7 +143,7 @@ private fun ShoppingCartItems(
         ) {
             AsyncImage(
                 model = shoppingCartItem.product.imageUrl,
-                contentDescription = "상품 이미지",
+                contentDescription = PRODUCT_IMAGE_DESCRIPTION,
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -141,7 +153,7 @@ private fun ShoppingCartItems(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = DecimalFormat("#,###원").format(shoppingCartItem.product.price),
+                text = DecimalFormat(PRICE_FORMAT_PATTERN).format(shoppingCartItem.product.price),
             )
         }
     }
@@ -156,14 +168,14 @@ private fun ShoppingCartTopBar(
     TopAppBar(
         title = {
             Text(
-                text = "Cart",
+                text = CART_TOP_BAR_TITLE,
             )
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Image(
                     painter = painterResource(R.drawable.back_icon),
-                    contentDescription = "상세페이지 닫기",
+                    contentDescription = BACK_ICON_DESCRIPTION,
                     modifier = Modifier.size(16.dp),
                 )
             }

@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.ui.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ private val CustomColorScheme =
         tertiary = Pink80,
         surfaceContainer = Gray80,
         onSurface = White,
+        onSurfaceVariant = Gray80,
         onBackground = Black,
     )
 
