@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 private const val MORE_BUTTON_TEXT = "더보기"
 
@@ -38,5 +40,13 @@ fun MoreButton(
                 ),
     ) {
         Text(MORE_BUTTON_TEXT)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun MoreButtonPreview() {
+    AndroidShoppingTheme {
+        MoreButton(onClick = {})
     }
 }

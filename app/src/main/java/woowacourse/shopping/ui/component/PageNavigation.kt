@@ -18,8 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 private const val PREVIOUS_PAGE_DESCRIPTION = "이전 페이지"
 private const val NEXT_PAGE_DESCRIPTION = "다음 페이지"
@@ -91,4 +95,49 @@ fun PageNavigation(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PageNavigationPreview(
+    @PreviewParameter(PageNavigationPreviewProvider::class)
+    state: PageNavigationPreviewState
+) {
+    AndroidShoppingTheme {
+        PageNavigation(
+            currentPage = state.currentPage,
+            canMoveToPreviousPage = state.canMoveToPreviousPage,
+            canMoveToNextPage = state.canMoveToNextPage,
+            onBeforePageClick = {},
+            onNextPageClick = {},
+            modifier = Modifier
+        )
+    }
+}
+
+private data class PageNavigationPreviewState(
+    val currentPage: Int,
+    val canMoveToPreviousPage: Boolean,
+    val canMoveToNextPage: Boolean
+)
+
+private class PageNavigationPreviewProvider : PreviewParameterProvider<PageNavigationPreviewState> {
+
+    override val values = sequenceOf(
+        PageNavigationPreviewState(
+            currentPage = 1,
+            canMoveToPreviousPage = false,
+            canMoveToNextPage = true
+        ),
+        PageNavigationPreviewState(
+            currentPage = 2,
+            canMoveToPreviousPage = true,
+            canMoveToNextPage = true
+        ),
+        PageNavigationPreviewState(
+            currentPage = 5,
+            canMoveToPreviousPage = true,
+            canMoveToNextPage = false
+        )
+    )
 }
