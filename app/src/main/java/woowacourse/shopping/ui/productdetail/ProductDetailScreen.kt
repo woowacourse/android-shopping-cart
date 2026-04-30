@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.productlist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ fun ProductDetailScreen(
     title: String,
     price: String,
     onCloseClick: () -> Unit,
+    onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -81,18 +83,25 @@ fun ProductDetailScreen(
                     )
                 }
             }
-            CartPutButton(modifier = Modifier.align(Alignment.BottomCenter))
+            CartPutButton(
+                onClick = onAddToCartClick,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 }
 
 @Composable
-private fun CartPutButton(modifier: Modifier = Modifier) {
+private fun CartPutButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
             .background(color = Color(0xff04c09e))
+            .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
     ) {
         Text(
@@ -112,5 +121,6 @@ private fun ProductScreenPreview() {
         title = "프리뷰",
         price = "1,000원",
         onCloseClick = {},
+        onAddToCartClick = {},
     )
 }

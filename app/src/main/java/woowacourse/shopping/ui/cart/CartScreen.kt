@@ -25,10 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.constants.MockData
+import woowacourse.shopping.ui.state.ProductUiModel
 
 @Composable
 fun CartScreen(
+    cartItems: List<ProductUiModel> = emptyList(),
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -47,6 +48,7 @@ fun CartScreen(
                 .padding(innerPadding),
         ) {
             CartItemList(
+                cartItems,
                 modifier = Modifier.weight(1f),
             )
             Spacer(modifier = Modifier.height(40.dp))
@@ -112,7 +114,10 @@ private fun PageButton(
 }
 
 @Composable
-private fun CartItemList(modifier: Modifier = Modifier) {
+private fun CartItemList(
+    cartItems: List<ProductUiModel>,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -121,12 +126,12 @@ private fun CartItemList(modifier: Modifier = Modifier) {
     ) {
         items(
             key = { it.id },
-            items = MockData.MOCK_PRODUCTS,
+            items = cartItems,
         ) {
             SingleCartItem(
                 imageUrl = it.imageUrl,
-                title = it.name,
-                price = it.priceAmount().toString(),
+                title = it.title,
+                price = it.price,
             )
         }
     }

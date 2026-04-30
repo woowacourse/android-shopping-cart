@@ -1,7 +1,10 @@
 package woowacourse.shopping.ui.productlist.stateholder
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.compose.runtime.mutableStateListOf
 import woowacourse.shopping.constants.MockData
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.state.ProductUiModel
 
@@ -9,12 +12,18 @@ class ProductListStateHolder {
     private val _products = mutableStateListOf<Product>()
     val products: List<Product> = _products
 
-    fun getAllProducts(): List<Product> {
+    var cart = Cart()
 
+    fun getAllProducts(): List<Product> {
         if (_products.size % PAGE_SIZE != 0) {
-            return products
+            return products // 더 이상 추가할 상품이 없을 때
         }
-        _products.addAll(MockData.MOCK_PRODUCTS.take(_products.size + PAGE_SIZE))
+        _products.addAll(
+            MockData.MOCK_PRODUCTS.subList(
+                fromIndex = _products.size,
+                toIndex = _products.size + PAGE_SIZE,
+            ),
+        )
 
         return products
     }
@@ -26,6 +35,10 @@ class ProductListStateHolder {
             imageUrl = product.imageUrl,
             id = product.id,
         )
+    }
+
+    fun addCartItem(cartItem: CartItem): Cart {
+        return cart.plusCartItem(cartItem)
     }
 
     companion object {

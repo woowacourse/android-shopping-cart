@@ -1,8 +1,11 @@
 package woowacourse.shopping.ui.state
 
 import android.icu.text.DecimalFormat
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class ProductUiModel(val title: String, val price: String, val imageUrl: String, val id: String) {
+@Parcelize
+data class ProductUiModel(val title: String, val price: String, val imageUrl: String, val id: String) : Parcelable {
     companion object {
         fun of(
             name: String,
