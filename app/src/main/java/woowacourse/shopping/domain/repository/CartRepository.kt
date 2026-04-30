@@ -11,7 +11,7 @@ interface CartRepository {
 
     fun deleteItem(id: String)
 
-    fun getCartItemByPage(page: Int): List<CartItem>
+    suspend fun getCartItemByPage(page: Int): List<CartItem>
 
     fun isLastPage(page: Int): Boolean
 }

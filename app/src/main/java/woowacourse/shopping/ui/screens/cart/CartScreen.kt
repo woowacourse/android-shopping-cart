@@ -15,13 +15,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
@@ -30,6 +33,11 @@ fun CartScreen(
     onNavigateUp: () -> Unit,
 ) {
     val cartItems = cartStateHolder.cartItems
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        cartStateHolder.initCartItems()
+    }
 
     Scaffold(
         topBar = {
@@ -56,7 +64,9 @@ fun CartScreen(
                     name = it.product.name,
                     price = it.product.price,
                     onDelete = {
-                        cartStateHolder.deleteCartItem(it.product.id)
+                        scope.launch {
+                            cartStateHolder.deleteCartItem(it.product.id)
+                        }
                     },
                 )
             }
@@ -67,10 +77,14 @@ fun CartScreen(
                         curPage = cartStateHolder.curPage,
                         isLastPage = cartStateHolder.isLast,
                         onPrevClick = {
-                            cartStateHolder.getPrevPage()
+                            scope.launch {
+                                cartStateHolder.getPrevPage()
+                            }
                         },
                         onNextClick = {
-                            cartStateHolder.getNextPage()
+                            scope.launch {
+                                cartStateHolder.getNextPage()
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()

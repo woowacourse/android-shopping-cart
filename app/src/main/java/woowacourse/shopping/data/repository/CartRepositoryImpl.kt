@@ -28,7 +28,7 @@ class CartRepositoryImpl(
         cartDataSource.deleteItem(id)
     }
 
-    override fun getCartItemByPage(page: Int): List<CartItem> {
+    override suspend fun getCartItemByPage(page: Int): List<CartItem> {
         val startIndex = (page - 1) * PAGE_SIZE
         val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
 
