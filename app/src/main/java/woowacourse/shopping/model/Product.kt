@@ -9,5 +9,5 @@ data class Product(
     val id: UUID = UUID.randomUUID(),
     val name: String,
     val price: Money,
-    val imageUrl: String
-): Parcelable
+    val imageUrl: String,
+) : Parcelable

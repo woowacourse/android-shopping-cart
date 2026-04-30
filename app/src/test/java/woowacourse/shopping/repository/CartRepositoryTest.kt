@@ -11,17 +11,19 @@ import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 class CartRepositoryTest {
     val repo: CartRepository = InMemoryCartRepository
 
-    val product1 = Product(
-        name = "새우깡",
-        price = Money(3100),
-        imageUrl = ""
-    )
+    val product1 =
+        Product(
+            name = "새우깡",
+            price = Money(3100),
+            imageUrl = "",
+        )
 
-    val product2 = Product(
-        name = "아이셔",
-        price = Money(1300),
-        imageUrl = ""
-    )
+    val product2 =
+        Product(
+            name = "아이셔",
+            price = Money(1300),
+            imageUrl = "",
+        )
     val items = mapOf(product1 to 1)
 
     @Test

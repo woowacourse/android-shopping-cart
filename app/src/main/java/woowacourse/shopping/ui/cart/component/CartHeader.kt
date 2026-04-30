@@ -25,23 +25,24 @@ fun CartHeader(
     onBackClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = Color.DarkGray)
-            .padding(start = 26.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(color = Color.DarkGray)
+                .padding(start = 26.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "이전",
             tint = Color.White,
-            modifier = Modifier.clickable(onClick = onBackClick)
+            modifier = Modifier.clickable(onClick = onBackClick),
         )
         Spacer(modifier = Modifier.size(21.dp))
         Text(
             text = "Cart",
             color = Color.White,
-            style = ShoppingTypography.titleMedium
+            style = ShoppingTypography.titleMedium,
         )
     }
 }

@@ -33,7 +33,7 @@ class CartActivity : ComponentActivity() {
                         onDeleteClick = {
                             cartRepo.delete(it)
                             cart = cartRepo.showAll()
-                        }
+                        },
                     )
                 }
             }

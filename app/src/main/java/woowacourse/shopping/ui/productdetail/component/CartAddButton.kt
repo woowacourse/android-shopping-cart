@@ -18,21 +18,22 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CartAddButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color(0xFF04C09E))
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color(0xFF04C09E))
+                .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "장바구니 담기",
             fontSize = 20.sp,
             fontWeight = FontWeight.W700,
             color = Color.White,
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
         )
     }
 }

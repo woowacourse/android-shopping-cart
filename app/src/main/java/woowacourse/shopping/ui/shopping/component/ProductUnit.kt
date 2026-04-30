@@ -27,21 +27,22 @@ import woowacourse.shopping.ui.ShoppingTypography
 fun ProductUnit(
     product: Product,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val price = product.price.value
     val formatted = String.format("%,d", price)
     Column(
-        modifier = modifier
-            .width(154.dp)
-            .height(206.dp)
-            .clickable(onClick = onClick)
+        modifier =
+            modifier
+                .width(154.dp)
+                .height(206.dp)
+                .clickable(onClick = onClick),
     ) {
         AsyncImage(
             model = product.imageUrl,
             contentDescription = "이미지",
             modifier = Modifier.size(154.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
         Spacer(Modifier.size(6.dp))
         Text(
@@ -50,13 +51,13 @@ fun ProductUnit(
             style = ShoppingTypography.productName,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(start = 6.dp, end = 9.dp)
+            modifier = Modifier.padding(start = 6.dp, end = 9.dp),
         )
         Text(
             text = "$formatted 원",
             color = Color.DarkGray,
             style = ShoppingTypography.productPrice,
-            modifier = Modifier.padding(start = 6.dp)
+            modifier = Modifier.padding(start = 6.dp),
         )
     }
 }
@@ -71,11 +72,12 @@ private fun ProductUnitPreview() {
 @Preview(showBackground = true, name = "긴 이름을 가진 상품")
 private fun ProductUnitPreview2() {
     ProductUnit(
-        product = Product(
-            name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
-            price = Money(1000),
-            imageUrl = ""
-        ),
-        onClick = {}
+        product =
+            Product(
+                name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
+                price = Money(1000),
+                imageUrl = "",
+            ),
+        onClick = {},
     )
 }

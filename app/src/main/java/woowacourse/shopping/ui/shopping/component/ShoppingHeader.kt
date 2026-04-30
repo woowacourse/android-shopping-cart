@@ -22,28 +22,29 @@ import woowacourse.shopping.ui.ShoppingTypography
 @Composable
 fun ShoppingHeader(
     modifier: Modifier = Modifier,
-    onCartClick: () -> Unit
+    onCartClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(color = Color.DarkGray)
-            .padding(start = 26.dp, end = 16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(color = Color.DarkGray)
+                .padding(start = 26.dp, end = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "Shopping",
             color = Color.White,
-            style = ShoppingTypography.titleMedium
+            style = ShoppingTypography.titleMedium,
         )
 
         Icon(
             imageVector = Icons.Default.ShoppingCart,
             contentDescription = "장바구니",
             modifier = Modifier.clickable(onClick = onCartClick),
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }
