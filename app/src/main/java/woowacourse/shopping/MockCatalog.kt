@@ -1,5 +1,9 @@
 package woowacourse.shopping
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 import kotlin.math.min
@@ -164,10 +168,13 @@ object MockCatalog {
         price = 1
     )
 
-    fun loadMoreProducts(page: Int, pageSize: Int): List<Product> {
-        val fromIndex = if(page * pageSize > catalog.size) catalog.size else page * pageSize
-        val toIndex = min(fromIndex + pageSize, catalog.size)
-        return catalog.subList(fromIndex, toIndex)
+    fun loadMoreProducts(page: Int, pageSize: Int): Deferred<List<Product>> = runBlocking {
+        async {
+//            delay(2000)
+            val fromIndex = if (page * pageSize > catalog.size) catalog.size else page * pageSize
+            val toIndex = min(fromIndex + pageSize, catalog.size)
+            catalog.subList(fromIndex, toIndex)
+        }
     }
 
     fun findProductById(id: UUID): Product = catalog.find { it.uuid == id } ?: unFoundedProduct

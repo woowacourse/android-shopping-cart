@@ -23,6 +23,7 @@
 - [x] LazyVerticalGrid를 사용한다
 - [x] 카트 아이콘을 클릭하면 CartScreen으로 이동한다
 - [x] 상품 목록에서 스크롤을 20개 했을 때 더보기 버튼을 눌러 추가 20개를 로드할 수 있다
+  - [x] 비동기로 데이터를 가지고 온다
 **ShoppingItem**
 - [x] 아이템을 클릭하면 해당 Item의 DetailScreen으로 이동한다
 - [x] 이미지 로딩으로 Coil을 사용한다

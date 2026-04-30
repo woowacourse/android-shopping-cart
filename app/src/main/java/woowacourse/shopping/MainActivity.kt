@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
@@ -39,16 +40,17 @@ class MainActivity : ComponentActivity() {
             }
 
         var currentIndex = 0
-        val MAX_PRODUCT = 20
         var currentProducts = mutableStateOf(
-            MockCatalog.loadMoreProducts(currentIndex, MAX_PRODUCT)
+            runBlocking {
+                getCurrentProducts(currentIndex, MAX_PRODUCT)
+            }
         )
 
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
-                        catalog = currentProducts.value,
+                        catalog = currentProducts.value.value,
                         onItemClick = { id ->
                             productDetailIntent.putExtra("id", id.toString())
                             startForProductDetailResult.launch(productDetailIntent)
@@ -59,16 +61,19 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value += MockCatalog.loadMoreProducts(
-                                currentIndex,
-                                MAX_PRODUCT
-                            )
-
+                            currentProducts.value.value += runBlocking { getCurrentProducts(currentIndex, MAX_PRODUCT) }.value
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
         }
+    }
+
+    suspend fun getCurrentProducts(currentIndex: Int, size: Int) =
+        mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
+
+    companion object {
+        const val MAX_PRODUCT = 20
     }
 }
