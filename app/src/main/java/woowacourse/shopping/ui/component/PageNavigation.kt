@@ -18,15 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
-
-private const val PREVIOUS_PAGE_DESCRIPTION = "이전 페이지"
-private const val NEXT_PAGE_DESCRIPTION = "다음 페이지"
 
 @Composable
 fun PageNavigation(
@@ -64,7 +62,7 @@ fun PageNavigation(
         ) {
             Icon(
                 painter = painterResource(R.drawable.left_icon),
-                contentDescription = PREVIOUS_PAGE_DESCRIPTION,
+                contentDescription = stringResource(R.string.previous_page_description),
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )
@@ -89,7 +87,7 @@ fun PageNavigation(
         ) {
             Icon(
                 painter = painterResource(R.drawable.right_icon),
-                contentDescription = NEXT_PAGE_DESCRIPTION,
+                contentDescription = stringResource(R.string.next_page_description),
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )

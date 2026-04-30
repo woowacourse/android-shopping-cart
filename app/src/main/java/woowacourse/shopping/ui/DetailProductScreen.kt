@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,12 +36,6 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
-
-private const val PRODUCT_IMAGE_DESCRIPTION_SUFFIX = "상품 이미지"
-private const val PRICE_LABEL = "가격"
-private const val ADD_TO_CART_BUTTON_TEXT = "장바구니에 담기"
-private const val CLOSE_DETAIL_DESCRIPTION = "상세페이지 닫기"
-private const val PRICE_FORMAT_PATTERN = "#,###원"
 
 @Composable
 fun DetailProductScreen(
@@ -66,7 +61,7 @@ fun DetailProductScreen(
         ) {
             AsyncImage(
                 model = product.imageUrl,
-                contentDescription = "${product.title} $PRODUCT_IMAGE_DESCRIPTION_SUFFIX",
+                contentDescription = stringResource(R.string.product_image_content_description, product.title),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -91,11 +86,11 @@ fun DetailProductScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = PRICE_LABEL,
+                    text = stringResource(R.string.price_label),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = DecimalFormat(PRICE_FORMAT_PATTERN).format(product.price),
+                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.price),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -108,7 +103,7 @@ fun DetailProductScreen(
                         .height(48.dp),
                 shape = RectangleShape,
             ) {
-                Text(ADD_TO_CART_BUTTON_TEXT)
+                Text(stringResource(R.string.add_to_cart_button_text))
             }
         }
     }
@@ -126,7 +121,7 @@ private fun DetailProductTopBar(
             IconButton(onClick = onBackClick) {
                 Image(
                     painter = painterResource(R.drawable.close_icon),
-                    contentDescription = CLOSE_DETAIL_DESCRIPTION,
+                    contentDescription = stringResource(R.string.close_detail_description),
                     modifier = Modifier.size(16.dp),
                 )
             }

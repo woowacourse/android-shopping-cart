@@ -26,9 +26,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,11 +38,6 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.preparedProducts
 import woowacourse.shopping.repository.MemoryProductRepository
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
-
-private const val TOP_BAR_TITLE = "Shopping"
-private const val CART_ICON_DESCRIPTION = "장바구니 아이콘"
-private const val PRODUCT_IMAGE_DESCRIPTION_SUFFIX = "상품 이미지"
-private const val PRICE_FORMAT_PATTERN = "#,###원"
 
 @Composable
 fun ProductListScreen(
@@ -101,7 +96,7 @@ private fun ProductItem(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = "${product.title} $PRODUCT_IMAGE_DESCRIPTION_SUFFIX",
+            contentDescription = stringResource(R.string.product_image_content_description, product.title),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -122,7 +117,7 @@ private fun ProductItem(
                 ),
         )
         Text(
-            text = DecimalFormat(PRICE_FORMAT_PATTERN).format(product.price),
+            text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.price),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier =
                 Modifier.padding(
@@ -139,12 +134,12 @@ private fun ProductListTopBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(text = TOP_BAR_TITLE) },
+        title = { Text(text = stringResource(R.string.app_name)) },
         actions = {
             IconButton(onClick = onNavigateToCartClick) {
                 Image(
                     painter = painterResource(R.drawable.shopping_cart_icon),
-                    contentDescription = CART_ICON_DESCRIPTION,
+                    contentDescription = stringResource(R.string.cart_icon_description),
                     modifier = Modifier.size(22.dp),
                 )
             }

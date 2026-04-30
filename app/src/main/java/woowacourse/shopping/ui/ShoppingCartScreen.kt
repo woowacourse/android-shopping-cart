@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,12 +39,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
-
-private const val CART_TOP_BAR_TITLE = "Cart"
-private const val BACK_ICON_DESCRIPTION = "상세페이지 닫기"
-private const val REMOVE_ITEM_DESCRIPTION = "장바구니 삭제"
-private const val PRODUCT_IMAGE_DESCRIPTION = "상품 이미지"
-private const val PRICE_FORMAT_PATTERN = "#,###원"
 
 @Composable
 fun ShoppingCartScreen(
@@ -126,7 +121,7 @@ private fun ShoppingCartItems(
             )
             Image(
                 painter = painterResource(R.drawable.remove_icon),
-                contentDescription = REMOVE_ITEM_DESCRIPTION,
+                contentDescription = stringResource(R.string.remove_item_description),
                 modifier =
                     Modifier
                         .size(16.dp)
@@ -143,7 +138,7 @@ private fun ShoppingCartItems(
         ) {
             AsyncImage(
                 model = shoppingCartItem.product.imageUrl,
-                contentDescription = PRODUCT_IMAGE_DESCRIPTION,
+                contentDescription = stringResource(R.string.product_image_description),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -153,7 +148,7 @@ private fun ShoppingCartItems(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = DecimalFormat(PRICE_FORMAT_PATTERN).format(shoppingCartItem.product.price),
+                text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(shoppingCartItem.product.price),
             )
         }
     }
@@ -168,14 +163,14 @@ private fun ShoppingCartTopBar(
     TopAppBar(
         title = {
             Text(
-                text = CART_TOP_BAR_TITLE,
+                text = stringResource(R.string.cart_top_bar_title),
             )
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Image(
                     painter = painterResource(R.drawable.back_icon),
-                    contentDescription = BACK_ICON_DESCRIPTION,
+                    contentDescription = stringResource(R.string.close_detail_description),
                     modifier = Modifier.size(16.dp),
                 )
             }

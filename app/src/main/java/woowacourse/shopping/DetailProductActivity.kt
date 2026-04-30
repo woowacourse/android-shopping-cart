@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.DetailProductScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
@@ -18,7 +20,6 @@ class DetailProductActivity : ComponentActivity() {
 
     companion object {
         private const val INVALID_PRODUCT_ID = -1L
-        private const val PRODUCT_NOT_FOUND_MESSAGE = "상품을 찾을 수 없습니다"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,7 @@ class DetailProductActivity : ComponentActivity() {
                         onBackClick = this::finish,
                     )
                 } else {
-                    Text(PRODUCT_NOT_FOUND_MESSAGE)
+                    Text(stringResource(R.string.product_not_found_message))
                 }
             }
         }
