@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +31,7 @@ fun CartScreen(
     val cartItemsSize = cart.items.size
     val totalPages = (cartItemsSize - 1) / PAGE_SIZE + 1
 
-    var currentPage by remember { mutableIntStateOf(1) }
+    var currentPage by rememberSaveable { mutableIntStateOf(1) }
     val pagedItems =
         remember(cart, currentPage) {
             cart.items
