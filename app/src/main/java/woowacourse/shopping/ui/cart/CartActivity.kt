@@ -16,13 +16,14 @@ import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class CartActivity : ComponentActivity() {
+    val cartRepo = InMemoryCartRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val cartRepo = InMemoryCartRepository
                     var cart by remember { mutableStateOf(cartRepo.showAll()) }
 
                     CartScreen(
