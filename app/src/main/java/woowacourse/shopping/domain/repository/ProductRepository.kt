@@ -7,5 +7,5 @@ interface ProductRepository {
 
     fun getProductById(id: String): Product
 
-    fun getProducts(): List<Product>
+    suspend fun getProducts(): List<Product>
 }

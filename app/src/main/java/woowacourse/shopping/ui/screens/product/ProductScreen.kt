@@ -15,13 +15,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.topbar.MainTapBar
 
@@ -32,6 +35,11 @@ fun ProductScreen(
     onItemClick: (String) -> Unit,
 ) {
     val products = productStateHolder.products
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        productStateHolder.getProducts()
+    }
 
     Scaffold(
         topBar = {
@@ -71,7 +79,9 @@ fun ProductScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                productStateHolder.getProducts()
+                                scope.launch {
+                                    productStateHolder.getProducts()
+                                }
                             },
                     ) {
                         Icon(

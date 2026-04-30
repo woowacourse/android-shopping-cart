@@ -17,7 +17,7 @@ class ProductRepositoryImpl(
         products.firstOrNull { it.id == id }
             ?: throw IllegalArgumentException("존재하지 않는 상품입니다. 삐용삐용")
 
-    override fun getProducts(): List<Product> {
+    override suspend fun getProducts(): List<Product> {
         val fromIndex = offset
         offset = min(offset + PAGE_SIZE, products.size)
         return products.subList(fromIndex, offset)

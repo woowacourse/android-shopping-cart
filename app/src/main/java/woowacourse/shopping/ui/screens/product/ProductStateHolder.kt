@@ -16,11 +16,11 @@ class ProductStateHolder(
     var hasNext by mutableStateOf(false)
         private set
 
-    init {
-        getProducts()
-    }
+//    init {
+//        getProducts()
+//    }
 
-    fun getProducts() {
+    suspend fun getProducts() {
         products += productRepository.getProducts()
         hasNext = productRepository.hasNext
     }
