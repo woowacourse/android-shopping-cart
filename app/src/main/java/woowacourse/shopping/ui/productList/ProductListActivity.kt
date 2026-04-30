@@ -14,8 +14,6 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productDetail.ProductDetailActivity
 
 class ProductListActivity : ComponentActivity() {
-    val cartIntent = Intent(this, CartActivity::class.java)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,6 +26,7 @@ class ProductListActivity : ComponentActivity() {
                             productRepository = ProductRepositoryMockImpl(),
                         ),
                     onCartClick = {
+                        val cartIntent = Intent(this, CartActivity::class.java)
                         startActivity(cartIntent)
                     },
                     onProductClick = { product ->

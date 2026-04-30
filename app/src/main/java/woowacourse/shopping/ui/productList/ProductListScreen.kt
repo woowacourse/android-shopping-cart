@@ -167,7 +167,9 @@ private fun ProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier.clickable {
+            onClick()
+        },
     ) {
         AsyncImage(
             model = imageUrl,
