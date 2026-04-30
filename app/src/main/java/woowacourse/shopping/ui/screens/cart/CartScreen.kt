@@ -1,10 +1,8 @@
 package woowacourse.shopping.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +15,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +26,7 @@ import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
 fun CartScreen(
-    cartStateHolder: CartStateHolder,
+    cartStateHolder: CartStateHolder = remember { CartStateHolder() },
     onNavigateUp: () -> Unit,
 ) {
     val cartItems = cartStateHolder.cartItems
@@ -41,43 +40,44 @@ fun CartScreen(
         },
         modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(bottom = 50.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(vertical = 24.dp, horizontal = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(innerPadding)
-                    .padding(vertical = 24.dp, horizontal = 18.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+            items(
+                items = cartItems,
+                key = { it.product.id },
             ) {
-                items(
-                    items = cartItems,
-                    key = { it.product.id },
-                ) {
-                    CartItemCard(
-                        imageUrl = it.product.imageUrl,
-                        name = it.product.name,
-                        price = it.product.price,
-                        onDelete = {
-                            cartStateHolder.deleteCartItem(it.product.id)
+                CartItemCard(
+                    imageUrl = it.product.imageUrl,
+                    name = it.product.name,
+                    price = it.product.price,
+                    onDelete = {
+                        cartStateHolder.deleteCartItem(it.product.id)
+                    },
+                )
+            }
+
+            if (cartStateHolder.curPage != 1 || !cartStateHolder.isLast) {
+                item {
+                    CartPagination(
+                        curPage = cartStateHolder.curPage,
+                        isLastPage = cartStateHolder.isLast,
+                        onPrevClick = {
+                            cartStateHolder.getPrevPage()
                         },
+                        onNextClick = {
+                            cartStateHolder.getNextPage()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 50.dp),
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            CartPagination(
-                curPage = 1,
-                isLastPage = false,
-                onPrevClick = {},
-                onNextClick = {},
-            )
         }
     }
 }
@@ -92,7 +92,7 @@ private fun CartPagination(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PaginationButton(
@@ -139,7 +139,6 @@ private fun PaginationButton(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartStateHolder = CartStateHolder(),
         onNavigateUp = { },
     )
 }

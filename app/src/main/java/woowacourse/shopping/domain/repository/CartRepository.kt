@@ -4,12 +4,14 @@ import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 
 interface CartRepository {
-    fun getCartItems(): List<CartItem>
-
     fun addItem(
         product: Product,
         amount: Int,
     )
 
     fun deleteItem(id: String)
+
+    fun getCartItemByPage(page: Int): List<CartItem>
+
+    fun isLastPage(page: Int): Boolean
 }

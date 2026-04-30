@@ -9,7 +9,13 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource = CartDataSourceImpl,
 ) : CartRepository {
-    override fun getCartItems(): List<CartItem> = cartDataSource.items
+    private val cartItems
+        get() = cartDataSource.items
+
+    private val totalPage
+        get() = ((cartItems.size + PAGE_SIZE - 1) / PAGE_SIZE).coerceAtLeast(1)
+
+    override fun isLastPage(page: Int) = page == totalPage
 
     override fun addItem(
         product: Product,
@@ -20,5 +26,20 @@ class CartRepositoryImpl(
 
     override fun deleteItem(id: String) {
         cartDataSource.deleteItem(id)
+    }
+
+    override fun getCartItemByPage(page: Int): List<CartItem> {
+        val startIndex = (page - 1) * PAGE_SIZE
+        val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
+
+        require(page > 0) {
+            throw IllegalArgumentException("-거절(사유: ${page}pg가 말이 되는가)-")
+        }
+
+        return cartItems.subList(startIndex, endIndex)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 5
     }
 }
