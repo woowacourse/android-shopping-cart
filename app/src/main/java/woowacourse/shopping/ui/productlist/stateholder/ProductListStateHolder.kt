@@ -14,12 +14,6 @@ class ProductListStateHolder {
 
     var cart = Cart()
 
-    // 60 45 currentPage
-    // 20 20 1
-    // 40 40 2
-    // 60 45 3
-    // 끝
-
     fun isEndList(): Boolean {
         return _products.size >= MockData.MOCK_PRODUCTS.size
     }
@@ -52,15 +46,11 @@ class ProductListStateHolder {
     }
 
     fun replaceCartItems(uiModels: List<ProductUiModel>): Cart {
-        return Cart(
-            cart.cartItems.filter { cartItem ->
-                uiModels.any { it.id == cartItem.product.id }
-            },
-        )
+        return cart.filterById(uiModels.map { it.id })
     }
 
     fun toProductUiModels(): List<ProductUiModel> {
-        return cart.cartItems.map { toProductUiModel(it.product) }
+        return cart.getProductList().map { toProductUiModel(it) }
     }
 
     companion object {
