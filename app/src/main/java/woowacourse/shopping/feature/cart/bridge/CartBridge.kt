@@ -7,8 +7,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.repository.CartRepository
-import woowacourse.shopping.core.repository.MockRepository
-import woowacourse.shopping.core.repository.ProductRepository
 import woowacourse.shopping.core.uimodel.CartItemUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
 

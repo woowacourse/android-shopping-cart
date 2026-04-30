@@ -56,6 +56,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
     testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

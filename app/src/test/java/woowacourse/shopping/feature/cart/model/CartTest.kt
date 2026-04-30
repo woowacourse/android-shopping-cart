@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.cart.model
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.core.model.Money
@@ -38,12 +39,19 @@ class CartTest {
     @Test
     fun `등록한 상품을 삭제할 수 있다`() {
         assertThat(cart.items.size).isEqualTo(1)
-        val newCart = cart.deleteItem(product)
+        val newCart = cart.deleteItem(product.id)
         assertThat(newCart.items.size).isEqualTo(0)
     }
 
     @Test
     fun `등록된 상품의 총 가격을 계산할 수 있다`() {
         assertThat(cart.calculateTotalPrice()).isEqualTo(price)
+    }
+
+    @Test
+    fun `이미 등록된 상품을 추가하면 예외가 발생한다`() {
+        assertThatThrownBy {
+            cart.addItem(product)
+        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 }
