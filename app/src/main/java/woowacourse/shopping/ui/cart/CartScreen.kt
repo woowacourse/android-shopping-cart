@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,10 @@ fun CartScreen(
             .toMap()
     }
 
+    LaunchedEffect(totalPages) {
+        currentPage = currentPage.coerceAtMost(totalPages)
+    }
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -44,7 +49,7 @@ fun CartScreen(
 
         CartItemBody(
             cart = Cart(pagedItems),
-            hasNext = cartItemsSize >= PAGE_SIZE,
+            showPagination = cartItemsSize >= PAGE_SIZE + 1,
             currentPage = currentPage,
             totalPages = totalPages,
             modifier = Modifier

@@ -17,7 +17,7 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 @Composable
 fun CartItemBody(
     cart: Cart,
-    hasNext: Boolean,
+    showPagination: Boolean,
     currentPage: Int,
     totalPages: Int,
     modifier: Modifier = Modifier,
@@ -39,7 +39,7 @@ fun CartItemBody(
             )
         }
 
-        if (hasNext) {
+        if (showPagination) {
             item {
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -65,7 +65,7 @@ private fun CartItemBodyPreview() {
             )
         ),
         onDeleteClick = {},
-        hasNext = true,
+        showPagination = true,
         currentPage = 1,
         totalPages = 5,
         onPreviousClick = {},
