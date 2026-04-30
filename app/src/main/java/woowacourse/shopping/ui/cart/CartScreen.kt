@@ -21,17 +21,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -41,16 +38,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.constant.Format.formatPrice
+import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
+import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
+import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.MemoryCartRepository
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
@@ -60,38 +59,16 @@ fun CartScreen(
     val activity = LocalActivity.current
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
-        TopAppBar(
-            modifier = Modifier.height(56.dp),
-            title = {
-                Text(
-                    text = "Cart",
-                    fontSize = 20.sp,
-                )
+        CartTopAppBar(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+            onClick = {
+                activity?.finish()
             },
-            actions = {
-                IconButton(
-                    onClick = {
-                        activity?.finish()
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "뒤로 가기",
-                        tint = Color.White,
-                    )
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF555555),
-                    scrolledContainerColor = Color.Unspecified,
-                    navigationIconContentColor = Color.White,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White,
-                ),
-            windowInsets = WindowInsets(0, 0, 0, 0),
         )
 
         LazyColumn(
@@ -101,7 +78,10 @@ fun CartScreen(
         ) {
             items(cartUiState.cartItems) { cartItem ->
                 CartItemCard(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, start = 16.dp, end = 16.dp),
                     cartItem = cartItem,
                     onRemoveClick = {
                         viewModel.removeCartItem(cartItem)
@@ -124,6 +104,43 @@ fun CartScreen(
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CartTopAppBar(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = "Cart",
+                fontSize = 20.sp,
+            )
+        },
+        actions = {
+            IconButton(
+                onClick = onClick,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "뒤로 가기",
+                    tint = Color.White,
+                )
+            }
+        },
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(APP_BAR_COLOR),
+                scrolledContainerColor = Color.Unspecified,
+                navigationIconContentColor = Color.White,
+                titleContentColor = Color.White,
+                actionIconContentColor = Color.White,
+            ),
+        windowInsets = WindowInsets(0, 0, 0, 0),
+    )
 }
 
 @Composable
@@ -177,9 +194,9 @@ private fun CartItemCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = String.format("%,d원", cartItem.product.price.value),
+                    text = formatPrice(cartItem.product.price.value),
                     fontSize = 16.sp,
-                    color = Color(0xFF777777),
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 4.dp),
                 )
@@ -207,8 +224,8 @@ private fun PageNavigator(
             enabled = hasPrevious,
             colors =
                 ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF04C09E),
-                    disabledContainerColor = Color(0xFFAAAAAA),
+                    containerColor = Color(CART_PAGE_BUTTON_ACTIVE_COLOR),
+                    disabledContainerColor = Color(CART_PAGE_BUTTON_INACTIVE_COLOR),
                 ),
         ) {
             Text(
@@ -226,8 +243,8 @@ private fun PageNavigator(
             enabled = hasNext,
             colors =
                 ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF04C09E),
-                    disabledContainerColor = Color(0xFFAAAAAA),
+                    containerColor = Color(CART_PAGE_BUTTON_ACTIVE_COLOR),
+                    disabledContainerColor = Color(CART_PAGE_BUTTON_INACTIVE_COLOR),
                 ),
         ) {
             Text(

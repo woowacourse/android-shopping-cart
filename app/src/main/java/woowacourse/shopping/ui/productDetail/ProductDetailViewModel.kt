@@ -12,15 +12,14 @@ import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
 data class ProductDetailUiState(
-    val product: Product
+    val product: Product,
 )
 
 class ProductDetailViewModel(
     val productId: String,
     private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository
-): ViewModel() {
-
+    private val cartRepository: CartRepository,
+) : ViewModel() {
     lateinit var product: Product
 
     init {

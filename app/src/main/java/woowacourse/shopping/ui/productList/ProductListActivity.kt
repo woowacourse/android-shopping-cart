@@ -14,13 +14,13 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productDetail.ProductDetailActivity
 
 class ProductListActivity : ComponentActivity() {
+    val cartIntent = Intent(this, CartActivity::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val intent = Intent(this, CartActivity::class.java)
-
                 ProductListScreen(
                     modifier = Modifier.padding(innerPadding),
                     viewModel =
@@ -28,14 +28,14 @@ class ProductListActivity : ComponentActivity() {
                             productRepository = ProductRepositoryMockImpl(),
                         ),
                     onCartClick = {
-                        startActivity(intent)
+                        startActivity(cartIntent)
                     },
                     onProductClick = { product ->
-                        val intent2 =
+                        val detailIntent =
                             Intent(this, ProductDetailActivity::class.java).apply {
                                 putExtra("PRODUCT_ID", product.id)
                             }
-                        startActivity(intent2)
+                        startActivity(detailIntent)
                     },
                 )
             }

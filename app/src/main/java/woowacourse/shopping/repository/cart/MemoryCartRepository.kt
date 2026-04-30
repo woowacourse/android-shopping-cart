@@ -3,7 +3,6 @@ package woowacourse.shopping.repository.cart
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
-import woowacourse.shopping.mock.MockData
 
 object MemoryCartRepository : CartRepository {
     private var cart: Cart = Cart(cartItems = CartItems(mutableListOf()))
