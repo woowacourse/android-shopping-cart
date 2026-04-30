@@ -1,6 +1,5 @@
 package woowacourse.shopping
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -41,8 +40,7 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
-            val addedId = result.data
-                ?.getStringExtra("added_to_cart_id")
+            val addedId = ProductDetailActivity.getAddedId(result.data)
                 ?: return@registerForActivityResult
 
             productListStateHolder.cart = productListStateHolder.addCartItem(
@@ -59,8 +57,7 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
-            val deletedCartItems = result.data
-                ?.getParcelableArrayListExtra("deleted_cart_list", ProductUiModel::class.java)
+            val deletedCartItems = CartActivity.getDeletedList(result.data)
                 ?: return@registerForActivityResult
 
             productListStateHolder.cart = productListStateHolder.replaceCartItems(deletedCartItems)
@@ -79,16 +76,10 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     onProductClick = { id ->
-                        detailLauncher.launch(
-                            Intent(this, ProductDetailActivity::class.java)
-                                .putExtra("product_id", id),
-                        )
+                        detailLauncher.launch(ProductDetailActivity.newIntent(this, id))
                     },
                     onCartIconClick = {
-                        cartLauncher.launch(
-                            Intent(this, CartActivity::class.java)
-                                .putParcelableArrayListExtra("extra_cart_items", ArrayList(cartItems)),
-                        )
+                        cartLauncher.launch(CartActivity.newIntent(this, cartItems))
                     },
 
                 )
