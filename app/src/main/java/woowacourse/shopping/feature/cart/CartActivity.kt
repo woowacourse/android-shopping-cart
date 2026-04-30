@@ -24,7 +24,13 @@ class CartActivity : ComponentActivity() {
                         cartItems = state.uiState.cartItems,
                         onBackClick = { finish() },
                         onCartDeleteClick = state::removeFromCart,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        isLastPage = state.uiState.isLastPage,
+                        isFirstPage = state.uiState.isFirstPage,
+                        pageCount = state.uiState.displayPageNumber,
+                        isShowControls = state.uiState.showControls,
+                        onNextClick = state::nextPage,
+                        onPreviousClick = state::prevPage,
                     )
                 }
             }
