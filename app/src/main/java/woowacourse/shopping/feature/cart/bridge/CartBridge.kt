@@ -13,7 +13,6 @@ import woowacourse.shopping.core.uimodel.CartItemUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
 
 class CartBridge(
-    private val productRepository: ProductRepository = MockRepository(),
     private val cartRepository: CartRepository = CartRepository,
 ) {
     var cartItems: ImmutableList<CartItemUiModel> by mutableStateOf(persistentListOf())
