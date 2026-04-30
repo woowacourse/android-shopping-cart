@@ -21,7 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,17 +33,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.core.component.ShoppingAppBar
-import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.core.util.formattedPrice
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
 
 @Composable
 fun DetailScreen(
-    product: ProductUiModel,
-    onAddProductToCart: () -> Unit,
+    id: String,
+    onNavigateToCart: () -> Unit,
+    onFailure: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+    val state =
+        remember {
+            DetailStateHolder(
+                scope = scope,
+                id = id,
+            )
+        }
+    val product = state.product
+
     val activity = LocalActivity.current
     Scaffold(
         topBar = {
@@ -71,7 +82,13 @@ fun DetailScreen(
                         .height(48.dp)
                         .background(Green40)
                         .clickable {
-                            onAddProductToCart()
+                            state.addToCart { onResult ->
+                                if (onResult) {
+                                    onNavigateToCart()
+                                } else {
+                                    onFailure()
+                                }
+                            }
                         },
                 contentAlignment = Alignment.Center,
             ) {
@@ -150,14 +167,9 @@ private fun DetailContent(
 @Composable
 private fun DetailScreenPreview() {
     DetailScreen(
-        onAddProductToCart = {},
-        product =
-            ProductUiModel(
-                id = "id",
-                imageUrl = "",
-                name = "Test",
-                price = 10000,
-            ),
+        id = "1",
+        onNavigateToCart = {},
+        onFailure = {},
     )
 }
 

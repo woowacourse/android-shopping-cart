@@ -1,4 +1,4 @@
-package woowacourse.shopping.core.data
+package woowacourse.shopping.core.repository
 
 import woowacourse.shopping.core.model.Product
 import woowacourse.shopping.feature.cart.model.Cart
@@ -17,7 +17,7 @@ object CartRepository {
         }
     }
 
-    fun deleteItem(product: Product) {
-        cart = cart.deleteItem(product)
+    fun deleteItem(id: String) {
+        cart = cart.deleteItem(id)
     }
 }

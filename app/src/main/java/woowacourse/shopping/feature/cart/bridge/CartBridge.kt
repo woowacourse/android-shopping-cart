@@ -6,13 +6,14 @@ import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import woowacourse.shopping.core.data.CartRepository
-import woowacourse.shopping.core.data.ProductRepository
+import woowacourse.shopping.core.repository.CartRepository
+import woowacourse.shopping.core.repository.MockRepository
+import woowacourse.shopping.core.repository.ProductRepository
 import woowacourse.shopping.core.uimodel.CartItemUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
 
 class CartBridge(
-    private val productRepository: ProductRepository = ProductRepository,
+    private val productRepository: ProductRepository = MockRepository(),
     private val cartRepository: CartRepository = CartRepository,
 ) {
     var cartItems: ImmutableList<CartItemUiModel> by mutableStateOf(persistentListOf())
@@ -22,8 +23,7 @@ class CartBridge(
     }
 
     fun removeFromCart(productId: String) {
-        val product = productRepository.getProductById(productId)
-        cartRepository.deleteItem(product)
+        cartRepository.deleteItem(productId)
         refresh()
     }
 

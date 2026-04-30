@@ -2,12 +2,16 @@ package woowacourse.shopping.feature.shopping.bridge
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import woowacourse.shopping.core.data.ProductRepository
+import woowacourse.shopping.core.repository.MockRepository
+import woowacourse.shopping.core.repository.ProductRepository
 import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
 
 class ShoppingBridge(
-    private val productRepository: ProductRepository = ProductRepository,
+    private val productRepository: ProductRepository = MockRepository(),
 ) {
-    val products: ImmutableList<ProductUiModel> = productRepository.getProducts().map { it.toUiModel() }.toImmutableList()
+    suspend fun getProductData(
+        offset: Int,
+        limit: Int,
+    ): ImmutableList<ProductUiModel> = productRepository.getProducts(offset, limit).map { it.toUiModel() }.toImmutableList()
 }

@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.core.data.CartRepository
+import woowacourse.shopping.core.repository.CartRepository
 import woowacourse.shopping.core.uimodel.CartItemUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
 import kotlin.math.min

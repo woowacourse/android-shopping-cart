@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.feature.cart.CartActivity
@@ -38,8 +40,10 @@ import woowacourse.shopping.feature.detail.DetailActivity
 @Composable
 fun ShoppingScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
-    val state = remember { ShoppingStateHolder() }
+    val scope = rememberCoroutineScope()
+    val state = remember { ShoppingStateHolder(scope) }
     val products = state.currentProducts
+
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -73,8 +77,8 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
         ShoppingContents(
             products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
-            onLoad = { state.addProducts() },
-            isCanLoadMore = state.isCanLoadMore,
+            onLoad = { scope.launch { state.loadMore() } },
+            isCanLoadMore = state.canLoadMore,
         )
     }
 }

@@ -3,31 +3,34 @@ package woowacourse.shopping.feature.shopping.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.feature.shopping.bridge.ShoppingBridge
-import kotlin.math.min
 
 class ShoppingStateHolder(
+    private val scope: CoroutineScope,
     private val shoppingBridge: ShoppingBridge = ShoppingBridge(),
 ) {
     var currentProducts by mutableStateOf(emptyList<ProductUiModel>())
-    var isCanLoadMore by mutableStateOf(true)
+    var canLoadMore by mutableStateOf(true)
+    var isLoading by mutableStateOf(false)
     private var offset = 0
     private val pageSize = 20
 
     init {
-        addProducts()
-        isCanLoadMore()
+        loadMore()
     }
 
-    fun isCanLoadMore() {
-        isCanLoadMore = offset < shoppingBridge.products.size
-    }
-
-    fun addProducts() {
-        val fromIndex = offset
-        offset = min(offset + pageSize, shoppingBridge.products.size)
-        currentProducts = currentProducts + shoppingBridge.products.subList(fromIndex, offset)
-        isCanLoadMore()
+    fun loadMore() {
+        if (isLoading || !canLoadMore) return
+        scope.launch {
+            isLoading = true
+            val loadData = shoppingBridge.getProductData(offset, pageSize)
+            currentProducts = currentProducts.plus(loadData)
+            offset += loadData.size
+            canLoadMore = loadData.size == pageSize
+            isLoading = false
+        }
     }
 }
