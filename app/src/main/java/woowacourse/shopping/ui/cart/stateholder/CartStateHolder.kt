@@ -45,6 +45,6 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
     }
 
     companion object {
-        const val PAGE_SIZE = 3 // TODO
+        private const val PAGE_SIZE = 5
     }
 }
