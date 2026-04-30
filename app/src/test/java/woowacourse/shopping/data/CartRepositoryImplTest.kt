@@ -12,7 +12,7 @@ class CartRepositoryImplTest {
         val cartRepository = CartRepositoryImpl()
         cartRepository.addItem(product = ShoppingFixture.getProduct(), amount = 1)
 
-        cartRepository.getCartItems().size shouldEqual 1
+        cartRepository.getCartItemByPage(1).size shouldEqual 1
     }
 
     @Test
@@ -24,7 +24,7 @@ class CartRepositoryImplTest {
         cartRepository.addItem(product = product, amount = 1)
         cartRepository.addItem(product = product, amount = 1)
 
-        cartRepository.getCartItems().first { it.product.id == "1" }.quantity shouldEqual 2
+        cartRepository.getCartItemByPage(1).first { it.product.id == "1" }.quantity shouldEqual 2
     }
 
     @Test
@@ -36,6 +36,6 @@ class CartRepositoryImplTest {
         cartRepository.addItem(product = product, amount = 1)
         cartRepository.deleteItem(id = "1")
 
-        cartRepository.getCartItems().firstOrNull { it.product == product } shouldBe null
+        cartRepository.getCartItemByPage(1).firstOrNull { it.product == product } shouldBe null
     }
 }
