@@ -36,6 +36,8 @@ fun CartScreen(
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isLeftEnable: Boolean,
+    isRightEnable: Boolean,
 ) {
 
     Scaffold(
@@ -62,6 +64,8 @@ fun CartScreen(
                 page = page,
                 onLeftClick = onLeftClick,
                 onRightClick = onRightClick,
+                isLeftEnable = isLeftEnable,
+                isRightEnable = isRightEnable,
             )
             Spacer(modifier = Modifier.height(40.dp))
         }
@@ -74,6 +78,8 @@ private fun PageNavigator(
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isLeftEnable: Boolean,
+    isRightEnable: Boolean,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -85,7 +91,7 @@ private fun PageNavigator(
         PageButton(
             text = "<",
             onClick = onLeftClick,
-            isEnable = false,
+            isEnable = isLeftEnable,
         )
 
         Text(
@@ -96,7 +102,7 @@ private fun PageNavigator(
         PageButton(
             text = ">",
             onClick = onRightClick,
-            isEnable = true,
+            isEnable = isRightEnable,
         )
     }
 }
@@ -163,8 +169,10 @@ private fun CartScreenPreview() {
         cartItems = emptyList(),
         onCloseClick = {},
         onDelete = {},
+        page = 0,
         onLeftClick = {},
         onRightClick = {},
-        page = 0,
+        isLeftEnable = false,
+        isRightEnable = true,
     )
 }

@@ -10,6 +10,17 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
     var page by mutableIntStateOf(1)
     var cartItems by mutableStateOf(pagination(1, totalCartItems))
 
+    fun isStartPage(): Boolean {
+        return page == 1
+    }
+
+    fun isEndPage(): Boolean = page >= lastPage()
+
+    private fun lastPage(): Int {
+        if (totalCartItems.isEmpty()) return 1
+        return (totalCartItems.size + PAGE_SIZE - 1) / PAGE_SIZE
+    }
+
     fun onLeftClick() {
         page -= 1
         cartItems = pagination(page, totalCartItems)
@@ -34,6 +45,6 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
     }
 
     companion object {
-        const val PAGE_SIZE = 3
+        const val PAGE_SIZE = 3 // TODO
     }
 }

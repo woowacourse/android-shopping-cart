@@ -37,9 +37,11 @@ class CartActivity : ComponentActivity() {
                                 ),
                         )
                     },
+                    isLeftEnable = stateHolder.isStartPage().not(),
                     onLeftClick = {
                         stateHolder.onLeftClick()
                     },
+                    isRightEnable = stateHolder.isEndPage().not(),
                     onRightClick = {
                         stateHolder.onRightClick()
                     },
