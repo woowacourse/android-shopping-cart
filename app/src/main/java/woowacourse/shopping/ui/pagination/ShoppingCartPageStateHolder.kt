@@ -2,9 +2,9 @@ package woowacourse.shopping.ui.pagination
 
 import woowacourse.shopping.model.ShoppingCartItem
 
-class ShoppingCartPaginationStateHolder(
+class ShoppingCartPageStateHolder(
     shoppingCartItems: List<ShoppingCartItem>,
-) : DataLoadStateHolder<ShoppingCartItem>(shoppingCartItems) {
+) : PageStateHolder<ShoppingCartItem>(shoppingCartItems) {
     override val pageSize: Int = 5
 
     override fun getPageRange(): IntRange {

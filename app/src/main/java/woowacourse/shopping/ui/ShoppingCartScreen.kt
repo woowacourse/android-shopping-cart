@@ -53,24 +53,32 @@ fun ShoppingCartScreen(
                 onBackClick = onBackClick,
             )
         },
-        bottomBar = bottomContent,
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
         Column(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
-                    .padding(16.dp),
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            shoppingCartItems.forEach { shoppingCartItem ->
-                ShoppingCartItems(
-                    shoppingCartItem = shoppingCartItem,
-                    onRemoveShoppingItemClick = onRemoveShoppingItemClick,
-                )
+            Column(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                shoppingCartItems.forEach { shoppingCartItem ->
+                    ShoppingCartItems(
+                        shoppingCartItem = shoppingCartItem,
+                        onRemoveShoppingItemClick = onRemoveShoppingItemClick,
+                    )
+                }
             }
+
+            bottomContent()
         }
     }
 }

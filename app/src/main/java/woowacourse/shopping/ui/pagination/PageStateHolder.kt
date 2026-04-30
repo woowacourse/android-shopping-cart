@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class DataLoadStateHolder<T : Any>(
+abstract class PageStateHolder<T : Any>(
     items: List<T>,
 ) {
     protected abstract val pageSize: Int

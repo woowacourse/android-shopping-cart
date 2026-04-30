@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.ui.ShoppingCartScreen
 import woowacourse.shopping.ui.component.PageNavigation
-import woowacourse.shopping.ui.pagination.ShoppingCartPaginationStateHolder
+import woowacourse.shopping.ui.pagination.ShoppingCartPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,12 +26,12 @@ class ShoppingCartActivity : ComponentActivity() {
         setContent {
             var shoppingCartItems by remember { mutableStateOf(shoppingCartRepository.getShoppingItems()) }
             AndroidShoppingTheme {
-                val shoppingCartPaginationStateHolder =
+                val shoppingCartPageStateHolder =
                     remember(shoppingCartItems) {
-                        ShoppingCartPaginationStateHolder(shoppingCartItems)
+                        ShoppingCartPageStateHolder(shoppingCartItems)
                     }
                 ShoppingCartScreen(
-                    shoppingCartItems = shoppingCartPaginationStateHolder.getItems(),
+                    shoppingCartItems = shoppingCartPageStateHolder.getItems(),
                     onBackClick = this::finish,
                     onRemoveShoppingItemClick = { shoppingCartItem ->
                         shoppingCartRepository.remove(shoppingCartItem)
@@ -39,11 +39,11 @@ class ShoppingCartActivity : ComponentActivity() {
                     },
                 ) {
                     PageNavigation(
-                        currentPage = shoppingCartPaginationStateHolder.currentPage,
-                        canMoveToPreviousPage = shoppingCartPaginationStateHolder.canMoveToPreviousPage(),
-                        canMoveToNextPage = shoppingCartPaginationStateHolder.canMoveToNextPage(),
-                        onBeforePageClick = shoppingCartPaginationStateHolder::beforePage,
-                        onNextPageClick = shoppingCartPaginationStateHolder::nextPage,
+                        currentPage = shoppingCartPageStateHolder.currentPage,
+                        canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),
+                        canMoveToNextPage = shoppingCartPageStateHolder.canMoveToNextPage(),
+                        onBeforePageClick = shoppingCartPageStateHolder::beforePage,
+                        onNextPageClick = shoppingCartPageStateHolder::nextPage,
                     )
                 }
             }

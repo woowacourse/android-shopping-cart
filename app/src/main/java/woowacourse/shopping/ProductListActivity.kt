@@ -11,7 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
 import woowacourse.shopping.ui.ProductListScreen
 import woowacourse.shopping.ui.component.MoreButton
-import woowacourse.shopping.ui.pagination.ProductDataLoadStateHolder
+import woowacourse.shopping.ui.pagination.ProductPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +25,7 @@ class ProductListActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 val productPaginationStateHolder =
                     remember {
-                        ProductDataLoadStateHolder(productRepository.getProducts())
+                        ProductPageStateHolder(productRepository.getProducts())
                     }
                 ProductListScreen(
                     products = productPaginationStateHolder.getItems(),
