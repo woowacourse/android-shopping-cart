@@ -22,6 +22,8 @@ class CartStateHolder(
         getCartItems()
     }
 
+    fun getTotalCartSize(): Int = cartRepository.getCart().items.size
+
     fun getCartItems() {
         val items = cartRepository.getCart().items.map { it.toUiModel() }
         val fromIndex = page * pageSize

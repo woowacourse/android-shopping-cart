@@ -62,12 +62,14 @@ fun CartScreen(
             )
         },
         bottomBar = {
-            CartPageSection(
-                page = state.page + 1,
-                onNext = { state.nextPage() },
-                onPrevious = { state.previousPage() },
-                isCanMoveNext = state.isCanMoveNext,
-            )
+            if (state.getTotalCartSize() > 5) {
+                CartPageSection(
+                    page = state.page + 1,
+                    onNext = { state.nextPage() },
+                    onPrevious = { state.previousPage() },
+                    isCanMoveNext = state.isCanMoveNext,
+                )
+            }
         },
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
