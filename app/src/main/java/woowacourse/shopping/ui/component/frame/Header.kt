@@ -24,13 +24,14 @@ fun Header(
     headerContent: @Composable () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .height(56.dp)
-            .fillMaxWidth()
-            .background(
-                color = Color(0xFF555555),
-            )
-            .padding(26.dp, 16.dp)
+        modifier =
+            modifier
+                .height(56.dp)
+                .fillMaxWidth()
+                .background(
+                    color = Color(0xFF555555),
+                )
+                .padding(26.dp, 16.dp),
     ) {
         headerContent()
     }
@@ -43,7 +44,7 @@ private fun HeaderPreview() {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text("Shopping")
             Icon(

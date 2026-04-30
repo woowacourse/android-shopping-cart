@@ -26,6 +26,10 @@ class CartTest {
         val newProduct = Product(imageUri = "image", name = "twohander", price = 10000)
         val newCart = cart.removeProduct(newProduct.uuid)
 
-        assertTrue(newCart.cartProducts.products.contains(newProduct).not())
+        assertTrue(
+            newCart.cartProducts.products
+                .contains(newProduct)
+                .not(),
+        )
     }
 }

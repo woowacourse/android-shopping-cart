@@ -40,11 +40,12 @@ class MainActivity : ComponentActivity() {
             }
 
         var currentIndex = 0
-        var currentProducts = mutableStateOf(
-            runBlocking {
-                getCurrentProducts(currentIndex, MAX_PRODUCT)
-            }
-        )
+        var currentProducts =
+            mutableStateOf(
+                runBlocking {
+                    getCurrentProducts(currentIndex, MAX_PRODUCT)
+                },
+            )
 
         setContent {
             AndroidshoppingTheme {
@@ -61,7 +62,12 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value.value += runBlocking { getCurrentProducts(currentIndex, MAX_PRODUCT) }.value
+                            currentProducts.value.value += runBlocking {
+                                getCurrentProducts(
+                                    currentIndex,
+                                    MAX_PRODUCT
+                                )
+                            }.value
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
@@ -70,8 +76,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    suspend fun getCurrentProducts(currentIndex: Int, size: Int) =
-        mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
+    suspend fun getCurrentProducts(
+        currentIndex: Int,
+        size: Int,
+    ) = mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
 
     companion object {
         const val MAX_PRODUCT = 20

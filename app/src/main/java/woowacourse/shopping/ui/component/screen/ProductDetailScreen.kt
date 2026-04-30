@@ -35,33 +35,35 @@ fun ProductDetailScreen(
     onAddRequest: () -> Unit,
     onClose: () -> Unit,
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
         bodyContent = { ProductDetailBody(onAddRequest, product) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
 private fun ProductDetailHeader(
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_close),
             contentDescription = "닫기 버튼",
-            modifier = Modifier
-                .size(16.dp)
-                .clickable(onClick = onClose),
-            tint = Color.White
+            modifier =
+                Modifier
+                    .size(16.dp)
+                    .clickable(onClick = onClose),
+            tint = Color.White,
         )
     }
 }
@@ -73,24 +75,26 @@ private fun ProductDetailBody(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ProductDetailInfo(product)
 
         TextButton(
             onClick = onAddRequest,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color = Color(0xFF04C09E))
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .background(color = Color(0xFF04C09E)),
         ) {
             Text(
                 text = "장바구니 담기",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = Color.White
+                color = Color.White,
             )
         }
     }
@@ -99,45 +103,46 @@ private fun ProductDetailBody(
 @Composable
 private fun ProductDetailInfo(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         val configuration = LocalConfiguration.current
         val maxWidth = configuration.screenWidthDp.dp
         ProductImage(
             imageUri = product.imageUri,
-            modifier = Modifier
-                .size(maxWidth)
+            modifier =
+                Modifier
+                    .size(maxWidth),
         )
 
         Text(
             text = product.name,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
-            modifier = Modifier.padding(18.dp)
+            modifier = Modifier.padding(18.dp),
         )
         HorizontalDivider()
         Row(
-            modifier = Modifier
-                .padding(18.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(18.dp)
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "가격",
-                fontSize = 20.sp
+                fontSize = 20.sp,
             )
             Text(
                 text = product.price.toPriceString(),
-                fontSize = 20.sp
+                fontSize = 20.sp,
             )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -145,10 +150,11 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         onAddRequest = {},
         onClose = {},
-        product = Product(
-            imageUri = "emptyUri",
-            name = "우유",
-            price = 100
-        )
+        product =
+            Product(
+                imageUri = "emptyUri",
+                name = "우유",
+                price = 100,
+            ),
     )
 }

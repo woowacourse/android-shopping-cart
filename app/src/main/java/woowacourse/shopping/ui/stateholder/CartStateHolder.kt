@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.stateholder
 
-import android.app.Activity.RESULT_OK
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,10 +9,12 @@ import java.util.UUID
 class CartStateHolder(
     ids: List<String>,
 ) {
-    var items by mutableStateOf(ids.map { it ->
-        val id = UUID.fromString(it.trim())
-        MockCatalog.findProductById(id)
-    })
+    var items by mutableStateOf(
+        ids.map { it ->
+            val id = UUID.fromString(it.trim())
+            MockCatalog.findProductById(id)
+        },
+    )
 
     var currentPage by mutableStateOf(0)
 

@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
@@ -37,7 +36,6 @@ import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
-import woowacourse.shopping.ui.stateholder.CartStateHolder
 import java.util.UUID
 import kotlin.math.min
 
@@ -55,47 +53,50 @@ fun CartScreen(
 ) {
     CommonFrame(
         headerContent = { CartHeader(onClose) },
-        bodyContent = { CartBody(
-            cart = cart,
-            onDelete = onDelete,
-            currentPage = currentPage,
-            onPrevious = onPrevious,
-            previousEnable = previousEnable,
-            nextEnable = nextEnable,
-            onNext = onNext,
-        ) },
-        modifier = modifier
+        bodyContent = {
+            CartBody(
+                cart = cart,
+                onDelete = onDelete,
+                currentPage = currentPage,
+                onPrevious = onPrevious,
+                previousEnable = previousEnable,
+                nextEnable = nextEnable,
+                onNext = onNext,
+            )
+        },
+        modifier = modifier,
     )
 }
 
 @Composable
 private fun CartHeader(
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_arrow_left),
             contentDescription = "뒤로가기 버튼",
-            modifier = Modifier
-                .size(40.dp)
-                .clickable(onClick = onClose),
-            tint = Color.White
+            modifier =
+                Modifier
+                    .size(40.dp)
+                    .clickable(onClick = onClose),
+            tint = Color.White,
         )
         Spacer(Modifier.padding(12.dp))
         Text(
             text = "Cart",
             fontWeight = FontWeight(500),
             fontSize = 20.sp,
-            color = Color.White
+            color = Color.White,
         )
     }
 }
-
 
 @Composable
 private fun CartBody(
@@ -109,11 +110,12 @@ private fun CartBody(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(
-                state = rememberScrollState(),
-            ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .verticalScroll(
+                    state = rememberScrollState(),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val products = cart.cartProducts
@@ -121,7 +123,7 @@ private fun CartBody(
             CartItem(
                 product = it,
                 onDelete = onDelete,
-                modifier = Modifier.padding(top = 24.dp)
+                modifier = Modifier.padding(top = 24.dp),
             )
         }
         if (cart.isPageable()) {
@@ -143,43 +145,46 @@ fun PagingBtn(
     onNext: () -> Unit,
     previousEnable: Boolean,
     nextEnable: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .padding(vertical = 30.dp)
-            .width(129.dp)
-            .height(42.dp)
-            .clip(
-                RoundedCornerShape(4.dp)
-            ),
+        modifier =
+            modifier
+                .padding(vertical = 30.dp)
+                .width(129.dp)
+                .height(42.dp)
+                .clip(
+                    RoundedCornerShape(4.dp),
+                ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "<",
             fontSize = 22.sp,
             fontWeight = FontWeight(500),
             color = Color.White,
-            modifier = Modifier
-                .background(color = btnAvailable(previousEnable))
-                .fillMaxHeight()
-                .width(42.dp)
-                .clickable(
-                    onClick = onPrevious,
-                    enabled = previousEnable
-                )
-                .wrapContentSize(Alignment.Center)
+            modifier =
+                Modifier
+                    .background(color = btnAvailable(previousEnable))
+                    .fillMaxHeight()
+                    .width(42.dp)
+                    .clickable(
+                        onClick = onPrevious,
+                        enabled = previousEnable,
+                    )
+                    .wrapContentSize(Alignment.Center),
         )
         Text(
             text = (currentPage + 1).toString(),
             fontSize = 22.sp,
             fontWeight = FontWeight(500),
             color = Color(0xFF555555),
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(42.dp)
-                .wrapContentSize(Alignment.Center)
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(42.dp)
+                    .wrapContentSize(Alignment.Center),
         )
         Text(
             text = ">",
@@ -187,31 +192,33 @@ fun PagingBtn(
             fontWeight = FontWeight(500),
             color = Color.White,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(42.dp)
-                .clickable(
-                    onClick = onNext,
-                    enabled = nextEnable
-                )
-                .background(color = btnAvailable(nextEnable))
-                .wrapContentHeight(Alignment.CenterVertically)
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(42.dp)
+                    .clickable(
+                        onClick = onNext,
+                        enabled = nextEnable,
+                    )
+                    .background(color = btnAvailable(nextEnable))
+                    .wrapContentHeight(Alignment.CenterVertically),
         )
     }
 }
 
-private fun btnAvailable(btnFlag: Boolean): Color = if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
+private fun btnAvailable(btnFlag: Boolean): Color =
+    if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
-private fun Cart.isPageable(): Boolean {
-    return cartProducts.size() > 5
-}
+private fun Cart.isPageable(): Boolean = cartProducts.size() > 5
 
-private fun CartProducts.getPartedItem(page: Int, pageSize: Int = 5): List<Product> {
+private fun CartProducts.getPartedItem(
+    page: Int,
+    pageSize: Int = 5,
+): List<Product> {
     val fromIndex = page * pageSize
     val toIndex = min(fromIndex + pageSize, products.size)
     return products.subList(fromIndex, toIndex)
 }
-
 
 @Preview
 @Composable
@@ -224,43 +231,43 @@ private fun CartScreenPreview() {
         onNext = {},
         previousEnable = false,
         nextEnable = false,
-        cart = Cart(
-            cartProducts = CartProducts(
-                listOf(
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
+        cart =
+            Cart(
+                cartProducts =
+                    CartProducts(
+                        listOf(
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                            Product(
+                                imageUri = "uri",
+                                name = "무엘사",
+                                price = 10000000,
+                            ),
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
-                    ),
-
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
-                    ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
-                    ),
-
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
-                    ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000
-                    ),
-                )
-            )
-        )
+            ),
     )
 }

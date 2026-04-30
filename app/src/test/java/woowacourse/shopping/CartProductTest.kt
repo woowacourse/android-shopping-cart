@@ -10,11 +10,12 @@ class CartProductTest {
     @Test
     fun `상품을 추가하면 해당 상품이 포함된다`() {
         val cartProducts1 = CartProducts()
-        val newProduct = Product(
-            imageUri = "image",
-            name = "twohander",
-            price = 10000
-        )
+        val newProduct =
+            Product(
+                imageUri = "image",
+                name = "twohander",
+                price = 10000,
+            )
         val cartProducts2 = cartProducts1.add(newProduct)
 
         assertTrue(cartProducts2.products.contains(newProduct))
@@ -22,11 +23,12 @@ class CartProductTest {
 
     @Test
     fun `상품을 제거하면 해당 상품이 포함되지 않는다`() {
-        val newProduct = Product(
-            imageUri = "image",
-            name = "twohander",
-            price = 10000
-        )
+        val newProduct =
+            Product(
+                imageUri = "image",
+                name = "twohander",
+                price = 10000,
+            )
         val cartProducts1 = CartProducts(products = listOf(newProduct))
         val targetId = newProduct.uuid
         val cartProducts2 = cartProducts1.remove(targetId)
@@ -36,10 +38,12 @@ class CartProductTest {
 
     @Test
     fun `상품을 id로 검색 한다`() {
-        val newProduct = Product(
-            imageUri = "image",
-            name = "twohander",
-            price = 10000)
+        val newProduct =
+            Product(
+                imageUri = "image",
+                name = "twohander",
+                price = 10000,
+            )
         val cartProducts1 = CartProducts(products = listOf(newProduct))
         val targetId = newProduct.uuid
 
@@ -50,15 +54,18 @@ class CartProductTest {
 
     @Test
     fun `id 검색에 실패했다면 null을 반환한다`() {
-        val newProduct = Product(
-            imageUri = "image",
-            name = "twohander",
-            price = 10000)
-        val newProduct2 = Product(
-            imageUri = "image",
-            name = "samuel",
-            price = 50
-        )
+        val newProduct =
+            Product(
+                imageUri = "image",
+                name = "twohander",
+                price = 10000,
+            )
+        val newProduct2 =
+            Product(
+                imageUri = "image",
+                name = "samuel",
+                price = 50,
+            )
         val cartProducts1 = CartProducts(products = listOf(newProduct))
         val targetId = newProduct2.uuid
 

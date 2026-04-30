@@ -2,7 +2,9 @@ package woowacourse.shopping.domain
 
 import java.util.UUID
 
-class Cart(val cartProducts: CartProducts) {
+class Cart(
+    val cartProducts: CartProducts,
+) {
     fun addProduct(product: Product): Cart {
         val product = cartProducts.add(product)
         return Cart(product)

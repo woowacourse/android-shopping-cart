@@ -12,11 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 fun Body(
     modifier: Modifier = Modifier,
     bodyContent: @Composable () -> Unit,
-){
+) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
     ) {
         bodyContent()
     }
@@ -25,7 +26,7 @@ fun Body(
 @Preview
 @Composable
 private fun BodyPreview() {
-    Body() {
+    Body {
         Text("Body")
     }
 }

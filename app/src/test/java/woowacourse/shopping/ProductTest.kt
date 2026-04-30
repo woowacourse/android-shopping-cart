@@ -18,19 +18,23 @@ class ProductTest {
 
     @Test
     fun `이름은 빈 값이 될 수 없다`() {
-        assertThrows<IllegalArgumentException> { Product(
-            imageUri = "testUri",
-            name = "",
-            price = 10000,
-        ) }
+        assertThrows<IllegalArgumentException> {
+            Product(
+                imageUri = "testUri",
+                name = "",
+                price = 10000,
+            )
+        }
     }
 
     @Test
     fun `가격은 0 초과이어야 한다`() {
-        assertThrows<IllegalArgumentException> { Product(
-            imageUri = "testUri",
-            name = "name",
-            price = 0,
-        ) }
+        assertThrows<IllegalArgumentException> {
+            Product(
+                imageUri = "testUri",
+                name = "name",
+                price = 0,
+            )
+        }
     }
 }

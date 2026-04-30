@@ -41,8 +41,9 @@ fun CatalogScreen(
         headerContent = { CatalogHeader(onCartClick) },
         bodyContent = {
             CatalogBody(
-                catalog, onItemClick,
-                onLoadClick = onLoadClick
+                catalog,
+                onItemClick,
+                onLoadClick = onLoadClick,
             )
         },
         modifier = modifier,
@@ -57,22 +58,24 @@ private fun CatalogHeader(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
     ) {
         Text(
             text = "Shopping",
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            color = Color.White,
         )
         Icon(
             painter = painterResource(R.drawable.ic_cart),
             contentDescription = "장바구니 아이콘",
             tint = Color.White,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onCartClick)
+            modifier =
+                Modifier
+                    .size(24.dp)
+                    .clickable(onClick = onCartClick),
         )
     }
 }
@@ -92,12 +95,12 @@ private fun CatalogBody(
         items(catalog.size) { item ->
             ShoppingItem(
                 product = catalog[item],
-                onClick = onItemClick
+                onClick = onItemClick,
             )
         }
 
         item(
-            span = { GridItemSpan(maxLineSpan) }
+            span = { GridItemSpan(maxLineSpan) },
         ) {
             LoadBtn(onLoadClick)
         }
@@ -113,41 +116,42 @@ private fun LoadBtn(
         painter = painterResource(R.drawable.ic_add),
         contentDescription = "더보기 버튼",
         tint = Color.White,
-        modifier = modifier
-            .padding(25.dp)
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(color = Color.LightGray)
-            .clickable(onClick = onLoad),
+        modifier =
+            modifier
+                .padding(25.dp)
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(color = Color.LightGray)
+                .clickable(onClick = onLoad),
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CatalogScreenPreview() {
-    val catalog = listOf(
-        Product(
-            imageUri = "hello",
-            name = "너무너무너무긴아이템이름",
-            price = 100000
-        ),
-        Product(
-            imageUri = "디디",
-            name = "당근주스",
-            price = 1000
-        ),
-        Product(
-            imageUri = "hello",
-            name = "우유",
-            price = 100
-        ),
-        Product(
-            imageUri = "hello",
-            name = "투핸더",
-            price = 100000000
+    val catalog =
+        listOf(
+            Product(
+                imageUri = "hello",
+                name = "너무너무너무긴아이템이름",
+                price = 100000,
+            ),
+            Product(
+                imageUri = "디디",
+                name = "당근주스",
+                price = 1000,
+            ),
+            Product(
+                imageUri = "hello",
+                name = "우유",
+                price = 100,
+            ),
+            Product(
+                imageUri = "hello",
+                name = "투핸더",
+                price = 100000000,
+            ),
         )
-
-    )
 
     CatalogScreen(catalog, {}, {}, {})
 }

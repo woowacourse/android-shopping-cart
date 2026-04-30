@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,42 +29,46 @@ import java.util.UUID
 @Composable
 fun CartItem(
     product: Product,
-    onDelete : (UUID) -> Unit,
-    modifier: Modifier = Modifier
+    onDelete: (UUID) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
-        modifier = modifier
-            .width(324.dp)
-            .height(152.dp)
+        modifier =
+            modifier
+                .width(324.dp)
+                .height(152.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(18.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .padding(18.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 ProductName(product.name)
                 CloseBtn(
                     product = product,
-                    onClick = onDelete
+                    onClick = onDelete,
                 )
             }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
             ) {
                 ProductImage(
                     product.imageUri,
-                    modifier = Modifier.size(width = 136.dp, height = 72.dp)
+                    modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
                 ProductPrice(product.price)
             }
@@ -76,13 +79,13 @@ fun CartItem(
 @Composable
 private fun ProductName(
     name: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text = name,
         fontWeight = FontWeight(700),
         fontSize = 18.sp,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -90,29 +93,30 @@ private fun ProductName(
 private fun CloseBtn(
     product: Product,
     onClick: (UUID) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Icon(
         painter = painterResource(R.drawable.ic_close),
         contentDescription = "삭제 버튼",
-        modifier = modifier
-            .size(16.dp)
-            .clickable(
-                onClick = { onClick(product.uuid) }
-            )
+        modifier =
+            modifier
+                .size(16.dp)
+                .clickable(
+                    onClick = { onClick(product.uuid) },
+                ),
     )
 }
 
 @Composable
 private fun ProductPrice(
     price: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text = price.toPriceString(),
         fontSize = 16.sp,
         color = Color(0xFF555555),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -121,10 +125,10 @@ private fun ProductPrice(
 private fun CartItemPreview() {
     CartItem(
         Product(
-        imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
-        name = "매우매우긴상품명입니다",
-        price = 1000000000,
+            imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
+            name = "매우매우긴상품명입니다",
+            price = 1000000000,
         ),
-        {}
+        {},
     )
 }

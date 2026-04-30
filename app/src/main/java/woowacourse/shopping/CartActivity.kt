@@ -8,24 +8,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
-import java.util.UUID
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val ids = intent.getStringExtra("id")
-            ?.split(",")
-            ?.filter { it.isNotBlank() } ?: emptyList()
+        val ids =
+            intent
+                .getStringExtra("id")
+                ?.split(",")
+                ?.filter { it.isNotBlank() } ?: emptyList()
 
         val cartStateHolder = CartStateHolder(ids)
 
@@ -44,14 +42,15 @@ class CartActivity : ComponentActivity() {
                         val product = MockCatalog.findProductById(it)
                         cartStateHolder.items = cartStateHolder.items.minus(product)
                     },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(it),
                     currentPage = cartStateHolder.currentPage,
                     onPrevious = { cartStateHolder.onPrevious() },
                     onNext = { cartStateHolder.onNext() },
                     previousEnable = cartStateHolder.checkPreviousAvailable(),
-                    nextEnable = cartStateHolder.checkNextAvailable()
+                    nextEnable = cartStateHolder.checkNextAvailable(),
                 )
             }
         }

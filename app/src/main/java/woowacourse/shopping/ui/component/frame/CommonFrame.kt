@@ -35,7 +35,7 @@ private fun CommonFramePreview() {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text("Shopping")
                 Icon(
@@ -47,6 +47,6 @@ private fun CommonFramePreview() {
         bodyContent = {
             Text("Body")
         },
-        modifier = Modifier
+        modifier = Modifier,
     )
 }

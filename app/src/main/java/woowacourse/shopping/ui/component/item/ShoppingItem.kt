@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 
@@ -28,15 +27,16 @@ fun ShoppingItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .width(154.dp)
-            .height(206.dp)
-            .clickable(
-                onClick = {
-                    onClick(product.uuid)
-                },
-            ),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .width(154.dp)
+                .height(206.dp)
+                .clickable(
+                    onClick = {
+                        onClick(product.uuid)
+                    },
+                ),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ProductImage(product.imageUri, Modifier.size(154.dp))
         ProductInfo(product.name, product.price)
@@ -50,9 +50,10 @@ private fun ProductInfo(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .padding(horizontal = 9.dp)
-            .width(154.dp),
+        modifier =
+            modifier
+                .padding(horizontal = 9.dp)
+                .width(154.dp),
     ) {
         Text(
             text = name,
