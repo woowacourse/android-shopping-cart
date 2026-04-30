@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.screens.product
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,7 +72,6 @@ fun ProductScreen(
                             .fillMaxWidth()
                             .clickable {
                                 productStateHolder.getProducts()
-                                Log.d("ProductScreen", "${products.joinToString(",")}}")
                             },
                     ) {
                         Icon(
