@@ -1,17 +1,13 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,8 +15,7 @@ import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.component.CartHeader
-import woowacourse.shopping.ui.cart.component.CartItemGroup
-import woowacourse.shopping.ui.cart.component.CartPaging
+import woowacourse.shopping.ui.cart.component.CartItemBody
 
 private const val PAGE_SIZE = 5
 
@@ -35,14 +30,11 @@ fun CartScreen(
     val totalPages = (cartItemsSize - 1) / PAGE_SIZE + 1
 
     var currentPage by remember { mutableIntStateOf(1) }
-    val pagedItems = cart.items.toList()
-        .drop((currentPage - 1) * PAGE_SIZE)
-        .take(PAGE_SIZE)
-        .toMap()
-
-
-    LaunchedEffect(totalPages) {
-        currentPage = currentPage.coerceAtMost(totalPages)
+    val pagedItems = remember(cart, currentPage) {
+        cart.items.toList()
+            .drop((currentPage - 1) * PAGE_SIZE)
+            .take(PAGE_SIZE)
+            .toMap()
     }
 
     Column(
@@ -50,25 +42,18 @@ fun CartScreen(
     ) {
         CartHeader(onBackClick = onBackClick)
 
-        CartItemGroup(
+        CartItemBody(
             cart = Cart(pagedItems),
+            hasNext = cartItemsSize >= PAGE_SIZE,
+            currentPage = currentPage,
+            totalPages = totalPages,
             modifier = Modifier
                 .padding(top = 8.dp, start = 18.dp, end = 18.dp)
                 .weight(1f),
-            onDeleteClick = onDeleteClick
+            onDeleteClick = onDeleteClick,
+            onPreviousClick = { currentPage = (currentPage - 1).coerceAtLeast(1) },
+            onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) }
         )
-
-        if (cartItemsSize >= PAGE_SIZE) {
-            Spacer(modifier = Modifier.height(60.dp))
-
-            CartPaging(
-                currentPage = currentPage,
-                totalPages = totalPages,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onPreviousClick = { currentPage -= 1 },
-                onNextClick = { currentPage += 1 }
-            )
-        }
     }
 }
 
