@@ -1,12 +1,16 @@
 package woowacourse.shopping.ui.component.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,11 +34,17 @@ fun CatalogScreen(
     catalog: List<Product>,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onLoadClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { CatalogHeader(onCartClick) },
-        bodyContent = { CatalogBody(catalog, onItemClick) },
+        bodyContent = {
+            CatalogBody(
+                catalog, onItemClick,
+                onLoadClick = onLoadClick
+            )
+        },
         modifier = modifier,
     )
 }
@@ -42,7 +52,7 @@ fun CatalogScreen(
 @Composable
 private fun CatalogHeader(
     onCartClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -71,6 +81,7 @@ private fun CatalogHeader(
 private fun CatalogBody(
     catalog: List<Product>,
     onItemClick: (UUID) -> Unit,
+    onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -84,7 +95,31 @@ private fun CatalogBody(
                 onClick = onItemClick
             )
         }
+
+        item(
+            span = { GridItemSpan(maxLineSpan) }
+        ) {
+            LoadBtn(onLoadClick)
+        }
     }
+}
+
+@Composable
+private fun LoadBtn(
+    onLoad: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Icon(
+        painter = painterResource(R.drawable.ic_add),
+        contentDescription = "더보기 버튼",
+        tint = Color.White,
+        modifier = modifier
+            .padding(25.dp)
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(color = Color.LightGray)
+            .clickable(onClick = onLoad),
+    )
 }
 
 @Preview(showBackground = true)
@@ -114,5 +149,5 @@ private fun CatalogScreenPreview() {
 
     )
 
-    CatalogScreen(catalog, {}, {})
+    CatalogScreen(catalog, {}, {}, {})
 }
