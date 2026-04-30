@@ -30,7 +30,7 @@ fun ShoppingScreen(
 
         ShoppingBody(
             products = products,
-            showMoreButton = hasNext, // 위로 호이스팅
+            showMoreButton = hasNext,
             modifier = Modifier
                 .padding(20.dp)
                 .weight(1f),
