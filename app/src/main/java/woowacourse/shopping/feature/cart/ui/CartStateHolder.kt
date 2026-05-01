@@ -27,7 +27,7 @@ class CartStateHolder(
     fun getCartItems() {
         val items = cartRepository.getCart().items.map { it.toUiModel() }
         val maxPage = if (items.isEmpty()) 0 else (items.size - 1) / pageSize
-        if (page > maxPage) page = maxPage
+        page = page.coerceIn(0, maxPage)
 
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, items.size)
@@ -36,11 +36,13 @@ class CartStateHolder(
     }
 
     fun nextPage() {
+        if (!isCanMoveNext) return
         page++
         getCartItems()
     }
 
     fun previousPage() {
+        if (page == 0) return
         page--
         getCartItems()
     }
