@@ -36,6 +36,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.util.formattedPrice
 import woowacourse.shopping.feature.cart.model.AddItemResult
+import woowacourse.shopping.feature.detail.ui.DetailStateHolder
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
 

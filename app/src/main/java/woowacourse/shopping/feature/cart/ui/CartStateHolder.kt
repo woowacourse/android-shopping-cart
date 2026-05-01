@@ -35,6 +35,11 @@ class CartStateHolder(
         isCanMoveNext = toIndex < items.size
     }
 
+    fun deleteItem(productId: String) {
+        cartRepository.deleteItem(productId)
+        getCartItems()
+    }
+
     fun nextPage() {
         if (!isCanMoveNext) return
         page++

@@ -30,13 +30,11 @@ import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.uimodel.CartItemUiModel
 import woowacourse.shopping.core.uimodel.ProductUiModel
-import woowacourse.shopping.feature.cart.bridge.CartBridge
 
 @Composable
 fun CartScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
     val state = remember { CartStateHolder() }
-    val cartBridge = remember { CartBridge() }
 
     Scaffold(
         topBar = {
@@ -77,10 +75,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         CartContent(
-            onDeleteItem = {
-                cartBridge.removeFromCart(it)
-                state.getCartItems()
-            },
+            onDeleteItem = { state.deleteItem(it) },
             cartItems = state.currentCartItems.toImmutableList(),
             modifier =
                 Modifier

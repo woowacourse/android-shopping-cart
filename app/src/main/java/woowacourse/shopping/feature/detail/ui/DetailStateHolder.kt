@@ -5,14 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import woowacourse.shopping.core.repository.CartRepository
+import woowacourse.shopping.core.repository.InMemoryProductRepository
+import woowacourse.shopping.core.repository.ProductRepository
 import woowacourse.shopping.core.uimodel.ProductUiModel
+import woowacourse.shopping.core.uimodel.toUiModel
 import woowacourse.shopping.feature.cart.model.AddItemResult
-import woowacourse.shopping.feature.detail.bridge.DetailBridge
 
 class DetailStateHolder(
     private val scope: CoroutineScope,
     private val id: String,
-    private val detailBridge: DetailBridge = DetailBridge(),
+    private val productRepository: ProductRepository = InMemoryProductRepository(),
+    private val cartRepository: CartRepository = CartRepository,
 ) {
     var product by mutableStateOf(
         ProductUiModel(
@@ -29,13 +33,15 @@ class DetailStateHolder(
 
     fun loadProduct() {
         scope.launch {
-            product = detailBridge.getProduct(id)
+            product = productRepository.getProductById(id).toUiModel()
         }
     }
 
     fun addToCart(onResult: (AddItemResult) -> Unit) {
         scope.launch {
-            onResult(detailBridge.addToCart(id))
+            val product = productRepository.getProductById(id)
+            val result = cartRepository.addItem(product)
+            onResult(result)
         }
     }
 }
