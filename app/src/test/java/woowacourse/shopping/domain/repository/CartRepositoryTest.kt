@@ -8,7 +8,6 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductName
 
 class CartRepositoryTest {
-
     @Test
     fun `등록되지 않은 상품을 등록하면 NewAdded를 반환한다`() {
         val uniqueProduct =
@@ -24,11 +23,12 @@ class CartRepositoryTest {
 
     @Test
     fun `이미 등록된 상품을 다시 등록하면 DuplicateItem을 반환한다`() {
-        val product = Product(
-            name = ProductName("상품2"),
-            price = Money(2000),
-            imageUrl = "ds",
-        )
+        val product =
+            Product(
+                name = ProductName("상품2"),
+                price = Money(2000),
+                imageUrl = "ds",
+            )
         CartRepository.addItem(product = product)
         assertThat(
             CartRepository.addItem(product = product),
