@@ -77,7 +77,7 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
         ShoppingContents(
             products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
-            onLoad = { scope.launch { state.loadMore() } },
+            onLoad = { state.loadMore() },
             isCanLoadMore = state.canLoadMore,
         )
     }
