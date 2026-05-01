@@ -1,4 +1,4 @@
-package woowacourse.shopping.activity
+package woowacourse.shopping.ui.shopping
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -14,7 +14,6 @@ import org.junit.Test
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.shopping.ProductListActivity
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivityTest {
