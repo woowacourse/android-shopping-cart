@@ -11,10 +11,10 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.CartActivity
-import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.ProductListActivity
+import woowacourse.shopping.ui.cart.activity.CartActivity
+import woowacourse.shopping.ui.productdetail.activity.ProductDetailActivity
+import woowacourse.shopping.ui.shopping.activity.ProductListActivity
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivityTest {

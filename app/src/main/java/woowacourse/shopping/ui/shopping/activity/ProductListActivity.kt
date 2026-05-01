@@ -1,11 +1,14 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.shopping.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.ui.cart.activity.CartActivity
+import woowacourse.shopping.ui.productdetail.activity.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.theme.androidshoppingTheme
 
