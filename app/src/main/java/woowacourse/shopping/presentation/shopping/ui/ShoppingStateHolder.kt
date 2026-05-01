@@ -15,24 +15,29 @@ import woowacourse.shopping.presentation.common.model.toUiModel
 class ShoppingStateHolder(
     private val scope: CoroutineScope,
     private val productRepository: ProductRepository = InMemoryProductRepository(),
+    private val getCurrentProducts: () -> List<ProductUiModel>,
+    private val onProductsChanged: (List<ProductUiModel>) -> Unit,
 ) {
-    var currentProducts by mutableStateOf(emptyList<ProductUiModel>())
     var canLoadMore by mutableStateOf(true)
     var isLoading by mutableStateOf(false)
     private var offset = 0
     private val pageSize = 20
 
     init {
-        loadMore()
+        offset = getCurrentProducts().size
+        if (offset == 0) {
+            loadMore()
+        }
     }
 
     fun loadMore() {
         if (isLoading || !canLoadMore) return
         isLoading = true
         scope.launch {
-            try{
+            try {
                 val loadData = getProductData(offset, pageSize)
-                currentProducts = currentProducts.plus(loadData)
+                val currentProducts = getCurrentProducts().plus(loadData)
+                onProductsChanged(currentProducts)
                 offset += loadData.size
                 canLoadMore = loadData.size == pageSize
             } catch (e: Exception) {
