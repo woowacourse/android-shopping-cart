@@ -17,14 +17,12 @@ class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel = ProductListViewModel(ProductRepositoryMockImpl())
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductListScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel =
-                        ProductListViewModel(
-                            productRepository = ProductRepositoryMockImpl(),
-                        ),
+                    viewModel = viewModel,
                     onCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
                         startActivity(cartIntent)

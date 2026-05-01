@@ -16,16 +16,14 @@ class   CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel = CartViewModel(MemoryCartRepository)
         setContent {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
             ) { innerPadding ->
                 CartScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel =
-                        CartViewModel(
-                            MemoryCartRepository,
-                        ),
+                    viewModel = viewModel
                 )
             }
         }
