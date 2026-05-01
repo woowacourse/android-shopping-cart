@@ -3,6 +3,7 @@ package woowacourse.shopping.cart
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
@@ -12,19 +13,25 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartTest {
+    @Test
+    fun `장바구니 아이템이 장바구니 안에 존재한다면 true를 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        assertTrue(cart.searchCartItem(cartItem1))
+    }
+
+    @Test
+    fun `장바구니 아이템이 장바구니 안에 존재하지 않는다면 false 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        assertFalse(cart.searchCartItem(cartItem4))
+    }
 
     @Test
     fun `장바구니에 상품을 추가했을 때 장바구니에 추가된다`() {
         val cart = Cart(cartItems = cartItemsValue)
-        val targetCartItem =
-            CartItem(
-                product =
-                    Product(
-                        name = ProductName("우아한스무디"),
-                        price = Price(1000),
-                        imageUrl = ImageUrl("https://daum.net"),
-                    ),
-            )
+        val targetCartItem = cartItem4
+
 
         val addedCart = cart.addCartItem(targetCartItem)
 
@@ -39,6 +46,30 @@ class CartTest {
         val removedCartItems = cart.removeCartItem(targetCartItem)
 
         assertFalse(removedCartItems.searchCartItem(targetCartItem))
+    }
+
+    @Test
+    fun `장바구니에서 첫 번째 페이지이고, 한 페이지에 3개의 아이템이 보인다면 첫번째부터 세번째까지 아이템을 리스트로 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+        val page = 0
+        val pageSize = 5
+
+        val result = cart.getPage(page, pageSize)
+
+        assertTrue(result.contains(cartItem1))
+        assertTrue(result.contains(cartItem2))
+        assertTrue(result.contains(cartItem3))
+    }
+
+    @Test
+    fun `0보다 작은 값이 페이지 값으로 들어갈 경우 예외가 발생한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+        val page = -1
+        val pageSize = 5
+
+        assertThrows<IllegalArgumentException> {
+            cart.getPage(page, pageSize)
+        }
     }
 
     private val cartItem1 =
@@ -68,6 +99,16 @@ class CartTest {
                     name = ProductName("우아한우유"),
                     price = Price(2000),
                     imageUrl = ImageUrl("https://google.com"),
+                ),
+        )
+
+    private val cartItem4 =
+        CartItem(
+            product =
+                Product(
+                    name = ProductName("우아한스무디"),
+                    price = Price(1000),
+                    imageUrl = ImageUrl("https://daum.net"),
                 ),
         )
 

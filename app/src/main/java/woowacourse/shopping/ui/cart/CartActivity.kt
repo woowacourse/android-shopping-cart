@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.repository.cart.MemoryCartRepository
+import woowacourse.shopping.repository.cart.CartRepositoryMockImpl
 
 class   CartActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val viewModel = CartViewModel(MemoryCartRepository)
+        val viewModel = CartViewModel(CartRepositoryMockImpl)
         setContent {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

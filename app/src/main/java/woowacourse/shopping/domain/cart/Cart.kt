@@ -15,7 +15,12 @@ data class Cart(
         page: Int,
         pageSize: Int,
     ): List<CartItem> {
+        require(isPage(page)) { "페이지는 0보다 커야 합니다." }
         val fromIndex = page * pageSize
         return cartItems.subList(fromIndex, fromIndex + pageSize)
+    }
+
+    companion object {
+        fun isPage(page: Int): Boolean = page >= 0
     }
 }
