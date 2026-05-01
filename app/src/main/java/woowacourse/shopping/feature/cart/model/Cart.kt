@@ -6,6 +6,8 @@ import woowacourse.shopping.core.model.Product
 data class Cart(
     val items: List<CartItem> = emptyList(),
 ) {
+    val size = items.size
+
     fun addItem(product: Product): AddItemResult {
         val existItem = items.firstOrNull { it.product == product }
         return if (existItem == null) {

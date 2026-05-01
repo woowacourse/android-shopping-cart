@@ -9,6 +9,8 @@ object CartRepository {
 
     fun getCart(): Cart = cart
 
+    fun getTotalCartSize(): Int = cart.size
+
     fun addItem(product: Product): AddItemResult {
         val addItemResult = cart.addItem(product)
         if (addItemResult is AddItemResult.NewAdded) cart = addItemResult.cart

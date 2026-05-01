@@ -22,7 +22,7 @@ class CartStateHolder(
         getCartItems()
     }
 
-    fun getTotalCartSize(): Int = cartRepository.getCart().items.size
+    fun getTotalCartSize(): Int = cartRepository.getTotalCartSize()
 
     fun getCartItems() {
         val items = cartRepository.getCart().items.map { it.toUiModel() }
