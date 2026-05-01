@@ -12,4 +12,12 @@ class ImageUrlTest {
             ImageUrl(emptyImageUrl)
         }
     }
+
+    @Test
+    fun `이미지 링크가 공백이면 예외가 발생한다`() {
+        val emptyImageUrl = " "
+        assertThrows(IllegalArgumentException::class.java) {
+            ImageUrl(emptyImageUrl)
+        }
+    }
 }
