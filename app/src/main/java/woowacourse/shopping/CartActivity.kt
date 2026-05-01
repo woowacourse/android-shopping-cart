@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
@@ -34,7 +34,7 @@ class CartActivity : ComponentActivity() {
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) {
                 CartScreen(
-                    cart = Cart(CartProducts(cartStateHolder.items)),
+                    cart = Cart(Products(cartStateHolder.items)),
                     onClose = {
                         saveAndCloseActivity(cartStateHolder.items)
                     },

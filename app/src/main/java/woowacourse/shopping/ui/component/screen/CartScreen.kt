@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
@@ -118,7 +118,7 @@ private fun CartBody(
                 ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val products = cart.cartProducts
+        val products = cart.products
         products.getPartedItem(currentPage).forEach {
             CartItem(
                 product = it,
@@ -209,15 +209,15 @@ fun PagingBtn(
 private fun btnAvailable(btnFlag: Boolean): Color =
     if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
-private fun Cart.isPageable(): Boolean = cartProducts.size() > 5
+private fun Cart.isPageable(): Boolean = products.size() > 5
 
-private fun CartProducts.getPartedItem(
+private fun Products.getPartedItem(
     page: Int,
     pageSize: Int = 5,
 ): List<Product> {
     val fromIndex = page * pageSize
-    val toIndex = min(fromIndex + pageSize, products.size)
-    return products.subList(fromIndex, toIndex)
+    val toIndex = min(fromIndex + pageSize, this@getPartedItem.products.size)
+    return this@getPartedItem.products.subList(fromIndex, toIndex)
 }
 
 @Preview
@@ -233,8 +233,8 @@ private fun CartScreenPreview() {
         nextEnable = false,
         cart =
             Cart(
-                cartProducts =
-                    CartProducts(
+                products =
+                    Products(
                         listOf(
                             Product(
                                 imageUri = "uri",
