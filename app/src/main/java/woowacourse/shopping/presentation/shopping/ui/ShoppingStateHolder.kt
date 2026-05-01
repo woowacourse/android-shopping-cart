@@ -28,13 +28,18 @@ class ShoppingStateHolder(
 
     fun loadMore() {
         if (isLoading || !canLoadMore) return
+        isLoading = true
         scope.launch {
-            isLoading = true
-            val loadData = getProductData(offset, pageSize)
-            currentProducts = currentProducts.plus(loadData)
-            offset += loadData.size
-            canLoadMore = loadData.size == pageSize
-            isLoading = false
+            try{
+                val loadData = getProductData(offset, pageSize)
+                currentProducts = currentProducts.plus(loadData)
+                offset += loadData.size
+                canLoadMore = loadData.size == pageSize
+            } catch (e: Exception) {
+                throw e
+            } finally {
+                isLoading = false
+            }
         }
     }
 
