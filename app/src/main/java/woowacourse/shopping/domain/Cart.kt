@@ -1,17 +1,20 @@
 package woowacourse.shopping.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 class Cart(
-    val cartProducts: CartProducts,
-) {
+    val products: Products,
+): Parcelable {
     fun addProduct(product: Product): Cart {
-        val product = cartProducts.add(product)
+        val product = products.add(product)
         return Cart(product)
     }
 
     fun removeProduct(id: UUID): Cart {
-        val product = cartProducts.remove(id)
+        val product = products.remove(id)
         return Cart(product)
     }
 }
