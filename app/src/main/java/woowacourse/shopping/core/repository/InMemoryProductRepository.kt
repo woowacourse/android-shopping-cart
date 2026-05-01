@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.core.data.ProductData
 import woowacourse.shopping.core.model.Product
 
-class MockRepository(
+class InMemoryProductRepository(
     private val source: List<Product> = ProductData.products,
 ) : ProductRepository {
     override suspend fun getProductById(id: String): Product = source.first { it.id == id }

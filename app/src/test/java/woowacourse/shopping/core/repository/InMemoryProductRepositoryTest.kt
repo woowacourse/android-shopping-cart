@@ -5,10 +5,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.core.data.ProductData
 
-class MockRepositoryTest {
+class InMemoryProductRepositoryTest {
     private val products = ProductData.products
     private val size = products.size
-    private val repository = MockRepository(source = products)
+    private val repository = InMemoryProductRepository(source = products)
 
     @Test
     fun `offset과 limit의 범위에 따라 리스트를 반환한다`() =
