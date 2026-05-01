@@ -69,7 +69,7 @@ fun ProductListScreen(
                     .padding(20.dp),
             onProductClick = { product -> onProductClick(product) },
             onMoreClick = { viewModel.moreProducts() },
-            currentProductCount = productListState.currentProductCount,
+            totalProductCount = productListState.totalProductCount,
         )
     }
 }
@@ -116,7 +116,7 @@ private fun ProductCardGrid(
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
     onMoreClick: () -> Unit = {},
-    currentProductCount: Int = 0,
+    totalProductCount: Int = 0,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -124,7 +124,7 @@ private fun ProductCardGrid(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(
-            items = products.take(currentProductCount),
+            items = products,
             key = { item -> item.id },
         ) { item ->
             ProductCard(
@@ -137,7 +137,7 @@ private fun ProductCardGrid(
                 },
             )
         }
-        if (currentProductCount < products.size) {
+        if (totalProductCount > products.size) {
             item(
                 span = { GridItemSpan(2) },
             ) {

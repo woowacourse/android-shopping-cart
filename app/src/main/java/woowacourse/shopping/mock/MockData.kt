@@ -19,6 +19,7 @@ object MockData {
 
     val products = listOf(
         Product(
+            id = "test",
             name = ProductName("기본 크롱"),
             imageUrl = ImageUrl("https://i.namu.wiki/i/3iOo9zl8aVfBf7z2yHFJEFBsSwcIP4t_-9z7mUZJk6GcKWJph9YTXPs24TOchHaJruPQ5sP33k7_tL72vW2CJg.webp"),
             price = Price(5000)
