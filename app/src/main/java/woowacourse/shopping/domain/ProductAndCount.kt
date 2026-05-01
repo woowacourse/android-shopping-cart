@@ -10,7 +10,12 @@ data class ProductAndCount(
 ) {
     fun increaseQuantity(): ProductAndCount = copy(count = count + 1)
 
-    fun decreaseQuantity(): ProductAndCount = copy(count = count - 1)
+    fun decreaseQuantity(): ProductAndCount =
+        if (count == 0) {
+            this
+        } else {
+            copy(count = count - 1)
+        }
 
     val productId: Uuid
         get() = product.productId

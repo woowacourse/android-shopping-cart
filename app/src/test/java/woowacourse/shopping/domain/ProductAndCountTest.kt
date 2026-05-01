@@ -32,4 +32,13 @@ class ProductAndCountTest {
 
         assertThat(newProductAndCount.count()).isEqualTo(0)
     }
+
+    @Test
+    fun `상품의 수량은 0보다 작아질 수 없다`() {
+        val productAndCount = ProductAndCount(product, 0)
+
+        val newProductAndCount = productAndCount.decreaseQuantity()
+
+        assertThat(newProductAndCount.count()).isEqualTo(0)
+    }
 }
