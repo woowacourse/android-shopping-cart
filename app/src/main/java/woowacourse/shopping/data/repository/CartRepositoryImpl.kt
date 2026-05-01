@@ -29,11 +29,10 @@ class CartRepositoryImpl(
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {
-        require(page > 0) { "페이지가 올바르지 않습니다." }
+        require(page in 1..totalPage) { "페이지가 올바르지 않습니다." }
 
         val startIndex = (page - 1) * PAGE_SIZE
         val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
-
 
         return cartItems.subList(startIndex, endIndex)
     }
