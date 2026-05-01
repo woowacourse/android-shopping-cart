@@ -1,7 +1,6 @@
 package woowacourse.shopping.feature.cart.model
 
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.core.model.Money
@@ -20,7 +19,7 @@ class CartTest {
 
     @BeforeEach
     fun setUp() {
-        cart = Cart().addItem(product)
+        cart = (Cart().addItem(product) as AddItemResult.NewAdded).cart
     }
 
     @Test
@@ -31,8 +30,9 @@ class CartTest {
                 price = Money(10000),
                 imageUrl = "ds",
             )
+        val result = cart.addItem(product2)
         assertThat(cart.items.size).isEqualTo(1)
-        val newCart = cart.addItem(product2)
+        val newCart = (result as AddItemResult.NewAdded).cart
         assertThat(newCart.items.size).isEqualTo(2)
     }
 
@@ -49,9 +49,8 @@ class CartTest {
     }
 
     @Test
-    fun `이미 등록된 상품을 추가하면 예외가 발생한다`() {
-        assertThatThrownBy {
-            cart.addItem(product)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+    fun `이미 등록된 상품을 추가하면 DuplicateItem을 발생한다`() {
+        val result = cart.addItem(product)
+        assertThat(result).isEqualTo(AddItemResult.DuplicateItem)
     }
 }
