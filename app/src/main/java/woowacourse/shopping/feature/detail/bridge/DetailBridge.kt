@@ -5,6 +5,7 @@ import woowacourse.shopping.core.repository.MockRepository
 import woowacourse.shopping.core.repository.ProductRepository
 import woowacourse.shopping.core.uimodel.ProductUiModel
 import woowacourse.shopping.core.uimodel.toUiModel
+import woowacourse.shopping.feature.cart.model.AddItemResult
 
 class DetailBridge(
     private val productRepository: ProductRepository = MockRepository(),
@@ -12,7 +13,7 @@ class DetailBridge(
 ) {
     suspend fun getProduct(id: String): ProductUiModel = productRepository.getProductById(id).toUiModel()
 
-    suspend fun addToCart(productId: String): Boolean {
+    suspend fun addToCart(productId: String): AddItemResult {
         val product = productRepository.getProductById(productId)
         return cartRepository.addItem(product)
     }

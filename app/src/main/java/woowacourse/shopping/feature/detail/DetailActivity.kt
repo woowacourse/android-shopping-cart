@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.cart.model.AddItemResult
 import woowacourse.shopping.feature.detail.ui.DetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
@@ -24,12 +25,15 @@ class DetailActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 DetailScreen(
                     id = id,
-                    onNavigateToCart = {
-                        val intent = Intent(this, CartActivity::class.java)
-                        startActivity(intent)
-                    },
-                    onFailure = {
-                        Toast.makeText(this, "이미 장바구니에 담긴 상품입니다.", Toast.LENGTH_SHORT).show()
+                    onNavigateToCart = { result ->
+                        when (result) {
+                            is AddItemResult.NewAdded -> {
+                                val intent = Intent(this, CartActivity::class.java)
+                                startActivity(intent)
+                            }
+                            is AddItemResult.DuplicateItem ->
+                                Toast.makeText(this, "이미 장바구니에 담긴 상품입니다.", Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier,
                 )

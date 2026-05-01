@@ -35,14 +35,14 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.core.component.ShoppingAppBar
 import woowacourse.shopping.core.util.formattedPrice
+import woowacourse.shopping.feature.cart.model.AddItemResult
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
 
 @Composable
 fun DetailScreen(
     id: String,
-    onNavigateToCart: () -> Unit,
-    onFailure: () -> Unit,
+    onNavigateToCart: (AddItemResult) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -85,11 +85,7 @@ fun DetailScreen(
                         .background(Green40)
                         .clickable {
                             state.addToCart { onResult ->
-                                if (onResult) {
-                                    onNavigateToCart()
-                                } else {
-                                    onFailure()
-                                }
+                                onNavigateToCart(onResult)
                             }
                         },
                 contentAlignment = Alignment.Center,
@@ -172,7 +168,6 @@ private fun DetailScreenPreview() {
     DetailScreen(
         id = "1",
         onNavigateToCart = {},
-        onFailure = {},
     )
 }
 

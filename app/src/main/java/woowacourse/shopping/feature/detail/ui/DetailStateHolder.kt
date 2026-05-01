@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.core.uimodel.ProductUiModel
+import woowacourse.shopping.feature.cart.model.AddItemResult
 import woowacourse.shopping.feature.detail.bridge.DetailBridge
 
 class DetailStateHolder(
@@ -32,7 +33,7 @@ class DetailStateHolder(
         }
     }
 
-    fun addToCart(onResult: (Boolean) -> Unit) {
+    fun addToCart(onResult: (AddItemResult) -> Unit) {
         scope.launch {
             onResult(detailBridge.addToCart(id))
         }
