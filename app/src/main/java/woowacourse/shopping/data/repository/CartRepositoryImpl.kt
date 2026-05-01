@@ -24,8 +24,8 @@ class CartRepositoryImpl(
         cartDataSource.add(CartItem(product, amount))
     }
 
-    override fun deleteItem(id: String) {
-        cartDataSource.deleteItem(id)
+    override fun deleteItem(productId: String) {
+        cartDataSource.deleteItem(productId)
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {

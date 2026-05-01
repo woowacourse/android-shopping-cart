@@ -9,7 +9,7 @@ interface CartRepository {
         amount: Int,
     )
 
-    fun deleteItem(id: String)
+    fun deleteItem(productId: String)
 
     suspend fun getCartItemByPage(page: Int): List<CartItem>
 

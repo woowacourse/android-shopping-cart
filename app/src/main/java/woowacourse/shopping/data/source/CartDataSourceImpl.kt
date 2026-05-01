@@ -17,7 +17,7 @@ object CartDataSourceImpl : CartDataSource {
         _items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
     }
 
-    override fun deleteItem(id: String) {
-        _items.removeIf { it.product.id == id }
+    override fun deleteItem(productId: String) {
+        _items.removeIf { it.product.id == productId }
     }
 }

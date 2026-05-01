@@ -25,8 +25,8 @@ class CartStateHolder(
         isLast = cartRepository.isLastPage(curPage)
     }
 
-    suspend fun deleteCartItem(id: String) {
-        cartRepository.deleteItem(id)
+    suspend fun deleteCartItem(productId: String) {
+        cartRepository.deleteItem(productId = productId)
         updateCartItems()
     }
 
