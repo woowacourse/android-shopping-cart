@@ -117,7 +117,7 @@ fun DetailScreen(
 private fun DetailContent(
     imageUrl: String,
     productName: String,
-    price: Int,
+    price: Long,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -176,7 +176,7 @@ private fun DetailScreenPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun DetailContentPreview() {
     DetailContent(

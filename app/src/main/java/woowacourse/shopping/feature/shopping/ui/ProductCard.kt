@@ -22,7 +22,7 @@ fun ProductCard(
     onClick: () -> Unit,
     imageUrl: String,
     productName: String,
-    price: Int,
+    price: Long,
     modifier: Modifier = Modifier,
 ) {
     Column(

@@ -34,4 +34,14 @@ class CartItemTest {
             )
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
+
+    @Test
+    fun `상품 개수가 100개 이상 일 시 예외를 반환한다`() {
+        assertThatThrownBy {
+            CartItem(
+                product = product,
+                quantity = 100,
+            )
+        }.isInstanceOf(IllegalArgumentException::class.java)
+    }
 }

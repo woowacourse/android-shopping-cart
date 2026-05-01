@@ -32,7 +32,7 @@ fun CartCard(
     onDeleteItem: () -> Unit,
     productName: String,
     imageUrl: String,
-    price: Int,
+    price: Long,
     modifier: Modifier = Modifier,
 ) {
     Column(
