@@ -17,7 +17,7 @@ class CartActivity : ComponentActivity() {
         @OptIn(ExperimentalUuidApi::class)
         setContent {
             androidshoppingTheme {
-                CartScreen()
+                CartScreen(onBack = { finish() })
             }
         }
     }

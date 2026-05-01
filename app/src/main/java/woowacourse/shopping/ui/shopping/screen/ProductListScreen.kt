@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping.screen
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,10 +18,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.productdetail.component.ActionButton
@@ -33,19 +30,17 @@ import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 @Composable
 fun ProductListScreen(
     products: Products,
+    onCartIconClick: () -> Unit,
+    onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
     val visibleProducts = products.getProducts(page = currentPageIndex)
 
     Scaffold(
         topBar = {
             ProductListTopAppBar(
-                onClick = {
-                    val intent = Intent(context, CartActivity::class.java)
-                    context.startActivity(intent)
-                },
+                onClick = onCartIconClick,
             )
         },
         containerColor = Color.White,
@@ -58,7 +53,10 @@ fun ProductListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(visibleProducts) { product ->
-                    ProductItem(product)
+                    ProductItem(
+                        product = product,
+                        onClick = onItemClick,
+                    )
                 }
                 if (products.hasNextPage(currentPage = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -81,5 +79,7 @@ fun ProductListScreen(
 private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(ProductFixture.productList),
+        onCartIconClick = {},
+        onItemClick = {},
     )
 }

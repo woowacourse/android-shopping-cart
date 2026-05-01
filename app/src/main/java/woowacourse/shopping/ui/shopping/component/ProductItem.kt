@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping.component
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,14 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
@@ -33,24 +30,16 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ProductItem(
     product: Product,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-
     Card(
         colors =
             CardDefaults.cardColors(
                 containerColor = Color.White,
             ),
         shape = RectangleShape,
-        modifier =
-            modifier.clickable {
-                val intent =
-                    Intent(context, ProductDetailActivity::class.java).apply {
-                        putExtra("woowacourse.shopping.product_id", product.productId.toString())
-                    }
-                context.startActivity(intent)
-            },
+        modifier = modifier.clickable { onClick(product.productId.toString()) },
     ) {
         Column {
             AsyncImage(
@@ -92,6 +81,7 @@ private fun ProductItemPreview() {
                 productName = "PET보틀-정사각형(370ml)",
                 price = Price(10000),
             ),
+        onClick = {},
         modifier = Modifier.fillMaxWidth(),
     )
 }

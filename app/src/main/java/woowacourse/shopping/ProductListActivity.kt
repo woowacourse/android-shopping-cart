@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +17,17 @@ class ProductListActivity : ComponentActivity() {
             androidshoppingTheme {
                 ProductListScreen(
                     products = Products(ProductFixture.productList),
+                    onCartIconClick = {
+                        val intent = Intent(this, CartActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onItemClick = { productId ->
+                        val intent =
+                            Intent(this, ProductDetailActivity::class.java).apply {
+                                putExtra("woowacourse.shopping.product_id", productId)
+                            }
+                        startActivity(intent)
+                    },
                 )
             }
         }
