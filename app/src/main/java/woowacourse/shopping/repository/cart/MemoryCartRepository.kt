@@ -9,8 +9,6 @@ object MemoryCartRepository : CartRepository {
 
     override suspend fun getCart(): Cart = cart
 
-    override suspend fun getCarItems(): CartItems = cart.cartItems
-
     override suspend fun addCartItem(cartItem: CartItem) {
         cart = cart.addCartItem(cartItem)
     }

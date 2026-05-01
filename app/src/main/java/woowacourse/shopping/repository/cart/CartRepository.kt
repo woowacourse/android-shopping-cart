@@ -7,8 +7,6 @@ import woowacourse.shopping.domain.cart.CartItems
 interface CartRepository {
     suspend fun getCart(): Cart
 
-    suspend fun getCarItems(): CartItems
-
     suspend fun addCartItem(cartItem: CartItem)
 
     suspend fun removeCartItem(cartItem: CartItem)

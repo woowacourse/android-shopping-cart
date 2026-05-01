@@ -12,6 +12,35 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartTest {
+
+    @Test
+    fun `장바구니에 상품을 추가했을 때 장바구니에 추가된다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+        val targetCartItem =
+            CartItem(
+                product =
+                    Product(
+                        name = ProductName("우아한스무디"),
+                        price = Price(1000),
+                        imageUrl = ImageUrl("https://daum.net"),
+                    ),
+            )
+
+        val addedCart = cart.addCartItem(targetCartItem)
+
+        assertTrue(addedCart.searchCartItem(targetCartItem))
+    }
+
+    @Test
+    fun `장바구니에 상품 존재하는 상품을 삭제했을 때 장바구니에서 삭제된다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+        val targetCartItem = cartItem3
+
+        val removedCartItems = cart.removeCartItem(targetCartItem)
+
+        assertFalse(removedCartItems.searchCartItem(targetCartItem))
+    }
+
     private val cartItem1 =
         CartItem(
             product =
@@ -51,32 +80,4 @@ class CartTest {
                     cartItem3,
                 ),
         )
-
-    @Test
-    fun `장바구니에 상품을 추가했을 때 장바구니에 추가된다`() {
-        val cart = Cart(cartItems = cartItemsValue)
-        val targetCartItem =
-            CartItem(
-                product =
-                    Product(
-                        name = ProductName("우아한스무디"),
-                        price = Price(1000),
-                        imageUrl = ImageUrl("https://daum.net"),
-                    ),
-            )
-
-        val addedCart = cart.addCartItem(targetCartItem)
-
-        assertTrue(addedCart.cartItems.searchCartItem(targetCartItem))
-    }
-
-    @Test
-    fun `장바구니에 상품 존재하는 상품을 삭제했을 때 장바구니에서 삭제된다`() {
-        val cart = Cart(cartItems = cartItemsValue)
-        val targetCartItem = cartItem3
-
-        val removedCartItems = cart.removeCartItem(targetCartItem)
-
-        assertFalse(removedCartItems.cartItems.searchCartItem(targetCartItem))
-    }
 }
