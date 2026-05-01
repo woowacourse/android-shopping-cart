@@ -16,7 +16,7 @@ class CartTest {
         )
 
     @Test
-    fun `잗바구니에 상품을 추가할 수 있다`() {
+    fun `장바구니에 상품을 추가할 수 있다`() {
         val cart = Cart()
 
         val newCart = cart.addProductToCart(product)
