@@ -4,13 +4,13 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-data class ProductAndCount(
+data class CartItem(
     val product: Product,
     private val count: Int,
 ) {
-    fun increaseQuantity(): ProductAndCount = copy(count = count + 1)
+    fun increaseQuantity(): CartItem = copy(count = count + 1)
 
-    fun decreaseQuantity(): ProductAndCount =
+    fun decreaseQuantity(): CartItem =
         if (count == 0) {
             this
         } else {

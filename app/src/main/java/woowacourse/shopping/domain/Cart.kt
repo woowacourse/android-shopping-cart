@@ -9,25 +9,25 @@ val CART_PAGE_SIZE = 5
 
 @OptIn(ExperimentalUuidApi::class)
 data class Cart(
-    val productAndCounts: List<ProductAndCount> = emptyList(),
+    val cartItems: List<CartItem> = emptyList(),
 ) {
     fun addProductToCart(product: Product): Cart {
-        val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
+        val index = cartItems.indexOfFirst { product.productId == it.product.productId }
         if (index != -1) {
-            val existProductAndCount = productAndCounts[index]
+            val existProductAndCount = cartItems[index]
             val newProductAndCount = existProductAndCount.increaseQuantity()
-            val updated = productAndCounts.toMutableList()
+            val updated = cartItems.toMutableList()
             updated[index] = newProductAndCount
-            return copy(productAndCounts = updated)
+            return copy(cartItems = updated)
         } else {
-            return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
+            return copy(cartItems = cartItems + CartItem(product, 1))
         }
     }
 
     fun deleteProductFromCart(productId: Uuid): Cart =
         copy(
-            productAndCounts =
-                productAndCounts.filterNot {
+            cartItems =
+                cartItems.filterNot {
                     it.productId == productId
                 },
         )
@@ -35,9 +35,9 @@ data class Cart(
     fun getProductAndCounts(
         page: Int,
         pageSize: Int = CART_PAGE_SIZE,
-    ): List<ProductAndCount> {
+    ): List<CartItem> {
         val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + CART_PAGE_SIZE, productAndCounts.size)
-        return productAndCounts.subList(fromIndex, toIndex)
+        val toIndex = min(fromIndex + CART_PAGE_SIZE, cartItems.size)
+        return cartItems.subList(fromIndex, toIndex)
     }
 }

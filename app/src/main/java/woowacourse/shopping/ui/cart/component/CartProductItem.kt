@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductAndCount
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
@@ -38,8 +38,8 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun CartItem(
-    productAndCount: ProductAndCount,
+fun CartProductItem(
+    cartItem: CartItem,
     onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,7 +68,7 @@ fun CartItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = productAndCount.productName,
+                    text = cartItem.productName,
                     fontWeight = FontWeight.W700,
                     fontSize = 18.sp,
                     color = topAppBarColor,
@@ -80,7 +80,7 @@ fun CartItem(
                         Modifier
                             .size(16.dp)
                             .clickable {
-                                onDelete(productAndCount.productId)
+                                onDelete(cartItem.productId)
                             },
                     colorFilter = ColorFilter.tint(topAppBarColor),
                 )
@@ -92,14 +92,14 @@ fun CartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 AsyncImage(
-                    model = productAndCount.product.imageUrl,
-                    contentDescription = productAndCount.product.productName,
+                    model = cartItem.product.imageUrl,
+                    contentDescription = cartItem.product.productName,
                     modifier = Modifier.size(136.dp, 72.dp),
                 )
                 Box {
                     Text(
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        text = "${intFormatter(productAndCount.product.price.value)}원",
+                        text = "${intFormatter(cartItem.product.price.value)}원",
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,
                         color = topAppBarColor,
@@ -113,10 +113,10 @@ fun CartItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun cartItemPreview() {
-    CartItem(
-        productAndCount =
-            ProductAndCount(
+private fun cartProductItemPreview() {
+    CartProductItem(
+        cartItem =
+            CartItem(
                 Product(
                     imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                     productName = "[든든] 동원 스위트콘",

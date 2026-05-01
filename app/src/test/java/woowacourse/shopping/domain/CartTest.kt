@@ -21,7 +21,7 @@ class CartTest {
 
         val newCart = cart.addProductToCart(product)
 
-        assertThat(newCart.productAndCounts.size).isEqualTo(1)
+        assertThat(newCart.cartItems.size).isEqualTo(1)
     }
 
     @Test
@@ -30,6 +30,6 @@ class CartTest {
 
         val newCart = cart.addProductToCart(product)
 
-        assertThat(newCart.productAndCounts[0].product).isEqualTo(product)
+        assertThat(newCart.cartItems[0].product).isEqualTo(product)
     }
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.cart.component.CartItem
+import woowacourse.shopping.ui.cart.component.CartProductItem
 import woowacourse.shopping.ui.cart.component.CartTopAppBar
 import woowacourse.shopping.ui.cart.component.Pagination
 import kotlin.uuid.ExperimentalUuidApi
@@ -46,8 +46,8 @@ fun CartScreen(
                     modifier = Modifier.weight(1f),
                 ) {
                     items(CartRepository.getProductAndCounts(currentPageIndex)) { productAndCount ->
-                        CartItem(
-                            productAndCount = productAndCount,
+                        CartProductItem(
+                            cartItem = productAndCount,
                             onDelete = { id ->
                                 CartRepository.deleteProduct(productId = id)
 
