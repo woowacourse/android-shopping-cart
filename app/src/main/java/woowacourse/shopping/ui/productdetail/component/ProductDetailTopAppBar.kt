@@ -18,7 +18,7 @@ import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun productDetailTopAppBar(onClose: () -> Unit) {
+fun ProductDetailTopAppBar(onClose: () -> Unit) {
     TopAppBar(
         title = {},
         actions = {
@@ -42,6 +42,6 @@ fun productDetailTopAppBar(onClose: () -> Unit) {
 
 @Preview
 @Composable
-private fun productDetailTopAppBarPreview() {
-    productDetailTopAppBar(onClose = {})
+private fun ProductDetailTopAppBarPreview() {
+    ProductDetailTopAppBar(onClose = {})
 }

@@ -20,14 +20,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.productdetail.component.mintButton
-import woowacourse.shopping.ui.productdetail.component.productDetail
-import woowacourse.shopping.ui.productdetail.component.productDetailTopAppBar
+import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.productdetail.component.ProductDetail
+import woowacourse.shopping.ui.productdetail.component.ProductDetailTopAppBar
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun productDetailScreen(
+fun ProductDetailScreen(
     product: Product?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -36,7 +36,7 @@ fun productDetailScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { productDetailTopAppBar(onClose) },
+        topBar = { ProductDetailTopAppBar(onClose) },
         containerColor = Color.White,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
@@ -46,8 +46,8 @@ fun productDetailScreen(
                 .padding(innerPadding),
         ) {
             if (product != null) {
-                productDetail(product)
-                mintButton(
+                ProductDetail(product)
+                MintButton(
                     onClick = {
                         CartRepository.addProduct(product)
                         scope.launch {
@@ -68,8 +68,8 @@ fun productDetailScreen(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun productDetailScreenPreview() {
-    productDetailScreen(
+private fun ProductDetailScreenPreview() {
+    ProductDetailScreen(
         product =
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",

@@ -19,14 +19,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.cart.component.cartItem
-import woowacourse.shopping.ui.cart.component.cartTopAppBar
-import woowacourse.shopping.ui.cart.component.pagination
+import woowacourse.shopping.ui.cart.component.CartItem
+import woowacourse.shopping.ui.cart.component.CartTopAppBar
+import woowacourse.shopping.ui.cart.component.Pagination
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun cartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current as? Activity
     var cartProducts = CartRepository.getCartProducts()
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
@@ -34,7 +34,7 @@ fun cartScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         topBar = {
-            cartTopAppBar(
+            CartTopAppBar(
                 onClick = { context?.finish() },
             )
         },
@@ -46,7 +46,7 @@ fun cartScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.weight(1f),
                 ) {
                     items(CartRepository.getProductAndCounts(currentPageIndex)) { productAndCount ->
-                        cartItem(
+                        CartItem(
                             productAndCount = productAndCount,
                             onDelete = { id ->
                                 CartRepository.deleteProduct(productId = id)
@@ -62,7 +62,7 @@ fun cartScreen(modifier: Modifier = Modifier) {
                     }
                 }
                 if (cartProducts.size > 5) {
-                    pagination(
+                    Pagination(
                         pageMoveToLeft = { if (currentPageIndex > 0) currentPageIndex-- },
                         pageMoveToLeftButtonEnabled = currentPageIndex > 0,
                         currentPageIndex = currentPageIndex,
@@ -78,6 +78,6 @@ fun cartScreen(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun cartScreenPreview() {
-    cartScreen()
+private fun CartScreenPreview() {
+    CartScreen()
 }

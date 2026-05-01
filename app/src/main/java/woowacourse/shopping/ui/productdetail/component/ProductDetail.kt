@@ -17,12 +17,11 @@ import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.ui.productdetail.component.productPrice
 import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun productDetail(
+fun ProductDetail(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
@@ -44,7 +43,7 @@ fun productDetail(
         }
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
-        productPrice(
+        ProductPrice(
             price = product.price.value,
         )
     }
@@ -53,8 +52,8 @@ fun productDetail(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun productDetailPreview() {
-    productDetail(
+private fun ProductDetailPreview() {
+    ProductDetail(
         product =
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",

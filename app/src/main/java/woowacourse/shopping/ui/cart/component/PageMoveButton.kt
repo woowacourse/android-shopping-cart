@@ -11,7 +11,7 @@ import woowacourse.shopping.ui.theme.cartPageButtonColor
 import woowacourse.shopping.ui.theme.topAppBarColor
 
 @Composable
-fun pageMoveButton(
+fun PageMoveButton(
     onClick: () -> Unit,
     shape: RoundedCornerShape,
     enabled: Boolean,
@@ -35,8 +35,8 @@ fun pageMoveButton(
 
 @Preview
 @Composable
-private fun pageMoveButtonPreview() {
-    pageMoveButton(
+private fun PageMoveButtonPreview() {
+    PageMoveButton(
         onClick = {},
         shape =
             RoundedCornerShape(

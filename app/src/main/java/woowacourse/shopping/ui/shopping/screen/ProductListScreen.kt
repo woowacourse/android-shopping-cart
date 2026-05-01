@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.productdetail.component.mintButton
-import woowacourse.shopping.ui.shopping.component.productItem
-import woowacourse.shopping.ui.shopping.component.productListTopAppBar
+import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.shopping.component.ProductItem
+import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun productListScreen(
+fun ProductListScreen(
     products: Products,
     modifier: Modifier = Modifier,
 ) {
@@ -41,7 +41,7 @@ fun productListScreen(
 
     Scaffold(
         topBar = {
-            productListTopAppBar(
+            ProductListTopAppBar(
                 onClick = {
                     val intent = Intent(context, CartActivity::class.java)
                     context.startActivity(intent)
@@ -58,11 +58,11 @@ fun productListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(visibleProducts) { product ->
-                    productItem(product)
+                    ProductItem(product)
                 }
                 if (products.hasNextPage(currentPage = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        mintButton(
+                        MintButton(
                             onClick = {
                                 currentPageIndex++
                             },
@@ -78,8 +78,8 @@ fun productListScreen(
 
 @Preview
 @Composable
-private fun productListScreenPreview() {
-    productListScreen(
+private fun ProductListScreenPreview() {
+    ProductListScreen(
         products = Products(ProductFixture.productList),
     )
 }

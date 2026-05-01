@@ -38,7 +38,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun cartItem(
+fun CartItem(
     productAndCount: ProductAndCount,
     onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
@@ -114,7 +114,7 @@ fun cartItem(
 @Preview
 @Composable
 private fun cartItemPreview() {
-    cartItem(
+    CartItem(
         productAndCount =
             ProductAndCount(
                 Product(

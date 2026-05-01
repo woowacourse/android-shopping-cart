@@ -31,7 +31,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun productItem(
+fun ProductItem(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
@@ -84,8 +84,8 @@ fun productItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun productItemPreview() {
-    productItem(
+private fun ProductItemPreview() {
+    ProductItem(
         product =
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",

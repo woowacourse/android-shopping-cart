@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.productdetail.screen.productDetailScreen
+import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -25,7 +25,7 @@ class ProductDetailActivity : ComponentActivity() {
 
         setContent {
             androidshoppingTheme {
-                productDetailScreen(
+                ProductDetailScreen(
                     product = product,
                     onClose = { finish() },
                 )
