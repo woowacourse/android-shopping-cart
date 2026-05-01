@@ -19,12 +19,9 @@ data class Products(
         return products.subList(0, toIndex)
     }
 
-    fun hasNextPage(
-        currentPage: Int,
-        pageSize: Int = SHOPPING_PAGE_SIZE,
-    ): Boolean =
+    fun hasNextPage(currentPage: Int): Boolean =
         getProducts(page = currentPage).size >= SHOPPING_PAGE_SIZE &&
-            (currentPage + 1) * pageSize < products.size
+            (currentPage + 1) * SHOPPING_PAGE_SIZE < products.size
 
     @OptIn(ExperimentalUuidApi::class)
     fun findProductById(productId: Uuid): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
