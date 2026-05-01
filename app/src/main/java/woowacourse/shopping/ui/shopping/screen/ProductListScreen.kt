@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.productdetail.component.ActionButton
 import woowacourse.shopping.ui.shopping.component.ProductItem
 import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 
@@ -62,7 +62,7 @@ fun ProductListScreen(
                 }
                 if (products.hasNextPage(currentPage = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        MintButton(
+                        ActionButton(
                             onClick = {
                                 currentPageIndex++
                             },

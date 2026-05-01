@@ -20,7 +20,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.productdetail.component.ActionButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetail
 import woowacourse.shopping.ui.productdetail.component.ProductDetailTopAppBar
 import kotlin.uuid.ExperimentalUuidApi
@@ -47,7 +47,7 @@ fun ProductDetailScreen(
         ) {
             if (product != null) {
                 ProductDetail(product)
-                MintButton(
+                ActionButton(
                     onClick = {
                         CartRepository.addProduct(product)
                         scope.launch {
