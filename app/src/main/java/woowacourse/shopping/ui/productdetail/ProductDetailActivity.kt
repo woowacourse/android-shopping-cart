@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail.activity
+package woowacourse.shopping.ui.productdetail
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -12,9 +12,9 @@ import androidx.test.espresso.intent.rule.IntentsRule
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.ui.cart.activity.CartActivity
-import woowacourse.shopping.ui.productdetail.activity.ProductDetailActivity
-import woowacourse.shopping.ui.shopping.activity.ProductListActivity
+import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.shopping.ProductListActivity
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivityTest {
