@@ -19,8 +19,8 @@ class ProductActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 ProductScreen(
-                    onIconClick = { startActivity(cartIntent) },
-                    onItemClick = { id ->
+                    onCartClick = { startActivity(cartIntent) },
+                    onProductCardClick = { id ->
                         productDetailIntent.putExtra("productId", id)
                         startActivity(productDetailIntent)
                     },

@@ -21,10 +21,9 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 
 @Composable
-fun MainTapBar(
+fun MainTopBar(
     title: String,
-    iconResources: Int,
-    onIconClick: () -> Unit,
+    onCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -43,23 +42,22 @@ fun MainTapBar(
         )
 
         Icon(
-            painter = painterResource(iconResources),
+            painter = painterResource(R.drawable.ic_cart),
             contentDescription = "$title 화면 메뉴 버튼",
             tint = Color.White,
             modifier = Modifier
                 .size(24.dp)
-                .clickable(onClick = onIconClick),
+                .clickable(onClick = onCartClick),
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MainTapBarPreview() {
-    MainTapBar(
+private fun MainTopBarPreview() {
+    MainTopBar(
         title = "안녕하세요 볼트입니다",
-        iconResources = R.drawable.ic_cart,
-        onIconClick = { },
+        onCartClick = { },
         modifier = Modifier.fillMaxWidth(),
     )
 }

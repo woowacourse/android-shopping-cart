@@ -26,13 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.component.topbar.MainTapBar
+import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
 fun ProductScreen(
     productStateHolder: ProductStateHolder = remember { ProductStateHolder() },
-    onIconClick: () -> Unit,
-    onItemClick: (String) -> Unit,
+    onCartClick: () -> Unit,
+    onProductCardClick: (String) -> Unit,
 ) {
     val products = productStateHolder.products
     val scope = rememberCoroutineScope()
@@ -43,10 +43,9 @@ fun ProductScreen(
 
     Scaffold(
         topBar = {
-            MainTapBar(
+            MainTopBar(
                 title = "Shopping",
-                iconResources = R.drawable.ic_cart,
-                onIconClick = onIconClick,
+                onCartClick = onCartClick,
                 modifier = Modifier.statusBarsPadding(),
             )
         },
@@ -68,7 +67,7 @@ fun ProductScreen(
                     imageUrl = it.imageUrl,
                     name = it.name,
                     price = it.price,
-                    onClick = { onItemClick(it.id) },
+                    onClick = { onProductCardClick(it.id) },
                     modifier = Modifier,
                 )
             }
@@ -105,7 +104,7 @@ fun ProductScreen(
 fun ProductScreenPreview() {
     ProductScreen(
         productStateHolder = ProductStateHolder(),
-        onIconClick = { },
-        onItemClick = { },
+        onCartClick = { },
+        onProductCardClick = { },
     )
 }
