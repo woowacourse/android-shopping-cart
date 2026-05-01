@@ -110,9 +110,7 @@ private fun ShoppingContents(
             ) { product ->
                 ProductCard(
                     onClick = {
-                        val intent = Intent(activity, DetailActivity::class.java)
-                        intent.putExtra("id", product.id)
-                        activity?.startActivity(intent)
+                        activity?.startActivity(DetailActivity.newIntent(activity, product.id))
                     },
                     imageUrl = product.imageUrl,
                     productName = product.name,
