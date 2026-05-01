@@ -10,7 +10,7 @@ object ProductFixture {
         listOf(
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
-                productName = "PET보틀-정사각형(370ml)",
+                productName = "PET보틀-정사각형(370ml)1",
                 price = Price(10000),
             ),
             Product(
@@ -45,7 +45,7 @@ object ProductFixture {
             ),
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
-                productName = "PET보틀-정사각형(370ml)",
+                productName = "PET보틀-정사각형(370ml)2",
                 price = Price(10000),
             ),
             Product(
@@ -80,7 +80,7 @@ object ProductFixture {
             ),
             Product(
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
-                productName = "PET보틀-정사각형(370ml)",
+                productName = "PET보틀-정사각형(370ml)3",
                 price = Price(10000),
             ),
             Product(

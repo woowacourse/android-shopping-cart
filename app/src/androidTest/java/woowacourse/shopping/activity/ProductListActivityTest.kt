@@ -1,13 +1,14 @@
 package woowacourse.shopping.activity
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsRule
 import org.junit.Rule
 import org.junit.Test
@@ -33,8 +34,13 @@ class ProductListActivityTest {
             .onNodeWithText(product.productName)
             .performClick()
 
-        intended(hasComponent(ProductDetailActivity::class.java.name))
-        intended(hasExtra("woowacourse.shopping.product_id", product.productId.toString()))
+        Intents.intended(IntentMatchers.hasComponent(ProductDetailActivity::class.java.name))
+        Intents.intended(
+            IntentMatchers.hasExtra(
+                "woowacourse.shopping.product_id",
+                product.productId.toString()
+            )
+        )
     }
 
     @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
@@ -44,7 +50,7 @@ class ProductListActivityTest {
             .onNodeWithContentDescription("shoppingCart")
             .performClick()
 
-        intended(hasComponent(CartActivity::class.java.name))
+        Intents.intended(IntentMatchers.hasComponent(CartActivity::class.java.name))
     }
 
     @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
@@ -56,7 +62,7 @@ class ProductListActivityTest {
 
         composeRule
             .onNodeWithContentDescription("leftArrowIcon")
-            .assertExists()
+            .assertIsDisplayed()
 
         composeRule
             .onNodeWithContentDescription("leftArrowIcon")
@@ -64,6 +70,6 @@ class ProductListActivityTest {
 
         composeRule
             .onNodeWithText("Shopping")
-            .assertExists()
+            .assertIsDisplayed()
     }
 }
