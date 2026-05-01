@@ -1,14 +1,11 @@
 package woowacourse.shopping
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import java.util.UUID
-import kotlin.math.min
 
 object MockCatalog {
-    val catalog =
+    val catalog = Products(
         listOf(
             Product(
                 imageUri = "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcREOx9x8uZchUa41cKYxYrqv5uj-bD4zupCW4G3ADchbwNbXaxRIZtdeG9clkH0F06NCsQnTQ690KD0G4PygBj6ZPVbvCS7KUEmMwETqd9c7xuGRnAFucVgDQhFmfK2FJ3XWHAcKw&usqp=CAc",
@@ -161,6 +158,7 @@ object MockCatalog {
                 price = 4040525,
             ),
         )
+    )
 
     val unFoundedProduct =
         Product(
@@ -172,16 +170,7 @@ object MockCatalog {
     fun loadMoreProducts(
         page: Int,
         pageSize: Int,
-    ): Deferred<List<Product>> =
-        runBlocking {
-            async {
-//            delay(2000)
-                val fromIndex =
-                    if (page * pageSize > catalog.size) catalog.size else page * pageSize
-                val toIndex = min(fromIndex + pageSize, catalog.size)
-                catalog.subList(fromIndex, toIndex)
-            }
-        }
+    ): Products = catalog.getPartedItem(page, pageSize)
 
-    fun findProductById(id: UUID): Product = catalog.find { it.uuid == id } ?: unFoundedProduct
+    fun findProductById(id: UUID): Product = catalog.findWithId(id) ?: unFoundedProduct
 }

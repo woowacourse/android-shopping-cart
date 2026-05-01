@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ShoppingItem
 import java.util.UUID
 
 @Composable
 fun CatalogScreen(
-    catalog: List<Product>,
+    catalog: Products,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
     onLoadClick: () -> Unit,
@@ -82,7 +83,7 @@ private fun CatalogHeader(
 
 @Composable
 private fun CatalogBody(
-    catalog: List<Product>,
+    catalog: Products,
     onItemClick: (UUID) -> Unit,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -92,9 +93,9 @@ private fun CatalogBody(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
     ) {
-        items(catalog.size) { item ->
+        items(catalog.size()) { item ->
             ShoppingItem(
-                product = catalog[item],
+                product = catalog.getSingleItem(item),
                 onClick = onItemClick,
             )
         }
@@ -129,7 +130,7 @@ private fun LoadBtn(
 @Preview(showBackground = true)
 @Composable
 private fun CatalogScreenPreview() {
-    val catalog =
+    val catalog = Products(
         listOf(
             Product(
                 imageUri = "hello",
@@ -152,6 +153,7 @@ private fun CatalogScreenPreview() {
                 price = 100000000,
             ),
         )
+    )
 
     CatalogScreen(catalog, {}, {}, {})
 }

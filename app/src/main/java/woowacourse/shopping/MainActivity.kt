@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
@@ -40,18 +39,13 @@ class MainActivity : ComponentActivity() {
             }
 
         var currentIndex = 0
-        var currentProducts =
-            mutableStateOf(
-                runBlocking {
-                    getCurrentProducts(currentIndex, MAX_PRODUCT)
-                },
-            )
+        var currentProducts = mutableStateOf(getCurrentProducts(currentIndex, MAX_PRODUCT))
 
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
-                        catalog = currentProducts.value.value,
+                        catalog = currentProducts.value,
                         onItemClick = { id ->
                             productDetailIntent.putExtra("id", id.toString())
                             startForProductDetailResult.launch(productDetailIntent)
@@ -62,12 +56,7 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value.value += runBlocking {
-                                getCurrentProducts(
-                                    currentIndex,
-                                    MAX_PRODUCT
-                                )
-                            }.value
+                            currentProducts.value += getCurrentProducts(currentIndex,MAX_PRODUCT)
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
@@ -76,10 +65,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    suspend fun getCurrentProducts(
+    fun getCurrentProducts(
         currentIndex: Int,
         size: Int,
-    ) = mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
+    ) = MockCatalog.loadMoreProducts(currentIndex, size)
 
     companion object {
         const val MAX_PRODUCT = 20
