@@ -11,6 +11,40 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartItemsTest {
+    @Test
+    fun `장바구니 목록에 상품을 추가했을 때 장바구니 목록에 추가된다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+        val targetCartItem = cartItem4
+
+        val addedCartItems = cartItems.addCartItem(targetCartItem)
+
+        assertTrue(addedCartItems.searchCartItem(targetCartItem))
+    }
+
+    @Test
+    fun `장바구니 목록에 상품 존재하는 상품을 삭제했을 때 장바구니 목록에서 삭제된다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+        val targetCartItem = cartItem3
+
+        val removedCartItems = cartItems.removeCartItem(targetCartItem)
+
+        assertFalse(removedCartItems.searchCartItem(targetCartItem))
+    }
+
+    @Test
+    fun `장바구니 목록 안에 target id와 동일한 상품이 있을 경우 true를 반환한다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        assertTrue(cartItems.searchCartItem(cartItem1))
+    }
+
+    @Test
+    fun `장바구니 목록 안에 target id와 동일한 상품이 없을 경우 false를 반환한다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        assertFalse(cartItems.searchCartItem(cartItem4))
+    }
+
     private val cartItem1 =
         CartItem(
             product =
@@ -57,38 +91,4 @@ class CartItemsTest {
             cartItem2,
             cartItem3,
         )
-
-    @Test
-    fun `장바구니 목록에 상품을 추가했을 때 장바구니 목록에 추가된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem4
-
-        val addedCartItems = cartItems.addCartItem(targetCartItem)
-
-        assertTrue(addedCartItems.searchCartItem(targetCartItem))
-    }
-
-    @Test
-    fun `장바구니 목록에 상품 존재하는 상품을 삭제했을 때 장바구니 목록에서 삭제된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem3
-
-        val removedCartItems = cartItems.removeCartItem(targetCartItem)
-
-        assertFalse(removedCartItems.searchCartItem(targetCartItem))
-    }
-
-    @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 있을 경우 true를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-
-        assertTrue(cartItems.searchCartItem(cartItem1))
-    }
-
-    @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 없을 경우 false를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-
-        assertFalse(cartItems.searchCartItem(cartItem4))
-    }
 }
