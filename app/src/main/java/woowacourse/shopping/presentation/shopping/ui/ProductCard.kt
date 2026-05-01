@@ -35,7 +35,7 @@ fun ProductCard(
     ) {
         AsyncImage(
             model = imageUrl,
-            contentDescription = "상품 이미지",
+            contentDescription = productName,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().aspectRatio(1f),
         )

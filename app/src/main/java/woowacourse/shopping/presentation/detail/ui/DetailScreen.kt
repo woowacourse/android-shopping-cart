@@ -122,7 +122,7 @@ private fun DetailContent(
     ) {
         AsyncImage(
             model = imageUrl,
-            contentDescription = "상품 이미지",
+            contentDescription = productName,
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier

@@ -79,7 +79,7 @@ fun CartCard(
         ) {
             AsyncImage(
                 model = imageUrl,
-                contentDescription = "상품 이미지",
+                contentDescription = productName,
                 contentScale = ContentScale.Fit,
                 modifier =
                     Modifier
