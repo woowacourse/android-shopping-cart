@@ -17,10 +17,9 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val productId = intent.getStringExtra("PRODUCT_ID")
-        val viewModel =
-            ProductDetailViewModel(
-                productId = productId!!,
+        val productId = intent.getStringExtra("PRODUCT_ID") ?: ""
+        val viewModel = ProductDetailViewModel(
+                productId = productId,
                 productRepository = ProductRepositoryMockImpl(),
                 cartRepository = MemoryCartRepository,
             )
