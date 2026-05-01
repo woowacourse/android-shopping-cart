@@ -1,22 +1,19 @@
-package woowacourse.shopping
+package woowacourse.shopping.presentation.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.presentation.shopping.ShoppingActivity
+import woowacourse.shopping.presentation.shopping.ui.ShoppingScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
-import kotlin.jvm.java
 
-class MainActivity : ComponentActivity() {
+class ShoppingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidshoppingTheme {
-                val intent = Intent(this, ShoppingActivity::class.java)
-                startActivity(intent)
+                ShoppingScreen()
             }
         }
     }
