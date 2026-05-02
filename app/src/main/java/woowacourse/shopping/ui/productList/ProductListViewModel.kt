@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
 
 class ProductListViewModel(
-    private val productRepository: ProductRepository,
+    private val productRepository: ProductRepository = ProductRepositoryMockImpl(),
 ) : ViewModel() {
     private val _productListUiState = MutableStateFlow<ProductListState>(ProductListState())
     val productListUiState: StateFlow<ProductListState> = _productListUiState

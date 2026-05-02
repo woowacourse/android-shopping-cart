@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,10 +15,12 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productDetail.ProductDetailActivity
 
 class ProductListActivity : ComponentActivity() {
+
+    private val viewModel: ProductListViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val viewModel = ProductListViewModel(ProductRepositoryMockImpl())
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductListScreen(

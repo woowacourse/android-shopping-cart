@@ -8,11 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.CartRepository
+import woowacourse.shopping.repository.cart.CartRepositoryMockImpl
 import kotlin.math.ceil
 import kotlin.math.max
 
 class CartViewModel(
-    private val cartRepository: CartRepository,
+    private val cartRepository: CartRepository = CartRepositoryMockImpl,
 ) : ViewModel() {
     private val cartUiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = cartUiState.asStateFlow()
