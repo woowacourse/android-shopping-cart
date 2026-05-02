@@ -38,7 +38,7 @@ class CartRepositoryImplTest {
             val product = ShoppingFixture.getProduct(id = "1")
 
             cartRepository.addItem(product = product, amount = 1)
-            cartRepository.deleteItem(id = "1")
+            cartRepository.deleteItem(productId = "1")
 
             cartRepository.getCartItemByPage(1).firstOrNull { it.product == product } shouldBe null
         }
