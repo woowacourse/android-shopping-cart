@@ -20,7 +20,9 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val stateHolder = rememberSaveable { CartStateHolder(getCartItems(intent)) }
+            val stateHolder = rememberSaveable(saver = CartStateHolder.Saver) {
+                CartStateHolder(getCartItems(intent))
+            }
             AndroidshoppingcartTheme {
                 CartScreen(
                     cartItems = stateHolder.cartItems,

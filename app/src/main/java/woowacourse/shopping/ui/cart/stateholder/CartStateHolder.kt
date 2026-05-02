@@ -1,15 +1,18 @@
 package woowacourse.shopping.ui.cart.stateholder
 
+import android.os.Build
+import android.os.Bundle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.ui.state.ProductUiModel
 
-class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
-    var page by mutableIntStateOf(1)
-    var cartItems by mutableStateOf(pagination(1, totalCartItems))
-
+class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) {
+    var totalCartItems: List<ProductUiModel> = initialItems
+    var page by mutableIntStateOf(initialPage)
+    var cartItems by mutableStateOf(pagination(initialPage, initialItems))
     fun isStartPage(): Boolean {
         return page == 1
     }
@@ -46,5 +49,28 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
 
     companion object {
         private const val PAGE_SIZE = 5
+        private const val KEY_PAGE = "page"
+        private const val KEY_ITEMS = "items"
+
+        val Saver: Saver<CartStateHolder, Bundle> = Saver(
+            save = { holder ->
+                Bundle().apply {
+                    putInt(KEY_PAGE, holder.page)
+                    putParcelableArrayList(KEY_ITEMS, ArrayList(holder.totalCartItems))
+                }
+            },
+            restore = { bundle ->
+                val items: List<ProductUiModel> =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        bundle.getParcelableArrayList(KEY_ITEMS, ProductUiModel::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        bundle.getParcelableArrayList(KEY_ITEMS)
+                    }
+                        ?: emptyList()
+                val page = bundle.getInt(KEY_PAGE, 1)
+                CartStateHolder(items, page)
+            },
+        )
     }
 }
