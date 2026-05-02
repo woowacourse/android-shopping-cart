@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.saveable.rememberSaveable
 import woowacourse.shopping.ui.cart.stateholder.CartStateHolder
 import woowacourse.shopping.ui.cart.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.state.ProductUiModel
@@ -18,9 +19,8 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val stateHolder = CartStateHolder(getCartItems(intent))
         setContent {
-
+            val stateHolder = rememberSaveable { CartStateHolder(getCartItems(intent)) }
             AndroidshoppingcartTheme {
                 CartScreen(
                     cartItems = stateHolder.cartItems,
@@ -29,13 +29,13 @@ class CartActivity : ComponentActivity() {
                         stateHolder.deleteCartItem(id)
                         setResult(RESULT_OK, deletedListResult(stateHolder.totalCartItems))
                     },
-                    isLeftEnable = stateHolder.isStartPage().not(),
+                    canMoveToPreviousPage = stateHolder.isStartPage().not(),
                     onLeftClick = {
-                        stateHolder.onLeftClick()
+                        stateHolder.moveToPreviousPage()
                     },
-                    isRightEnable = stateHolder.isEndPage().not(),
+                    canMoveToNextPage = stateHolder.isEndPage().not(),
                     onRightClick = {
-                        stateHolder.onRightClick()
+                        stateHolder.moveToNextPage()
                     },
                     page = stateHolder.page,
                 )

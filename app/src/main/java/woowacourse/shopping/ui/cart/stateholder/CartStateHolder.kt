@@ -21,12 +21,12 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
         return (totalCartItems.size + PAGE_SIZE - 1) / PAGE_SIZE
     }
 
-    fun onLeftClick() {
+    fun moveToPreviousPage() {
         page -= 1
         cartItems = pagination(page, totalCartItems)
     }
 
-    fun onRightClick() {
+    fun moveToNextPage() {
         page += 1
         cartItems = pagination(page, totalCartItems)
     }
