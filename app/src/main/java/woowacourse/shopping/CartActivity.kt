@@ -8,7 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.ui.component.screen.CartScreen
@@ -25,7 +25,7 @@ class CartActivity : ComponentActivity() {
         }
 
         setContent {
-            val stateHolder = remember { CartStateHolder(cart) }
+            val stateHolder = rememberSaveable { CartStateHolder(cart) }
 
             Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
                 CartScreen(

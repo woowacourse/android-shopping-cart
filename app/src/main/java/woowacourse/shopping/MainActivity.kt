@@ -9,7 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
@@ -43,14 +47,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-        var currentIndex = 0
-        var currentProducts = mutableStateOf(getCurrentProducts(currentIndex, MAX_PRODUCT))
-
         setContent {
+            var currentIndex by rememberSaveable { mutableIntStateOf(0) }
+            var currentProducts by rememberSaveable { mutableStateOf(getCurrentProducts(currentIndex, MAX_PRODUCT)) }
+
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
-                        catalog = currentProducts.value,
+                        catalog = currentProducts,
                         onItemClick = { product ->
                             productDetailIntent.putExtra(IntentKeys.PRODUCT_KEY, product)
                             startForProductDetailResult.launch(productDetailIntent)
@@ -61,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value += getCurrentProducts(currentIndex, MAX_PRODUCT)
+                            currentProducts += getCurrentProducts(currentIndex, MAX_PRODUCT)
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
