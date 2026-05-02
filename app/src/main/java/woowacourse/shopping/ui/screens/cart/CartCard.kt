@@ -76,6 +76,8 @@ fun CartItemCard(
                     .width(136.dp)
                     .height(72.dp),
                 contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_progress_circle),
+                error = painterResource(R.drawable.ic_error),
             )
 
             Text(

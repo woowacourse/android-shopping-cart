@@ -19,11 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
@@ -54,6 +56,8 @@ fun ProductDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f),
+                placeholder = painterResource(R.drawable.ic_progress_circle),
+                error = painterResource(R.drawable.ic_error),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
