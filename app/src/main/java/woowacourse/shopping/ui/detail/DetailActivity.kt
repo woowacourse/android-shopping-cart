@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.detail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -8,15 +9,23 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.detail.DetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
+    companion object {
+        const val PRODUCT_ID = "id"
+
+        fun getIntent(context: Context, id: String): Intent =
+            Intent(context, DetailActivity::class.java).apply {
+                putExtra(PRODUCT_ID, id)
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val id = this.intent.getStringExtra("id")
+            val id = this.intent.getStringExtra(PRODUCT_ID)
             require(id != null) {
                 Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
                 this.finish()

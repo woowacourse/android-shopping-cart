@@ -4,8 +4,8 @@
 - From 베르
   - [x] 패키지 구조 변경
   - [x] MainActivity 존재 이유 관련 고민
-    - MainActivity 제거 및 ShoppingActivty를 시작점으로 수정
-  - [ ] intent 시 raw 문자열 사용에 따른 문제 수정
+    - MainActivity 제거 및 ShoppingActivity를 시작점으로 수정
+  - [x] intent 시 raw 문자열 사용에 따른 문제 수정
 - From 토끼
   - [x] 의존성 버전관리 누락 이슈 수정
   - [x] Money 곱셈 오버플로우 수정 
