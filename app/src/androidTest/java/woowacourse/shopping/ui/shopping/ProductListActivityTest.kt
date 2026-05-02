@@ -13,6 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.navigation.IntentKeys
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -35,7 +36,7 @@ class ProductListActivityTest {
         Intents.intended(IntentMatchers.hasComponent(ProductDetailActivity::class.java.name))
         Intents.intended(
             IntentMatchers.hasExtra(
-                "woowacourse.shopping.product_id",
+                IntentKeys.PRODUCT_ID,
                 product.productId.toString(),
             ),
         )

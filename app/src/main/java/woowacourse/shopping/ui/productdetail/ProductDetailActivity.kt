@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.ui.navigation.IntentKeys
+import woowacourse.shopping.ui.productdetail.screen.ProductDetailErrorScreen
 import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
@@ -17,20 +19,28 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        @OptIn(ExperimentalUuidApi::class)
-        val productId =
-            requireNotNull(intent.getStringExtra("woowacourse.shopping.product_id")).let(
-                Uuid.Companion::parse,
-            )
-        val product = Products(ProductFixture.productList).findProductById(productId)
+        val product =
+            intent
+                .getStringExtra(IntentKeys.PRODUCT_ID)
+                ?.toUuidOrNull()
+                ?.let { productId ->
+                    Products(ProductFixture.productList).findProductById(productId)
+                }
 
         setContent {
             androidshoppingTheme {
-                ProductDetailScreen(
-                    product = product,
-                    onClose = { finish() },
-                )
+                if (product != null) {
+                    ProductDetailScreen(
+                        product = product,
+                        onClose = { finish() },
+                    )
+                } else {
+                    ProductDetailErrorScreen(onClose = { finish() })
+                }
             }
         }
     }
 }
+
+@OptIn(ExperimentalUuidApi::class)
+private fun String.toUuidOrNull(): Uuid? = runCatching { Uuid.parse(this) }.getOrNull()

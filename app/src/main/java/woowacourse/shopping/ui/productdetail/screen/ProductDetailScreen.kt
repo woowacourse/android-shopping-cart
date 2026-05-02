@@ -28,7 +28,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    product: Product?,
+    product: Product,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,22 +45,20 @@ fun ProductDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            if (product != null) {
-                ProductDetail(product)
-                ActionButton(
-                    onClick = {
-                        CartRepository.addProduct(product)
-                        scope.launch {
-                            snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
-                        }
-                    },
-                    text = "장바구니 담기",
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter),
-                )
-            }
+            ProductDetail(product)
+            ActionButton(
+                onClick = {
+                    CartRepository.addProduct(product)
+                    scope.launch {
+                        snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
+                    }
+                },
+                text = "장바구니 담기",
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
+            )
         }
     }
 }

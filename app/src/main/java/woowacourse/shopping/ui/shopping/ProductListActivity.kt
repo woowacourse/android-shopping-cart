@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.navigation.IntentKeys
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.theme.androidshoppingTheme
@@ -27,7 +28,7 @@ class ProductListActivity : ComponentActivity() {
                     onItemClick = { productId ->
                         val intent =
                             Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra("woowacourse.shopping.product_id", productId)
+                                putExtra(IntentKeys.PRODUCT_ID, productId)
                             }
                         startActivity(intent)
                     },
