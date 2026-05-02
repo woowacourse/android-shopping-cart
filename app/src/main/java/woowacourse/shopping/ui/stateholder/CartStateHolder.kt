@@ -35,18 +35,18 @@ class CartStateHolder(
 
     fun onDeleteProduct(id: UUID) {
         cart = cart.removeProduct(id)
-        if(cart.size() % 5 == 0) currentPage--
+        if(cart.size() % ONE_PAGE_ITEM_COUNT == 0) currentPage--
     }
 
     fun checkPreviousAvailable(): Boolean = currentPage > 0
 
-    fun checkNextAvailable(): Boolean = currentPage < (cart.size() - 1) / 5
+    fun checkNextAvailable(): Boolean = currentPage < (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
 
-    fun isPageable(): Boolean = cart.size() > 5
+    fun isPageable(): Boolean = cart.size() > ONE_PAGE_ITEM_COUNT
 
     fun getPartedItem(
         page: Int,
-        pageSize: Int = 5,
+        pageSize: Int = ONE_PAGE_ITEM_COUNT,
     ): List<Product> {
         require(page >= 0) { "페이지는 0이상이여야 합니다" }
         require(pageSize > 0) { "페이지 사이즈는 0보다 커야 합니다" }
@@ -55,5 +55,9 @@ class CartStateHolder(
         val toIndex = min(fromIndex + pageSize, cart.size())
         if(fromIndex >= toIndex || cart.size() == 0) return emptyList()
         return cart.cartProducts.items.subList(fromIndex, toIndex)
+    }
+
+    companion object {
+        const val ONE_PAGE_ITEM_COUNT = 5
     }
 }
