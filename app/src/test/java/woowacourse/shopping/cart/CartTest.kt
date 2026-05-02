@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartItem
-import woowacourse.shopping.domain.cart.CartItems
-import woowacourse.shopping.domain.product.ImageUrl
-import woowacourse.shopping.domain.product.Price
-import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductName
+import woowacourse.shopping.domain.cart.model.Cart
+import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItems
+import woowacourse.shopping.domain.product.model.ImageUrl
+import woowacourse.shopping.domain.product.model.Price
+import woowacourse.shopping.domain.product.model.Product
+import woowacourse.shopping.domain.product.model.ProductName
 
 class CartTest {
     @Test

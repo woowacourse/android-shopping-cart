@@ -1,48 +1,49 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.data.cart
 
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.cart.model.CartItem
-import woowacourse.shopping.domain.cart.model.CartItems
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.model.ProductName
 
-class CartItemsTest {
+class CartRepositoryMockImplTest {
     @Test
-    fun `장바구니 목록에 상품을 추가했을 때 장바구니 목록에 추가된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem4
+    fun `장바구니에 상품을 추가할 수 있다`() {
+        val cartRepository = CartRepositoryMockImpl
 
-        val addedCartItems = cartItems.addCartItem(targetCartItem)
-
-        assertTrue(addedCartItems.searchCartItem(targetCartItem))
+        runBlocking {
+            cartRepository.addCartItem(cartItem1)
+        }
+        val updatedCart = runBlocking {
+            cartRepository.getCart()
+        }
+        assertTrue(updatedCart.searchCartItem(cartItem1))
     }
 
     @Test
-    fun `장바구니 목록에 상품 존재하는 상품을 삭제했을 때 장바구니 목록에서 삭제된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem3
+    fun `장바구니에 상품을 제거할 수 있다`() {
+        val cartRepository = CartRepositoryMockImpl
 
-        val removedCartItems = cartItems.removeCartItem(targetCartItem)
+        runBlocking {
+            cartRepository.addCartItem(cartItem1)
+            cartRepository.addCartItem(cartItem2)
+            cartRepository.addCartItem(cartItem3)
+        }
+        runBlocking {
+            cartRepository.removeCartItem(cartItem2)
+        }
 
-        assertFalse(removedCartItems.searchCartItem(targetCartItem))
-    }
+        val updatedCart = runBlocking {
+            cartRepository.getCart()
+        }
 
-    @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 있을 경우 true를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-
-        assertTrue(cartItems.searchCartItem(cartItem1))
-    }
-
-    @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 없을 경우 false를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-
-        assertFalse(cartItems.searchCartItem(cartItem4))
+        assertTrue(updatedCart.searchCartItem(cartItem1))
+        assertFalse(updatedCart.searchCartItem(cartItem2))
+        assertTrue(updatedCart.searchCartItem(cartItem3))
     }
 
     private val cartItem1 =
@@ -83,12 +84,5 @@ class CartItemsTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://daum.net"),
                 ),
-        )
-
-    private val cartItemsValue =
-        listOf(
-            cartItem1,
-            cartItem2,
-            cartItem3,
         )
 }

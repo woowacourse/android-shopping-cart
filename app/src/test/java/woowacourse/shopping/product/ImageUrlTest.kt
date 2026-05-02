@@ -2,7 +2,7 @@ package woowacourse.shopping.product
 
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.domain.product.ImageUrl
+import woowacourse.shopping.domain.product.model.ImageUrl
 
 class ImageUrlTest {
     @Test
