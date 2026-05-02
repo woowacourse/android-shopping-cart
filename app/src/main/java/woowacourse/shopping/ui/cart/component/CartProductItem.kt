@@ -113,7 +113,7 @@ fun CartProductItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun cartProductItemPreview() {
+private fun CartProductItemPreview() {
     CartProductItem(
         cartItem =
             CartItem(

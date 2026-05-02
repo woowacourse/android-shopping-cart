@@ -52,6 +52,6 @@ fun CartTopAppBar(onClick: () -> Unit) {
 
 @Preview
 @Composable
-private fun cartTopAppBarPreview() {
+private fun CartTopAppBarPreview() {
     CartTopAppBar(onClick = {})
 }
