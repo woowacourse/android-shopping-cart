@@ -17,7 +17,7 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val product = intent.getParcelableExtra<Product>(IntentKeys.PRODUCT_KEY)!!
+        val product = intent.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY)!!
 
         enableEdgeToEdge()
         setContent {
@@ -26,7 +26,7 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         onAddRequest = {
-                            intent.putExtra(IntentKeys.PRODUCT_KEY, product)
+                            intent.putExtra(IntentKeys.STORED_PRODUCT_KEY, product)
                             setResult(RESULT_OK, intent)
                             finish()
                         },

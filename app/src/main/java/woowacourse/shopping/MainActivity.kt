@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         val startForProductDetailResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val product = result.data?.getParcelableExtra<Product>(IntentKeys.PRODUCT_KEY)
+                    val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
                     if (product != null) {
                         CartRepository.addProduct(product)
                     }
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     CatalogScreen(
                         catalog = currentProducts,
                         onItemClick = { product ->
-                            productDetailIntent.putExtra(IntentKeys.PRODUCT_KEY, product)
+                            productDetailIntent.putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
                             startForProductDetailResult.launch(productDetailIntent)
                         },
                         onCartClick = {
