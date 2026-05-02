@@ -72,7 +72,7 @@ fun CartPageSection(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowForwardIos,
-                contentDescription = "이전 페이지",
+                contentDescription = "다음 페이지",
                 tint = Color.White,
                 modifier = Modifier.size(14.dp),
             )
