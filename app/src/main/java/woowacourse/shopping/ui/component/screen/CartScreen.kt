@@ -111,13 +111,16 @@ private fun CartBody(
                 ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        stateHolder.getPartedItem(currentPage).forEach {
-            CartItem(
-                product = it,
-                onDelete = onDelete,
-                modifier = Modifier.padding(top = 24.dp),
-            )
-        }
+        runCatching { stateHolder.getPartedItem(currentPage) }
+            .onSuccess {
+                it.forEach { product ->
+                    CartItem(
+                        product = product,
+                        onDelete = onDelete,
+                        modifier = Modifier.padding(top = 24.dp),
+                    )
+                }
+            }
         if (stateHolder.isPageable()) {
             PagingBtn(
                 currentPage = currentPage,

@@ -48,8 +48,12 @@ class CartStateHolder(
         page: Int,
         pageSize: Int = 5,
     ): List<Product> {
+        require(page >= 0) { "페이지는 0이상이여야 합니다" }
+        require(pageSize > 0) { "페이지 사이즈는 0보다 커야 합니다" }
+
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, cart.size())
+        if(fromIndex >= toIndex || cart.size() == 0) return emptyList()
         return cart.cartProducts.items.subList(fromIndex, toIndex)
     }
 }
