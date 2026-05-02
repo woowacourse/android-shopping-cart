@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import kotlin.jvm.java
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
@@ -16,12 +15,16 @@ import woowacourse.shopping.ui.productlist.ProductDetailScreen
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class ProductDetailActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val uiModel = intent.getParcelableExtra(DETAIL_PRODUCT, ProductUiModel::class.java)
+        val uiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(DETAIL_PRODUCT, ProductUiModel::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(DETAIL_PRODUCT)
+        }
         if (uiModel == null) {
             Toast.makeText(this, R.string.product_detail_entry_error, Toast.LENGTH_SHORT).show()
             finish()

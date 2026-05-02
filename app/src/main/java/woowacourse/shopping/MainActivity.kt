@@ -1,13 +1,11 @@
 package woowacourse.shopping
 
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartContent
@@ -19,7 +17,6 @@ import woowacourse.shopping.ui.productlist.stateholder.ProductListStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,7 +49,7 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
-            val deletedCartItems = CartActivity.getDeletedList(result.data)
+            val deletedCartItems = result.data?.let { CartActivity.getDeletedList(it) }
                 ?: return@registerForActivityResult
 
             productListStateHolder.cart = productListStateHolder.replaceCartItems(deletedCartItems.map { it.id })

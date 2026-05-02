@@ -7,14 +7,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.saveable.rememberSaveable
 import woowacourse.shopping.ui.cart.stateholder.CartStateHolder
 import woowacourse.shopping.ui.cart.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class CartActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -55,14 +53,23 @@ class CartActivity : ComponentActivity() {
         ): Intent = Intent(context, CartActivity::class.java)
             .putParcelableArrayListExtra(EXTRA_CART_ITEMS, ArrayList(cartItems))
 
-        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-        fun getDeletedList(intent: Intent?): List<ProductUiModel>? =
-            intent?.getParcelableArrayListExtra(EXTRA_DELETED_LIST, ProductUiModel::class.java)
+        fun getDeletedList(intent: Intent): List<ProductUiModel> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra(EXTRA_DELETED_LIST, ProductUiModel::class.java)
+                ?: emptyList()
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra(EXTRA_DELETED_LIST)
+                ?: emptyList()
+        }
 
-        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-        private fun getCartItems(intent: Intent): List<ProductUiModel> =
+        private fun getCartItems(intent: Intent): List<ProductUiModel> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayListExtra(EXTRA_CART_ITEMS, ProductUiModel::class.java)
                 ?: emptyList()
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra(EXTRA_CART_ITEMS)
+                ?: emptyList()
+        }
 
         private fun deletedListResult(items: List<ProductUiModel>): Intent =
             Intent().putParcelableArrayListExtra(EXTRA_DELETED_LIST, ArrayList(items))
