@@ -8,8 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartContent
@@ -18,7 +16,6 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.productlist.ProductListScreen
 import woowacourse.shopping.ui.productlist.stateholder.ProductListStateHolder
-import woowacourse.shopping.ui.state.ProductUiModel
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,10 +25,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val productListStateHolder = ProductListStateHolder()
-        val productUiModels: MutableState<List<ProductUiModel>> = mutableStateOf(emptyList())
 
         lifecycleScope.launch {
-            productUiModels.value = productListStateHolder.fetchProducts()
+            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
                 .map(productListStateHolder::toProductUiModel)
         }
 
@@ -66,11 +62,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 ProductListScreen(
-                    productUiModels = productUiModels.value,
+                    productUiModels = productListStateHolder.uiModels,
                     isEnd = productListStateHolder.isEndList(),
                     onLoading = {
                         lifecycleScope.launch {
-                            productUiModels.value = productListStateHolder.fetchProducts()
+                            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
                                 .map(productListStateHolder::toProductUiModel)
                         }
                     },
