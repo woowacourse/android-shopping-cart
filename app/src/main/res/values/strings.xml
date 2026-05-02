@@ -10,8 +10,9 @@
 
     <string name="product_detail_price">가격</string>
     <string name="product_detail_select">장바구니 담기</string>
-    <string name="title_activity_cart">CartActivity</string>
-    <string name="title_activity_product_detail">ProductDetailActivity</string>
+
+    <string name="title_activity_cart">장바구니 화면</string>
+    <string name="title_activity_product_detail">상품 상세 화면</string>
 
     <string name="product_detail_entry_error">상품을 찾을 수 없습니다</string>
 
