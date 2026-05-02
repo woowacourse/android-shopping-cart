@@ -17,6 +17,7 @@ import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 fun ShoppingScreen(
     products: Products,
     hasNext: Boolean,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
@@ -31,6 +32,7 @@ fun ShoppingScreen(
         ShoppingBody(
             products = products,
             showMoreButton = hasNext,
+            isLoading = isLoading,
             modifier =
                 Modifier
                     .padding(20.dp)
@@ -47,6 +49,7 @@ private fun ShoppingScreenPreview() {
     ShoppingScreen(
         products = InMemoryProductRepository.products,
         hasNext = true,
+        isLoading = true,
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},

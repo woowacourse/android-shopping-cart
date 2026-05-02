@@ -5,10 +5,10 @@ import woowacourse.shopping.model.Products
 interface ProductRepository {
     val size: Int
 
-    fun getProducts(
+    suspend fun getProducts(
         fromIndex: Int,
         limit: Int,
     ): Products
 
-    fun hasNext(current: Int): Boolean
+    suspend fun hasNext(current: Int): Boolean
 }

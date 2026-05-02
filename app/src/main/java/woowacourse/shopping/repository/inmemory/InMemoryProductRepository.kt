@@ -182,10 +182,10 @@ object InMemoryProductRepository : ProductRepository {
     override val size: Int
         get() = products.count()
 
-    override fun getProducts(
+    override suspend fun getProducts(
         fromIndex: Int,
         limit: Int,
     ) = products.getPagedProducts(fromIndex, limit)
 
-    override fun hasNext(current: Int) = current < products.toList().lastIndex
+    override suspend fun hasNext(current: Int) = current < products.toList().lastIndex
 }

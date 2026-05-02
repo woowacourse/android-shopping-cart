@@ -5,38 +5,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.model.Products
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
-private const val PAGE_SIZE = 20
-
 class ShoppingActivity : ComponentActivity() {
+    private val viewModel: ShoppingViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val productRepo = InMemoryProductRepository
-
-                    var visibleCount by rememberSaveable { mutableIntStateOf(PAGE_SIZE) }
-                    val visibleProducts = productRepo.getProducts(0, visibleCount).toList()
-                    val hasNext = productRepo.hasNext(visibleProducts.size - 1)
-
                     ShoppingScreen(
-                        products = Products(visibleProducts),
-                        hasNext = hasNext,
+                        products = uiState.products,
+                        hasNext = uiState.hasNext,
+                        isLoading = uiState.isLoading,
                         modifier = Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))
@@ -48,9 +42,7 @@ class ShoppingActivity : ComponentActivity() {
                                 }
                             startActivity(intent)
                         },
-                        onMoreClick = {
-                            visibleCount = minOf(visibleCount + PAGE_SIZE, productRepo.size)
-                        },
+                        onMoreClick = viewModel::loadMore,
                     )
                 }
             }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 fun ShoppingBody(
     products: Products,
     showMoreButton: Boolean,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
@@ -34,7 +36,15 @@ fun ShoppingBody(
             ProductUnit(product, onClick = { onProductClick(product) })
         }
 
-        if (showMoreButton) {
+        if(isLoading && products.toList().isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+
+        if (!isLoading && showMoreButton) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     MoreButton(
@@ -53,6 +63,7 @@ private fun ShoppingBodyPreview() {
     ShoppingBody(
         products = InMemoryProductRepository.products,
         showMoreButton = true,
+        isLoading = true,
         onProductClick = {},
         onMoreClick = {},
     )
