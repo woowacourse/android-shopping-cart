@@ -9,6 +9,8 @@ import kotlin.math.min
 class Products(
     val products: List<Product> = emptyList(),
 ): Parcelable {
+    fun isEmpty() = products.isEmpty()
+
     fun size() = products.size
 
     fun add(product: Product) = Products(products + product)

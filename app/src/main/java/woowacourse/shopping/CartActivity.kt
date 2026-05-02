@@ -46,7 +46,7 @@ class CartActivity : ComponentActivity() {
                         CartRepository.removeProduct(id)
                         currentPageProducts.value =
                             CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
-                        if (currentPageProducts.value.size() == 0) {
+                        if (currentPageProducts.value.isEmpty()) {
                             stateHolder.onPrevious()
                             currentPageProducts.value =
                                 CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
