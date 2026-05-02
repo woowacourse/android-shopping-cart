@@ -10,7 +10,13 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val productId: String = intent.getStringExtra("productId") ?: throw IllegalArgumentException("삐용삐용 id가 없으면 안됭당께...")
+        val productId = intent.getStringExtra("productId")
+
+        if (productId == null) {
+            finish()
+            return
+        }
+
         setContent {
             AndroidshoppingTheme {
                 ProductDetailScreen(
