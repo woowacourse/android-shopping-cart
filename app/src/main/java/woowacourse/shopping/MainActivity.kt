@@ -39,7 +39,12 @@ class MainActivity : ComponentActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val product =
                         result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
-                    if (product != null) {
+                    if (product != null && product != Product(
+                            imageUri = "INVALID",
+                            name = "상품을 찾을 수 없습니다.",
+                            price = 0,
+                        )
+                    ) {
                         CartRepository.addProduct(product)
                     }
                 }
