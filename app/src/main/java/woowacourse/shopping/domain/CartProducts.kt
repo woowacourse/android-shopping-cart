@@ -3,8 +3,11 @@ package woowacourse.shopping.domain
 import java.util.UUID
 
 class CartProducts(
-    val products: List<Product> = emptyList(),
+    private val products: List<Product> = emptyList(),
 ) {
+    val items: List<Product>
+        get() = products.toList()
+
     fun size() = products.size
 
     fun add(product: Product) = CartProducts(products + product)
