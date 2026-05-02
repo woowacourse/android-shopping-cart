@@ -13,8 +13,8 @@ class CartContentTest {
         val cartContent = CartContent(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartContent.isSame(
-            product,
+        val result = cartContent.hasProductId(
+            product.id,
         )
 
         // then : true를 반환한다
@@ -31,8 +31,8 @@ class CartContentTest {
         val cartContent = CartContent(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartContent.isSame(
-            other,
+        val result = cartContent.hasProductId(
+            other.id,
         )
 
         // then : false를 반환한다

@@ -1,22 +1,24 @@
 package woowacourse.shopping.domain
 
-class Cart(val cartContents: List<CartContent> = emptyList()) {
-    fun plusCartItem(cartContent: CartContent): Cart {
-        val isSamerCartItem = cartContents.any { it.isSameCartItem(cartContent) }
+class Cart(private val cartContents: List<CartContent>) {
+    fun plusCartContent(newCartContent: CartContent): Cart {
+        val isSamerCartItem = cartContents.any { cartContent ->
+            cartContent.hasProductId(newCartContent.productId)
+        }
 
         if (isSamerCartItem) {
             return this
         }
-        return Cart(cartContents + cartContent)
+        return Cart(cartContents + newCartContent)
     }
 
-    fun isContains(product: Product): Boolean = cartContents.any { it.isSame(product) }
+    fun contains(product: Product): Boolean = cartContents.any { it.hasProductId(product.id) }
 
-    fun filterById(ids: List<String>): Cart {
+    fun retainOnly(ids: List<String>): Cart {
         return Cart(
             cartContents.filter { cartItem ->
                 ids.any {
-                    cartItem.isSameId(it)
+                    cartItem.hasProductId(it)
                 }
             },
         )

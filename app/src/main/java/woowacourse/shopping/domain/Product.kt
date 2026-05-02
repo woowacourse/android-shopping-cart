@@ -9,7 +9,5 @@ class Product(val name: String, private val price: Money, val imageUrl: String, 
 
     fun isSame(other: Product): Boolean = this.id == other.id
 
-    fun isSameId(other: String): Boolean = this.id == other
-
     fun priceAmount(): Int = price.amount
 }

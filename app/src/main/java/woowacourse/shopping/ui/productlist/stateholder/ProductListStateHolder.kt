@@ -12,7 +12,7 @@ class ProductListStateHolder {
     private val _products = mutableStateListOf<Product>()
     val products: List<Product> = _products
 
-    var cart = Cart()
+    var cart = Cart(emptyList())
 
     var uiModels = emptyList<ProductUiModel>()
 
@@ -44,11 +44,11 @@ class ProductListStateHolder {
     }
 
     fun addCartItem(cartContent: CartContent): Cart {
-        return cart.plusCartItem(cartContent)
+        return cart.plusCartContent(cartContent)
     }
 
-    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart {
-        return cart.filterById(uiModels.map { it.id })
+    fun replaceCartItems(ids: List<String>): Cart {
+        return cart.retainOnly(ids)
     }
 
     fun toProductUiModels(): List<ProductUiModel> {
