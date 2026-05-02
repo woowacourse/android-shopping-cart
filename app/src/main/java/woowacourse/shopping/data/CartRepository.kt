@@ -12,7 +12,7 @@ object CartRepository {
         try {
             cart = cart.addItem(product)
             return true
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
             return false
         }
     }
