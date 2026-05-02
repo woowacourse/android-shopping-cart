@@ -17,6 +17,8 @@ class MockRepository(
         offset: Int,
         limit: Int,
     ): ImmutableList<Product> {
+        require(offset >= 0) { "offset은 0 이상이어야 합니다." }
+
         if (offset >= source.size) return persistentListOf()
         val toIndex = minOf(offset + limit, source.size)
         return source.subList(offset, toIndex).toImmutableList()
