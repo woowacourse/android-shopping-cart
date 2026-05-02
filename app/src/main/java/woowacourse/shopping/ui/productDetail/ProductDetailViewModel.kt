@@ -12,7 +12,7 @@ import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
 data class ProductDetailUiState(
-    val product: Product,
+    val product: Product? = null,
 )
 
 class ProductDetailViewModel(
@@ -20,20 +20,21 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    lateinit var product: Product
+
+    private val _productDetailState = MutableStateFlow(ProductDetailUiState())
+    val productDetailState: StateFlow<ProductDetailUiState> = _productDetailState.asStateFlow()
+
 
     init {
         viewModelScope.launch {
-            product = productRepository.getProduct(productId)
+            val product = productRepository.getProduct(productId)
+            _productDetailState.value = ProductDetailUiState(product = product)
         }
     }
 
-    private val _productDetailUiState = MutableStateFlow(ProductDetailUiState(product))
-    val productDetailState: StateFlow<ProductDetailUiState> = _productDetailUiState.asStateFlow()
-
     fun addToCart() {
         viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = productDetailState.value.product))
+            cartRepository.addCartItem(CartItem(product = productDetailState.value.product!!))
         }
     }
 }

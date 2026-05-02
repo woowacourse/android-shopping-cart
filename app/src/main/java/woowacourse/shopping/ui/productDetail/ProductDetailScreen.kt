@@ -49,7 +49,7 @@ fun ProductDetailScreen(
     onAddToCartClick: () -> Unit = {},
 ) {
     val productDetailState by viewModel.productDetailState.collectAsState()
-    val product = productDetailState.product
+    val product = productDetailState.product!!
     val activity = LocalActivity.current
 
     Column(
