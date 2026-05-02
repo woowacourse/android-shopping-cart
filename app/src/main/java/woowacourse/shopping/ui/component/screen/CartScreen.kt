@@ -31,37 +31,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
+import woowacourse.shopping.ui.stateholder.CartStateHolder
 import java.util.UUID
-import kotlin.math.min
 
 @Composable
 fun CartScreen(
-    cart: Cart,
-    currentPage: Int,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
+    stateHolder: CartStateHolder,
     onClose: () -> Unit,
-    onDelete: (UUID) -> Unit,
-    previousEnable: Boolean,
-    nextEnable: Boolean,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { CartHeader(onClose) },
         bodyContent = {
             CartBody(
-                cart = cart,
-                onDelete = onDelete,
-                currentPage = currentPage,
-                onPrevious = onPrevious,
-                previousEnable = previousEnable,
-                nextEnable = nextEnable,
-                onNext = onNext,
+                stateHolder = stateHolder,
+                onDelete = {
+                    stateHolder.onDeleteProduct(it)
+                },
+                onNext = { stateHolder.onNext() },
+                currentPage = stateHolder.currentPage,
+                onPrevious = { stateHolder.onPrevious() },
+                previousEnable = stateHolder.checkPreviousAvailable(),
+                nextEnable = stateHolder.checkNextAvailable(),
             )
         },
         modifier = modifier,
@@ -100,11 +93,11 @@ private fun CartHeader(
 
 @Composable
 private fun CartBody(
-    cart: Cart,
+    stateHolder: CartStateHolder,
     currentPage: Int,
     onDelete: (UUID) -> Unit,
-    onPrevious: () -> Unit = {},
-    onNext: () -> Unit = {},
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
     previousEnable: Boolean,
     nextEnable: Boolean,
     modifier: Modifier = Modifier,
@@ -118,15 +111,14 @@ private fun CartBody(
                 ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val products = cart.cartProducts
-        products.getPartedItem(currentPage).forEach {
+        stateHolder.getPartedItem(currentPage).forEach {
             CartItem(
                 product = it,
                 onDelete = onDelete,
                 modifier = Modifier.padding(top = 24.dp),
             )
         }
-        if (cart.isPageable()) {
+        if (stateHolder.isPageable()) {
             PagingBtn(
                 currentPage = currentPage,
                 onPrevious = onPrevious,
@@ -209,65 +201,11 @@ fun PagingBtn(
 private fun btnAvailable(btnFlag: Boolean): Color =
     if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
-private fun Cart.isPageable(): Boolean = cartProducts.size() > 5
-
-private fun CartProducts.getPartedItem(
-    page: Int,
-    pageSize: Int = 5,
-): List<Product> {
-    val fromIndex = page * pageSize
-    val toIndex = min(fromIndex + pageSize, products.size)
-    return products.subList(fromIndex, toIndex)
-}
-
 @Preview
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        currentPage = 0,
+        stateHolder = CartStateHolder(listOf("")),
         onClose = {},
-        onDelete = {},
-        onPrevious = {},
-        onNext = {},
-        previousEnable = false,
-        nextEnable = false,
-        cart =
-            Cart(
-                cartProducts =
-                    CartProducts(
-                        listOf(
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                        ),
-                    ),
-            ),
     )
 }

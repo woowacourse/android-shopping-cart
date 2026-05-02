@@ -28,29 +28,20 @@ class CartActivity : ComponentActivity() {
         val cartStateHolder = CartStateHolder(ids)
 
         onBackPressedDispatcher.addCallback {
-            saveAndCloseActivity(cartStateHolder.items)
+            saveAndCloseActivity(cartStateHolder.cart.cartProducts.items)
         }
 
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) {
                 CartScreen(
-                    cart = Cart(CartProducts(cartStateHolder.items)),
+                    stateHolder = cartStateHolder,
                     onClose = {
-                        saveAndCloseActivity(cartStateHolder.items)
-                    },
-                    onDelete = { it ->
-                        val product = MockCatalog.findProductById(it)
-                        cartStateHolder.items = cartStateHolder.items.minus(product)
+                        saveAndCloseActivity(cartStateHolder.cart.cartProducts.items)
                     },
                     modifier =
                         Modifier
                             .fillMaxSize()
                             .padding(it),
-                    currentPage = cartStateHolder.currentPage,
-                    onPrevious = { cartStateHolder.onPrevious() },
-                    onNext = { cartStateHolder.onNext() },
-                    previousEnable = cartStateHolder.checkPreviousAvailable(),
-                    nextEnable = cartStateHolder.checkNextAvailable(),
                 )
             }
         }
