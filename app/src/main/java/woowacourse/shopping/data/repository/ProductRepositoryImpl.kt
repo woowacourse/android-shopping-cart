@@ -11,6 +11,7 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     private val products = productDataSource.products
     private var offset = 0
+    private var isProductLoading = false
     override val hasNext get() = offset < products.size
 
     override fun getProductById(id: String): Product =
@@ -18,8 +19,15 @@ class ProductRepositoryImpl(
             ?: throw IllegalArgumentException("존재하지 않는 상품입니다. 삐용삐용")
 
     override suspend fun getProducts(): List<Product> {
+        if (isProductLoading) return emptyList()
+
+        isProductLoading = true
+
         val fromIndex = offset
         offset = min(offset + PAGE_SIZE, products.size)
+
+        isProductLoading = false
+
         return products.subList(fromIndex, offset)
     }
 
