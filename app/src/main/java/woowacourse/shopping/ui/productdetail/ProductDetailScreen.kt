@@ -15,9 +15,10 @@ import woowacourse.shopping.ui.productdetail.component.ProductDetailHeader
 @Composable
 fun ProductDetailScreen(
     product: Product,
+    isAdding: Boolean,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
-    onAddToCart: (Product, Int) -> Unit,
+    onAddToCart: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProductDetailHeader(onCloseClick = onCloseClick)
@@ -26,7 +27,10 @@ fun ProductDetailScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CartAddButton(onClick = { onAddToCart(product, 1) })
+        CartAddButton(
+            isEnabled = !isAdding,
+            onClick = onAddToCart,
+        )
     }
 }
 
@@ -36,7 +40,8 @@ private fun ProductDetailScreenPreview() {
     val product = InMemoryProductRepository.APPLE
     ProductDetailScreen(
         product = product,
+        isAdding = false,
         onCloseClick = {},
-        onAddToCart = { _, _ -> },
+        onAddToCart = {},
     )
 }

@@ -19,15 +19,16 @@ import woowacourse.shopping.R
 
 @Composable
 fun CartAddButton(
-    onClick: () -> Unit,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
                 .background(Color(0xFF04C09E))
-                .clickable(onClick = onClick),
+                .clickable(enabled = isEnabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -43,5 +44,5 @@ fun CartAddButton(
 @Composable
 @Preview
 private fun CartAddButtonPreview() {
-    CartAddButton(onClick = {})
+    CartAddButton(isEnabled = true, onClick = {},)
 }
