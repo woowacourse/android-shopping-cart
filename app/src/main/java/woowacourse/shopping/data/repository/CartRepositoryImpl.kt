@@ -16,10 +16,19 @@ object CartRepositoryImpl : CartRepository {
         page: Int,
         pageSize: Int,
     ): Cart {
+        if (page < 0 || pageSize <= 0) return Cart()
+
         val fromIndex = page * pageSize
+
+        if (fromIndex >= getTotalItemCount()) {
+            return Cart()
+        }
+
         val toIndex = min(fromIndex + pageSize, cart.cartItems.size)
         return Cart(cart.cartItems.subList(fromIndex, toIndex))
     }
+
+    override fun getTotalItemCount(): Int = cart.cartItems.size
 
     override fun addProduct(product: Product) {
         cart = cart.addProductToCart(product)

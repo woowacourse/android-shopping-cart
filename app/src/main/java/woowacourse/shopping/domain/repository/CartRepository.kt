@@ -13,6 +13,8 @@ interface CartRepository {
         pageSize: Int,
     ): Cart
 
+    fun getTotalItemCount(): Int
+
     fun addProduct(product: Product)
 
     @OptIn(ExperimentalUuidApi::class)

@@ -13,18 +13,14 @@ class CartStateHolder(
 ) {
     private val pageSize = 5
 
-    private var allCart by mutableStateOf(Cart())
-    private var pagedCart by mutableStateOf(Cart())
-    private var currentPageIndex by mutableStateOf(0)
+    var cart by mutableStateOf(Cart())
+        private set
 
-    val cart: Cart
-        get() = pagedCart
+    private var currentPageIndex by mutableStateOf(0)
+    private var totalItemCount by mutableStateOf(0)
 
     val currentPage: Int
         get() = currentPageIndex + 1
-
-    val totalItemCount: Int
-        get() = allCart.cartItems.size
 
     val lastPageIndex: Int
         get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / pageSize
@@ -46,7 +42,7 @@ class CartStateHolder(
     fun deleteProduct(productId: Uuid) {
         cartRepository.deleteProduct(productId)
 
-        refreshAllCart()
+        refreshTotalItemCount()
         adjustCurrentPage()
         refreshPagedCart()
     }
@@ -66,17 +62,17 @@ class CartStateHolder(
     }
 
     private fun refresh() {
-        refreshAllCart()
+        refreshTotalItemCount()
         adjustCurrentPage()
         refreshPagedCart()
     }
 
-    private fun refreshAllCart() {
-        allCart = cartRepository.getItems()
+    private fun refreshTotalItemCount() {
+        totalItemCount = cartRepository.getTotalItemCount()
     }
 
     private fun refreshPagedCart() {
-        pagedCart =
+        cart =
             cartRepository.getPagingItems(
                 page = currentPageIndex,
                 pageSize = pageSize,
