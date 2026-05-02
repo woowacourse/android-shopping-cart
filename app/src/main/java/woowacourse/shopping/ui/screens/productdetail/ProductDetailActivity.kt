@@ -10,7 +10,7 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val productId = intent.getStringExtra("productId")
+        val productId = intent.getStringExtra(PRODUCT_ID)
 
         if (productId == null) {
             finish()
@@ -25,5 +25,9 @@ class ProductDetailActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    companion object {
+        const val PRODUCT_ID = "productId"
     }
 }
