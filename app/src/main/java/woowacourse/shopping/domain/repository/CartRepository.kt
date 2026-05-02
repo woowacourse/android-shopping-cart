@@ -4,20 +4,12 @@ import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Product
 
-object CartRepository {
-    private var cart: Cart = Cart()
+interface CartRepository {
+    suspend fun getCart(): Cart
 
-    fun getCart(): Cart = cart
+    suspend fun getTotalCartSize(): Int
 
-    fun getTotalCartSize(): Int = cart.size
+    suspend fun addItem(product: Product): AddItemResult
 
-    fun addItem(product: Product): AddItemResult {
-        val addItemResult = cart.addItem(product)
-        if (addItemResult is AddItemResult.NewAdded) cart = addItemResult.cart
-        return addItemResult
-    }
-
-    fun deleteItem(id: String) {
-        cart = cart.deleteItem(id)
-    }
+    suspend fun deleteItem(id: String)
 }
