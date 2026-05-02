@@ -3,13 +3,15 @@ package woowacourse.shopping.data
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.model.Product
 
 class MockRepository(
     private val source: List<Product> = ProductData.products,
 ) : ProductRepository {
-    override suspend fun getProductById(id: String): Product = source.first { it.id == id }
+    override suspend fun getProductById(id: String): Product =
+        requireNotNull(source.firstOrNull { it.id == id }) {
+            "존재하지 않는 상품입니다."
+        }
 
     override suspend fun getProducts(
         offset: Int,

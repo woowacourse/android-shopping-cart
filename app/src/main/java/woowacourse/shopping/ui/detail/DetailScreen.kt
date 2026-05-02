@@ -42,6 +42,7 @@ import woowacourse.shopping.ui.util.formattedPrice
 fun DetailScreen(
     id: String,
     onNavigateToCart: () -> Unit,
+    onProductNotFound: () -> Unit,
     onFailure: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -51,6 +52,7 @@ fun DetailScreen(
             DetailStateHolder(
                 scope = scope,
                 id = id,
+                onProductNotFound = onProductNotFound,
             )
         }
     val product = state.product
@@ -84,13 +86,10 @@ fun DetailScreen(
                         .height(48.dp)
                         .background(Green40)
                         .clickable {
-                            state.addToCart { onResult ->
-                                if (onResult) {
-                                    onNavigateToCart()
-                                } else {
-                                    onFailure()
-                                }
-                            }
+                            state.addToCart(
+                                onSuccess = onNavigateToCart,
+                                onAlreadyExists = onFailure,
+                            )
                         },
                 contentAlignment = Alignment.Center,
             ) {
@@ -172,6 +171,7 @@ private fun DetailScreenPreview() {
     DetailScreen(
         id = "1",
         onNavigateToCart = {},
+        onProductNotFound = {},
         onFailure = {},
     )
 }

@@ -14,6 +14,7 @@ import woowacourse.shopping.ui.model.toUiModel
 class DetailStateHolder(
     private val scope: CoroutineScope,
     private val id: String,
+    private val onProductNotFound: () -> Unit,
     private val productRepository: ProductRepository = MockRepository(),
     private val cartRepository: CartRepository = CartRepository,
 ) {
@@ -32,14 +33,30 @@ class DetailStateHolder(
 
     fun loadProduct() {
         scope.launch {
-            product = productRepository.getProductById(id).toUiModel()
+            try {
+                product = productRepository.getProductById(id).toUiModel()
+            } catch (e: IllegalArgumentException) {
+                onProductNotFound()
+            }
         }
     }
 
-    fun addToCart(onResult: (Boolean) -> Unit) {
+    fun addToCart(
+        onSuccess: () -> Unit,
+        onAlreadyExists: () -> Unit,
+    ) {
         scope.launch {
-            val product = productRepository.getProductById(id)
-            onResult(cartRepository.addItem(product))
+            try {
+                val product = productRepository.getProductById(id)
+                val addedResult = cartRepository.addItem(product)
+                if (addedResult) {
+                    onSuccess()
+                } else {
+                    onAlreadyExists()
+                }
+            } catch (e: IllegalArgumentException) {
+                onProductNotFound()
+            }
         }
     }
 }

@@ -29,4 +29,18 @@ class MockRepositoryTest {
             assertThat(repository.getProducts(offset = size, limit = 20)).isEmpty()
             assertThat(repository.getProducts(offset = size + 5, limit = 20)).isEmpty()
         }
+
+    @Test
+    fun `존재하지 않는 id로 상품을 조회하면 예외가 발생한다`() =
+        runTest {
+            val exception =
+                try {
+                    repository.getProductById("1111")
+                    null
+                } catch (e: IllegalArgumentException) {
+                    e
+                }
+
+            assertThat(exception?.message).contains("존재하지 않는 상품입니다.")
+        }
 }

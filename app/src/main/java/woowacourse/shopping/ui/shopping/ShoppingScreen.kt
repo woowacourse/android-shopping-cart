@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping
 
-import android.content.Intent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -64,8 +63,7 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
                             Modifier
                                 .size(24.dp)
                                 .clickable {
-                                    val intent = Intent(activity, CartActivity::class.java)
-                                    activity?.startActivity(intent)
+                                    activity?.startActivity(CartActivity.getIntent(activity))
                                 },
                     )
                 },
@@ -113,7 +111,7 @@ private fun ShoppingContents(
                         activity?.startActivity(
                             DetailActivity.getIntent(
                                 context = activity,
-                                id = product.id
+                                id = product.id,
                             ),
                         )
                     },

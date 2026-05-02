@@ -15,7 +15,10 @@ class DetailActivity : ComponentActivity() {
     companion object {
         const val PRODUCT_ID = "id"
 
-        fun getIntent(context: Context, id: String): Intent =
+        fun getIntent(
+            context: Context,
+            id: String,
+        ): Intent =
             Intent(context, DetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, id)
             }
@@ -25,17 +28,21 @@ class DetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val id = this.intent.getStringExtra(PRODUCT_ID)
-            require(id != null) {
+            val id = intent.getStringExtra(PRODUCT_ID)
+            if (id == null) {
                 Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
-                this.finish()
+                finish()
+                return@setContent
             }
             AndroidshoppingTheme {
                 DetailScreen(
                     id = id,
                     onNavigateToCart = {
-                        val intent = Intent(this, CartActivity::class.java)
-                        startActivity(intent)
+                        startActivity(CartActivity.getIntent(this))
+                    },
+                    onProductNotFound = {
+                        Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
+                        finish()
                     },
                     onFailure = {
                         Toast.makeText(this, "이미 장바구니에 담긴 상품입니다.", Toast.LENGTH_SHORT).show()
