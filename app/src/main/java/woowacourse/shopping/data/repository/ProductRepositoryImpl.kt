@@ -4,34 +4,25 @@ import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.math.min
 
 class ProductRepositoryImpl(
     productDataSource: ProductDataSource = ProductDataSourceImpl,
 ) : ProductRepository {
     private val products = productDataSource.products
-    private var offset = 0
-    private var isProductLoading = false
-    override val hasNext get() = offset < products.size
+    override val productSize get() = products.size
 
     override fun getProductById(id: String): Product =
         products.firstOrNull { it.id == id }
             ?: throw IllegalArgumentException("존재하지 않는 상품입니다. 삐용삐용")
 
-    override suspend fun getProducts(): List<Product> {
-        if (isProductLoading) return emptyList()
+    override suspend fun getProducts(
+        startIndex: Int,
+        count: Int,
+    ): List<Product> {
+        require(startIndex in 0..productSize) { "시작 인덱스가 올바르지 않습니다." }
 
-        isProductLoading = true
+        val endIndex = minOf(startIndex + count, productSize)
 
-        val fromIndex = offset
-        offset = min(offset + PAGE_SIZE, products.size)
-
-        isProductLoading = false
-
-        return products.subList(fromIndex, offset)
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 20
+        return products.subList(startIndex, endIndex)
     }
 }

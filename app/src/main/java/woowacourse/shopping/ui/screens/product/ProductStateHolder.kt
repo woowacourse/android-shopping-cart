@@ -16,8 +16,20 @@ class ProductStateHolder(
     var hasNext by mutableStateOf(false)
         private set
 
+    private var isProductLoading = false
+
     suspend fun getProducts() {
-        products += productRepository.getProducts()
-        hasNext = productRepository.hasNext
+        if (isProductLoading) return
+
+        isProductLoading = true
+
+        products += productRepository.getProducts(products.size, PAGE_SIZE)
+        hasNext = productRepository.productSize > products.size
+
+        isProductLoading = false
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }
