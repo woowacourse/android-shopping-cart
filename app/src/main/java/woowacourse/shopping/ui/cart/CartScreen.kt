@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.cart
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,35 +25,29 @@ private const val PAGE_SIZE = 5
 @Composable
 fun CartScreen(
     cart: Cart,
+    currentPage: Int,
+    totalPages: Int,
+    showPagination: Boolean,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onDeleteClick: (Product) -> Unit,
+    onPreviousClick: () -> Unit,
+    onNextClick: () -> Unit,
 ) {
-    val cartItemsSize = cart.items.size
-    val totalPages = (cartItemsSize - 1) / PAGE_SIZE + 1
-
-    var currentPage by rememberSaveable { mutableIntStateOf(1) }
-    val pagedItems =
-        remember(cart, currentPage) {
-            cart.items
-                .toList()
-                .drop((currentPage - 1) * PAGE_SIZE)
-                .take(PAGE_SIZE)
-                .toMap()
-        }
-
-    LaunchedEffect(totalPages) {
-        currentPage = currentPage.coerceAtMost(totalPages)
-    }
-
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
         CartHeader(onBackClick = onBackClick)
 
+        if(isLoading && cart.items.isEmpty()) {
+            CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+            return
+        }
+
         CartItemBody(
-            cart = Cart(pagedItems),
-            showPagination = cartItemsSize >= PAGE_SIZE + 1,
+            cart = cart,
+            showPagination = showPagination,
             currentPage = currentPage,
             totalPages = totalPages,
             modifier =
@@ -60,8 +55,8 @@ fun CartScreen(
                     .padding(top = 8.dp, start = 18.dp, end = 18.dp)
                     .weight(1f),
             onDeleteClick = onDeleteClick,
-            onPreviousClick = { currentPage = (currentPage - 1).coerceAtLeast(1) },
-            onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) },
+            onPreviousClick = onPreviousClick,
+            onNextClick = onNextClick,
         )
     }
 }
@@ -70,5 +65,15 @@ fun CartScreen(
 @Preview(showBackground = true)
 private fun CartScreenPreview() {
     val cart = Cart(InMemoryProductRepository.products.associateWith { 1 })
-    CartScreen(cart = cart, onBackClick = {}, onDeleteClick = {})
+    CartScreen(
+        cart = cart,
+        currentPage = 1,
+        totalPages = 1,
+        showPagination = false,
+        isLoading = false,
+        onBackClick = {},
+        onDeleteClick = {},
+        onPreviousClick = {},
+        onNextClick = {}
+    )
 }

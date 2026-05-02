@@ -4,9 +4,15 @@ import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 
 interface CartRepository {
-    fun add(item: Product)
+    suspend fun add(item: Product)
 
-    fun delete(item: Product)
+    suspend fun delete(item: Product)
+    suspend fun getCartItems(
+        fromIndex: Int,
+        limit: Int,
+    ): Map<Product, Int>
 
-    fun showAll(): Cart
+    suspend fun showAll(): Cart
+
+    suspend fun count(): Int
 }
