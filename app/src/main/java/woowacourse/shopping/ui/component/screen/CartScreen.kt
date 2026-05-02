@@ -31,22 +31,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
 import java.util.UUID
-import kotlin.math.min
 
 @Composable
 fun CartScreen(
-    cart: Cart,
+    cart: Products,
     currentPage: Int,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onClose: () -> Unit,
     onDelete: (UUID) -> Unit,
+    isPageable: Boolean,
     previousEnable: Boolean,
     nextEnable: Boolean,
     modifier: Modifier = Modifier,
@@ -59,6 +58,7 @@ fun CartScreen(
                 onDelete = onDelete,
                 currentPage = currentPage,
                 onPrevious = onPrevious,
+                isPageable = isPageable,
                 previousEnable = previousEnable,
                 nextEnable = nextEnable,
                 onNext = onNext,
@@ -100,11 +100,12 @@ private fun CartHeader(
 
 @Composable
 private fun CartBody(
-    cart: Cart,
+    cart: Products,
     currentPage: Int,
     onDelete: (UUID) -> Unit,
     onPrevious: () -> Unit = {},
     onNext: () -> Unit = {},
+    isPageable: Boolean,
     previousEnable: Boolean,
     nextEnable: Boolean,
     modifier: Modifier = Modifier,
@@ -119,14 +120,14 @@ private fun CartBody(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val products = cart.products
-        products.getPartedItem(currentPage).forEach {
+        products.forEach {
             CartItem(
                 product = it,
                 onDelete = onDelete,
                 modifier = Modifier.padding(top = 24.dp),
             )
         }
-        if (cart.isPageable()) {
+        if (isPageable) {
             PagingBtn(
                 currentPage = currentPage,
                 onPrevious = onPrevious,
@@ -209,17 +210,6 @@ fun PagingBtn(
 private fun btnAvailable(btnFlag: Boolean): Color =
     if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
-private fun Cart.isPageable(): Boolean = products.size() > 5
-
-private fun Products.getPartedItem(
-    page: Int,
-    pageSize: Int = 5,
-): List<Product> {
-    val fromIndex = page * pageSize
-    val toIndex = min(fromIndex + pageSize, this@getPartedItem.products.size)
-    return this@getPartedItem.products.subList(fromIndex, toIndex)
-}
-
 @Preview
 @Composable
 private fun CartScreenPreview() {
@@ -231,43 +221,40 @@ private fun CartScreenPreview() {
         onNext = {},
         previousEnable = false,
         nextEnable = false,
-        cart =
-            Cart(
-                products =
-                    Products(
-                        listOf(
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                            Product(
-                                imageUri = "uri",
-                                name = "무엘사",
-                                price = 10000000,
-                            ),
-                        ),
-                    ),
+        cart = Products(
+            listOf(
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
+                Product(
+                    imageUri = "uri",
+                    name = "무엘사",
+                    price = 10000000,
+                ),
             ),
+        ),
+        isPageable = true,
     )
 }

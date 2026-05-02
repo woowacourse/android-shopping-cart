@@ -15,9 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.CatalogScreen
+import woowacourse.shopping.ui.repository.CartRepository
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import kotlin.jvm.java
 
@@ -28,28 +28,30 @@ class MainActivity : ComponentActivity() {
 
         val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
         val cartIntent = Intent(this, CartActivity::class.java)
-        var cart = Cart()
 
         val startForProductDetailResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val product = result.data?.getParcelableExtra<Product>(IntentKeys.PRODUCT_KEY)
                     if (product != null) {
-                        cart = cart.addProduct(product)
+                        CartRepository.addProduct(product)
                     }
                 }
             }
 
         val startForCartResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    cart = result.data?.getParcelableExtra(IntentKeys.CART_KEY) ?: Cart()
-                }
-            }
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
         setContent {
             var currentIndex by rememberSaveable { mutableIntStateOf(0) }
-            var currentProducts by rememberSaveable { mutableStateOf(getCurrentProducts(currentIndex, MAX_PRODUCT)) }
+            var currentProducts by rememberSaveable {
+                mutableStateOf(
+                    getCurrentProducts(
+                        currentIndex,
+                        MAX_PRODUCT
+                    )
+                )
+            }
 
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -60,7 +62,6 @@ class MainActivity : ComponentActivity() {
                             startForProductDetailResult.launch(productDetailIntent)
                         },
                         onCartClick = {
-                            cartIntent.putExtra(IntentKeys.CART_KEY, cart)
                             startForCartResult.launch(cartIntent)
                         },
                         onLoadClick = {
