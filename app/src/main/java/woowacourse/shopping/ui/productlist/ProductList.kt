@@ -39,7 +39,7 @@ fun ProductList(
             key = { it.id },
             items = products,
         ) {
-            SingleProductItem(
+            ProductItem(
                 imageUrl = it.imageUrl,
                 title = it.title,
                 price = it.price,

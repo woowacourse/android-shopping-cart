@@ -12,7 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartContent
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 ?: return@registerForActivityResult
 
             productListStateHolder.cart = productListStateHolder.addCartItem(
-                CartItem(
+                CartContent(
                     product = productListStateHolder.products.first { it.id == addedId },
                     quantity = Quantity(1),
                 ),

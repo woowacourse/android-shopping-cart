@@ -1,7 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import android.R.attr.end
-import android.R.attr.text
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +26,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ui.productlist.PreviewableAsyncImage
 
 @Composable
-fun SingleCartItem(
+fun CartItem(
     imageUrl: String,
     title: String,
     price: String,
@@ -93,7 +91,7 @@ fun SingleCartItem(
 @Preview
 @Composable
 private fun CartItemPreview() {
-    SingleCartItem(
+    CartItem(
         imageUrl = "",
         title = "프리뷰",
         price = "1,000원",

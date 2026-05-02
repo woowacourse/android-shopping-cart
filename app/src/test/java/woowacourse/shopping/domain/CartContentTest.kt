@@ -3,17 +3,17 @@ package woowacourse.shopping.domain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class CartItemTest {
+class CartContentTest {
     @Test
     fun `입력받은 상품의 id가 CartItem 의 상품 id 와 같으면 true를 반환한다`() {
 
         // given : 상품과 CartItem이 주어진다
         val product = normalProduct("임시")
 
-        val cartItem = CartItem(product, Quantity(1))
+        val cartContent = CartContent(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartItem.isSame(
+        val result = cartContent.isSame(
             product,
         )
 
@@ -28,10 +28,10 @@ class CartItemTest {
         val product = normalProduct("임시")
         val other = normalProduct("임시2")
 
-        val cartItem = CartItem(product, Quantity(1))
+        val cartContent = CartContent(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartItem.isSame(
+        val result = cartContent.isSame(
             other,
         )
 

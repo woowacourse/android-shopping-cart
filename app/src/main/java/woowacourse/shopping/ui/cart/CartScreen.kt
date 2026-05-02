@@ -150,7 +150,7 @@ private fun CartItemList(
             key = { it.id },
             items = cartItems,
         ) {
-            SingleCartItem(
+            CartItem(
                 imageUrl = it.imageUrl,
                 title = it.title,
                 price = it.price,

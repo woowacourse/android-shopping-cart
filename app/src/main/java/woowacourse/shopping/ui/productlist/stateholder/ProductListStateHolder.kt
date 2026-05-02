@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.delay
 import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartContent
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.state.ProductUiModel
 
@@ -43,8 +43,8 @@ class ProductListStateHolder {
         )
     }
 
-    fun addCartItem(cartItem: CartItem): Cart {
-        return cart.plusCartItem(cartItem)
+    fun addCartItem(cartContent: CartContent): Cart {
+        return cart.plusCartItem(cartContent)
     }
 
     fun replaceCartItems(uiModels: List<ProductUiModel>): Cart {
