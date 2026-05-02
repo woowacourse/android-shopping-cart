@@ -18,7 +18,7 @@ class CartProductTest {
             )
         val cartProducts2 = cartProducts1.add(newProduct)
 
-        assertTrue(cartProducts2.products.contains(newProduct))
+        assertTrue(cartProducts2.items.contains(newProduct))
     }
 
     @Test
@@ -33,7 +33,7 @@ class CartProductTest {
         val targetId = newProduct.uuid
         val cartProducts2 = cartProducts1.remove(targetId)
 
-        assertTrue(cartProducts2.products.contains(newProduct).not())
+        assertTrue(cartProducts2.items.contains(newProduct).not())
     }
 
     @Test
