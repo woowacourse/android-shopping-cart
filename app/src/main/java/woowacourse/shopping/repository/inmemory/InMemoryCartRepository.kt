@@ -24,7 +24,6 @@ object InMemoryCartRepository : CartRepository {
             .take(limit)
             .associate { it.toPair() }
     }
-    override suspend fun showAll() = Cart(items.toMap())
 
     override suspend fun count(): Int = items.size
 }

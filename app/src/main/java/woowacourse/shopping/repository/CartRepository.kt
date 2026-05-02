@@ -12,7 +12,5 @@ interface CartRepository {
         limit: Int,
     ): Map<Product, Int>
 
-    suspend fun showAll(): Cart
-
     suspend fun count(): Int
 }

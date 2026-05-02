@@ -52,7 +52,7 @@ class CartViewModel(
     }
 
     private fun loadPage(page: Int) {
-        if(_uiState.value.isLoading && _uiState.value.cart.items.isNotEmpty())
+        if(_uiState.value.isLoading && _uiState.value.cart.items.isNotEmpty()) return
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
