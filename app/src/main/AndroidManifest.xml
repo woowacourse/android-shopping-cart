@@ -26,11 +26,8 @@
             android:theme="@style/Theme.Shopping" />
         <activity
             android:name=".ui.screens.product.ProductActivity"
-            android:exported="false"
             android:label="@string/title_activity_product"
-            android:theme="@style/Theme.Shopping" />
-        <activity
-            android:name=".MainActivity"
+            android:theme="@style/Theme.Shopping"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
