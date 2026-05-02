@@ -23,7 +23,12 @@ class CartStateHolder(
     }
 
     fun onNext() {
-        if (currentPage < items.size / 5) currentPage++
+        if (checkNextAvailable()) currentPage++
+    }
+
+    fun onDeleteProduct(id: UUID) {
+        cart = cart.removeProduct(id)
+        if(cart.size() % 5 == 0) currentPage--
     }
 
     fun checkPreviousAvailable(): Boolean = currentPage > 0
