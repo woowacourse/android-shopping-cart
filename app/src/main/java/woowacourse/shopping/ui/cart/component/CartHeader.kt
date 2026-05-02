@@ -12,11 +12,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.ShoppingTypography
 
 @Composable
@@ -34,13 +36,13 @@ fun CartHeader(
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "이전",
+            contentDescription = stringResource(R.string.content_description_previous),
             tint = Color.White,
             modifier = Modifier.clickable(onClick = onBackClick),
         )
         Spacer(modifier = Modifier.size(21.dp))
         Text(
-            text = "Cart",
+            text = stringResource(R.string.cart_title),
             color = Color.White,
             style = ShoppingTypography.titleMedium,
         )

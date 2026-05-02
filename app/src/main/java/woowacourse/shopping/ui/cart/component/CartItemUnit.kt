@@ -24,10 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
@@ -77,7 +79,7 @@ private fun NameAndCloseIcon(
         )
         Icon(
             imageVector = Icons.Default.Close,
-            contentDescription = "닫기",
+            contentDescription = stringResource(R.string.content_description_close),
             modifier = Modifier.clickable(onClick = onClick),
             tint = Color.Gray,
         )
@@ -102,7 +104,7 @@ private fun ImageAndPrice(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = "이미지",
+            contentDescription = stringResource(R.string.content_description_image),
             modifier =
                 Modifier
                     .width(136.dp)
@@ -110,7 +112,7 @@ private fun ImageAndPrice(
             contentScale = ContentScale.Crop,
         )
         Text(
-            text = "$formatted 원",
+            text = stringResource(R.string.price_format, formatted),
             color = Color.DarkGray,
             style = ShoppingTypography.productPrice,
             modifier = Modifier.padding(start = 6.dp),

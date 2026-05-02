@@ -14,12 +14,14 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.ShoppingTypography
 
 @Composable
@@ -48,13 +50,13 @@ fun CartPaging(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = "이전",
+                contentDescription = stringResource(R.string.content_description_previous),
                 tint = Color.White,
             )
         }
 
         Text(
-            text = "$currentPage",
+            text = stringResource(R.string.page_format, currentPage),
             color = Color.Black,
             style = ShoppingTypography.titleMedium,
         )
@@ -66,7 +68,7 @@ fun CartPaging(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "다음",
+                contentDescription = stringResource(R.string.content_description_next),
                 tint = Color.White,
             )
         }
@@ -112,7 +114,7 @@ private fun ArrowButtonPreview1() {
         content = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "다음",
+                contentDescription = stringResource(R.string.content_description_next),
                 tint = Color.White,
             )
         },
@@ -129,7 +131,7 @@ private fun ArrowButtonPreview2() {
         content = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "다음",
+                contentDescription = stringResource(R.string.content_description_next),
                 tint = Color.White,
             )
         },

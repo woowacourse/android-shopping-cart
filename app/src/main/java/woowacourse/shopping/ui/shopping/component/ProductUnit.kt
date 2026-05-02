@@ -13,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.R
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
@@ -40,7 +42,7 @@ fun ProductUnit(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = "이미지",
+            contentDescription = stringResource(R.string.content_description_image),
             modifier = Modifier.size(154.dp),
             contentScale = ContentScale.Crop,
         )
@@ -54,7 +56,7 @@ fun ProductUnit(
             modifier = Modifier.padding(start = 6.dp, end = 9.dp),
         )
         Text(
-            text = "$formatted 원",
+            text = stringResource(R.string.price_format, formatted),
             color = Color.DarkGray,
             style = ShoppingTypography.productPrice,
             modifier = Modifier.padding(start = 6.dp),

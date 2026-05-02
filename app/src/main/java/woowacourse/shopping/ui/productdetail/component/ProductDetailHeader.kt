@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.R
 
 @Composable
 fun ProductDetailHeader(
@@ -32,7 +34,7 @@ fun ProductDetailHeader(
     ) {
         Icon(
             imageVector = Icons.Default.Close,
-            contentDescription = "닫기",
+            contentDescription = stringResource(R.string.content_description_close),
             modifier = Modifier.clickable(onClick = onCloseClick),
             tint = Color.White,
         )
