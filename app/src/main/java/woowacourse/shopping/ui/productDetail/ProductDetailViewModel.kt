@@ -32,9 +32,7 @@ class ProductDetailViewModel(
         }
     }
 
-    fun addToCart() {
-        viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = productDetailState.value.product!!))
-        }
+    suspend fun addToCart() {
+        cartRepository.addCartItem(CartItem(product = productDetailState.value.product!!))
     }
 }

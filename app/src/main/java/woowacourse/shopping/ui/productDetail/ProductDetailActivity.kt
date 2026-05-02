@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.repository.cart.CartRepositoryMockImpl
 import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
 import woowacourse.shopping.ui.cart.CartActivity
@@ -30,9 +32,12 @@ class ProductDetailActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding),
                     viewModel = viewModel,
                     onAddToCartClick = {
-                        viewModel.addToCart()
                         val cartIntent = Intent(this, CartActivity::class.java)
-                        startActivity(cartIntent)
+
+                        lifecycleScope.launch {
+                            viewModel.addToCart()
+                            startActivity(cartIntent)
+                        }
                     },
                 )
             }
