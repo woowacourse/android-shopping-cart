@@ -8,10 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Products
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
 
@@ -19,46 +18,40 @@ class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val ids =
-            intent
-                .getStringExtra("id")
-                ?.split(",")
-                ?.filter { it.isNotBlank() } ?: emptyList()
-
-        val cartStateHolder = CartStateHolder(ids)
+        val cart: Cart = intent.getParcelableExtra(IntentKeys.CART_KEY) ?: Cart()
 
         onBackPressedDispatcher.addCallback {
-            saveAndCloseActivity(cartStateHolder.items)
+            saveAndCloseActivity(cart)
         }
 
         setContent {
-            Scaffold(modifier = Modifier.fillMaxSize()) {
+            val stateHolder = remember { CartStateHolder(cart) }
+
+            Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
                 CartScreen(
-                    cart = Cart(Products(cartStateHolder.items)),
+                    cart = stateHolder.cart,
                     onClose = {
-                        saveAndCloseActivity(cartStateHolder.items)
+                        saveAndCloseActivity(stateHolder.cart)
                     },
-                    onDelete = { it ->
-                        val product = MockCatalog.findProductById(it)
-                        cartStateHolder.items = cartStateHolder.items.minus(product)
+                    onDelete = { id ->
+                        stateHolder.removeProduct(id)
                     },
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .padding(it),
-                    currentPage = cartStateHolder.currentPage,
-                    onPrevious = { cartStateHolder.onPrevious() },
-                    onNext = { cartStateHolder.onNext() },
-                    previousEnable = cartStateHolder.checkPreviousAvailable(),
-                    nextEnable = cartStateHolder.checkNextAvailable(),
+                            .padding(paddingValues),
+                    currentPage = stateHolder.currentPage,
+                    onPrevious = { stateHolder.onPrevious() },
+                    onNext = { stateHolder.onNext() },
+                    previousEnable = stateHolder.checkPreviousAvailable(),
+                    nextEnable = stateHolder.checkNextAvailable(),
                 )
             }
         }
     }
 
-    fun saveAndCloseActivity(items: List<Product>) {
-        val itemsId = items.joinToString(",") { it.uuid.toString() }
-        intent.putExtra("id", itemsId)
+    fun saveAndCloseActivity(cart: Cart) {
+        intent.putExtra(IntentKeys.CART_KEY, cart)
         setResult(RESULT_OK, intent)
         finish()
     }

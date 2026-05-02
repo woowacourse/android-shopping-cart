@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,20 +24,22 @@ class MainActivity : ComponentActivity() {
 
         val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
         val cartIntent = Intent(this, CartActivity::class.java)
-        var items = ""
+        var cart = Cart()
 
         val startForProductDetailResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val uuid = result.data?.getStringExtra("id")
-                    items += if (items.isEmpty()) uuid else ",$uuid"
+                    val product = result.data?.getParcelableExtra<Product>(IntentKeys.PRODUCT_KEY)
+                    if (product != null) {
+                        cart = cart.addProduct(product)
+                    }
                 }
             }
 
         val startForCartResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    items = result.data?.getStringExtra("id") ?: items
+                    cart = result.data?.getParcelableExtra(IntentKeys.CART_KEY) ?: Cart()
                 }
             }
 
@@ -46,17 +51,17 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
                         catalog = currentProducts.value,
-                        onItemClick = { id ->
-                            productDetailIntent.putExtra("id", id.toString())
+                        onItemClick = { product ->
+                            productDetailIntent.putExtra(IntentKeys.PRODUCT_KEY, product)
                             startForProductDetailResult.launch(productDetailIntent)
                         },
                         onCartClick = {
-                            cartIntent.putExtra("id", items)
+                            cartIntent.putExtra(IntentKeys.CART_KEY, cart)
                             startForCartResult.launch(cartIntent)
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value += getCurrentProducts(currentIndex,MAX_PRODUCT)
+                            currentProducts.value += getCurrentProducts(currentIndex, MAX_PRODUCT)
                         },
                         modifier = Modifier.padding(innerPadding),
                     )

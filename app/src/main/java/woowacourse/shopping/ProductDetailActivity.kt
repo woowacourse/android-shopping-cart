@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import java.util.UUID
@@ -16,8 +17,7 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val productId = UUID.fromString(intent.getStringExtra("id"))
-        val product = MockCatalog.findProductById(productId)
+        val product = intent.getParcelableExtra<Product>(IntentKeys.PRODUCT_KEY)!!
 
         enableEdgeToEdge()
         setContent {
@@ -26,7 +26,7 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         onAddRequest = {
-                            intent.putExtra("id", product.uuid.toString())
+                            intent.putExtra(IntentKeys.PRODUCT_KEY, product)
                             setResult(RESULT_OK, intent)
                             finish()
                         },

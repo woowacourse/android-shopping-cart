@@ -33,7 +33,7 @@ import java.util.UUID
 @Composable
 fun CatalogScreen(
     catalog: Products,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -42,8 +42,8 @@ fun CatalogScreen(
         headerContent = { CatalogHeader(onCartClick) },
         bodyContent = {
             CatalogBody(
-                catalog,
-                onItemClick,
+                catalog = catalog ,
+                onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
             )
         },
@@ -84,7 +84,7 @@ private fun CatalogHeader(
 @Composable
 private fun CatalogBody(
     catalog: Products,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -96,7 +96,7 @@ private fun CatalogBody(
         items(catalog.size()) { item ->
             ShoppingItem(
                 product = catalog.getSingleItem(item),
-                onClick = onItemClick,
+                onClick = { onItemClick(catalog.getSingleItem(item)) },
             )
         }
 
