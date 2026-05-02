@@ -2,10 +2,10 @@
     <string name="app_name">Shopping</string>
     <string name="cart_name">Cart</string>
 
-    <string name="cart_description">장바구니 아이콘</string>
-    <string name="left_arrow_description">뒤로가기 아이콘</string>
-    <string name="close_description">닫기 아이콘</string>
-    <string name="load_more_description">상품 더보기 아이콘</string>
+    <string name="cart_description">장바구니로 이동</string>
+    <string name="left_arrow_description">뒤로 가기</string>
+    <string name="close_description">닫기</string>
+    <string name="load_more_description">상품 더보기</string>
 
 
     <string name="product_detail_price">가격</string>
