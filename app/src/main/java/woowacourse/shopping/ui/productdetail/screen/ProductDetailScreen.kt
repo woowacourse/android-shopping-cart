@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.domain.model.product.Price
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.ui.productdetail.component.ActionButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetail
 import woowacourse.shopping.ui.productdetail.component.ProductDetailTopAppBar
@@ -48,7 +48,7 @@ fun ProductDetailScreen(
             ProductDetail(product)
             ActionButton(
                 onClick = {
-                    CartRepository.addProduct(product)
+                    CartRepositoryImpl.addProduct(product)
                     scope.launch {
                         snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
                     }

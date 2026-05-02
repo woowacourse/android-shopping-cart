@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.ui.navigation.IntentKeys
 import woowacourse.shopping.ui.productdetail.screen.ProductDetailErrorScreen
 import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
@@ -24,7 +23,7 @@ class ProductDetailActivity : ComponentActivity() {
                 .getStringExtra(IntentKeys.PRODUCT_ID)
                 ?.toUuidOrNull()
                 ?.let { productId ->
-                    Products(ProductFixture.productList).findProductById(productId)
+                    ProductRepositoryImpl.findProductById(productId)
                 }
 
         setContent {

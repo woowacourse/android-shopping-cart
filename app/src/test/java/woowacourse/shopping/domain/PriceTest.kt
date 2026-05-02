@@ -3,6 +3,7 @@ package woowacourse.shopping.domain
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.domain.model.product.Price
 
 class PriceTest {
     @Test

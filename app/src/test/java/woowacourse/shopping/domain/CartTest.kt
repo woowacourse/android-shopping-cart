@@ -2,6 +2,9 @@ package woowacourse.shopping.domain
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.domain.model.cart.Cart
+import woowacourse.shopping.domain.model.product.Price
+import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

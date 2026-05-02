@@ -20,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.ui.productdetail.component.ActionButton
 import woowacourse.shopping.ui.shopping.component.ProductItem
 import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
@@ -35,7 +36,7 @@ fun ProductListScreen(
     modifier: Modifier = Modifier,
 ) {
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    val visibleProducts = products.getProducts(page = currentPageIndex)
+    val visibleProducts = ProductRepositoryImpl.getPagingProducts(page = currentPageIndex).productItems
 
     Scaffold(
         topBar = {
@@ -58,7 +59,7 @@ fun ProductListScreen(
                         onClick = onItemClick,
                     )
                 }
-                if (products.hasNextPage(currentPage = currentPageIndex)) {
+                if (ProductRepositoryImpl.hasNextPage(currentPage = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ActionButton(
                             onClick = {

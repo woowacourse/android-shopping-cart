@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.ProductFixture
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.navigation.IntentKeys
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity

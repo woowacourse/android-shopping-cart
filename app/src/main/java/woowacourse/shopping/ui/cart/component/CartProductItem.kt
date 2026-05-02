@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.cart.CartItem
+import woowacourse.shopping.domain.model.product.Price
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi

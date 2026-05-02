@@ -15,8 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.domain.CART_PAGE_SIZE
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.data.repository.CART_PAGE_SIZE
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.ui.cart.component.CartProductItem
 import woowacourse.shopping.ui.cart.component.CartTopAppBar
 import woowacourse.shopping.ui.cart.component.Pagination
@@ -28,7 +28,7 @@ fun CartScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var cartProducts = CartRepository.getCartProducts()
+    var cartProducts = CartRepositoryImpl.getItems().cartItems
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
     var lastPageIndex = if (cartProducts.isEmpty()) 0 else (cartProducts.size - 1) / CART_PAGE_SIZE
 
@@ -45,13 +45,13 @@ fun CartScreen(
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                 ) {
-                    items(CartRepository.getProductAndCounts(currentPageIndex)) { productAndCount ->
+                    items(CartRepositoryImpl.getPagingItems(currentPageIndex).cartItems) { productAndCount ->
                         CartProductItem(
                             cartItem = productAndCount,
                             onDelete = { id ->
-                                CartRepository.deleteProduct(productId = id)
+                                CartRepositoryImpl.deleteProduct(productId = id)
 
-                                val updatedProducts = CartRepository.getCartProducts()
+                                val updatedProducts = CartRepositoryImpl.getItems().cartItems
                                 val updatedLastPageIndex =
                                     if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
                                 if (currentPageIndex > updatedLastPageIndex) {

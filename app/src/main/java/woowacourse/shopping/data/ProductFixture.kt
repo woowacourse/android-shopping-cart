@@ -1,7 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.data
 
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.product.Price
+import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 
 object ProductFixture {

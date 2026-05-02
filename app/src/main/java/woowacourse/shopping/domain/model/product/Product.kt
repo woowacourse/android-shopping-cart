@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.model.product
 
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
