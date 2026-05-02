@@ -20,14 +20,13 @@ class CartTest {
 
     @Test
     fun `사용자가 선택한 상품을 제거할 수 있다`() {
-        val cart =
-            Cart(Products(listOf(Product(imageUri = "image", name = "twohander", price = 10000))))
-
+        val cart = Cart()
         val newProduct = Product(imageUri = "image", name = "twohander", price = 10000)
-        val newCart = cart.removeProduct(newProduct.uuid)
+        val productAddedCart = cart.addProduct(newProduct)
+        val productRemovedCart = productAddedCart.removeProduct(newProduct.uuid)
 
         assertTrue(
-            newCart.products.products
+            productRemovedCart.products.products
                 .contains(newProduct)
                 .not(),
         )
