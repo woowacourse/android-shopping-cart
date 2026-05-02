@@ -12,16 +12,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.data.ProductFixture
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import woowacourse.shopping.presentation.shopping.component.ProductItem
@@ -31,13 +26,12 @@ import woowacourse.shopping.presentation.shopping.component.ProductListTopAppBar
 @Composable
 fun ProductListScreen(
     products: Products,
+    hasNextPage: Boolean,
+    onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    val visibleProducts = ProductRepositoryImpl.getPagingProducts(page = currentPageIndex).productItems
-
     Scaffold(
         topBar = {
             ProductListTopAppBar(
@@ -53,18 +47,16 @@ fun ProductListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(visibleProducts) { product ->
+                items(products.productItems) { product ->
                     ProductItem(
                         product = product,
                         onClick = onItemClick,
                     )
                 }
-                if (ProductRepositoryImpl.hasNextPage(currentPage = currentPageIndex)) {
+                if (hasNextPage) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ActionButton(
-                            onClick = {
-                                currentPageIndex++
-                            },
+                            onClick = onLoadMore,
                             text = "더보기",
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -80,6 +72,8 @@ fun ProductListScreen(
 private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(ProductFixture.productList),
+        hasNextPage = true,
+        onLoadMore = {},
         onCartIconClick = {},
         onItemClick = {},
     )

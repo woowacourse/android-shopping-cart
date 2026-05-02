@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.remember
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.screen.ProductDetailErrorScreen
@@ -28,10 +30,17 @@ class ProductDetailActivity : ComponentActivity() {
 
         setContent {
             androidshoppingTheme {
+                val stateHolder =
+                    remember {
+                        ProductDetailStateHolder(
+                            cartRepository = CartRepositoryImpl,
+                        )
+                    }
                 if (product != null) {
                     ProductDetailScreen(
                         product = product,
                         onClose = { finish() },
+                        onAddToCart = { product -> stateHolder.addToCart(product) },
                     )
                 } else {
                     ProductDetailErrorScreen(onClose = { finish() })

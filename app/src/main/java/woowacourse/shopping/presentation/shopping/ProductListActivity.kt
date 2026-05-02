@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.data.ProductFixture
-import woowacourse.shopping.domain.model.product.Products
+import androidx.compose.runtime.remember
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -19,8 +19,16 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             androidshoppingTheme {
+                val stateHolder =
+                    remember {
+                        ProductListStateHolder(
+                            productRepository = ProductRepositoryImpl,
+                        )
+                    }
                 ProductListScreen(
-                    products = Products(ProductFixture.productList),
+                    products = stateHolder.products,
+                    hasNextPage = stateHolder.hasNextPage,
+                    onLoadMore = { stateHolder.loadMore() },
                     onCartIconClick = {
                         val intent = Intent(this, CartActivity::class.java)
                         startActivity(intent)

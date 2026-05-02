@@ -20,11 +20,11 @@ import woowacourse.shopping.R
 
 @Composable
 fun Pagination(
-    pageMoveToLeft: () -> Unit,
-    pageMoveToLeftButtonEnabled: Boolean,
-    currentPageIndex: Int,
-    pageMoveToRight: () -> Unit,
-    pageMoveToRightButtonEnabled: Boolean,
+    onPreviousPageClick: () -> Unit,
+    hasPreviousPage: Boolean,
+    currentPage: Int,
+    onNextPageClick: () -> Unit,
+    hasNextPage: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -35,7 +35,7 @@ fun Pagination(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PageMoveButton(
-            onClick = pageMoveToLeft,
+            onClick = onPreviousPageClick,
             shape =
                 RoundedCornerShape(
                     topStart = 4.dp,
@@ -43,7 +43,7 @@ fun Pagination(
                     bottomStart = 4.dp,
                     bottomEnd = 0.dp,
                 ),
-            enabled = pageMoveToLeftButtonEnabled,
+            enabled = hasPreviousPage,
         ) {
             Image(
                 modifier = Modifier.size(width = 12.dp, height = 19.dp),
@@ -56,13 +56,13 @@ fun Pagination(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = (currentPageIndex + 1).toString(),
+                text = currentPage.toString(),
                 fontWeight = FontWeight.W500,
                 fontSize = 22.sp,
             )
         }
         PageMoveButton(
-            onClick = pageMoveToRight,
+            onClick = onNextPageClick,
             shape =
                 RoundedCornerShape(
                     topStart = 0.dp,
@@ -70,7 +70,7 @@ fun Pagination(
                     bottomStart = 0.dp,
                     bottomEnd = 4.dp,
                 ),
-            enabled = pageMoveToRightButtonEnabled,
+            enabled = hasNextPage,
         ) {
             Image(
                 painter = painterResource(R.drawable.next_icon),
@@ -85,10 +85,10 @@ fun Pagination(
 @Composable
 private fun PaginationPreview() {
     Pagination(
-        pageMoveToLeft = {},
-        pageMoveToLeftButtonEnabled = true,
-        currentPageIndex = 1,
-        pageMoveToRight = {},
-        pageMoveToRightButtonEnabled = true,
+        onPreviousPageClick = {},
+        hasPreviousPage = true,
+        currentPage = 1,
+        onNextPageClick = {},
+        hasNextPage = true,
     )
 }

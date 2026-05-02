@@ -8,30 +8,31 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.data.repository.CART_PAGE_SIZE
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.presentation.cart.component.CartProductItem
 import woowacourse.shopping.presentation.cart.component.CartTopAppBar
 import woowacourse.shopping.presentation.cart.component.Pagination
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun CartScreen(
+    cart: Cart,
+    currentPage: Int,
+    hasMoreItems: Boolean,
+    onPreviousPageClick: () -> Unit,
+    onNextPageClick: () -> Unit,
+    hasPreviousPage: Boolean,
+    hasNextPage: Boolean,
+    onDelete: (Uuid) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var cartProducts = CartRepositoryImpl.getItems().cartItems
-    var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    var lastPageIndex = if (cartProducts.isEmpty()) 0 else (cartProducts.size - 1) / CART_PAGE_SIZE
-
     Scaffold(
         topBar = {
             CartTopAppBar(
@@ -45,29 +46,20 @@ fun CartScreen(
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                 ) {
-                    items(CartRepositoryImpl.getPagingItems(currentPageIndex).cartItems) { productAndCount ->
+                    items(cart.cartItems) { productAndCount ->
                         CartProductItem(
                             cartItem = productAndCount,
-                            onDelete = { id ->
-                                CartRepositoryImpl.deleteProduct(productId = id)
-
-                                val updatedProducts = CartRepositoryImpl.getItems().cartItems
-                                val updatedLastPageIndex =
-                                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-                                if (currentPageIndex > updatedLastPageIndex) {
-                                    currentPageIndex = updatedLastPageIndex
-                                }
-                            },
+                            onDelete = { id -> onDelete(id) },
                         )
                     }
                 }
-                if (cartProducts.size > 5) {
+                if (hasMoreItems) {
                     Pagination(
-                        pageMoveToLeft = { if (currentPageIndex > 0) currentPageIndex-- },
-                        pageMoveToLeftButtonEnabled = currentPageIndex > 0,
-                        currentPageIndex = currentPageIndex,
-                        pageMoveToRight = { if (currentPageIndex < lastPageIndex) currentPageIndex++ },
-                        pageMoveToRightButtonEnabled = currentPageIndex < lastPageIndex,
+                        onPreviousPageClick = onPreviousPageClick,
+                        hasPreviousPage = hasPreviousPage,
+                        currentPage = currentPage,
+                        onNextPageClick = onNextPageClick,
+                        hasNextPage = hasNextPage,
                     )
                 }
             }
@@ -79,5 +71,15 @@ fun CartScreen(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen(onBack = {})
+    CartScreen(
+        cart = CartRepositoryImpl.getItems(),
+        currentPage = 1,
+        hasMoreItems = true,
+        onPreviousPageClick = {},
+        onNextPageClick = {},
+        hasPreviousPage = true,
+        hasNextPage = true,
+        onDelete = {},
+        onBack = {},
+    )
 }

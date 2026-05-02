@@ -8,7 +8,10 @@ import kotlin.uuid.Uuid
 interface CartRepository {
     fun getItems(): Cart
 
-    fun getPagingItems(page: Int): Cart
+    fun getPagingItems(
+        page: Int,
+        pageSize: Int,
+    ): Cart
 
     fun addProduct(product: Product)
 

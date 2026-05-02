@@ -8,9 +8,15 @@ import kotlin.uuid.Uuid
 interface ProductRepository {
     fun getProducts(): Products
 
-    fun getPagingProducts(page: Int): Products
+    fun getPagingProducts(
+        page: Int,
+        pageSize: Int,
+    ): Products
 
-    fun hasNextPage(currentPage: Int): Boolean
+    fun hasNextPage(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean
 
     @OptIn(ExperimentalUuidApi::class)
     fun findProductById(productId: Uuid): Product?
