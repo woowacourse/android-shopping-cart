@@ -2,24 +2,25 @@ package woowacourse.shopping.ui.productdetail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.ui.productdetail.stateholder.ProductDetailStateHolder
+import androidx.annotation.RequiresApi
+import kotlin.jvm.java
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.productlist.ProductDetailScreen
+import woowacourse.shopping.ui.state.ProductUiModel
 
 class ProductDetailActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val id = intent.getStringExtra(EXTRA_PRODUCT_ID)
-        val holder = ProductDetailStateHolder()
-
-        val productModel = id?.let { holder.getProductUiModel(it) }
-        if (productModel == null) {
+        val uiModel = intent.getParcelableExtra(DETAIL_PRODUCT, ProductUiModel::class.java)
+        if (uiModel == null) {
             finish()
             return
         }
@@ -27,12 +28,12 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingcartTheme {
                 ProductDetailScreen(
-                    imageUrl = productModel.imageUrl,
-                    title = productModel.title,
-                    price = productModel.price,
+                    imageUrl = uiModel.imageUrl,
+                    title = uiModel.title,
+                    price = uiModel.price,
                     onCloseClick = { finish() },
                     onAddToCartClick = {
-                        setResult(RESULT_OK, addedIdResult(id))
+                        setResult(RESULT_OK, addedIdResult(uiModel.id))
                         finish()
                     },
                 )
@@ -41,14 +42,14 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT_ID = "product_id"
+        private const val DETAIL_PRODUCT = "product_id"
         private const val EXTRA_ADDED_ID = "added_to_cart_id"
 
         fun newIntent(
             context: Context,
-            productId: String,
+            uiModel: ProductUiModel,
         ): Intent = Intent(context, ProductDetailActivity::class.java)
-            .putExtra(EXTRA_PRODUCT_ID, productId)
+            .putExtra(DETAIL_PRODUCT, uiModel)
 
         fun getAddedId(intent: Intent?): String? = intent?.getStringExtra(EXTRA_ADDED_ID)
 

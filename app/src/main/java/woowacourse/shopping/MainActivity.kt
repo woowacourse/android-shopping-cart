@@ -74,8 +74,8 @@ class MainActivity : ComponentActivity() {
                                 .map(productListStateHolder::toProductUiModel)
                         }
                     },
-                    onProductClick = { id ->
-                        detailLauncher.launch(ProductDetailActivity.newIntent(this, id))
+                    onProductClick = { uiModel ->
+                        detailLauncher.launch(ProductDetailActivity.newIntent(this, uiModel))
                     },
                     onCartIconClick = {
                         cartLauncher.launch(CartActivity.newIntent(this, productListStateHolder.uiModels))

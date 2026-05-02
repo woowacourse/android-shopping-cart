@@ -23,7 +23,7 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @Composable
 fun ProductList(
     products: List<ProductUiModel>,
-    onProductClick: (String) -> Unit,
+    onProductClick: (ProductUiModel) -> Unit,
     onLoading: () -> Unit,
     modifier: Modifier = Modifier,
     isEnd: Boolean,
@@ -45,7 +45,7 @@ fun ProductList(
                 price = it.price,
                 modifier = Modifier.clickable(
                     onClick = {
-                        onProductClick(it.id)
+                        onProductClick(it)
                     },
                 ),
             )
