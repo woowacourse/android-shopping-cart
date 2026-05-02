@@ -51,7 +51,7 @@ private fun ProductDetailHeader(
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
