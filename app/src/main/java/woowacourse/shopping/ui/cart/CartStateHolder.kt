@@ -31,6 +31,14 @@ class CartStateHolder(
 
     fun getCartItems() {
         val items = cartRepository.getCart().items.map { it.toUiModel() }
+        val lastPage =
+            if (items.isEmpty()) {
+                0
+            } else {
+                items.lastIndex / pageSize
+            }
+        if (page < 0) page = 0
+        else if (page > lastPage) page = lastPage
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, items.size)
         currentCartItems = items.subList(fromIndex, toIndex)

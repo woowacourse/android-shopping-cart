@@ -14,7 +14,7 @@
   - [x] getProductById 제품 미존재 시 오류 처리 로직 작성
   - [x] 페이지네이션 파라미터 경계값 검증
   - [x] 다음 버튼 접근성 라벨 수정
-  - [ ] getCartItem 로직 수정 (경계값)
+  - [x] getCartItem 로직 수정 (경계값)
 ## 상품명(ProductName)
 - 상품의 이름(String)을 나타낸다.
 - [x] 이름이 빈 값일 경우 예외를 반환한다.
