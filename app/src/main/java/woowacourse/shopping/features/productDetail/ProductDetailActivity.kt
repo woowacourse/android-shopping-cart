@@ -20,7 +20,8 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val productId = intent.getStringExtra("PRODUCT_ID") ?: ""
-        val viewModel = ProductDetailViewModel(
+        val viewModel =
+            ProductDetailViewModel(
                 productId = productId,
                 productRepository = ProductRepositoryMockImpl(),
                 cartRepository = CartRepositoryMockImpl,

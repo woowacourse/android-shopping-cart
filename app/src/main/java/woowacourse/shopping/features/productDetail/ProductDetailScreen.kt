@@ -34,12 +34,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.data.cart.CartRepositoryMockImpl
+import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
-import woowacourse.shopping.data.cart.CartRepositoryMockImpl
-import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

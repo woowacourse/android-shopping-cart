@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.model.CartItem
-import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.cart.repository.CartRepository
+import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.repository.ProductRepository
 
 data class ProductDetailUiState(
@@ -20,10 +20,8 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-
     private val _productDetailState = MutableStateFlow(ProductDetailUiState())
     val productDetailState: StateFlow<ProductDetailUiState> = _productDetailState.asStateFlow()
-
 
     init {
         viewModelScope.launch {

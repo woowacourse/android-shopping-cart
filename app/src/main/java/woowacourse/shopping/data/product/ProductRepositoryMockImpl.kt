@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.product
 
+import woowacourse.shopping.data.MockData
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.repository.ProductRepository
-import woowacourse.shopping.data.MockData
 
 class ProductRepositoryMockImpl : ProductRepository {
     override suspend fun getProductsSize(): Int = MockData.products.size

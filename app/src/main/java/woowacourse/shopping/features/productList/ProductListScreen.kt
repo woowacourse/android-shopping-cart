@@ -35,10 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.data.product.ProductRepositoryMockImpl
+import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
-import woowacourse.shopping.domain.product.model.Product
-import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,9 +167,10 @@ private fun ProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable {
-            onClick()
-        },
+        modifier =
+            modifier.clickable {
+                onClick()
+            },
     ) {
         AsyncImage(
             model = imageUrl,

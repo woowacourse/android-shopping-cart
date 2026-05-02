@@ -43,12 +43,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.data.cart.CartRepositoryMockImpl
+import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
-import woowacourse.shopping.domain.cart.model.CartItem
-import woowacourse.shopping.data.cart.CartRepositoryMockImpl
 
 @Composable
 fun CartScreen(

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 
-class   CartActivity : ComponentActivity() {
+class CartActivity : ComponentActivity() {
     private val viewModel: CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +22,7 @@ class   CartActivity : ComponentActivity() {
             ) { innerPadding ->
                 CartScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel = viewModel
+                    viewModel = viewModel,
                 )
             }
         }

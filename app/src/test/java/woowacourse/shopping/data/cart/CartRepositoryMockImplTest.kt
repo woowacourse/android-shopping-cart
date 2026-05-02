@@ -18,9 +18,10 @@ class CartRepositoryMockImplTest {
         runBlocking {
             cartRepository.addCartItem(cartItem1)
         }
-        val updatedCart = runBlocking {
-            cartRepository.getCart()
-        }
+        val updatedCart =
+            runBlocking {
+                cartRepository.getCart()
+            }
         assertTrue(updatedCart.searchCartItem(cartItem1))
     }
 
@@ -37,9 +38,10 @@ class CartRepositoryMockImplTest {
             cartRepository.removeCartItem(cartItem2)
         }
 
-        val updatedCart = runBlocking {
-            cartRepository.getCart()
-        }
+        val updatedCart =
+            runBlocking {
+                cartRepository.getCart()
+            }
 
         assertTrue(updatedCart.searchCartItem(cartItem1))
         assertFalse(updatedCart.searchCartItem(cartItem2))

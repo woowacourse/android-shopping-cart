@@ -14,7 +14,6 @@ import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
 
 class ProductListActivity : ComponentActivity() {
-
     private val viewModel: ProductListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

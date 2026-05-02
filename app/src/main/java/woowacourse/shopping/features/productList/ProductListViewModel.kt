@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.product.repository.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryMockImpl
+import woowacourse.shopping.domain.product.repository.ProductRepository
 
 class ProductListViewModel(
     private val productRepository: ProductRepository = ProductRepositoryMockImpl(),
@@ -31,7 +31,8 @@ class ProductListViewModel(
 
             _productListUiState.value =
                 ProductListState(
-                    products = productListUiState.value.products + productRepository.getPagedProducts(page = currentPage, pageSize = PAGE_SIZE),
+                    products =
+                        productListUiState.value.products + productRepository.getPagedProducts(page = currentPage, pageSize = PAGE_SIZE),
                     currentProductCount = currentPage,
                     totalProductCount = totalProductCount,
                 )

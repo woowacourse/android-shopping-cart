@@ -32,7 +32,6 @@ class CartTest {
         val cart = Cart(cartItems = cartItemsValue)
         val targetCartItem = cartItem4
 
-
         val addedCart = cart.addCartItem(targetCartItem)
 
         assertTrue(addedCart.searchCartItem(targetCartItem))
