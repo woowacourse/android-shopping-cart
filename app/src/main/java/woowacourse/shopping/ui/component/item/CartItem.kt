@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,7 +86,9 @@ private fun ProductName(
         text = name,
         fontWeight = FontWeight(700),
         fontSize = 18.sp,
-        modifier = modifier,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier.width(250.dp),
     )
 }
 
@@ -126,7 +129,7 @@ private fun CartItemPreview() {
     CartItem(
         Product(
             imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
-            name = "매우매우긴상품명입니다",
+            name = "진짜진짜정말정말매우매우긴상품명입니다",
             price = 1000000000,
         ),
         {},
