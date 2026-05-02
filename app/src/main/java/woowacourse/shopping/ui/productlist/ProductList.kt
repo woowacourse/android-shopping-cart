@@ -17,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.state.ProductUiModel
 
 @Composable
@@ -61,7 +63,7 @@ fun ProductList(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowDownward,
-                        contentDescription = "상품 더보기",
+                        contentDescription = stringResource(R.string.load_more_description),
                         modifier = Modifier
                             .padding(12.dp)
                             .size(24.dp)
