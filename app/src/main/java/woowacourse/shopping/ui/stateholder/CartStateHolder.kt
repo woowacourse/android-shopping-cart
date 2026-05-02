@@ -18,7 +18,7 @@ class CartStateHolder: Parcelable {
     }
 
     fun onNext(count: Int) {
-        if (currentPage < count / 5) {
+        if (currentPage < (count - 1) / 5) {
             currentPage++
         }
     }
