@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.presentation.cart.screen.CartScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
@@ -20,7 +21,7 @@ class CartActivity : ComponentActivity() {
         setContent {
             androidshoppingTheme {
                 val stateHolder =
-                    remember {
+                    rememberSaveable {
                         CartStateHolder(
                             cartRepository = CartRepositoryImpl,
                         )

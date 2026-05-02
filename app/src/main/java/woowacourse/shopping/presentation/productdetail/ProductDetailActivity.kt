@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.presentation.navigation.IntentKeys
@@ -31,7 +31,7 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             androidshoppingTheme {
                 val stateHolder =
-                    remember {
+                    rememberSaveable {
                         ProductDetailStateHolder(
                             cartRepository = CartRepositoryImpl,
                         )
