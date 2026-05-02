@@ -9,13 +9,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.repository.CartRepository
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -32,7 +37,8 @@ class MainActivity : ComponentActivity() {
         val startForProductDetailResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
+                    val product =
+                        result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
                     if (product != null) {
                         CartRepository.addProduct(product)
                     }
@@ -43,14 +49,13 @@ class MainActivity : ComponentActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
         setContent {
+            val coroutineScope = rememberCoroutineScope()
             var currentIndex by rememberSaveable { mutableIntStateOf(0) }
-            var currentProducts by rememberSaveable {
-                mutableStateOf(
-                    getCurrentProducts(
-                        currentIndex,
-                        MAX_PRODUCT
-                    )
-                )
+            var currentProducts by rememberSaveable { mutableStateOf(Products()) }
+            LaunchedEffect(Unit) {
+                if(currentProducts.isEmpty()) {
+                    currentProducts = loadProducts(currentIndex, MAX_PRODUCT)
+                }
             }
 
             AndroidshoppingTheme {
@@ -65,8 +70,10 @@ class MainActivity : ComponentActivity() {
                             startForCartResult.launch(cartIntent)
                         },
                         onLoadClick = {
-                            currentIndex++
-                            currentProducts += getCurrentProducts(currentIndex, MAX_PRODUCT)
+                            coroutineScope.launch {
+                                currentIndex++
+                                currentProducts += loadProducts(currentIndex, MAX_PRODUCT)
+                            }
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
@@ -75,7 +82,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun getCurrentProducts(
+    suspend fun loadProducts(
         currentIndex: Int,
         size: Int,
     ) = MockCatalog.loadMoreProducts(currentIndex, size)

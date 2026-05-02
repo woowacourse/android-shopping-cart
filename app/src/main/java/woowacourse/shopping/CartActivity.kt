@@ -8,13 +8,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.repository.CartRepository
 import woowacourse.shopping.ui.stateholder.CartStateHolder
+import kotlin.time.Duration.Companion.seconds
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,14 +28,13 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val coroutineScope = rememberCoroutineScope()
             val stateHolder = rememberSaveable { CartStateHolder() }
-            val currentPageProducts = remember {
-                mutableStateOf(
-                    CartRepository.getPartedItem(
-                        stateHolder.currentPage,
-                        PAGE_SIZE
-                    )
-                )
+            val currentPageProducts = remember { mutableStateOf(Products()) }
+
+            LaunchedEffect(Unit) {
+                currentPageProducts.value =
+                    CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
             }
 
             BackHandler {
@@ -44,24 +49,31 @@ class CartActivity : ComponentActivity() {
                     },
                     onDelete = { id ->
                         CartRepository.removeProduct(id)
-                        currentPageProducts.value =
+                        coroutineScope.launch { currentPageProducts.value =
                             CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                        }
                         if (currentPageProducts.value.isEmpty()) {
                             stateHolder.onPrevious()
-                            currentPageProducts.value =
-                                CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                            coroutineScope.launch {
+                                currentPageProducts.value =
+                                    CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                            }
                         }
                     },
                     currentPage = stateHolder.currentPage,
                     onPrevious = {
                         stateHolder.onPrevious()
-                        currentPageProducts.value =
-                            CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                        coroutineScope.launch {
+                            currentPageProducts.value =
+                                CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                        }
                     },
                     onNext = {
                         stateHolder.onNext(CartRepository.size())
-                        currentPageProducts.value =
-                            CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                        coroutineScope.launch {
+                            currentPageProducts.value =
+                                CartRepository.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
+                        }
                     },
                     previousEnable = stateHolder.checkPreviousAvailable(),
                     nextEnable = stateHolder.checkNextAvailable(CartRepository.size()),

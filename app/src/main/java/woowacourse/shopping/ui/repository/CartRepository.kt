@@ -8,7 +8,7 @@ import java.util.UUID
 object CartRepository {
     private var cart = Cart()
 
-    fun getPartedItem(
+    suspend fun getPartedItem(
         page: Int,
         pageSize: Int,
     ): Products {
@@ -26,7 +26,7 @@ object CartRepository {
     fun size() = cart.size()
 }
 
-private fun Cart.getPartedItem(
+private suspend fun Cart.getPartedItem(
     page: Int,
     pageSize: Int,
 ): Products {
