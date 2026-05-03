@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.component.ShoppingAppBar
 import woowacourse.shopping.ui.model.ProductUiModel
@@ -62,7 +64,7 @@ fun ShoppingScreen(
         remember {
             ShoppingStateHolder(
                 scope = scope,
-                initialProducts = savedProducts,
+                initialProducts = savedProducts.toPersistentList(),
                 initialCanLoadMore = savedCanLoadMore,
                 initialOffset = savedOffset,
                 onProductsChanged = { products ->
@@ -108,7 +110,7 @@ fun ShoppingScreen(
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         ShoppingContents(
-            products = products.toImmutableList(),
+            products = products,
             modifier = Modifier.padding(innerPadding),
             onLoad = { state.loadMore() },
             onProductClick = onProductClick,
