@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.constant.Format.formatPrice
@@ -49,7 +48,7 @@ import woowacourse.shopping.repository.product.MockProductRepository
 @Composable
 fun ProductListScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProductListViewModel = viewModel(factory = ProductListViewModel.factory(MockProductRepository())),
+    viewModel: ProductListViewModel ,
     onCartClick: () -> Unit = {},
     onProductClick: (Product) -> Unit = {},
 ) {

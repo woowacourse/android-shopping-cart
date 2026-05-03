@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.repository.cart.MockCartRepository
 
 class   CartActivity : ComponentActivity() {
@@ -17,10 +18,14 @@ class   CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: CartViewModel = viewModel(
+                factory = CartViewModel.factory(MockCartRepository),
+            )
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
             ) { innerPadding ->
                 CartScreen(
+                    viewModel = viewModel,
                     modifier = Modifier.padding(innerPadding),
                 )
             }

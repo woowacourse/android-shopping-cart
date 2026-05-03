@@ -52,12 +52,11 @@ import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.MockCartRepository
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel = viewModel(factory = CartViewModel.factory(MockCartRepository)),
+    viewModel: CartViewModel ,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
