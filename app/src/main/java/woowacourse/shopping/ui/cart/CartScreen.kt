@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,7 +57,7 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     viewModel: CartViewModel,
 ) {
-    val cartUiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
 
     Column(
@@ -71,36 +73,109 @@ fun CartScreen(
             },
         )
 
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 4.dp),
-        ) {
-            items(cartUiState.cartItems) { cartItem ->
-                CartItemCard(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                    cartItem = cartItem,
-                    onRemoveClick = {
-                        viewModel.removeCartItem(cartItem)
-                    },
+        when (val state = uiState) {
+            is CartUiState.Loading -> {
+                LoadingContent(modifier = Modifier.weight(1f))
+            }
+
+            is CartUiState.Empty -> {
+                EmptyContent(modifier = Modifier.weight(1f))
+            }
+
+            is CartUiState.Success -> {
+                CartItemList(
+                    cartItems = state.cartItems,
+                    modifier = Modifier.weight(1f),
+                    onRemoveClick = viewModel::removeCartItem,
+                )
+
+                if (state.showPageNavigator) {
+                    PageNavigator(
+                        currentPage = state.currentPage,
+                        hasPrevious = state.hasPrevious,
+                        hasNext = state.hasNext,
+                        onPreviousClick = { viewModel.goToPreviousPage() },
+                        onNextClick = { viewModel.goToNextPage() },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                    )
+                }
+            }
+
+            is CartUiState.Error -> {
+                ErrorContent(
+                    modifier = Modifier.weight(1f),
+                    message = state.throwable.message ?: "장바구니를 불러오지 못했어요.",
                 )
             }
         }
+    }
+}
 
-        if (cartUiState.totalPages > 1) {
-            PageNavigator(
-                currentPage = cartUiState.currentPage,
-                hasPrevious = cartUiState.hasPrevious,
-                hasNext = cartUiState.hasNext,
-                onPreviousClick = { viewModel.goToPreviousPage() },
-                onNextClick = { viewModel.goToNextPage() },
+@Composable
+private fun LoadingContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun EmptyContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "장바구니가 비어있어요.",
+            fontSize = 16.sp,
+            color = Color.Gray,
+        )
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    message: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = message,
+            fontSize = 16.sp,
+            color = Color.Gray,
+        )
+    }
+}
+
+@Composable
+private fun CartItemList(
+    cartItems: List<CartItem>,
+    onRemoveClick: (CartItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(bottom = 4.dp),
+    ) {
+        items(cartItems) { cartItem ->
+            CartItemCard(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                cartItem = cartItem,
+                onRemoveClick = {
+                    onRemoveClick(cartItem)
+                },
             )
         }
     }
@@ -126,7 +201,7 @@ private fun CartTopAppBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "뒤로 가기",
+                    contentDescription = "뒤로가기",
                     tint = Color.White,
                 )
             }
