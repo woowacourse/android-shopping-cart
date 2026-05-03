@@ -39,7 +39,7 @@ import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
 import woowacourse.shopping.repository.cart.MemoryCartRepository
-import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
+import woowacourse.shopping.repository.product.MemoryProductRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -251,7 +251,7 @@ fun ProductDetailScreenPreview() {
         viewModel =
             ProductDetailViewModel(
                 "0",
-                ProductRepositoryMockImpl(),
+                MemoryProductRepository(),
                 MemoryCartRepository,
             ),
         onAddToCartClick = {},

@@ -38,7 +38,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
+import woowacourse.shopping.repository.product.MemoryProductRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -230,5 +230,5 @@ private fun MoreButton(
 @Preview(showBackground = true)
 @Composable
 fun ProductListScreenPreview() {
-    ProductListScreen(viewModel = ProductListViewModel(ProductRepositoryMockImpl()))
+    ProductListScreen(viewModel = ProductListViewModel(MemoryProductRepository()))
 }

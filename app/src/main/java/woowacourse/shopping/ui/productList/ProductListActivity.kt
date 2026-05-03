@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.repository.product.ProductRepositoryMockImpl
+import woowacourse.shopping.repository.product.MemoryProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productDetail.ProductDetailActivity
 
@@ -23,7 +23,7 @@ class ProductListActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding),
                     viewModel =
                         ProductListViewModel(
-                            productRepository = ProductRepositoryMockImpl(),
+                            productRepository = MemoryProductRepository(),
                         ),
                     onCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
