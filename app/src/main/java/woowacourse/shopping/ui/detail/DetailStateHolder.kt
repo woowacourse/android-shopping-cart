@@ -19,12 +19,7 @@ class DetailStateHolder(
     private val cartRepository: CartRepository = CartRepository,
 ) {
     var product by mutableStateOf(
-        ProductUiModel(
-            id = "",
-            name = "",
-            imageUrl = "",
-            price = 0,
-        ),
+        ProductUiModel(),
     )
 
     init {
