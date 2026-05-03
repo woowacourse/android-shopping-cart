@@ -4,8 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -38,8 +36,11 @@ class ShoppingStateHolder(
         if (isLoading || !canLoadMore) return
         scope.launch {
             isLoading = true
-            val loadData = productRepository.getProducts(offset, pageSize).map { it.toUiModel() }
-                .toImmutableList()
+            val loadData =
+                productRepository
+                    .getProducts(offset, pageSize)
+                    .map { it.toUiModel() }
+                    .toImmutableList()
             currentProducts = currentProducts.plus(loadData).toImmutableList()
             offset += loadData.size
             canLoadMore = loadData.size == pageSize

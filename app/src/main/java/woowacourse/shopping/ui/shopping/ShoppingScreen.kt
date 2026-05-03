@@ -34,9 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentSet
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.component.ShoppingAppBar
 import woowacourse.shopping.ui.model.ProductUiModel
@@ -44,7 +42,7 @@ import woowacourse.shopping.ui.model.ProductUiModel
 @Composable
 fun ShoppingScreen(
     onProductClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
@@ -170,6 +168,6 @@ private fun ShoppingContents(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
-        onProductClick = {}
+        onProductClick = {},
     )
 }

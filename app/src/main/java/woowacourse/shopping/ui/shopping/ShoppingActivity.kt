@@ -17,7 +17,7 @@ class ShoppingActivity : ComponentActivity() {
                     onProductClick = { id ->
                         val intent = DetailActivity.getIntent(this, id)
                         startActivity(intent)
-                    }
+                    },
                 )
             }
         }

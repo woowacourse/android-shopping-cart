@@ -27,13 +27,15 @@ class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val id = intent.getStringExtra(PRODUCT_ID)
+        if (id == null) {
+            Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         setContent {
-            val id = intent.getStringExtra(PRODUCT_ID)
-            if (id == null) {
-                Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
-                finish()
-                return@setContent
-            }
             AndroidshoppingTheme {
                 DetailScreen(
                     id = id,

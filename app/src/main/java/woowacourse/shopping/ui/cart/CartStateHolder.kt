@@ -37,8 +37,11 @@ class CartStateHolder(
             } else {
                 items.lastIndex / pageSize
             }
-        if (page < 0) page = 0
-        else if (page > lastPage) page = lastPage
+        if (page < 0) {
+            page = 0
+        } else if (page > lastPage) {
+            page = lastPage
+        }
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, items.size)
         currentCartItems = items.subList(fromIndex, toIndex)

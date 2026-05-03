@@ -33,12 +33,13 @@ class MockProductRepositoryTest {
     @Test
     fun `offset이 음수이면 예외가 발생한다`() =
         runTest {
-            val exception = try {
-                repository.getProducts(offset = -1, limit = 20)
-                null
-            } catch (e: IllegalArgumentException) {
-                e
-            }
+            val exception =
+                try {
+                    repository.getProducts(offset = -1, limit = 20)
+                    null
+                } catch (e: IllegalArgumentException) {
+                    e
+                }
             assertThat(exception?.message).contains("offset은 0 이상이어야 합니다.")
         }
 

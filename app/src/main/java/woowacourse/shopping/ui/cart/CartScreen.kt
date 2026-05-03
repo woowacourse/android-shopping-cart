@@ -69,7 +69,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
                     onNext = { state.nextPage() },
                     onPrevious = { state.previousPage() },
                     isCanMoveNext = state.isCanMoveNext,
-                    modifier = Modifier.navigationBarsPadding()
+                    modifier = Modifier.navigationBarsPadding(),
                 )
             }
         },
