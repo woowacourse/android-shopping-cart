@@ -8,8 +8,8 @@ import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductListStateHolder(
     private val productRepository: ProductRepository,
+    private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) {
-    private val pageSize = 20
     private var currentPageIndex = 0
 
     var products by mutableStateOf(Products())
@@ -51,5 +51,9 @@ class ProductListStateHolder(
                 currentPage = currentPageIndex,
                 pageSize = pageSize,
             )
+    }
+
+    companion object {
+        private const val DEFAULT_PAGE_SIZE = 20
     }
 }
