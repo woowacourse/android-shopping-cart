@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,10 +18,14 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val productId = intent.getStringExtra("PRODUCT_ID")
+        val productId = intent.getStringExtra(EXTRA_PRODUCT_ID)
+        if (productId == null) {
+            finish()
+            return
+        }
         val viewModel =
             ProductDetailViewModel(
-                productId = productId!!,
+                productId = productId,
                 productRepository = MockProductRepository(),
                 cartRepository = MockCartRepository,
             )
@@ -38,5 +43,16 @@ class ProductDetailActivity : ComponentActivity() {
                 )
             }
         }
+    }
+    companion object {
+        private const val EXTRA_PRODUCT_ID = "PRODUCT_ID"
+
+        fun newIntent(
+            context: Context,
+            productId: String,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(EXTRA_PRODUCT_ID, productId)
+            }
     }
 }

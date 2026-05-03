@@ -30,11 +30,7 @@ class ProductListActivity : ComponentActivity() {
                         startActivity(cartIntent)
                     },
                     onProductClick = { product ->
-                        val detailIntent =
-                            Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra("PRODUCT_ID", product.id)
-                            }
-                        startActivity(detailIntent)
+                        startActivity(ProductDetailActivity.newIntent(this, product.id))
                     },
                 )
             }
