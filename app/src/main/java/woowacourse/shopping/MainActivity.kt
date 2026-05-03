@@ -24,18 +24,13 @@ class MainActivity : ComponentActivity() {
         val cartIntent = Intent(this, CartActivity::class.java)
 
         var currentIndex = 0
-        var currentProducts =
-            mutableStateOf(
-                runBlocking {
-                    getCurrentProducts(currentIndex, MAX_PRODUCT)
-                },
-            )
+        val currentProducts = runBlocking { getCurrentProducts(currentIndex, MAX_PRODUCT) }
 
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
-                        catalog = currentProducts.value.value,
+                        catalog = currentProducts.value,
                         onItemClick = { id ->
                             productDetailIntent.putExtra("id", id.toString())
                             startActivity(productDetailIntent)
@@ -45,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value.value += runBlocking {
+                            currentProducts.value += runBlocking {
                                 getCurrentProducts(
                                     currentIndex,
                                     MAX_PRODUCT
