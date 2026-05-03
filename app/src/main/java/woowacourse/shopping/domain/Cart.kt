@@ -2,9 +2,9 @@ package woowacourse.shopping.domain
 
 class Cart(val cartItems: List<CartItem> = emptyList()) {
     fun plusCartItem(cartItem: CartItem): Cart {
-        val isSamerCartItem = cartItems.any { it.isSameCartItem(cartItem) }
+        val isSameCartItem = cartItems.any { it.isSameCartItem(cartItem) }
 
-        if (isSamerCartItem) {
+        if (isSameCartItem) {
             return this
         }
         return Cart(cartItems + cartItem)
