@@ -16,10 +16,7 @@ import woowacourse.shopping.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductAppBar(
-    onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun ProductAppBar(onCloseClick: () -> Unit, modifier: Modifier = Modifier) {
     TopAppBar(
         title = {},
         actions = {

@@ -12,17 +12,13 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
 
     fun isContains(product: Product): Boolean = cartItems.any { it.isSame(product) }
 
-    fun filterById(ids: List<String>): Cart {
-        return Cart(
-            cartItems.filter { cartItem ->
-                ids.any {
-                    cartItem.isSameId(it)
-                }
-            },
-        )
-    }
+    fun filterById(ids: List<String>): Cart = Cart(
+        cartItems.filter { cartItem ->
+            ids.any {
+                cartItem.isSameId(it)
+            }
+        },
+    )
 
-    fun getProductList(): List<Product> {
-        return cartItems.map { it.product }
-    }
+    fun getProductList(): List<Product> = cartItems.map { it.product }
 }

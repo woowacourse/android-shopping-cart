@@ -10,9 +10,7 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
     var page by mutableIntStateOf(1)
     var cartItems by mutableStateOf(pagination(1, totalCartItems))
 
-    fun isStartPage(): Boolean {
-        return page == 1
-    }
+    fun isStartPage(): Boolean = page == 1
 
     fun isEndPage(): Boolean = page >= lastPage()
 
@@ -31,10 +29,7 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
         cartItems = pagination(page, totalCartItems)
     }
 
-    private fun pagination(
-        page: Int,
-        productUiModels: List<ProductUiModel>,
-    ): List<ProductUiModel> {
+    private fun pagination(page: Int, productUiModels: List<ProductUiModel>): List<ProductUiModel> {
         val toIndex = minOf(page * PAGE_SIZE, productUiModels.size)
         return productUiModels.subList((page - 1) * PAGE_SIZE, toIndex)
     }

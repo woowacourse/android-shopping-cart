@@ -20,10 +20,7 @@ import woowacourse.shopping.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartAppBar(
-    onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun CartAppBar(onCloseClick: () -> Unit, modifier: Modifier = Modifier) {
     TopAppBar(
         navigationIcon = {
             IconButton(onClick = onCloseClick) {

@@ -47,10 +47,7 @@ class CartActivity : ComponentActivity() {
         private const val EXTRA_CART_ITEMS = "extra_cart_items"
         private const val EXTRA_DELETED_LIST = "deleted_cart_list"
 
-        fun newIntent(
-            context: Context,
-            cartItems: List<ProductUiModel>,
-        ): Intent = Intent(context, CartActivity::class.java)
+        fun newIntent(context: Context, cartItems: List<ProductUiModel>): Intent = Intent(context, CartActivity::class.java)
             .putParcelableArrayListExtra(EXTRA_CART_ITEMS, ArrayList(cartItems))
 
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)

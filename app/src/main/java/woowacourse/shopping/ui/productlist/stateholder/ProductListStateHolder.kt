@@ -16,9 +16,7 @@ class ProductListStateHolder {
 
     var uiModels = emptyList<ProductUiModel>()
 
-    fun isEndList(): Boolean {
-        return _products.size >= MockData.MOCK_PRODUCTS.size
-    }
+    fun isEndList(): Boolean = _products.size >= MockData.MOCK_PRODUCTS.size
 
     suspend fun fetchProducts(): List<Product> {
         delay(500) // 비동기 상황 가정
@@ -34,26 +32,18 @@ class ProductListStateHolder {
         return products
     }
 
-    fun toProductUiModel(product: Product): ProductUiModel {
-        return ProductUiModel.of(
-            name = product.name,
-            price = product.priceAmount(),
-            imageUrl = product.imageUrl,
-            id = product.id,
-        )
-    }
+    fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
+        name = product.name,
+        price = product.priceAmount(),
+        imageUrl = product.imageUrl,
+        id = product.id,
+    )
 
-    fun addCartItem(cartItem: CartItem): Cart {
-        return cart.plusCartItem(cartItem)
-    }
+    fun addCartItem(cartItem: CartItem): Cart = cart.plusCartItem(cartItem)
 
-    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart {
-        return cart.filterById(uiModels.map { it.id })
-    }
+    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart = cart.filterById(uiModels.map { it.id })
 
-    fun toProductUiModels(): List<ProductUiModel> {
-        return cart.getProductList().map { toProductUiModel(it) }
-    }
+    fun toProductUiModels(): List<ProductUiModel> = cart.getProductList().map { toProductUiModel(it) }
 
     companion object {
         private const val PAGE_SIZE = 20

@@ -92,10 +92,7 @@ fun ProductDetailScreen(
 }
 
 @Composable
-private fun CartPutButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun CartPutButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

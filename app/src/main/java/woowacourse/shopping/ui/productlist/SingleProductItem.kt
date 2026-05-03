@@ -19,12 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SingleProductItem(
-    imageUrl: String,
-    title: String,
-    price: String,
-    modifier: Modifier = Modifier,
-) {
+fun SingleProductItem(imageUrl: String, title: String, price: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         PreviewableAsyncImage(
             imageUrl = imageUrl,

@@ -108,12 +108,7 @@ private fun PageNavigator(
 }
 
 @Composable
-private fun PageButton(
-    text: String,
-    onClick: () -> Unit,
-    isEnable: Boolean,
-    modifier: Modifier = Modifier,
-) {
+private fun PageButton(text: String, onClick: () -> Unit, isEnable: Boolean, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         enabled = isEnable,
@@ -135,11 +130,7 @@ private fun PageButton(
 }
 
 @Composable
-private fun CartItemList(
-    cartItems: List<ProductUiModel>,
-    onDelete: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun CartItemList(cartItems: List<ProductUiModel>, onDelete: (String) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()

@@ -28,13 +28,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ui.productlist.PreviewableAsyncImage
 
 @Composable
-fun SingleCartItem(
-    imageUrl: String,
-    title: String,
-    price: String,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun SingleCartItem(imageUrl: String, title: String, price: String, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = modifier

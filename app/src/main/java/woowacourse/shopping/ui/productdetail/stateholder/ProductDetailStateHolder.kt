@@ -15,12 +15,10 @@ class ProductDetailStateHolder {
         return product
     }
 
-    private fun toProductUiModel(product: Product): ProductUiModel {
-        return ProductUiModel.of(
-            name = product.name,
-            price = product.priceAmount(),
-            imageUrl = product.imageUrl,
-            id = product.id,
-        )
-    }
+    private fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
+        name = product.name,
+        price = product.priceAmount(),
+        imageUrl = product.imageUrl,
+        id = product.id,
+    )
 }

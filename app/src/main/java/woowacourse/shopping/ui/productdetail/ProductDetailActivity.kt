@@ -44,10 +44,7 @@ class ProductDetailActivity : ComponentActivity() {
         private const val EXTRA_PRODUCT_ID = "product_id"
         private const val EXTRA_ADDED_ID = "added_to_cart_id"
 
-        fun newIntent(
-            context: Context,
-            productId: String,
-        ): Intent = Intent(context, ProductDetailActivity::class.java)
+        fun newIntent(context: Context, productId: String): Intent = Intent(context, ProductDetailActivity::class.java)
             .putExtra(EXTRA_PRODUCT_ID, productId)
 
         fun getAddedId(intent: Intent?): String? = intent?.getStringExtra(EXTRA_ADDED_ID)
