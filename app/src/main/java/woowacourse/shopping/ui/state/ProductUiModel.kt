@@ -1,8 +1,8 @@
 package woowacourse.shopping.ui.state
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.text.DecimalFormat
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ProductUiModel(val title: String, val price: String, val imageUrl: String, val id: String) : Parcelable {

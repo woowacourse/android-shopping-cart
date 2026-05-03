@@ -31,11 +31,13 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
     }
 
     fun onLeftClick() {
+        if (isStartPage()) return
         page -= 1
         cartItems = pagination(page, totalCartItems)
     }
 
     fun onRightClick() {
+        if (isEndPage()) return
         page += 1
         cartItems = pagination(page, totalCartItems)
     }
