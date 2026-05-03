@@ -16,8 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,12 @@ import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
 fun ProductScreen(
-    productStateHolder: ProductStateHolder = remember { ProductStateHolder() },
+    productStateHolder: ProductStateHolder = rememberSaveable(
+        saver = Saver(
+            save = { it.products.size },
+            restore = { ProductStateHolder(initialSize = it) },
+        ),
+    ) { ProductStateHolder() },
     onCartClick: () -> Unit,
     onProductCardClick: (String) -> Unit,
 ) {
@@ -38,7 +44,7 @@ fun ProductScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        productStateHolder.getProducts()
+        productStateHolder.initialProducts()
     }
 
     Scaffold(

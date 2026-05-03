@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductStateHolder(
     private val productRepository: ProductRepository = ProductRepositoryImpl(),
+    private val initialSize: Int = 0,
 ) {
     var products: List<Product> by mutableStateOf(emptyList())
         private set
@@ -27,6 +28,13 @@ class ProductStateHolder(
         hasNext = productRepository.productSize > products.size
 
         isProductLoading = false
+    }
+
+    suspend fun initialProducts() {
+        val count = maxOf(initialSize, PAGE_SIZE)
+
+        products = productRepository.getProducts(0, count)
+        hasNext = productRepository.productSize > products.size
     }
 
     companion object {
