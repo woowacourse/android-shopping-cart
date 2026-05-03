@@ -22,14 +22,22 @@ class ProductTest {
     fun `입력받은 상품의 id가 같으면 true를 반환한다`() {
         // given : 상품이 주어진다
         val product = Product(
+            id = "1",
             name = "임시",
             price = Money(1000),
             imageUrl = "",
         )
 
-        // when : 동일한 상품을 입력받아 비교할 때
+        val other = Product(
+            id = "1",
+            name = "임시2",
+            price = Money(2000),
+            imageUrl = "",
+        )
+
+        // when : 동일한 id 상품을 입력받아 비교할 때
         val result = product.isSame(
-            product,
+            other,
         )
 
         // then : true를 반환한다
@@ -40,13 +48,15 @@ class ProductTest {
     fun `입력받은 상품의 id가 다르면 false를 반환한다`() {
         // given : 상품과 다른 상품이 주어진다
         val product = Product(
+            id = "1",
             name = "임시",
             price = Money(1000),
             imageUrl = "",
         )
 
         val other = Product(
-            name = "임시2",
+            id = "2",
+            name = "임시",
             price = Money(1000),
             imageUrl = "",
         )
