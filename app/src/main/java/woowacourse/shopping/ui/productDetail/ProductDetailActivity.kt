@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
@@ -23,16 +24,19 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val viewModel =
-            ProductDetailViewModel(
-                productId = productId,
-                productRepository = MockProductRepository(),
-                cartRepository = MockCartRepository,
-            )
 
         setContent {
+            val viewModel: ProductDetailViewModel =
+                viewModel(
+                    factory = ProductDetailViewModel.factory(
+                        productId = productId,
+                        productRepository = MockProductRepository(),
+                        cartRepository = MockCartRepository,
+                    ),
+                )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
+                    productId = productId,
                     modifier = Modifier.padding(innerPadding),
                     viewModel = viewModel,
                     onAddToCartClick = {

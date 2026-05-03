@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productList
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.constant.Format.formatPrice
@@ -47,7 +49,7 @@ import woowacourse.shopping.repository.product.MockProductRepository
 @Composable
 fun ProductListScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProductListViewModel,
+    viewModel: ProductListViewModel = viewModel(factory = ProductListViewModel.factory(MockProductRepository())),
     onCartClick: () -> Unit = {},
     onProductClick: (Product) -> Unit = {},
 ) {
@@ -272,8 +274,10 @@ private fun MoreButton(
     }
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun ProductListScreenPreview() {
+
     ProductListScreen(viewModel = ProductListViewModel(MockProductRepository()))
 }

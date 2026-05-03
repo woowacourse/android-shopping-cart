@@ -1,7 +1,10 @@
 package woowacourse.shopping.ui.productDetail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,5 +44,23 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             cartRepository.addCartItem(CartItem(product = current.product))
         }
+    }
+
+    companion object {
+
+        fun factory(
+            productId: String,
+            productRepository: ProductRepository,
+            cartRepository: CartRepository,
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    ProductDetailViewModel(
+                        productId = productId,
+                        productRepository = productRepository,
+                        cartRepository = cartRepository,
+                    )
+                }
+            }
     }
 }

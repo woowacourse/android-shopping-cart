@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -51,11 +52,12 @@ import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.MockCartRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel,
+    viewModel: CartViewModel = viewModel(factory = CartViewModel.factory(MockCartRepository)),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
@@ -345,12 +347,11 @@ private fun ProductImage(
     )
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 private fun CartScreenPreview() {
-    val viewModel = CartViewModel(MockCartRepository)
-
     CartScreen(
-        viewModel = viewModel,
+        viewModel = CartViewModel(MockCartRepository),
     )
 }

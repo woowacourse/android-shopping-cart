@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,12 +42,20 @@ import woowacourse.shopping.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
 import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    viewModel: ProductDetailViewModel,
+    productId: String,
     modifier: Modifier = Modifier,
+    viewModel: ProductDetailViewModel = viewModel(
+        factory = ProductDetailViewModel.factory(
+            productId = productId,
+            MockProductRepository(),
+            cartRepository = MockCartRepository
+        )
+    ),
     onAddToCartClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -286,10 +295,12 @@ private fun CardAddButton(
     }
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
+        productId = "0",
         viewModel =
             ProductDetailViewModel(
                 productId = "0",

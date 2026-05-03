@@ -1,7 +1,10 @@
 package woowacourse.shopping.ui.productList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,5 +48,12 @@ class ProductListViewModel(
     companion object {
         private const val INITIAL_PRODUCT_COUNT = 20
         private const val PRODUCT_COUNT_INCREMENT = 20
+
+        fun factory(productRepository: ProductRepository): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    ProductListViewModel(productRepository)
+                }
+            }
     }
 }

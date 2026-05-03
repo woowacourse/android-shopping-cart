@@ -21,10 +21,6 @@ class ProductListActivity : ComponentActivity() {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductListScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel =
-                        ProductListViewModel(
-                            productRepository = MockProductRepository(),
-                        ),
                     onCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
                         startActivity(cartIntent)

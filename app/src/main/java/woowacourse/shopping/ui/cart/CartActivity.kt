@@ -22,10 +22,6 @@ class   CartActivity : ComponentActivity() {
             ) { innerPadding ->
                 CartScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel =
-                        CartViewModel(
-                            MockCartRepository,
-                        ),
                 )
             }
         }
