@@ -10,8 +10,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.productlist.ProductListScreen
@@ -39,14 +37,13 @@ class MainActivity : ComponentActivity() {
             val addedId = ProductDetailActivity.getAddedId(result.data)
                 ?: return@registerForActivityResult
 
-            productListStateHolder.cart = productListStateHolder.addCartItem(
-                CartItem(
-                    product = productListStateHolder.products.first { it.id == addedId },
-                    quantity = Quantity(1),
-                ),
-            )
-            productListStateHolder.uiModels = productListStateHolder.toProductUiModels()
-            Toast.makeText(this, "장바구니에 추가되었습니다", Toast.LENGTH_SHORT).show()
+            val isSuccess = productListStateHolder.addCartItem(addedId = addedId)
+
+            if (isSuccess) {
+                Toast.makeText(this, "장바구니에 추가되었습니다", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "상품 정보를 찾을 수 없어 추가에 실패했습니다", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val cartLauncher = registerForActivityResult(

@@ -6,6 +6,7 @@ import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class ProductListStateHolder {
@@ -32,16 +33,26 @@ class ProductListStateHolder {
         return products
     }
 
+    fun addCartItem(addedId: String): Boolean {
+        val targetProduct = _products.firstOrNull { it.id == addedId } ?: return false
+        val newCartItem = CartItem(
+            product = targetProduct,
+            quantity = Quantity(1),
+        )
+
+        this.cart = cart.plusCartItem(newCartItem)
+        this.uiModels = toProductUiModels()
+        return true
+    }
+
+    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart = cart.filterById(uiModels.map { it.id })
+
     fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
         name = product.name,
         price = product.priceAmount(),
         imageUrl = product.imageUrl,
         id = product.id,
     )
-
-    fun addCartItem(cartItem: CartItem): Cart = cart.plusCartItem(cartItem)
-
-    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart = cart.filterById(uiModels.map { it.id })
 
     fun toProductUiModels(): List<ProductUiModel> = cart.getProductList().map { toProductUiModel(it) }
 
