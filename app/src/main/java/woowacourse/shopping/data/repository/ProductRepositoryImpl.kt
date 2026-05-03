@@ -17,9 +17,16 @@ object ProductRepositoryImpl : ProductRepository {
         page: Int,
         pageSize: Int,
     ): Products {
+        if (page < 0 || pageSize <= 0) return Products()
+
         val fromIndex = page * pageSize
+
+        if (fromIndex >= products.productItems.size) {
+            return Products()
+        }
+
         val toIndex = min(fromIndex + pageSize, products.productItems.size)
-        return Products(products.productItems.subList(0, toIndex))
+        return Products(products.productItems.subList(fromIndex, toIndex))
     }
 
     override fun hasNextPage(
