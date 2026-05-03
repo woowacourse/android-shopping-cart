@@ -49,10 +49,11 @@
 ## 리팩토링 목록
 ### 리팩토링
 - [x] 방어적 복사 이용
-- [ ] 상태 이용 로직 StateHolder로 이동
+- [x] 상태 이용 로직 StateHolder로 이동
 - [x] 아이템을 모두 지웠을 때 Activity가 종료되는 버그 수정
 - [x] page, pageSize에 대한 경계값 검사 추가
 - [x] Cart 관련 데이터를 CartRepository로 변경
+- [x] 현재 페이지를 저장하도록 변경
 
 ### 추가 기능
 - [x] CartScreen에서 5개 이상을 담고 보여지는 아이템들을 다 지우면 이전 페이지를 보여줌

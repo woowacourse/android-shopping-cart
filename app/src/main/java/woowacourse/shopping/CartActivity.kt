@@ -16,10 +16,13 @@ import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
 
 class CartActivity : ComponentActivity() {
+    private lateinit var cartStateHolder: CartStateHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val cartStateHolder = CartStateHolder()
+        val restoredPage = savedInstanceState?.getInt("CURRENT_PAGE") ?: 0
+        cartStateHolder = CartStateHolder(initialPage = restoredPage)
 
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) {
@@ -35,5 +38,11 @@ class CartActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("CURRENT_PAGE", cartStateHolder.currentPage)
     }
 }

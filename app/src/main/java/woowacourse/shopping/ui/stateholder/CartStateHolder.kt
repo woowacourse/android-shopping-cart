@@ -9,10 +9,12 @@ import woowacourse.shopping.domain.Product
 import java.util.UUID
 import kotlin.math.min
 
-class CartStateHolder {
+class CartStateHolder(
+    initialPage: Int = 0,
+) {
     var cart by mutableStateOf(CartProvider.cart)
 
-    var currentPage by mutableIntStateOf(0)
+    var currentPage by mutableIntStateOf(initialPage)
 
     fun onPrevious() {
         if (checkPreviousAvailable()) currentPage--
@@ -26,7 +28,9 @@ class CartStateHolder {
         val removingItem = cart.cartProducts.findWithId(id) ?: return
         CartProvider.removeItem(removingItem)
         cart = CartProvider.cart
-        if(cart.size() % ONE_PAGE_ITEM_COUNT == 0 && currentPage != 0) currentPage--
+
+        val maxValidPage = if (cart.size() == 0) 0 else (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
+        if (currentPage > maxValidPage) currentPage = maxValidPage
     }
 
     fun checkPreviousAvailable(): Boolean = currentPage > 0
@@ -44,7 +48,7 @@ class CartStateHolder {
 
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, cart.size())
-        if(fromIndex >= toIndex || cart.size() == 0) return emptyList()
+        if (fromIndex >= toIndex || cart.size() == 0) return emptyList()
         return cart.cartProducts.items.subList(fromIndex, toIndex)
     }
 
