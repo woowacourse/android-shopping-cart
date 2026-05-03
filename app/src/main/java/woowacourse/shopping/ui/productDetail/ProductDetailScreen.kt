@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -48,8 +49,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     onAddToCartClick: () -> Unit = {},
 ) {
-    val productDetailState by viewModel.productDetailState.collectAsState()
-    val product = productDetailState.product
+    val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
 
     Column(
@@ -65,22 +65,64 @@ fun ProductDetailScreen(
             },
         )
 
-        ProductDetailContent(
-            modifier =
-                Modifier
-                    .background(Color.White)
-                    .weight(1f),
-            imageUrl = product.imageUrl.value,
-            productName = product.name.value,
-            price = product.price.value,
-        )
+        when (val state = uiState) {
+            is ProductDetailUiState.Loading -> {
+                LoadingContent(modifier = Modifier.weight(1f))
+            }
 
-        CardAddButton(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-            onAddToCartClick = onAddToCartClick,
+            is ProductDetailUiState.Success -> {
+                ProductDetailContent(
+                    modifier =
+                        Modifier
+                            .background(Color.White)
+                            .weight(1f),
+                    imageUrl = state.product.imageUrl.value,
+                    productName = state.product.name.value,
+                    price = state.product.price.value,
+                )
+
+                CardAddButton(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                    onAddToCartClick = onAddToCartClick,
+                )
+            }
+
+            is ProductDetailUiState.Error -> {
+                ErrorContent(
+                    modifier = Modifier.weight(1f),
+                    message = state.throwable.message ?: "상품 정보를 불러오지 못했어요.",
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadingContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    message: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = message,
+            fontSize = 16.sp,
+            color = Color.Gray,
         )
     }
 }
@@ -250,9 +292,9 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         viewModel =
             ProductDetailViewModel(
-                "0",
-                MemoryProductRepository(),
-                MemoryCartRepository,
+                productId = "0",
+                productRepository = MemoryProductRepository(),
+                cartRepository = MemoryCartRepository,
             ),
         onAddToCartClick = {},
     )

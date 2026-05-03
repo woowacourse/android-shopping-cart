@@ -11,29 +11,35 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
-data class ProductDetailUiState(
-    val product: Product,
-)
-
 class ProductDetailViewModel(
     val productId: String,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    lateinit var product: Product
+
+    private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
+    val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     init {
+        loadProduct()
+    }
+
+    private fun loadProduct() {
         viewModelScope.launch {
-            product = productRepository.getProduct(productId)
+            runCatching { productRepository.getProduct(productId) }
+                .onSuccess { product ->
+                    _uiState.value = ProductDetailUiState.Success(product)
+                }
+                .onFailure { throwable ->
+                    _uiState.value = ProductDetailUiState.Error(throwable)
+                }
         }
     }
 
-    private val _productDetailUiState = MutableStateFlow(ProductDetailUiState(product))
-    val productDetailState: StateFlow<ProductDetailUiState> = _productDetailUiState.asStateFlow()
-
     fun addToCart() {
+        val current = _uiState.value as? ProductDetailUiState.Success ?: return
         viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = productDetailState.value.product))
+            cartRepository.addCartItem(CartItem(product = current.product))
         }
     }
 }
