@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.getValue
-import woowacourse.shopping.ui.shopping.ShoppingScreen
+import woowacourse.shopping.ui.detail.DetailActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
@@ -14,7 +13,12 @@ class ShoppingActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidshoppingTheme {
-                ShoppingScreen()
+                ShoppingScreen(
+                    onProductClick = { id ->
+                        val intent = DetailActivity.getIntent(this, id)
+                        startActivity(intent)
+                    }
+                )
             }
         }
     }

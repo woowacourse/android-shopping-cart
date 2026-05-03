@@ -35,14 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.component.ShoppingAppBar
-import woowacourse.shopping.ui.detail.DetailActivity
 import woowacourse.shopping.ui.model.ProductUiModel
 
 @Composable
-fun ShoppingScreen(modifier: Modifier = Modifier) {
+fun ShoppingScreen(
+    onProductClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
     var savedProducts by rememberSaveable {
@@ -110,6 +111,7 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
             products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
             onLoad = { state.loadMore() },
+            onProductClick = onProductClick,
             isCanLoadMore = state.canLoadMore,
         )
     }
@@ -120,9 +122,9 @@ private fun ShoppingContents(
     products: ImmutableList<ProductUiModel>,
     onLoad: () -> Unit,
     isCanLoadMore: Boolean,
+    onProductClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
     Column(
         modifier =
             modifier
@@ -142,12 +144,7 @@ private fun ShoppingContents(
             ) { product ->
                 ProductCard(
                     onClick = {
-                        activity?.startActivity(
-                            DetailActivity.getIntent(
-                                context = activity,
-                                id = product.id,
-                            ),
-                        )
+                        onProductClick(product.id)
                     },
                     imageUrl = product.imageUrl,
                     productName = product.name,
@@ -170,5 +167,7 @@ private fun ShoppingContents(
 @Preview
 @Composable
 private fun ShoppingScreenPreview() {
-    ShoppingScreen()
+    ShoppingScreen(
+        onProductClick = {}
+    )
 }
