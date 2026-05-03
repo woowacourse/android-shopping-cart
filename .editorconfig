@@ -1,0 +1,29 @@
+# 이 파일이 최상단 설정 파일임을 명시합니다.
+root = true
+
+# 모든 파일에 적용되는 기본 설정
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Kotlin 및 Gradle 설정 파일에 적용되는 설정
+[*.{kt,kts}]
+ktlint_code_style = android_studio
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+max_line_length = 140 # ktlint official
+ktlint_function_naming_ignore_when_annotated_with = Composable, Test
+ktlint_standard_filename = disabled
+ktlint_standard_package-name = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_backing-property-naming = disabled
+ktlint_standard_argument-list-wrapping = disabled
+ktlint_standard_double-colon-spacing = disabled
+ktlint_standard_enum-entry-name-case = disabled
+ktlint_standard_multiline-if-else = disabled
+ktlint_standard_no-empty-first-line-in-method-block = disabled
+ktlint_standard_package-name = disabled
