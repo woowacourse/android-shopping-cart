@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,7 @@ class ProductDetailActivity : ComponentActivity() {
 
         val productModel = id?.let { holder.getProductUiModel(it) }
         if (productModel == null) {
+            Toast.makeText(this, "해당 상품 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
