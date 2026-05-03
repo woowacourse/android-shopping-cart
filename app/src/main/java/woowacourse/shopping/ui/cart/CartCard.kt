@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -80,6 +83,9 @@ fun CartCard(
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "상품 이미지",
+                placeholder = rememberVectorPainter(Icons.Default.CloudSync),
+                error = rememberVectorPainter(Icons.Default.CloudOff),
+                fallback = rememberVectorPainter(Icons.Default.CloudOff),
                 contentScale = ContentScale.Fit,
                 modifier =
                     Modifier

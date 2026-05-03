@@ -24,7 +24,7 @@
 - [x] 불필요한 Coroutine launch 메서드 수정
 - [x] 리컴포지션 시 불필요한 중복 동작 로직 수정
 - [x] DetailStateHolder 리컴포지션 로직 수정
-- [ ] 이미지 불러오기 오류 관련 UX 개선
+- [x] 이미지 불러오기 오류 관련 UX 개선
 - [ ] kotlin default parameter 활용
 - [ ] DetailActivity 내 companion object 위치 변경 및 캡슐화
 
