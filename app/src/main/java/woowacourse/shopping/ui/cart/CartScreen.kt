@@ -48,7 +48,7 @@ import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
 import woowacourse.shopping.domain.cart.CartItem
-import woowacourse.shopping.repository.cart.MemoryCartRepository
+import woowacourse.shopping.repository.cart.MockCartRepository
 
 @Composable
 fun CartScreen(
@@ -273,7 +273,7 @@ private fun ProductImage(
 @Preview(showBackground = true)
 @Composable
 private fun CartScreenPreview() {
-    val viewModel = CartViewModel(MemoryCartRepository)
+    val viewModel = CartViewModel(MockCartRepository)
 
     CartScreen(
         viewModel = viewModel,

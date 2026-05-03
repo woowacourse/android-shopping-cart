@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.repository.cart.MemoryCartRepository
+import woowacourse.shopping.repository.cart.MockCartRepository
 
 class   CartActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +24,7 @@ class   CartActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding),
                     viewModel =
                         CartViewModel(
-                            MemoryCartRepository,
+                            MockCartRepository,
                         ),
                 )
             }
