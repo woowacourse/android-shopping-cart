@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
                     isEnd = productListStateHolder.isEndList(),
                     onLoading = {
                         scope.launch {
+                            delay(500)
                             productListStateHolder.fetchProducts()
                         }
                     },
