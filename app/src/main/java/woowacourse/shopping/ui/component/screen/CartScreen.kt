@@ -208,7 +208,7 @@ private fun btnAvailable(btnFlag: Boolean): Color =
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        stateHolder = CartStateHolder(listOf("")),
+        stateHolder = CartStateHolder(),
         onClose = {},
     )
 }

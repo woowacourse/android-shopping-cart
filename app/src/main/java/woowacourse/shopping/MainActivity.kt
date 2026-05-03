@@ -22,22 +22,6 @@ class MainActivity : ComponentActivity() {
 
         val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
         val cartIntent = Intent(this, CartActivity::class.java)
-        var items = ""
-
-        val startForProductDetailResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val uuid = result.data?.getStringExtra("id")
-                    items += if (items.isEmpty()) uuid else ",$uuid"
-                }
-            }
-
-        val startForCartResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    items = result.data?.getStringExtra("id") ?: items
-                }
-            }
 
         var currentIndex = 0
         var currentProducts =
@@ -54,11 +38,10 @@ class MainActivity : ComponentActivity() {
                         catalog = currentProducts.value.value,
                         onItemClick = { id ->
                             productDetailIntent.putExtra("id", id.toString())
-                            startForProductDetailResult.launch(productDetailIntent)
+                            startActivity(productDetailIntent)
                         },
                         onCartClick = {
-                            cartIntent.putExtra("id", items)
-                            startForCartResult.launch(cartIntent)
+                            startActivity(cartIntent)
                         },
                         onLoadClick = {
                             currentIndex++

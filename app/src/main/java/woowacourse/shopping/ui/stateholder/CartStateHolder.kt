@@ -4,27 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.MockCatalog
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.CartProvider
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 import kotlin.math.min
 
-class CartStateHolder(
-    val ids: List<String>,
-) {
-    var cart by mutableStateOf(createCart())
+class CartStateHolder {
+    var cart by mutableStateOf(CartProvider.cart)
 
     var currentPage by mutableIntStateOf(0)
 
-    private fun createCart(): Cart {
-        val items = ids.map { it ->
-            val id = UUID.fromString(it.trim())
-            MockCatalog.findProductById(id)
-        }
-        return Cart(CartProducts(items))
-    }
     fun onPrevious() {
         if (checkPreviousAvailable()) currentPage--
     }
@@ -34,8 +23,10 @@ class CartStateHolder(
     }
 
     fun onDeleteProduct(id: UUID) {
-        cart = cart.removeProduct(id)
-        if(cart.size() % ONE_PAGE_ITEM_COUNT == 0) currentPage--
+        val removingItem = cart.cartProducts.findWithId(id) ?: return
+        CartProvider.removeItem(removingItem)
+        cart = CartProvider.cart
+        if(cart.size() % ONE_PAGE_ITEM_COUNT == 0 && currentPage != 0) currentPage--
     }
 
     fun checkPreviousAvailable(): Boolean = currentPage > 0

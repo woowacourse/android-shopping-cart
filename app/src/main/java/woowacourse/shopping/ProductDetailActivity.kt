@@ -26,7 +26,7 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         onAddRequest = {
-                            intent.putExtra("id", product.uuid.toString())
+                            CartProvider.addItem(product)
                             setResult(RESULT_OK, intent)
                             finish()
                         },

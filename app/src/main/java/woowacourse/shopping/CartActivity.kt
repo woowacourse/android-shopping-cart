@@ -19,24 +19,14 @@ class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val ids =
-            intent
-                .getStringExtra("id")
-                ?.split(",")
-                ?.filter { it.isNotBlank() } ?: emptyList()
-
-        val cartStateHolder = CartStateHolder(ids)
-
-        onBackPressedDispatcher.addCallback {
-            saveAndCloseActivity(cartStateHolder.cart.cartProducts.items)
-        }
+        val cartStateHolder = CartStateHolder()
 
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) {
                 CartScreen(
                     stateHolder = cartStateHolder,
                     onClose = {
-                        saveAndCloseActivity(cartStateHolder.cart.cartProducts.items)
+                        finish()
                     },
                     modifier =
                         Modifier
@@ -45,12 +35,5 @@ class CartActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    fun saveAndCloseActivity(items: List<Product>) {
-        val itemsId = items.joinToString(",") { it.uuid.toString() }
-        intent.putExtra("id", itemsId)
-        setResult(RESULT_OK, intent)
-        finish()
     }
 }
