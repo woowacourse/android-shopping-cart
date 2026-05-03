@@ -1,6 +1,6 @@
 # 기능 구현 사항
 
-## 0차 리팩토링
+## 1차 리팩토링
 - From 베르
   - [x] 패키지 구조 변경
   - [x] MainActivity 존재 이유 관련 고민
@@ -15,6 +15,19 @@
   - [x] 페이지네이션 파라미터 경계값 검증
   - [x] 다음 버튼 접근성 라벨 수정
   - [x] getCartItem 로직 수정 (경계값)
+
+## 2차 리팩토링
+- [ ] 화면 회전 등의 이벤트 발생 대응
+- [ ] 화면 구성과 네비게이션 간 책임 분리
+- [ ] MockRepository 명명 수정
+- [ ] ShoppingScreen 내 불필요한 리컴포지션 로직 수정
+- [ ] 불필요한 Coroutine launch 메서드 수정
+- [ ] 리컴포지션 시 불필요한 중복 동작 로직 수정
+- [ ] DetailStateHolder 리컴포지션 로직 수정
+- [ ] 이미지 불러오기 오류 관련 UX 개선
+- [ ] kotlin default parameter 활용
+- [ ] DetailActivity 내 companion object 위치 변경 및 캡슐화
+
 ## 상품명(ProductName)
 - 상품의 이름(String)을 나타낸다.
 - [x] 이름이 빈 값일 경우 예외를 반환한다.
