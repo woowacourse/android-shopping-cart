@@ -19,8 +19,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +45,36 @@ import woowacourse.shopping.ui.model.ProductUiModel
 fun ShoppingScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
-    val state = remember { ShoppingStateHolder(scope) }
+    var savedProducts by rememberSaveable {
+        mutableStateOf(arrayListOf<ProductUiModel>())
+    }
+
+    var savedCanLoadMore by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var savedOffset by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    val state =
+        remember {
+            ShoppingStateHolder(
+                scope = scope,
+                initialProducts = savedProducts,
+                initialCanLoadMore = savedCanLoadMore,
+                initialOffset = savedOffset,
+                onProductsChanged = { products ->
+                    savedProducts = ArrayList(products)
+                },
+                onCanLoadMoreChanged = { canLoadMore ->
+                    savedCanLoadMore = canLoadMore
+                },
+                onOffsetChanged = { offset ->
+                    savedOffset = offset
+                },
+            )
+        }
     val products = state.currentProducts
 
     Scaffold(
@@ -75,7 +109,7 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
         ShoppingContents(
             products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
-            onLoad = { scope.launch { state.loadMore() } },
+            onLoad = { state.loadMore() },
             isCanLoadMore = state.canLoadMore,
         )
     }
