@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart.stateholder
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,9 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
 
     fun deleteCartItem(id: String) {
         totalCartItems = totalCartItems.filter { it.id != id }
+        if (page > lastPage()) {
+            page = lastPage()
+        }
         cartItems = pagination(page, totalCartItems)
     }
 
