@@ -2,7 +2,7 @@ package woowacourse.shopping.domain
 
 class Cart(val cartItems: List<CartItem> = emptyList()) {
     fun plusCartItem(cartItem: CartItem): Cart {
-        val isSameCartItem = cartItems.any { it.isSameCartItem(cartItem) }
+        val isSameCartItem = cartItems.any { it == cartItem }
 
         if (isSameCartItem) {
             return this
@@ -10,12 +10,12 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         return Cart(cartItems + cartItem)
     }
 
-    fun isContains(product: Product): Boolean = cartItems.any { it.isSame(product) }
+    fun isContains(product: Product): Boolean = cartItems.any { it.hasProduct(product) }
 
     fun filterById(ids: List<String>): Cart = Cart(
         cartItems.filter { cartItem ->
             ids.any {
-                cartItem.isSameId(it)
+                cartItem.hasProductId(it)
             }
         },
     )

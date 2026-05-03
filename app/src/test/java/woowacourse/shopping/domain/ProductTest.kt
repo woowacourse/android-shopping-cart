@@ -36,9 +36,7 @@ class ProductTest {
         )
 
         // when : 동일한 id 상품을 입력받아 비교할 때
-        val result = product.isSame(
-            other,
-        )
+        val result = product == other
 
         // then : true를 반환한다
         assertEquals(true, result)
@@ -62,9 +60,7 @@ class ProductTest {
         )
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = product.isSame(
-            other,
-        )
+        val result = product == other
 
         // then : false를 반환한다
         assertEquals(false, result)

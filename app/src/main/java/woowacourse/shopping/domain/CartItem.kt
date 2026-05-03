@@ -1,9 +1,16 @@
 package woowacourse.shopping.domain
 
 class CartItem(val product: Product, private val quantity: Quantity) {
-    fun isSame(other: Product): Boolean = product.isSame(other)
+    fun hasProduct(targetProduct: Product): Boolean = this.product == targetProduct
 
-    fun isSameCartItem(other: CartItem): Boolean = product.isSame(other.product)
+    fun hasProductId(targetId: String): Boolean = product.hasId(targetId)
 
-    fun isSameId(other: String): Boolean = product.isSameId(other)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CartItem) return false
+
+        return this.product == other.product
+    }
+
+    override fun hashCode(): Int = product.hashCode()
 }

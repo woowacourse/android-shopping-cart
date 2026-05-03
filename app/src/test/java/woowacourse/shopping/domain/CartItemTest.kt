@@ -13,7 +13,7 @@ class CartItemTest {
         val cartItem = CartItem(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartItem.isSame(
+        val result = cartItem.hasProduct(
             product,
         )
 
@@ -31,7 +31,7 @@ class CartItemTest {
         val cartItem = CartItem(product, Quantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
-        val result = cartItem.isSame(
+        val result = cartItem.hasProduct(
             other,
         )
 
