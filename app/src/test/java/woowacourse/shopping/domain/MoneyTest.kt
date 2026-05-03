@@ -20,4 +20,11 @@ class MoneyTest {
             Money(-1)
         }
     }
+
+    @Test
+    fun `가격이 0원이면 오류가 발생하지 않는다`() {
+        assertDoesNotThrow {
+            Money(0)
+        }
+    }
 }
