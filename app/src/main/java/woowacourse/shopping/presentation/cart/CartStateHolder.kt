@@ -10,9 +10,8 @@ import kotlin.uuid.Uuid
 
 class CartStateHolder(
     private val cartRepository: CartRepository,
+    private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) {
-    private val pageSize = 5
-
     var cart by mutableStateOf(Cart())
         private set
 
@@ -83,5 +82,9 @@ class CartStateHolder(
         if (currentPageIndex > lastPageIndex) {
             currentPageIndex = lastPageIndex
         }
+    }
+
+    companion object {
+        private const val DEFAULT_PAGE_SIZE = 5
     }
 }
