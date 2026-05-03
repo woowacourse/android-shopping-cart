@@ -11,7 +11,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class FakeProductRepository(
-    private val products: Products
+    private val products: Products,
 ) : ProductRepository {
     override fun getProducts(): Products = products
 
@@ -36,19 +36,19 @@ class FakeProductRepository(
         pageSize: Int,
     ): Boolean =
         getPagingProducts(page = currentPage, pageSize = pageSize).productItems.size >= pageSize &&
-                (currentPage + 1) * pageSize < products.productItems.size
+            (currentPage + 1) * pageSize < products.productItems.size
 
     @OptIn(ExperimentalUuidApi::class)
     override fun findProductById(productId: Uuid): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
 }
 
 class ProductListStateHolderTest {
-
     @Test
     fun `초기화 시 첫 페이지의 상품을 가져온다`() {
-        val repository = FakeProductRepository(
-            products = Products(ProductFixture.productList)
-        )
+        val repository =
+            FakeProductRepository(
+                products = Products(ProductFixture.productList),
+            )
         val stateHolder = ProductListStateHolder(productRepository = repository)
 
         val expectedProducts = Products(ProductFixture.productList.subList(0, 20))
@@ -57,9 +57,10 @@ class ProductListStateHolderTest {
 
     @Test
     fun `loadMore 호출 시 다음 페이지 상품이 기존 상품 뒤에 누적된다`() {
-        val repository = FakeProductRepository(
-            products = Products(ProductFixture.productList)
-        )
+        val repository =
+            FakeProductRepository(
+                products = Products(ProductFixture.productList),
+            )
         val stateHolder = ProductListStateHolder(productRepository = repository)
 
         stateHolder.loadMore()
@@ -70,9 +71,10 @@ class ProductListStateHolderTest {
 
     @Test
     fun `초기 상태에서 더 이상 불러올 상품이 없으면 hasNextPage는 false이다`() {
-        val repository = FakeProductRepository(
-            products = Products(ProductFixture.productList.take(3))
-        )
+        val repository =
+            FakeProductRepository(
+                products = Products(ProductFixture.productList.take(3)),
+            )
         val stateHolder = ProductListStateHolder(productRepository = repository, pageSize = 5)
 
         assertThat(stateHolder.hasNextPage).isFalse()
@@ -80,9 +82,10 @@ class ProductListStateHolderTest {
 
     @Test
     fun `마지막 페이지까지 불러오면 hasNextPage는 false가 된다`() {
-        val repository = FakeProductRepository(
-            products = Products(ProductFixture.productList.take(3))
-        )
+        val repository =
+            FakeProductRepository(
+                products = Products(ProductFixture.productList.take(3)),
+            )
         val stateHolder = ProductListStateHolder(productRepository = repository, pageSize = 2)
 
         assertThat(stateHolder.hasNextPage).isTrue()

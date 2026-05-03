@@ -9,12 +9,13 @@ import kotlin.uuid.Uuid
 
 class CartRepositoryImplTest {
     @OptIn(ExperimentalUuidApi::class)
-    val product = Product(
-        productId = Uuid.random(),
-        imageUrl = "",
-        productName = "동원 스위트콘",
-        price = Price(99800),
-    )
+    val product =
+        Product(
+            productId = Uuid.random(),
+            imageUrl = "",
+            productName = "동원 스위트콘",
+            price = Price(99800),
+        )
 
     @Test
     fun `page가 음수이면 빈 Cart를 반환한다`() {
