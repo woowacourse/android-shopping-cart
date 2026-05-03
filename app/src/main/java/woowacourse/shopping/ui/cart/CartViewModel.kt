@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -24,7 +25,9 @@ class CartViewModel(
     private var currentPage = 0
 
     init {
-        loadCart()
+        viewModelScope.launch {
+            loadCart()
+        }
     }
 
     fun removeCartItem(cartItem: CartItem) {
@@ -38,26 +41,28 @@ class CartViewModel(
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasNext) return
         currentPage++
+        viewModelScope.launch {
         loadCart()
+        }
     }
 
     fun goToPreviousPage() {
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasPrevious) return
         currentPage--
+        viewModelScope.launch {
         loadCart()
+        }
     }
 
-    private fun loadCart() {
-        viewModelScope.launch {
-            runCatching { cartRepository.getCart() }
-                .onSuccess { cart ->
-                    _uiState.value = mapToUiState(cart)
-                }
-                .onFailure { throwable ->
-                    _uiState.value = CartUiState.Error(throwable)
-                }
-        }
+    private suspend fun loadCart() {
+        runCatching { cartRepository.getCart() }
+            .onSuccess { cart ->
+                _uiState.value = mapToUiState(cart)
+            }
+            .onFailure { throwable ->
+                _uiState.value = CartUiState.Error(throwable)
+            }
     }
 
     private fun mapToUiState(cart: Cart): CartUiState {
