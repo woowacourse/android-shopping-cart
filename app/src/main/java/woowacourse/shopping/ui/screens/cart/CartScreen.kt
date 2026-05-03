@@ -16,8 +16,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +30,12 @@ import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
 fun CartScreen(
-    cartStateHolder: CartStateHolder = remember { CartStateHolder() },
+    cartStateHolder: CartStateHolder = rememberSaveable(
+        saver = Saver(
+            save = { it.curPage },
+            restore = { CartStateHolder(initialPage = it) },
+        ),
+    ) { CartStateHolder() },
     onNavigateUp: () -> Unit,
 ) {
     val cartItems = cartStateHolder.cartItems

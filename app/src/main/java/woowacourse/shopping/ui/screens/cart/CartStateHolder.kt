@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 
 class CartStateHolder(
     private val cartRepository: CartRepository = CartRepositoryImpl(),
+    private val initialPage: Int = 1,
 ) {
     var curPage by mutableIntStateOf(1)
         private set
@@ -21,6 +22,8 @@ class CartStateHolder(
         private set
 
     suspend fun initCartItems() {
+        curPage = initialPage
+
         cartItems = cartRepository.getCartItemByPage(curPage)
         isLast = cartRepository.isLastPage(curPage)
     }
