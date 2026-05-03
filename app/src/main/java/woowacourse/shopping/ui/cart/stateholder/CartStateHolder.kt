@@ -1,13 +1,23 @@
 package woowacourse.shopping.ui.cart.stateholder
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.ui.state.ProductUiModel
 
-class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
+@Composable
+fun rememberCartStateHolder(initialItems: List<ProductUiModel>): CartStateHolder = rememberSaveable(saver = CartStateHolder.Saver()) {
+    CartStateHolder(initialItems)
+}
+
+class CartStateHolder(initCartItems: List<ProductUiModel>) {
+
+    var totalCartItems = initCartItems
     var page by mutableIntStateOf(1)
     var cartItems by mutableStateOf(pagination(1, totalCartItems))
 
@@ -45,5 +55,23 @@ class CartStateHolder(var totalCartItems: List<ProductUiModel>) {
 
     companion object {
         private const val PAGE_SIZE = 5
+
+        fun Saver(): Saver<CartStateHolder, Any> = listSaver(
+            save = { stateHolder ->
+                listOf(
+                    stateHolder.totalCartItems,
+                    stateHolder.page,
+                )
+            },
+            restore = { savedList ->
+                val restoredItems = savedList[0] as List<ProductUiModel>
+                val restoredPage = savedList[1] as Int
+
+                CartStateHolder(restoredItems).apply {
+                    this.page = restoredPage
+                    this.cartItems = pagination(this.page, this.totalCartItems)
+                }
+            },
+        )
     }
 }
