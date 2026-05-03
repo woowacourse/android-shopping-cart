@@ -24,7 +24,7 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     private fun getProductId(): String? {
-        val productId = intent.getStringExtra("productId")
+        val productId = intent.getStringExtra(KEY_PRODUCT_ID)
 
         if (productId == null) {
             Log.e("ProductDetailActivity", "삐용삐용 id가 없으면 안됭당께...")
@@ -32,5 +32,9 @@ class ProductDetailActivity : ComponentActivity() {
             return null
         }
         return productId
+    }
+
+    companion object {
+        const val KEY_PRODUCT_ID = "productId"
     }
 }

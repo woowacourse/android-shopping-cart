@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.ui.screens.cart.CartActivity
 import woowacourse.shopping.ui.screens.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.screens.productdetail.ProductDetailActivity.Companion.KEY_PRODUCT_ID
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class ProductActivity : ComponentActivity() {
@@ -21,7 +22,7 @@ class ProductActivity : ComponentActivity() {
                 ProductScreen(
                     onIconClick = { startActivity(cartIntent) },
                     onItemClick = { id ->
-                        productDetailIntent.putExtra("productId", id)
+                        productDetailIntent.putExtra(KEY_PRODUCT_ID, id)
                         startActivity(productDetailIntent)
                     },
                 )
