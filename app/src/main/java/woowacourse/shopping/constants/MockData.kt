@@ -13,6 +13,7 @@ object MockData {
             name = "품목$i",
             price = Money(i * 1_000),
             imageUrl = "$IMAGE_BASE_URL${(i - 1) % 5}$IMAGE_URL_SUFFIX",
+            id = "$i",
         )
     }
 }
