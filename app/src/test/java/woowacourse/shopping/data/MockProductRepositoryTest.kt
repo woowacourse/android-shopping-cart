@@ -4,10 +4,10 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MockRepositoryTest {
+class MockProductRepositoryTest {
     private val products = ProductData.products
     private val size = products.size
-    private val repository = MockRepository(source = products)
+    private val repository = MockProductRepository(source = products)
 
     @Test
     fun `offset과 limit의 범위에 따라 리스트를 반환한다`() =

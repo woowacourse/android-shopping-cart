@@ -19,7 +19,7 @@
 ## 2차 리팩토링
 - [x] 화면 회전 등의 이벤트 발생 대응
 - [x] 화면 구성과 네비게이션 간 책임 분리
-- [ ] MockRepository 명명 수정
+- [x] MockRepository 명명 수정
 - [ ] ShoppingScreen 내 불필요한 리컴포지션 로직 수정
 - [x] 불필요한 Coroutine launch 메서드 수정
 - [ ] 리컴포지션 시 불필요한 중복 동작 로직 수정

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
-import woowacourse.shopping.data.MockRepository
+import woowacourse.shopping.data.MockProductRepository
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.ui.model.ProductUiModel
 import woowacourse.shopping.ui.model.toUiModel
@@ -15,7 +15,7 @@ class DetailStateHolder(
     private val scope: CoroutineScope,
     private val id: String,
     private val onProductNotFound: () -> Unit,
-    private val productRepository: ProductRepository = MockRepository(),
+    private val productRepository: ProductRepository = MockProductRepository(),
     private val cartRepository: CartRepository = CartRepository,
 ) {
     var product by mutableStateOf(

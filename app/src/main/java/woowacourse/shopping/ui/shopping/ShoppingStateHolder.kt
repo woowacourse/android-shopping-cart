@@ -6,14 +6,14 @@ import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.MockRepository
+import woowacourse.shopping.data.MockProductRepository
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.ui.model.ProductUiModel
 import woowacourse.shopping.ui.model.toUiModel
 
 class ShoppingStateHolder(
     private val scope: CoroutineScope,
-    private val productRepository: ProductRepository = MockRepository(),
+    private val productRepository: ProductRepository = MockProductRepository(),
     initialProducts: List<ProductUiModel> = emptyList(),
     initialCanLoadMore: Boolean = true,
     initialOffset: Int = 0,
