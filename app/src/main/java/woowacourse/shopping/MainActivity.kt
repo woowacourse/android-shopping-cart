@@ -53,8 +53,7 @@ class MainActivity : ComponentActivity() {
             val deletedCartItems = CartActivity.getDeletedList(result.data)
                 ?: return@registerForActivityResult
 
-            productListStateHolder.cart = productListStateHolder.replaceCartItems(deletedCartItems)
-            productListStateHolder.uiModels = productListStateHolder.toProductUiModels()
+            productListStateHolder.syncDeletedCartItems(deletedCartItems)
         }
 
         setContent {

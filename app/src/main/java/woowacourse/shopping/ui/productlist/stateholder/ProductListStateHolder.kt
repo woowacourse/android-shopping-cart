@@ -14,6 +14,7 @@ class ProductListStateHolder {
     val products: List<Product> = _products
 
     var cart = Cart()
+        private set
 
     var uiModels = emptyList<ProductUiModel>()
 
@@ -45,7 +46,10 @@ class ProductListStateHolder {
         return true
     }
 
-    fun replaceCartItems(uiModels: List<ProductUiModel>): Cart = cart.filterById(uiModels.map { it.id })
+    fun syncDeletedCartItems(deletedUiModels: List<ProductUiModel>) {
+        this.cart = cart.filterById(deletedUiModels.map { it.id })
+        this.uiModels = toProductUiModels()
+    }
 
     fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
         name = product.name,
@@ -54,7 +58,7 @@ class ProductListStateHolder {
         id = product.id,
     )
 
-    fun toProductUiModels(): List<ProductUiModel> = cart.getProductList().map { toProductUiModel(it) }
+    private fun toProductUiModels(): List<ProductUiModel> = cart.getProductList().map { toProductUiModel(it) }
 
     companion object {
         private const val PAGE_SIZE = 20
