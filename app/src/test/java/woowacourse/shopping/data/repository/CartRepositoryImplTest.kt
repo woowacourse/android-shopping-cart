@@ -45,10 +45,17 @@ class CartRepositoryImplTest {
     @Test
     fun `상품을 추가하면 장바구니에 저장된다`() {
         CartRepositoryImpl.addProduct(product)
+        val cart = CartRepositoryImpl.getPagingItems(page = 0, pageSize = 10)
+        assertThat(cart.cartItems).hasSize(1)
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품을 삭제하면 장바구니에서 삭제된다`() {
         CartRepositoryImpl.addProduct(product)
+        CartRepositoryImpl.deleteProduct(product.productId)
+
+        val cart = CartRepositoryImpl.getPagingItems(page = 0, pageSize = 10)
+        assertThat(cart.cartItems).isEmpty()
     }
 }
