@@ -48,7 +48,7 @@ fun DetailScreen(
 ) {
     val scope = rememberCoroutineScope()
     val state =
-        remember {
+        remember(id) {
             DetailStateHolder(
                 scope = scope,
                 id = id,
