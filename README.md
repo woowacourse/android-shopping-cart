@@ -26,7 +26,7 @@
 - [x] DetailStateHolder 리컴포지션 로직 수정
 - [x] 이미지 불러오기 오류 관련 UX 개선
 - [x] kotlin default parameter 활용
-- [ ] DetailActivity 내 companion object 위치 변경 및 캡슐화
+- [x] DetailActivity 내 companion object 위치 변경 및 캡슐화
 
 ## 상품명(ProductName)
 - 상품의 이름(String)을 나타낸다.

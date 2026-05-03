@@ -12,17 +12,6 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
-    companion object {
-        const val PRODUCT_ID = "id"
-
-        fun getIntent(
-            context: Context,
-            id: String,
-        ): Intent =
-            Intent(context, DetailActivity::class.java).apply {
-                putExtra(PRODUCT_ID, id)
-            }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,5 +42,17 @@ class DetailActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    companion object {
+        private const val PRODUCT_ID = "id"
+
+        fun getIntent(
+            context: Context,
+            id: String,
+        ): Intent =
+            Intent(context, DetailActivity::class.java).apply {
+                putExtra(PRODUCT_ID, id)
+            }
     }
 }
