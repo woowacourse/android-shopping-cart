@@ -22,7 +22,7 @@
         <activity
             android:name=".ui.screens.productdetail.ProductDetailActivity"
             android:exported="false"
-            android:label="@string/title_activity_producy_detail"
+            android:label="@string/title_activity_product_detail"
             android:theme="@style/Theme.Shopping" />
         <activity
             android:name=".ui.screens.product.ProductActivity"
