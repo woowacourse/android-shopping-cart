@@ -43,9 +43,7 @@ class CartStateHolder(
     fun deleteProduct(productId: Uuid) {
         cartRepository.deleteProduct(productId)
 
-        refreshTotalItemCount()
-        adjustCurrentPage()
-        refreshPagedCart()
+        refresh()
     }
 
     fun goToPreviousPage() {
