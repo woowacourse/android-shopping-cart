@@ -72,7 +72,7 @@ fun ProductListScreen(
 
             is ProductListUiState.Success -> {
                 ProductCardGrid(
-                    visibleProducts = state.visibleProducts,
+                    visibleProducts = state.products,
                     canLoadMore = state.canLoadMore,
                     modifier =
                         Modifier

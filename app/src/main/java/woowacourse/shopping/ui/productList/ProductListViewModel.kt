@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productList
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.product.ProductRepository
 
 class ProductListViewModel(
@@ -17,27 +19,27 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
-    private var currentProductCount = INITIAL_PRODUCT_COUNT
+    private var currentPage = 0
+    private val accumulatedProducts = mutableListOf<Product>()
 
     init {
-        loadProducts()
+        loadNextPage()
     }
 
     fun moreProducts() {
-        currentProductCount += PRODUCT_COUNT_INCREMENT
-        loadProducts()
+        loadNextPage()
     }
 
-    private fun loadProducts() {
+    private fun loadNextPage() {
         viewModelScope.launch {
-            runCatching { productRepository.getProducts() }
-                .onSuccess { products ->
-                    _uiState.value =
-                        ProductListUiState.Success(
-                            products = products,
-                            currentProductCount = currentProductCount,
-                            totalProductCount = products.size,
-                        )
+            runCatching { productRepository.getProducts(currentPage, PAGE_SIZE) }
+                .onSuccess { newProducts ->
+                    accumulatedProducts.addAll(newProducts)
+                    currentPage++
+                    _uiState.value = ProductListUiState.Success(
+                        products = accumulatedProducts.toList(),
+                        canLoadMore = newProducts.size == PAGE_SIZE,
+                    )
                 }
                 .onFailure { throwable ->
                     _uiState.value = ProductListUiState.Error(throwable)
@@ -46,8 +48,7 @@ class ProductListViewModel(
     }
 
     companion object {
-        private const val INITIAL_PRODUCT_COUNT = 20
-        private const val PRODUCT_COUNT_INCREMENT = 20
+        private const val PAGE_SIZE = 20
 
         fun factory(productRepository: ProductRepository): ViewModelProvider.Factory =
             viewModelFactory {

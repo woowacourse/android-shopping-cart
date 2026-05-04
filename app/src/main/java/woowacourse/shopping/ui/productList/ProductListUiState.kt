@@ -7,15 +7,8 @@ sealed interface ProductListUiState {
 
     data class Success(
         val products: List<Product>,
-        val currentProductCount: Int,
-        val totalProductCount: Int,
-    ) : ProductListUiState {
-        val canLoadMore: Boolean
-            get() = currentProductCount < totalProductCount
-
-        val visibleProducts: List<Product>
-            get() = products.take(currentProductCount)
-    }
+        val canLoadMore: Boolean,
+    ) : ProductListUiState
 
     data class Error(
         val throwable: Throwable,
