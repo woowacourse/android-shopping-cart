@@ -23,6 +23,8 @@ class CartStateHolder: Parcelable {
         }
     }
 
+    fun isEmptyPage(count: Int, pageSize: Int) = count <= (currentPage * pageSize)
+
     fun checkPreviousAvailable(): Boolean = currentPage > 0
 
     fun checkNextAvailable(count: Int): Boolean = currentPage < (count - 1) / 5
