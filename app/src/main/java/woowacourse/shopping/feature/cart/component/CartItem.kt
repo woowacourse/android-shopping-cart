@@ -60,7 +60,7 @@ fun CartItem(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_close_16),
                 tint = Color.LightGray,
-                contentDescription = null,
+                contentDescription = "장바구니에서 상품 삭제하기",
                 modifier = Modifier.clickable(onClick = onClick),
             )
         }

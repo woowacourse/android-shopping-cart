@@ -34,7 +34,7 @@ fun ProductsTopAppBar(
 
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.icon_cart_24),
-            contentDescription = null,
+            contentDescription = "장바구니 이동 버튼",
             tint = Color.White,
             modifier = Modifier.clickable(onClick = onClick),
         )

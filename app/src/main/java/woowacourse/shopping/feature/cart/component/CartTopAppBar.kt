@@ -34,7 +34,7 @@ fun CartTopAppBar(
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_left_arrow_24),
-                contentDescription = null,
+                contentDescription = "뒤로가기",
                 tint = Color.White,
                 modifier = Modifier.clickable(onClick = onClick),
             )

@@ -23,7 +23,7 @@ fun ProductDetailTopAppBar(
         Spacer(Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.icon_close_16),
-            contentDescription = null,
+            contentDescription = "상품 상세 닫기",
             tint = Color.White,
             modifier = Modifier.clickable(onClick = onClick),
         )

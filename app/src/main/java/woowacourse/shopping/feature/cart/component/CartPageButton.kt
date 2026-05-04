@@ -12,6 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +39,7 @@ fun CartPageButton(
             enabled = isPreviousEnabled,
             onClick = onPreviousClick,
             text = "<",
+            contentDescription = "이전 페이지 이동 버튼",
             buttonShape =
                 RoundedCornerShape(
                     topStart = 4.dp,
@@ -52,6 +57,7 @@ fun CartPageButton(
             enabled = isNextEnabled,
             onClick = onNextClick,
             text = ">",
+            contentDescription = "다음 페이지 이동 버튼",
             buttonShape =
                 RoundedCornerShape(
                     topStart = 0.dp,
@@ -65,11 +71,12 @@ fun CartPageButton(
 
 @Composable
 private fun NextPageButton(
+    text: String,
+    buttonShape: RoundedCornerShape,
+    contentDescription: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
-    text: String,
-    buttonShape: RoundedCornerShape,
 ) {
     Box(
         modifier =
@@ -80,7 +87,11 @@ private fun NextPageButton(
                 .clickable(
                     enabled = enabled,
                     onClick = onClick,
-                ).padding(vertical = 12.dp, horizontal = 16.dp),
+                ).padding(vertical = 12.dp, horizontal = 16.dp)
+                .semantics {
+                    this.contentDescription = contentDescription
+                    role = Role.Button
+               },
         contentAlignment = Alignment.Center,
     ) {
         Text(
