@@ -32,9 +32,10 @@ object ProductRepositoryImpl : ProductRepository {
     override fun hasNextPage(
         currentPage: Int,
         pageSize: Int,
-    ): Boolean =
-        getPagingProducts(page = currentPage, pageSize = pageSize).productItems.size >= pageSize &&
-            (currentPage + 1) * pageSize < products.productItems.size
+    ): Boolean {
+        val nextPageStartIndex = (currentPage + 1) * pageSize
+        return nextPageStartIndex < products.productItems.size
+    }
 
     @OptIn(ExperimentalUuidApi::class)
     override fun findProductById(productId: Uuid): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
