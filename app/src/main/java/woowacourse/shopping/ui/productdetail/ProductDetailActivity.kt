@@ -34,13 +34,11 @@ class ProductDetailActivity : ComponentActivity() {
                     val cartRepo = InMemoryCartRepository
 
                     ProductDetailScreen(
-                        product = receivedProduct,
+                        productToShow = receivedProduct,
+                        cartRepo = cartRepo,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
-                        onAddToCart = { product, _ ->
-                            cartRepo.add(product)
-                            finish()
-                        },
+                        onAddToCartClick = ::finish,
                     )
                 }
             }

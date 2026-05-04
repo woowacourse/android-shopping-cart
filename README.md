@@ -11,7 +11,7 @@
   - `InMemoryProductRepository`에서 `toList()`로 인한 불필요한 리스트 복사 발생 제거
 
 ## 구조 및 아키텍처 (관심사 분리)
-- [ ] `StateHolder` 도입
+- [x] `StateHolder` 도입
   - `Activity` 집중된 데이터 로딩 및 상태 관리 로직을 분리하여 Activity의 역할 축소
 - [x] Intent 통신 상수화
   - `ProductDetailActivity`와 `ShoppingActivity` 간에 사용하는 `"Product"`라는 하드코딩된 문자열을 공유 상수(const val)로 캡슐화하여 관리
