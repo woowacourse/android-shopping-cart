@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.cart.model.CartItemUiModel
 import woowacourse.shopping.presentation.cart.model.toUiModel
@@ -42,9 +43,10 @@ class CartStateHolder(
         }
     }
 
-    suspend fun deleteItem(productId: String) {
-        cartRepository.deleteItem(productId)
-        loadCartItems()
+    suspend fun deleteItem(productId: String): RemoveItemResult {
+        val result = cartRepository.deleteItem(productId)
+        if (result is RemoveItemResult.Success) loadCartItems()
+        return result
     }
 
     suspend fun nextPage() {

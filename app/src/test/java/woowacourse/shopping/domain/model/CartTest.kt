@@ -20,24 +20,33 @@ class CartTest {
     }
 
     @Test
-    fun `상품을 등록할 수 있다`() {
-        val product2 =
+    fun `새로운 상품을 추가하면 NewAdded를 반환한다`() {
+        val newProduct =
             Product(
-                name = ProductName("상품2"),
+                name = ProductName("새로운 상품904"),
                 price = Money(10000),
                 imageUrl = "ds",
             )
-        val result = cart.addItem(product2)
-        assertThat(cart.items.size).isEqualTo(1)
-        val newCart = (result as AddItemResult.NewAdded).cart
-        assertThat(newCart.items.size).isEqualTo(2)
+        val result = cart.addItem(newProduct)
+        assertThat(result).isInstanceOf(AddItemResult.NewAdded::class.java)
     }
 
     @Test
-    fun `등록한 상품을 삭제할 수 있다`() {
-        assertThat(cart.items.size).isEqualTo(1)
-        val newCart = cart.deleteItem(product.id)
-        assertThat(newCart.items.size).isEqualTo(0)
+    fun `이미 등록된 상품을 장바구니에 추가하면 DuplicateItem을 반환한다`() {
+        val result = cart.addItem(product)
+        assertThat(result).isInstanceOf(AddItemResult.DuplicateItem::class.java)
+    }
+
+    @Test
+    fun `등록한 상품을 삭제하면 Success를 반환한다`() {
+        val result = cart.deleteItem(product.id)
+        assertThat(result).isInstanceOf(RemoveItemResult.Success::class.java)
+    }
+
+    @Test
+    fun `등록되지 않은 상품을 삭제하면 NotFoundItem을 반환한다`() {
+        val result = cart.deleteItem("등록되지 않은 아이템")
+        assertThat(result).isInstanceOf(RemoveItemResult.NotFoundItem::class.java)
     }
 
     @Test

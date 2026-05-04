@@ -3,6 +3,7 @@ package woowacourse.shopping.data
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
 
 class InMemoryCartRepository : CartRepository {
@@ -18,7 +19,9 @@ class InMemoryCartRepository : CartRepository {
         return result
     }
 
-    override suspend fun deleteItem(id: String) {
-        cart = cart.deleteItem(id)
+    override suspend fun deleteItem(id: String): RemoveItemResult {
+        val result = cart.deleteItem(id)
+        if (result is RemoveItemResult.Success) cart = result.cart
+        return result
     }
 }

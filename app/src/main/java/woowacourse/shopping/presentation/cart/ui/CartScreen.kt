@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart.ui
 
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +33,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.presentation.cart.model.CartItemUiModel
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
@@ -40,6 +43,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
     val state = remember { CartStateHolder() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         state.loadCartItems()
@@ -84,7 +88,26 @@ fun CartScreen(modifier: Modifier = Modifier) {
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         CartContent(
-            onDeleteItem = { scope.launch { state.deleteItem(it) } },
+            onDeleteItem = {
+                scope.launch {
+                    val result = state.deleteItem(it)
+                    when (result) {
+                        is RemoveItemResult.Success -> {
+                            Toast
+                                .makeText(
+                                    context,
+                                    R.string.delete_item_success,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
+                        is RemoveItemResult.NotFoundItem -> {
+                            Toast
+                                .makeText(context, R.string.not_found_item, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+            },
             cartItems = state.currentCartItems.toImmutableList(),
             modifier =
                 Modifier

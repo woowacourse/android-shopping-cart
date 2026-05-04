@@ -3,6 +3,7 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RemoveItemResult
 
 interface CartRepository {
     suspend fun getCart(): Cart
@@ -11,5 +12,5 @@ interface CartRepository {
 
     suspend fun addItem(product: Product): AddItemResult
 
-    suspend fun deleteItem(id: String)
+    suspend fun deleteItem(id: String): RemoveItemResult
 }
