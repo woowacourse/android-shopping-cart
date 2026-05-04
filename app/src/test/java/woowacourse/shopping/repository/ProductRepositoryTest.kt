@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.repository
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 
@@ -13,10 +14,10 @@ class ProductRepositoryTest {
         val size = 20
         val offset = 0
 
-        val actual = repo.getProducts(offset, size).count()
         val expected = 20
+        val actual = repo.getProducts(offset, size).count()
 
-        assert(expected == actual)
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -24,9 +25,9 @@ class ProductRepositoryTest {
         val totalSize = repo.size
         val moreThanTotalSize = totalSize + 1
 
-        val actual = repo.getProducts(0, moreThanTotalSize).count()
         val expected = repo.size
+        val actual = repo.getProducts(0, moreThanTotalSize).count()
 
-        assert(expected == actual)
+        assertEquals(expected, actual)
     }
 }

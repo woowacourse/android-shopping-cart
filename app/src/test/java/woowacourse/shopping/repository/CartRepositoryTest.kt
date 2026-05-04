@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.repository
 
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.model.Money
@@ -24,13 +25,12 @@ class CartRepositoryTest {
             price = Money(1300),
             imageUrl = "",
         )
-    val items = mapOf(product1 to 1)
 
     @Test
     fun `정상적인 상품 객체를 장바구니에 추가하면, 장바구니 내부 목록에 해당 상품이 올바르게 반영된다`() {
         repo.add(product1)
 
-        assert(repo.showAll().items.contains(product1))
+        assertTrue(repo.showAll().items.contains(product1))
     }
 
     @Test
@@ -38,7 +38,7 @@ class CartRepositoryTest {
         repo.add(product1)
         repo.delete(product1)
 
-        assert(!repo.showAll().items.contains(product1))
+        assertTrue(!repo.showAll().items.contains(product1))
     }
 
     @Test

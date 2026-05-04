@@ -17,7 +17,7 @@
   - `ProductDetailActivity`와 `ShoppingActivity` 간에 사용하는 `"Product"`라는 하드코딩된 문자열을 공유 상수(const val)로 캡슐화하여 관리
 
 ## 테스트 코드 개선
-- [ ] 신뢰할 수 있는 Assertion 사용 
+- [x] 신뢰할 수 있는 Assertion 사용 
   - 실행 환경에 따라 무시될 수 있는 Kotlin의 `assert(...)` 대신, 무조건 실행이 보장되는 JUnit의 `assertEquals()`, `assertTrue()` 등으로 전면 교체
 
 ## UI/UX 디테일 향상

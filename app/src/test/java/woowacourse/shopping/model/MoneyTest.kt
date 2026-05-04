@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.model
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,7 +14,7 @@ class MoneyTest {
         val expected = 0
         val actual = Money(0).value
 
-        assert(expected == actual)
+        assertEquals(expected, actual)
     }
 
     @ParameterizedTest
@@ -27,6 +28,6 @@ class MoneyTest {
         val expected = Money(1000)
         val actual = Money(1000)
 
-        assert(expected == actual)
+        assertEquals(expected, actual)
     }
 }
