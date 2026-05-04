@@ -22,7 +22,11 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val productId = UUID.fromString(intent.getStringExtra("id"))
+        val productId = runCatching { UUID.fromString(intent.getStringExtra("id")) }.getOrNull()
+        if(productId == null) {
+            finish()
+            return
+        }
         val product = MockCatalog.findProductById(productId)
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
 
