@@ -23,10 +23,12 @@ class ProductStateHolder(
 
         isProductLoading = true
 
-        products += productRepository.getProducts(products.size, PAGE_SIZE)
-        hasNext = productRepository.productSize > products.size
-
-        isProductLoading = false
+        try {
+            products += productRepository.getProducts(products.size, PAGE_SIZE)
+            hasNext = productRepository.productSize > products.size
+        } finally {
+            isProductLoading = false
+        }
     }
 
     suspend fun initialProducts() {
