@@ -36,7 +36,7 @@ fun ShoppingBody(
             ProductUnit(product, onClick = { onProductClick(product) })
         }
 
-        if(isLoading && products.toList().isEmpty()) {
+        if (isLoading && products.toList().isEmpty()) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()

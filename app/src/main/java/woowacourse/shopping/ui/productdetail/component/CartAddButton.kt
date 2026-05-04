@@ -44,5 +44,5 @@ fun CartAddButton(
 @Composable
 @Preview
 private fun CartAddButtonPreview() {
-    CartAddButton(isEnabled = true, onClick = {},)
+    CartAddButton(isEnabled = true, onClick = {})
 }

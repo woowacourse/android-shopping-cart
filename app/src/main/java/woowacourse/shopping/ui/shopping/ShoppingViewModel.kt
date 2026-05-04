@@ -12,8 +12,8 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 private const val PAGE_SIZE = 20
 
 class ShoppingViewModel(
-    private val productRepository: ProductRepository = InMemoryProductRepository
-): ViewModel() {
+    private val productRepository: ProductRepository = InMemoryProductRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState(isLoading = true))
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
 
@@ -28,19 +28,20 @@ class ShoppingViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             val products = productRepository.getProducts(0, visibleCount)
-            val hasNext = productRepository.hasNext(products.count()-1)
+            val hasNext = productRepository.hasNext(products.count() - 1)
 
-            _uiState.value = ShoppingUiState(
-                products = products,
-                hasNext = hasNext,
-                isLoading = false,
-            )
+            _uiState.value =
+                ShoppingUiState(
+                    products = products,
+                    hasNext = hasNext,
+                    isLoading = false,
+                )
         }
     }
 
     fun loadMore() {
-        val currentState= _uiState.value
-        if(currentState.isLoading || !currentState.hasNext) return
+        val currentState = _uiState.value
+        if (currentState.isLoading || !currentState.hasNext) return
         visibleCount = minOf(visibleCount + PAGE_SIZE, productRepository.size)
         loadProducts()
     }

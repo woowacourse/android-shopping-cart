@@ -6,4 +6,4 @@ data class ProductDetailUiState(
     val product: Product? = null,
     val isAdding: Boolean = false,
     val isAdded: Boolean = false,
-    )
+)

@@ -14,11 +14,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
     private val viewModel: ProductDetailViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +44,7 @@ class ProductDetailActivity : ComponentActivity() {
             }
 
             LaunchedEffect(uiState.isAdded) {
-                if(uiState.isAdded) finish()
+                if (uiState.isAdded) finish()
             }
 
             ShoppingTheme {
