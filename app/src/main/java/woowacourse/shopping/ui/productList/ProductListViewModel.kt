@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productList
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
