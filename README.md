@@ -60,3 +60,26 @@
 
 - [ ] 데이터 로드 전략에서 상품 목록을 더이상 불러올 게 없다면 버튼 비활성화
 - [ ] 카트에 담기 성공했다면 "장바구니에 담았습니다" Snackbar를 노출한다
+
+## 2차 피드백 구현 사항
+
+### ProductDetailActivity
+
+- [ ] invalidProduct() 함수 제거
+- [ ] intent에 담긴 Product가 null이라면 Activity 종료 로직 추가
+
+### CartRepository 제거
+
+- [ ] MainActivity와 CartActivity가 Cart객체 자체를 주고 받도록 수정
+
+### CartStateHolder
+
+- [ ] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
+
+### CartActivity
+
+- [ ] onDelete 내부 구현 CoroutineScope 하나로 통합
+
+### MockCatalog
+
+- [ ] loadMoreProducts 함수 suspend 키워드 제거
