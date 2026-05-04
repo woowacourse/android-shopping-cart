@@ -2,6 +2,7 @@ package woowacourse.shopping
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,8 @@ import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
+    private var currentIndex: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,8 +26,9 @@ class MainActivity : ComponentActivity() {
         val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
         val cartIntent = Intent(this, CartActivity::class.java)
 
-        var currentIndex = 0
-        val currentProducts = runBlocking { getCurrentProducts(currentIndex, MAX_PRODUCT) }
+        var restoredIndex = savedInstanceState?.getInt("CURRENT_INDEX") ?: 0
+
+        val currentProducts = runBlocking { getCurrentProducts(restoredIndex, MAX_PRODUCT) }
 
         setContent {
             AndroidshoppingTheme {
@@ -40,9 +44,10 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadClick = {
                             currentIndex++
-                            currentProducts.value += runBlocking {
+                            restoredIndex++
+                            currentProducts.value = runBlocking {
                                 getCurrentProducts(
-                                    currentIndex,
+                                    restoredIndex,
                                     MAX_PRODUCT
                                 )
                             }.value
@@ -52,6 +57,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("CURRENT_INDEX", currentIndex)
     }
 
     suspend fun getCurrentProducts(

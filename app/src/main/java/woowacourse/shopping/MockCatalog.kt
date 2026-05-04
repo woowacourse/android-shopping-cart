@@ -179,7 +179,7 @@ object MockCatalog {
                 val fromIndex =
                     if (page * pageSize > catalog.size) catalog.size else page * pageSize
                 val toIndex = min(fromIndex + pageSize, catalog.size)
-                catalog.subList(fromIndex, toIndex)
+                catalog.subList(0, toIndex)
             }
         }
 
