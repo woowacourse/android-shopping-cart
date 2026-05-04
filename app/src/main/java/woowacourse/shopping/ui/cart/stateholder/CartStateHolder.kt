@@ -10,12 +10,12 @@ import androidx.core.os.BundleCompat
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) {
-    var totalCartItems: List<ProductUiModel> = initialItems.toList()
+    var totalCartContents: List<ProductUiModel> = initialItems.toList()
     var page by mutableIntStateOf(initialPage)
-    var cartItems by mutableStateOf(
+    var cartContents by mutableStateOf(
         pagination(
             page = initialPage,
-            productUiModels = totalCartItems,
+            productUiModels = totalCartContents,
             pageSIze = 5,
         ),
     )
@@ -27,18 +27,18 @@ class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) 
     fun isEndPage(): Boolean = page >= lastPage(5)
 
     private fun lastPage(pageSize: Int): Int {
-        if (totalCartItems.isEmpty()) return 1
-        return (totalCartItems.size + pageSize - 1) / pageSize
+        if (totalCartContents.isEmpty()) return 1
+        return (totalCartContents.size + pageSize - 1) / pageSize
     }
 
     fun moveToPreviousPage() {
         page -= 1
-        cartItems = pagination(page = page, productUiModels = totalCartItems, pageSIze = 5)
+        cartContents = pagination(page = page, productUiModels = totalCartContents, pageSIze = 5)
     }
 
     fun moveToNextPage() {
         page += 1
-        cartItems = pagination(page = page, productUiModels = totalCartItems, pageSIze = 5)
+        cartContents = pagination(page = page, productUiModels = totalCartContents, pageSIze = 5)
     }
 
     private fun pagination(
@@ -51,10 +51,10 @@ class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) 
     }
 
     fun deleteCartItem(id: String) {
-        totalCartItems = totalCartItems.filter { it.id != id }
-        cartItems = pagination(
+        totalCartContents = totalCartContents.filter { it.id != id }
+        cartContents = pagination(
             page = page,
-            productUiModels = totalCartItems,
+            productUiModels = totalCartContents,
             pageSIze = 5,
         )
     }
@@ -67,7 +67,7 @@ class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) 
             save = { holder ->
                 Bundle().apply {
                     putInt(KEY_PAGE, holder.page)
-                    putParcelableArrayList(KEY_ITEMS, ArrayList(holder.totalCartItems))
+                    putParcelableArrayList(KEY_ITEMS, ArrayList(holder.totalCartContents))
                 }
             },
             restore = { bundle ->

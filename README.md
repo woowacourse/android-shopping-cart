@@ -24,7 +24,7 @@
 
 ### Cart
 
-- cartItems: List<CartItem>
+- cartContents: List<CartItem>
 - totalAmount: Money (파생값)
 
 ---

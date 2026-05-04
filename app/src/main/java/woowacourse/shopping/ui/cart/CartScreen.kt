@@ -29,7 +29,7 @@ import woowacourse.shopping.ui.state.ProductUiModel
 
 @Composable
 fun CartScreen(
-    cartItems: List<ProductUiModel>,
+    cartContents: List<ProductUiModel>,
     onCloseClick: () -> Unit,
     onDelete: (String) -> Unit,
     page: Int,
@@ -55,7 +55,7 @@ fun CartScreen(
                 .padding(innerPadding),
         ) {
             CartItemList(
-                cartItems,
+                cartContents,
                 modifier = Modifier.weight(1f),
                 onDelete = onDelete,
             )
@@ -136,7 +136,7 @@ private fun PageButton(
 
 @Composable
 private fun CartItemList(
-    cartItems: List<ProductUiModel>,
+    cartContents: List<ProductUiModel>,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -148,7 +148,7 @@ private fun CartItemList(
     ) {
         items(
             key = { it.id },
-            items = cartItems,
+            items = cartContents,
         ) {
             CartItem(
                 imageUrl = it.imageUrl,
@@ -166,7 +166,7 @@ private fun CartItemList(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartItems = emptyList(),
+        cartContents = emptyList(),
         onCloseClick = {},
         onDelete = {},
         page = 0,

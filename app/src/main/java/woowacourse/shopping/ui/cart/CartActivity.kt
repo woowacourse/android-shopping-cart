@@ -24,11 +24,11 @@ class CartActivity : ComponentActivity() {
             }
             AndroidshoppingcartTheme {
                 CartScreen(
-                    cartItems = stateHolder.cartItems,
+                    cartContents = stateHolder.cartContents,
                     onCloseClick = { finish() },
                     onDelete = { id ->
                         stateHolder.deleteCartItem(id)
-                        setResult(RESULT_OK, deletedListResult(stateHolder.totalCartItems))
+                        setResult(RESULT_OK, deletedListResult(stateHolder.totalCartContents))
                     },
                     canMoveToPreviousPage = stateHolder.isStartPage().not(),
                     onLeftClick = {
@@ -50,9 +50,9 @@ class CartActivity : ComponentActivity() {
 
         fun newIntent(
             context: Context,
-            cartItems: List<ProductUiModel>,
+            cartContents: List<ProductUiModel>,
         ): Intent = Intent(context, CartActivity::class.java)
-            .putParcelableArrayListExtra(EXTRA_CART_ITEMS, ArrayList(cartItems))
+            .putParcelableArrayListExtra(EXTRA_CART_ITEMS, ArrayList(cartContents))
 
         fun getDeletedList(intent: Intent): List<ProductUiModel> =
             IntentCompat.getParcelableArrayListExtra(intent, EXTRA_DELETED_LIST, ProductUiModel::class.java)
