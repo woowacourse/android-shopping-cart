@@ -9,15 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.R
-import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.ui.productdetail.component.productPrice
 import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -54,12 +53,9 @@ fun productDetail(
 @Preview
 @Composable
 private fun productDetailPreview() {
+    val packageName = LocalContext.current.packageName
+
     productDetail(
-        product =
-            Product(
-                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-                productName = "[든든] 동원 스위트콘",
-                price = Price(99800),
-            ),
+        product = ProductFixture.productList(packageName).last(),
     )
 }

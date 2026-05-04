@@ -93,8 +93,10 @@ fun ProductListScreen(
 @Preview
 @Composable
 private fun ProductListScreenPreview() {
+    val packageName = LocalContext.current.packageName
+
     ProductListScreen(
-        products = Products(ProductFixture.productList),
+        products = Products(ProductFixture.productList(packageName)),
         onClick = {}
     )
 }

@@ -14,11 +14,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
+import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.productdetail.component.mintButton
@@ -72,13 +73,10 @@ fun productDetailScreen(
 @Preview
 @Composable
 private fun productDetailScreenPreview() {
+    val packageName = LocalContext.current.packageName
+
     productDetailScreen(
-        product =
-            Product(
-                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-                productName = "[든든] 동원 스위트콘",
-                price = Price(99800),
-            ),
+        product = ProductFixture.productList(packageName).last(),
         onClose = {},
     )
 }

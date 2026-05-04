@@ -27,7 +27,7 @@ class ProductListActivityTest {
     @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
     @Test
     fun openProductDetailWhenProductClicked() {
-        val product = ProductFixture.productList.first()
+        val product = ProductFixture.productList(composeRule.activity.packageName).first()
 
         composeRule
             .onNodeWithText(product.productName)

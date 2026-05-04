@@ -16,7 +16,7 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             androidshoppingTheme {
                 ProductListScreen(
-                    products = Products(ProductFixture.productList),
+                    products = Products(ProductFixture.productList(packageName)),
                     onClick = {
                         val intent = Intent(this, CartActivity::class.java)
                         this.startActivity(intent)

@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping.component
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,10 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.PRODUCT_ID_EXTRA_KEY
-import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
@@ -38,8 +35,6 @@ fun productItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-
     Card(
         colors =
             CardDefaults.cardColors(
@@ -84,13 +79,10 @@ fun productItem(
 @Preview
 @Composable
 private fun productItemPreview() {
+    val packageName = LocalContext.current.packageName
+
     productItem(
-        product =
-            Product(
-                imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
-                productName = "PET보틀-정사각형(370ml)",
-                price = Price(10000),
-            ),
+        product = ProductFixture.productList(packageName).first(),
         onClick = {},
         modifier = Modifier.fillMaxWidth(),
     )

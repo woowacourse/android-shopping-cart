@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,9 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductAndCount
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
@@ -93,7 +93,7 @@ fun cartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 AsyncImage(
-                    model = productAndCount.product.imageUrl,
+                    model = productAndCount.imageUrl,
                     contentDescription = productAndCount.product.productName,
                     modifier = Modifier.size(136.dp, 72.dp),
                 )
@@ -119,16 +119,10 @@ fun cartItem(
 @Preview
 @Composable
 private fun cartItemPreview() {
+    val packageName = LocalContext.current.packageName
+
     cartItem(
-        productAndCount =
-            ProductAndCount(
-                Product(
-                    imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
-                    productName = "[든든] 동원 스위트콘",
-                    price = Price(99800),
-                ),
-                count = 1,
-            ),
+        productAndCount = ProductAndCount(ProductFixture.productList(packageName).last(), 1),
         onDelete = {},
     )
 }

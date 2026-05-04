@@ -31,7 +31,7 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val product = Products(ProductFixture.productList).findProductById(productId)
+        val product = Products(ProductFixture.productList(packageName)).findProductById(productId)
         if (product == null) {
             finish()
             return
