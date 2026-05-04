@@ -2,7 +2,6 @@
 
 package woowacourse.shopping.ui
 
-import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,14 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Price
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun DetailProductScreen(
-    product: Product,
+    product: ProductDto,
     onAddToCartClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -65,7 +61,7 @@ fun DetailProductScreen(
         ) {
             AsyncImage(
                 model = product.imageUrl,
-                contentDescription = stringResource(R.string.product_image_content_description, product.getTitle()),
+                contentDescription = stringResource(R.string.product_image_content_description, product.title),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -74,7 +70,7 @@ fun DetailProductScreen(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = product.getTitle(),
+                text = product.title,
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -94,7 +90,7 @@ fun DetailProductScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.getPrice()),
+                    text = product.price,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -145,10 +141,10 @@ private fun DetailProductScreenPreview() {
     AndroidShoppingTheme {
         DetailProductScreen(
             product =
-                Product(
+                ProductDto(
                     id = 1,
-                    title = ProductTitle("동원 스위트콘"),
-                    price = Price(99_800),
+                    title = "동원 스위트콘",
+                    price = "9,980원",
                     imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                 ),
             onAddToCartClick = {},

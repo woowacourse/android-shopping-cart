@@ -2,7 +2,6 @@
 
 package woowacourse.shopping.ui
 
-import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,16 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Price
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductTitle
-import woowacourse.shopping.preparedProducts
-import woowacourse.shopping.repository.MemoryProductRepository
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ProductListScreen(
-    products: List<Product>,
+    products: List<ProductDto>,
     onNavigateToCartClick: () -> Unit,
     onProductClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -90,7 +84,7 @@ fun ProductListScreen(
 
 @Composable
 private fun ProductItem(
-    product: Product,
+    product: ProductDto,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -98,7 +92,7 @@ private fun ProductItem(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = stringResource(R.string.product_image_content_description, product.getTitle()),
+            contentDescription = stringResource(R.string.product_image_content_description, product.title),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -108,7 +102,7 @@ private fun ProductItem(
                     .background(MaterialTheme.colorScheme.surfaceContainer),
         )
         Text(
-            text = product.getTitle(),
+            text = product.title,
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -119,7 +113,7 @@ private fun ProductItem(
                 ),
         )
         Text(
-            text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.getPrice()),
+            text = product.price,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier =
                 Modifier.padding(
@@ -160,10 +154,10 @@ private fun ProductListTopBar(
 private fun ProductItemPreview() {
     ProductItem(
         product =
-            Product(
+            ProductDto(
                 id = 1,
-                title = ProductTitle("동원 스위트콘"),
-                price = Price(99_800),
+                title = "동원 스위트콘",
+                price = "99,800원",
                 imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
             ),
     )
@@ -174,7 +168,21 @@ private fun ProductItemPreview() {
 private fun ProductListScreenPreview() {
     AndroidShoppingTheme {
         ProductListScreen(
-            products = MemoryProductRepository(preparedProducts).getProducts(),
+            products =
+                listOf(
+                    ProductDto(
+                        id = 1,
+                        title = "동원 스위트콘",
+                        price = "99,800원",
+                        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+                    ),
+                    ProductDto(
+                        id = 2,
+                        title = "동원 스위트콘2",
+                        price = "99,800원",
+                        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+                    ),
+                ),
             onProductClick = {},
             onNavigateToCartClick = {},
         )
