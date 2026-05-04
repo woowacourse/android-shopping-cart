@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -90,5 +91,50 @@ class CartItemsTest {
         val cartItems = CartItems(value = cartItemsValue)
 
         assertFalse(cartItems.searchCartItem(cartItem4))
+    }
+
+    @Test
+    fun `subList는 정상 범위에서 부분 리스트를 반환한다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        val sub = cartItems.subList(fromIndex = 0, toIndex = 2)
+
+        assertEquals(listOf(cartItem1, cartItem2), sub)
+    }
+
+    @Test
+    fun `subList는 fromIndex가 음수여도 0으로 클램핑된다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        val sub = cartItems.subList(fromIndex = -3, toIndex = 2)
+
+        assertEquals(listOf(cartItem1, cartItem2), sub)
+    }
+
+    @Test
+    fun `subList는 toIndex가 size보다 커도 size로 클램핑된다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        val sub = cartItems.subList(fromIndex = 1, toIndex = 100)
+
+        assertEquals(listOf(cartItem2, cartItem3), sub)
+    }
+
+    @Test
+    fun `subList는 fromIndex가 size보다 크면 빈 리스트를 반환한다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        val sub = cartItems.subList(fromIndex = 10, toIndex = 20)
+
+        assertTrue(sub.isEmpty())
+    }
+
+    @Test
+    fun `subList는 fromIndex가 toIndex보다 크면 빈 리스트를 반환한다`() {
+        val cartItems = CartItems(value = cartItemsValue)
+
+        val sub = cartItems.subList(fromIndex = 3, toIndex = 1)
+
+        assertTrue(sub.isEmpty())
     }
 }

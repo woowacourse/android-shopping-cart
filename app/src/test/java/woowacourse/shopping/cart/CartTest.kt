@@ -1,6 +1,8 @@
 package woowacourse.shopping.cart
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.cart.Cart
@@ -78,5 +80,50 @@ class CartTest {
         val removedCartItems = cart.removeCartItem(targetCartItem)
 
         assertFalse(removedCartItems.cartItems.searchCartItem(targetCartItem))
+    }
+
+    @Test
+    fun `getPage는 page와 pageSize에 해당하는 부분 리스트를 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        val firstPage = cart.getPage(page = 0, pageSize = 2)
+
+        assertEquals(listOf(cartItem1, cartItem2), firstPage)
+    }
+
+    @Test
+    fun `getPage는 마지막 페이지가 pageSize보다 적게 차있어도 정상 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        val lastPage = cart.getPage(page = 1, pageSize = 2)
+
+        assertEquals(listOf(cartItem3), lastPage)
+    }
+
+    @Test
+    fun `getPage는 범위를 넘는 page를 요청하면 빈 리스트를 반환한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        val outOfRangePage = cart.getPage(page = 99, pageSize = 2)
+
+        assertTrue(outOfRangePage.isEmpty())
+    }
+
+    @Test
+    fun `getPage의 page가 음수면 예외가 발생한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            cart.getPage(page = -1, pageSize = 2)
+        }
+    }
+
+    @Test
+    fun `getPage의 pageSize가 0 이하면 예외가 발생한다`() {
+        val cart = Cart(cartItems = cartItemsValue)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            cart.getPage(page = 0, pageSize = 0)
+        }
     }
 }

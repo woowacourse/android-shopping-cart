@@ -12,4 +12,12 @@ class ImageUrlTest {
             ImageUrl(emptyImageUrl)
         }
     }
+
+    @Test
+    fun `이미지 링크가 탭 문자일 경우 예외가 발생한다`() {
+        val tablmageUrl = "\t"
+        assertThrows(IllegalArgumentException::class.java) {
+            ImageUrl(tablmageUrl)
+        }
+    }
 }
