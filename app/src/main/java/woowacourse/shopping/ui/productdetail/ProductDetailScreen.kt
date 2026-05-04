@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -113,6 +117,44 @@ private fun CartPutButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductDetailErrorScreen(
+    onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Scaffold(
+        containerColor = Color.White,
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            ProductAppBar(
+                onCloseClick = onCloseClick,
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = stringResource(R.string.product_detail_error_description),
+                tint = Color(0xFFFF9800),
+                modifier = Modifier.size(64.dp),
+            )
+            Text(
+                text = stringResource(R.string.product_detail_entry_error),
+                fontWeight = FontWeight.W500,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(top = 16.dp),
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun ProductScreenPreview() {
@@ -123,4 +165,10 @@ private fun ProductScreenPreview() {
         onCloseClick = {},
         onAddToCartClick = {},
     )
+}
+
+@Preview
+@Composable
+private fun ProductErrorScreenPreview() {
+    ProductDetailErrorScreen(onCloseClick = {})
 }

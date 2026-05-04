@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import kotlin.jvm.java
-import woowacourse.shopping.R
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
+import woowacourse.shopping.ui.productlist.ProductDetailErrorScreen
 import woowacourse.shopping.ui.productlist.ProductDetailScreen
 import woowacourse.shopping.ui.state.ProductUiModel
 
@@ -25,24 +24,23 @@ class ProductDetailActivity : ComponentActivity() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(DETAIL_PRODUCT)
         }
-        if (uiModel == null) {
-            Toast.makeText(this, R.string.product_detail_entry_error, Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
 
         setContent {
             AndroidshoppingcartTheme {
-                ProductDetailScreen(
-                    imageUrl = uiModel.imageUrl,
-                    title = uiModel.title,
-                    price = uiModel.price,
-                    onCloseClick = { finish() },
-                    onAddToCartClick = {
-                        setResult(RESULT_OK, addedIdResult(uiModel.id))
-                        finish()
-                    },
-                )
+                if (uiModel == null) {
+                    ProductDetailErrorScreen(onCloseClick = { finish() })
+                } else {
+                    ProductDetailScreen(
+                        imageUrl = uiModel.imageUrl,
+                        title = uiModel.title,
+                        price = uiModel.price,
+                        onCloseClick = { finish() },
+                        onAddToCartClick = {
+                            setResult(RESULT_OK, addedIdResult(uiModel.id))
+                            finish()
+                        },
+                    )
+                }
             }
         }
     }
