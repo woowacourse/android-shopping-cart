@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.model.cart
 
 import woowacourse.shopping.domain.model.product.Product
-import java.util.Collections.emptyList
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
