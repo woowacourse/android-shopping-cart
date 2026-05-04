@@ -30,13 +30,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.cart.CartItemUiModel
 
 @Composable
 fun CartItemUnit(
-    product: Product,
+    item: CartItemUiModel,
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
 ) {
@@ -49,17 +49,17 @@ fun CartItemUnit(
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                 .padding(18.dp),
     ) {
-        NameAndCloseIcon(product = product, onClick = onDeleteClick)
+        NameAndCloseIcon(item = item, onClick = onDeleteClick)
 
         Spacer(Modifier.size(20.dp))
 
-        ImageAndPrice(product)
+        ImageAndPrice(item)
     }
 }
 
 @Composable
 private fun NameAndCloseIcon(
-    product: Product,
+    item: CartItemUiModel,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -71,7 +71,7 @@ private fun NameAndCloseIcon(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = product.name,
+            text = item.name,
             color = Color.DarkGray,
             style = ShoppingTypography.productName,
             maxLines = 1,
@@ -89,11 +89,10 @@ private fun NameAndCloseIcon(
 @SuppressLint("DefaultLocale")
 @Composable
 private fun ImageAndPrice(
-    product: Product,
+    item: CartItemUiModel,
     modifier: Modifier = Modifier,
 ) {
-    val price = product.price.value
-    val formatted = String.format("%,d", price)
+    val formatted = String.format("%,d", item.price)
 
     Row(
         modifier =
@@ -103,7 +102,7 @@ private fun ImageAndPrice(
         verticalAlignment = Alignment.Bottom,
     ) {
         AsyncImage(
-            model = product.imageUrl,
+            model = item.imageUrl,
             contentDescription = stringResource(R.string.content_description_image),
             modifier =
                 Modifier
@@ -123,17 +122,45 @@ private fun ImageAndPrice(
 @Preview(showBackground = true, name = "카트 아이템 유닛")
 @Composable
 private fun CartItemUnitPreview() {
-    CartItemUnit(product = InMemoryProductRepository.APPLE, onDeleteClick = {})
+    CartItemUnit(
+        item =
+            CartItemUiModel(
+                productId = InMemoryProductRepository.APPLE.id,
+                name = InMemoryProductRepository.APPLE.name,
+                imageUrl = InMemoryProductRepository.APPLE.imageUrl,
+                price = InMemoryProductRepository.APPLE.price.value,
+                quantity = 2,
+            ),
+        onDeleteClick = {},
+    )
 }
 
 @Preview(showBackground = true, name = "이름과 닫기아이콘")
 @Composable
 private fun NameAndCloseIconPreview() {
-    NameAndCloseIcon(product = InMemoryProductRepository.APPLE, onClick = {})
+    NameAndCloseIcon(
+        item =
+            CartItemUiModel(
+                productId = InMemoryProductRepository.APPLE.id,
+                name = InMemoryProductRepository.APPLE.name,
+                imageUrl = InMemoryProductRepository.APPLE.imageUrl,
+                price = InMemoryProductRepository.APPLE.price.value,
+                quantity = 2,
+            ),
+        onClick = {},
+    )
 }
 
 @Preview(showBackground = true, name = "사진과 금액")
 @Composable
 private fun ImageAndPricePreview() {
-    ImageAndPrice(InMemoryProductRepository.APPLE)
+    ImageAndPrice(
+        CartItemUiModel(
+            productId = InMemoryProductRepository.APPLE.id,
+            name = InMemoryProductRepository.APPLE.name,
+            imageUrl = InMemoryProductRepository.APPLE.imageUrl,
+            price = InMemoryProductRepository.APPLE.price.value,
+            quantity = 2,
+        ),
+    )
 }

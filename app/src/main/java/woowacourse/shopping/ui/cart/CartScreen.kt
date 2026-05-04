@@ -8,8 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.model.Cart
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.component.CartHeader
 import woowacourse.shopping.ui.cart.component.CartItemBody
@@ -18,14 +17,14 @@ private const val PAGE_SIZE = 5
 
 @Composable
 fun CartScreen(
-    cart: Cart,
+    items: List<CartItemUiModel>,
     currentPage: Int,
     totalPages: Int,
     showPagination: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onDeleteClick: (Product) -> Unit,
+    onDeleteClick: (ProductId) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -34,13 +33,13 @@ fun CartScreen(
     ) {
         CartHeader(onBackClick = onBackClick)
 
-        if(isLoading && cart.items.isEmpty()) {
+        if (isLoading && items.isEmpty()) {
             CircularProgressIndicator(modifier = Modifier.padding(20.dp))
             return
         }
 
         CartItemBody(
-            cart = cart,
+            items = items,
             showPagination = showPagination,
             currentPage = currentPage,
             totalPages = totalPages,
@@ -58,9 +57,25 @@ fun CartScreen(
 @Composable
 @Preview(showBackground = true)
 private fun CartScreenPreview() {
-    val cart = Cart(InMemoryProductRepository.products.associateWith { 1 })
+    val items =
+        listOf(
+            CartItemUiModel(
+                productId = InMemoryProductRepository.APPLE.id,
+                name = InMemoryProductRepository.APPLE.name,
+                imageUrl = InMemoryProductRepository.APPLE.imageUrl,
+                price = InMemoryProductRepository.APPLE.price.value,
+                quantity = 2,
+            ),
+            CartItemUiModel(
+                productId = InMemoryProductRepository.BBOYAMI.id,
+                name = InMemoryProductRepository.BBOYAMI.name,
+                imageUrl = InMemoryProductRepository.BBOYAMI.imageUrl,
+                price = InMemoryProductRepository.BBOYAMI.price.value,
+                quantity = 1,
+            ),
+        )
     CartScreen(
-        cart = cart,
+        items = items,
         currentPage = 1,
         totalPages = 1,
         showPagination = false,
@@ -68,6 +83,6 @@ private fun CartScreenPreview() {
         onBackClick = {},
         onDeleteClick = {},
         onPreviousClick = {},
-        onNextClick = {}
+        onNextClick = {},
     )
 }

@@ -2,6 +2,7 @@ package woowacourse.shopping.repository.inmemory
 
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
@@ -182,10 +183,18 @@ object InMemoryProductRepository : ProductRepository {
     override val size: Int
         get() = products.count()
 
+    private val productMap: Map<ProductId, Product> = products.associateBy { it.id }
+
     override suspend fun getProducts(
         fromIndex: Int,
         limit: Int,
     ) = products.getPagedProducts(fromIndex, limit)
 
     override suspend fun hasNext(current: Int) = current < products.toList().lastIndex
+
+    override suspend fun findAllByIds(ids: Set<ProductId>): Map<ProductId, Product> =
+        ids
+            .mapNotNull { id ->
+                productMap[id]?.let { id to it }
+            }.toMap()
 }

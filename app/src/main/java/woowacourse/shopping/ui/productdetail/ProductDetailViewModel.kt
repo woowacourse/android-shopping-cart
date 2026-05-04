@@ -11,29 +11,30 @@ import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 
 class ProductDetailViewModel(
-    private val cartRepository: CartRepository = InMemoryCartRepository
-): ViewModel() {
+    private val cartRepository: CartRepository = InMemoryCartRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     fun setProduct(product: Product) {
-        if(_uiState.value.product != null) return
+        if (_uiState.value.product != null) return
         _uiState.value = _uiState.value.copy(product = product)
     }
 
     fun addToCart() {
         val product = _uiState.value.product ?: return
-        if(_uiState.value.isAdding) return
+        if (_uiState.value.isAdding) return
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isAdding = true)
 
-            cartRepository.add(product)
+            cartRepository.add(product.id)
 
-            _uiState.value = _uiState.value.copy(
-                isAdding = false,
-                isAdded = true
-            )
+            _uiState.value =
+                _uiState.value.copy(
+                    isAdding = false,
+                    isAdded = true,
+                )
         }
     }
 }

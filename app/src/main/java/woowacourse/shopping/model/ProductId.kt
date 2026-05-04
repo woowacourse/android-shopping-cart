@@ -5,9 +5,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 @Parcelize
-data class Product(
-    val id: ProductId = ProductId(UUID.randomUUID()),
-    val name: String,
-    val price: Money,
-    val imageUrl: String,
+@JvmInline
+value class ProductId(
+    val value: UUID,
 ) : Parcelable
