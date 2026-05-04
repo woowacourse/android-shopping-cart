@@ -102,8 +102,8 @@ fun cartItem(
                         modifier = Modifier.align(Alignment.BottomEnd),
                         text =
                             stringResource(
-                                R.string.price_format,
-                                intFormatter(productAndCount.product.price.value),
+                                R.string.cart_item_total_price,
+                                intFormatter(productAndCount.totalPrice()),
                             ),
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,

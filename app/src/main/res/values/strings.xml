@@ -15,4 +15,5 @@
     <string name="shopping_cart">shoppingCart</string>
     <string name="next_page">다음 페이지</string>
     <string name="close_button">closeButton</string>
+    <string name="cart_item_total_price">%1$s원</string>
 </resources>
