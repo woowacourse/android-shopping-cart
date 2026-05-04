@@ -167,7 +167,7 @@ object MockCatalog {
             price = 1,
         )
 
-    suspend fun loadMoreProducts(
+    fun loadMoreProducts(
         page: Int,
         pageSize: Int,
     ): Products = catalog.getPartedItem(page, pageSize)

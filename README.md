@@ -82,4 +82,4 @@
 
 ### MockCatalog
 
-- [ ] loadMoreProducts 함수 suspend 키워드 제거
+- [x] loadMoreProducts 함수 suspend 키워드 제거
