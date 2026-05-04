@@ -1,7 +1,7 @@
 package woowacourse.shopping.model
 
 class ShoppingCartItem(
-    private val id: Long,
+    val id: Long,
     val product: Product,
 ) {
     override fun equals(other: Any?): Boolean {

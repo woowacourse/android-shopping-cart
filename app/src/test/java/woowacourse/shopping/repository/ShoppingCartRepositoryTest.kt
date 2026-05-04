@@ -2,8 +2,8 @@ package woowacourse.shopping.repository
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.ShoppingApplication.Companion.shoppingCartRepository
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
@@ -11,12 +11,6 @@ import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartRepositoryTest {
     private val product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), "")
-    private lateinit var shoppingCartRepository: ShoppingCartRepository
-
-    @BeforeEach
-    fun setUp() {
-        shoppingCartRepository = MemoryShoppingCartRepository()
-    }
 
     @Test
     fun `같은 상품이라도 쇼핑 카트 아이템 id가 다르면 별개로 취급한다`() {
@@ -36,6 +30,7 @@ class ShoppingCartRepositoryTest {
 
     @Test
     fun `장바구니에 상품을 추가할 수 있다`() {
+        val shoppingCartRepository = MemoryShoppingCartRepository(emptyList())
         shoppingCartRepository.add(product)
         val shoppingCartItems = shoppingCartRepository.getShoppingItems()
 
@@ -54,6 +49,7 @@ class ShoppingCartRepositoryTest {
 
     @Test
     fun `장바구니에 없는 상품을 삭제하면 null이 반환된다`() {
+        val shoppingCartRepository = MemoryShoppingCartRepository(emptyList())
         shoppingCartRepository.remove(ShoppingCartItem(1, product)) shouldBe null
     }
 }

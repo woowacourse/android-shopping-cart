@@ -9,6 +9,6 @@ import woowacourse.shopping.repository.ShoppingCartRepository
 class ShoppingApplication : Application() {
     companion object {
         val productRepository: ProductRepository = MemoryProductRepository(products = preparedProducts)
-        val shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository()
+        val shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository(initialProducts = emptyList())
     }
 }
