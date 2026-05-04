@@ -16,7 +16,12 @@ class FakeProductRepository(
     override suspend fun getProducts(
         fromIndex: Int,
         limit: Int,
-    ): Products = products.getPagedProducts(fromIndex, limit)
+    ): Products {
+        val safeFrom = fromIndex.coerceAtLeast(0)
+        val safeTo = minOf(safeFrom + limit, products.count())
+
+        return Products(products.toList().subList(safeFrom, safeTo))
+    }
 
     override suspend fun hasNext(current: Int): Boolean = current < products.toList().lastIndex
 

@@ -3,6 +3,7 @@
 package woowacourse.shopping.model
 
 import java.util.UUID
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,5 +30,32 @@ class CartTest {
         assertThrows<IllegalArgumentException> {
             Cart(mapOf(productId to -1))
         }
+    }
+
+    @Test
+    fun `상품을 추가하면 해당 상품의 수량이 1 증가한 새 장바구니를 반환한다`() {
+        val cart = Cart(emptyMap())
+
+        val actual = cart.add(productId)
+
+        assertEquals(1, actual.items[productId])
+    }
+
+    @Test
+    fun `상품을 삭제하면 해당 상품의 수량이 1 감소한 새 장바구니를 반환한다`() {
+        val cart = Cart(mapOf(productId to 2))
+
+        val actual = cart.delete(productId)
+
+        assertEquals(1, actual.items[productId])
+    }
+
+    @Test
+    fun `수량이 1인 상품을 삭제하면 장바구니에서 제거된다`() {
+        val cart = Cart(mapOf(productId to 1))
+
+        val actual = cart.delete(productId)
+
+        assertEquals(emptyMap<ProductId, Int>(), actual.items)
     }
 }

@@ -188,7 +188,12 @@ object InMemoryProductRepository : ProductRepository {
     override suspend fun getProducts(
         fromIndex: Int,
         limit: Int,
-    ) = products.getPagedProducts(fromIndex, limit)
+    ): Products {
+        val safeFrom = fromIndex.coerceAtLeast(0)
+        val safeTo = minOf(safeFrom + limit, products.count())
+
+        return Products(products.toList().subList(safeFrom, safeTo))
+    }
 
     override suspend fun hasNext(current: Int) = current < products.toList().lastIndex
 

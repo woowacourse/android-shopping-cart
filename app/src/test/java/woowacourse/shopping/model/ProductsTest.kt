@@ -2,17 +2,18 @@
 
 package woowacourse.shopping.model
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class ProductsTest {
-    val product1 =
+    private val product1 =
         Product(
             name = "새우깡",
             price = Money(3100),
             imageUrl = "",
         )
 
-    val product2 =
+    private val product2 =
         Product(
             name = "아이셔",
             price = Money(1300),
@@ -28,6 +29,6 @@ class ProductsTest {
     fun `생성된 Products 객체에서 내부의 전체 상품 데이터를 누락이나 변형 없이 정상적으로 반환한다`() {
         val expected = listOf(product1, product2)
         val actual = Products(listOf(product1, product2)).toList()
-        assert(expected == actual)
+        assertEquals(expected, actual)
     }
 }
