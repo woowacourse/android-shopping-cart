@@ -12,43 +12,54 @@ import woowacourse.shopping.ui.state.ProductUiModel
 class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) {
     var totalCartItems: List<ProductUiModel> = initialItems
     var page by mutableIntStateOf(initialPage)
-    var cartItems by mutableStateOf(pagination(initialPage, initialItems))
+    var cartItems by mutableStateOf(
+        pagination(
+            page = initialPage,
+            productUiModels = totalCartItems,
+            pageSIze = 5,
+        ),
+    )
+
     fun isStartPage(): Boolean {
         return page == 1
     }
 
-    fun isEndPage(): Boolean = page >= lastPage()
+    fun isEndPage(): Boolean = page >= lastPage(5)
 
-    private fun lastPage(): Int {
+    private fun lastPage(pageSize: Int): Int {
         if (totalCartItems.isEmpty()) return 1
-        return (totalCartItems.size + PAGE_SIZE - 1) / PAGE_SIZE
+        return (totalCartItems.size + pageSize - 1) / pageSize
     }
 
     fun moveToPreviousPage() {
         page -= 1
-        cartItems = pagination(page, totalCartItems)
+        cartItems = pagination(page = page, productUiModels = totalCartItems, pageSIze = 5)
     }
 
     fun moveToNextPage() {
         page += 1
-        cartItems = pagination(page, totalCartItems)
+        cartItems = pagination(page = page, productUiModels = totalCartItems, pageSIze = 5)
     }
 
     private fun pagination(
         page: Int,
         productUiModels: List<ProductUiModel>,
+        pageSIze: Int,
     ): List<ProductUiModel> {
-        val toIndex = minOf(page * PAGE_SIZE, productUiModels.size)
-        return productUiModels.subList((page - 1) * PAGE_SIZE, toIndex)
+        val toIndex = minOf(page * pageSIze, productUiModels.size)
+        return productUiModels.subList((page - 1) * pageSIze, toIndex)
     }
 
     fun deleteCartItem(id: String) {
         totalCartItems = totalCartItems.filter { it.id != id }
-        cartItems = pagination(page, totalCartItems)
+        cartItems = pagination(
+            page = page,
+            productUiModels = totalCartItems,
+            pageSIze = 5,
+        )
     }
 
     companion object {
-        private const val PAGE_SIZE = 5
         private const val KEY_PAGE = "page"
         private const val KEY_ITEMS = "items"
 

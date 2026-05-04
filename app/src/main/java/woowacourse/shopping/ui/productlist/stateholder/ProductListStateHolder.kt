@@ -29,16 +29,16 @@ class ProductListStateHolder {
     suspend fun loadingFetch() {
         isLoading = true
         try {
-            uiModels = fetchProducts()
+            uiModels = fetchProducts(pageSize = 20)
                 .map(this::toProductUiModel)
         } finally {
             isLoading = false
         }
     }
 
-    suspend fun fetchProducts(): List<Product> {
+    suspend fun fetchProducts(pageSize: Int): List<Product> {
         delay(2000) // 비동기 상황 가정
-        val toOffset = minOf(_products.size + PAGE_SIZE, MockData.MOCK_PRODUCTS.size)
+        val toOffset = minOf(_products.size + pageSize, MockData.MOCK_PRODUCTS.size)
 
         _products.addAll(
             MockData.MOCK_PRODUCTS.subList(
@@ -69,9 +69,5 @@ class ProductListStateHolder {
 
     fun toProductUiModels(): List<ProductUiModel> {
         return cart.getProductList().map { toProductUiModel(it) }
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 20
     }
 }
