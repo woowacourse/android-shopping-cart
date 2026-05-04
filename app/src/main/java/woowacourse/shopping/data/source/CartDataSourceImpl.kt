@@ -7,7 +7,7 @@ object CartDataSourceImpl : CartDataSource {
     override val items get() = _items.toList()
 
     override fun add(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.product == cartItem.product }
+        val idx = _items.indexOfFirst { it.product.id == cartItem.product.id }
 
         if (idx == -1) {
             _items.add(cartItem)
