@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.domain.PageRequest
+import woowacourse.shopping.domain.ProductAndCount
 import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
@@ -20,7 +21,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun CartBody(
     innerPadding: PaddingValues,
-    cartProducts: CartRepository,
+    cartItems: List<ProductAndCount>,
     currentPageIndex: Int,
     lastPageIndex: Int,
     onMoveToPreviousPage: () -> Unit,
@@ -28,7 +29,7 @@ fun CartBody(
     onDeleteProduct: (Uuid) -> Unit,
     modifier: Modifier,
 ) {
-    val visibleProducts = cartProducts.getCartProducts().toPage(
+    val visibleProducts = cartItems.toPage(
         PageRequest(
             index = currentPageIndex,
             size = CART_PAGE_SIZE
@@ -46,7 +47,7 @@ fun CartBody(
                     )
                 }
             }
-            if (cartProducts.getCartProducts().size > 5) {
+            if (cartItems.size > 5) {
                 pagination(
                     pageMoveToLeft = { onMoveToPreviousPage() },
                     pageMoveToLeftButtonEnabled = currentPageIndex > 0,

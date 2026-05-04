@@ -17,6 +17,7 @@ import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.cartTopAppBar
 import woowacourse.shopping.ui.cart.state.CartState
 import woowacourse.shopping.ui.cart.state.rememberCartState
+import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -27,15 +28,10 @@ fun cartScreen(
     modifier: Modifier = Modifier,
 ) {
     val state = rememberCartState()
+    val cartItems = cartProducts.getCartProducts()
     val lastPageIndex =
-        if (cartProducts
-                .getCartProducts()
-                .isEmpty()
-        ) {
-            0
-        } else {
-            (cartProducts.getCartProducts().size - 1) / CART_PAGE_SIZE
-        }
+        if (cartItems.isEmpty()) 0 else (cartItems.size - 1) / CART_PAGE_SIZE
+    val effectivePageIndex = minOf(state.currentPageIndex,lastPageIndex)
 
     Scaffold(
         topBar = {
@@ -47,7 +43,7 @@ fun cartScreen(
     ) { innerPadding ->
         CartBody(
             innerPadding = innerPadding,
-            cartProducts = cartProducts,
+            cartItems = cartItems,
             currentPageIndex = state.currentPageIndex,
             lastPageIndex = lastPageIndex,
             onMoveToPreviousPage = { if (state.currentPageIndex > 0) state.decrease() },
