@@ -31,7 +31,13 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             runCatching { productRepository.getProduct(productId) }
                 .onSuccess { product ->
-                    _uiState.value = ProductDetailUiState.Success(product)
+                    _uiState.value = if (product != null) {
+                        ProductDetailUiState.Success(product)
+                    } else {
+                        ProductDetailUiState.Error(
+                            NoSuchElementException("상품을 찾을 수 없습니다. id=$productId")
+                        )
+                    }
                 }
                 .onFailure { throwable ->
                     _uiState.value = ProductDetailUiState.Error(throwable)
