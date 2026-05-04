@@ -150,7 +150,7 @@ object InMemoryProductRepository : ProductRepository {
             price = Money(15_000),
             imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
         )
-    val products =
+    val products: Products =
         Products(
             listOf(
                 DARAM,
@@ -179,13 +179,12 @@ object InMemoryProductRepository : ProductRepository {
                 SYANTI4,
             ),
         )
-    override val size: Int
-        get() = products.count()
+    override val size: Int = products.count()
 
     override fun getProducts(
         fromIndex: Int,
         limit: Int,
-    ) = products.getPagedProducts(fromIndex, limit)
+    ): Products = products.getPagedProducts(fromIndex, limit)
 
-    override fun hasNext(current: Int) = current < products.toList().lastIndex
+    override fun hasNext(current: Int): Boolean = current < size - 1
 }
