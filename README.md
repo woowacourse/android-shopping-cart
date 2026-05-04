@@ -74,7 +74,7 @@
 
 ### CartStateHolder
 
-- [ ] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
+- [x] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
 
 ### MainActivity
 

@@ -26,7 +26,7 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val stateHolder = rememberSaveable { CartStateHolder() }
+            val stateHolder = rememberSaveable(saver = CartStateHolder.Saver) { CartStateHolder(0) }
             var cart by rememberSaveable {
                 mutableStateOf(
                     intent.getParcelableExtra<Cart>(IntentKeys.CART_KEY)!!
