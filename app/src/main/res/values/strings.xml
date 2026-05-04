@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
-    <string name="title_activity_product_detail">ProductDetailActivity</string>
-    <string name="title_activity_cart">CartActivity</string>
+    <string name="title_activity_product_detail">상품 상세</string>
+    <string name="title_activity_cart">장바구니</string>
     <string name="delete_item_button">deleteItemButton</string>
     <string name="left_arrow_icon">leftArrowIcon</string>
     <string name="previous_page">이전 페이지</string>
