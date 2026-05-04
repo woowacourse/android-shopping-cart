@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,11 +16,17 @@ import woowacourse.shopping.core.designsystem.theme.AndroidshoppingTheme
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val productId = intent.getStringExtra(PRODUCT_ID)
+        if (productId.isNullOrBlank()) {
+            showErrorAndFinish()
+            return
+        }
+
         enableEdgeToEdge()
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val productId = intent.getStringExtra(PRODUCT_ID) ?: ""
                     val stateHolder = retainProductDetailStateHolder(productId)
 
                     ProductDetailScreen(
@@ -31,6 +38,11 @@ class ProductDetailActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun showErrorAndFinish() {
+        Toast.makeText(this, "상품 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     companion object {
@@ -45,3 +57,4 @@ class ProductDetailActivity : ComponentActivity() {
             }
     }
 }
+
