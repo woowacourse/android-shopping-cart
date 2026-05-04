@@ -70,7 +70,7 @@
 
 ### CartRepository 제거
 
-- [ ] MainActivity와 CartActivity가 Cart객체 자체를 주고 받도록 수정
+- [x] MainActivity와 CartActivity가 Cart객체 자체를 주고 받도록 수정
 
 ### CartStateHolder
 
