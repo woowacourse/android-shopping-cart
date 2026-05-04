@@ -1,6 +1,5 @@
 package woowacourse.shopping.repository
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Price
@@ -17,10 +16,8 @@ class ProductRepositoryTest {
     }
 
     @Test
-    fun `id값이 2인 상품이 저장되어 있지 않은 레파지토리에서 id값이 2인 상품을 조회하면 예외가 발생한다`() {
-        shouldThrow<IllegalArgumentException> {
-            productRepository.getProduct(2)
-        }
+    fun `id값이 2인 상품이 저장되어 있지 않은 레파지토리에서 id값이 2인 상품을 조회하면 null이 반환된다`() {
+        productRepository.getProduct(2) shouldBe null
     }
 
     @Test

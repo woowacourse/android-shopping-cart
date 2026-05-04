@@ -1,6 +1,5 @@
 package woowacourse.shopping.repository
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
@@ -45,18 +44,16 @@ class ShoppingCartRepositoryTest {
     }
 
     @Test
-    fun `장바구니에 추가된 상품은 삭제할 수 있다`() {
+    fun `장바구니에 추가된 상품은 삭제할 수 있으며 삭제된 아이템이 반환된다`() {
         shoppingCartRepository.add(product)
         val addedShoppingCartItem = shoppingCartRepository.getShoppingItems().single()
 
-        shoppingCartRepository.remove(addedShoppingCartItem)
+        shoppingCartRepository.remove(addedShoppingCartItem) shouldBe addedShoppingCartItem
         shoppingCartRepository.getShoppingItems() shouldBe emptyList()
     }
 
     @Test
-    fun `장바구니에 없는 상품을 삭제하면 예외가 발생한다`() {
-        shouldThrow<IllegalArgumentException> {
-            shoppingCartRepository.remove(ShoppingCartItem(1, product))
-        }
+    fun `장바구니에 없는 상품을 삭제하면 null이 반환된다`() {
+        shoppingCartRepository.remove(ShoppingCartItem(1, product)) shouldBe null
     }
 }

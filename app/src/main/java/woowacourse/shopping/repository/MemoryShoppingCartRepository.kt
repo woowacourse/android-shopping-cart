@@ -16,12 +16,8 @@ class MemoryShoppingCartRepository : ShoppingCartRepository {
         )
     }
 
-    override fun remove(shoppingCartItem: ShoppingCartItem) {
-        if (!items.contains(shoppingCartItem)) {
-            throw IllegalArgumentException("장바구니에 존재하지 않는 상품입니다")
-        }
-        items.remove(shoppingCartItem)
-    }
+    override fun remove(shoppingCartItem: ShoppingCartItem): ShoppingCartItem? =
+        if (items.remove(shoppingCartItem)) shoppingCartItem else null
 
     override fun getShoppingItems(): List<ShoppingCartItem> = items.toList()
 }

@@ -30,14 +30,18 @@ class DetailProductActivity : ComponentActivity() {
                 val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
                 if (productId != INVALID_PRODUCT_ID) {
                     val product = productRepository.getProduct(productId)
-                    DetailProductScreen(
-                        product = product,
-                        onAddToCartClick = {
-                            shoppingCartRepository.add(product)
-                            this.finish()
-                        },
-                        onBackClick = this::finish,
-                    )
+                    if (product != null) {
+                        DetailProductScreen(
+                            product = product,
+                            onAddToCartClick = {
+                                shoppingCartRepository.add(product)
+                                this.finish()
+                            },
+                            onBackClick = this::finish,
+                        )
+                    } else {
+                        Text(stringResource(R.string.product_not_found_message))
+                    }
                 } else {
                     Text(stringResource(R.string.product_not_found_message))
                 }
