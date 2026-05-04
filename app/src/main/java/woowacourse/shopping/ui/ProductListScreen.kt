@@ -3,13 +3,10 @@
 package woowacourse.shopping.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,15 +22,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.MoreButton
+import woowacourse.shopping.ui.component.ProductItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
@@ -81,47 +76,6 @@ fun ProductListScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ProductItem(
-    product: ProductDto,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-    ) {
-        AsyncImage(
-            model = product.imageUrl,
-            contentDescription = stringResource(R.string.product_image_content_description, product.title),
-            contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(154.dp)
-                    .padding(bottom = 8.dp)
-                    .background(MaterialTheme.colorScheme.surfaceContainer),
-        )
-        Text(
-            text = product.title,
-            style = MaterialTheme.typography.titleLarge,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier =
-                Modifier.padding(
-                    horizontal = 7.5.dp,
-                ),
-        )
-        Text(
-            text = product.price,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier =
-                Modifier.padding(
-                    horizontal = 7.5.dp,
-                ),
-        )
     }
 }
 
