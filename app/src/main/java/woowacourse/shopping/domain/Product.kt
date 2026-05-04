@@ -10,7 +10,7 @@ data class Product(
     val imageUri: String,
     val name: String,
     val price: Int,
-): Parcelable  {
+) : Parcelable {
     init {
         require(imageUri.isNotBlank()) { "imageUri는 빈 값이 될 수 없습니다." }
         require(name.isNotBlank()) { "name은 빈 값이 될 수 없습니다." }

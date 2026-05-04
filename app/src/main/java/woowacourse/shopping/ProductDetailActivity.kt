@@ -11,16 +11,16 @@ import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
-import java.util.UUID
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val product = intent?.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY) ?: run {
-            finish()
-            return
-        }
+        val product =
+            intent?.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY) ?: run {
+                finish()
+                return
+            }
 
         enableEdgeToEdge()
         setContent {

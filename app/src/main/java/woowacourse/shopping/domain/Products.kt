@@ -8,7 +8,7 @@ import kotlin.math.min
 @Parcelize
 class Products(
     val products: List<Product> = emptyList(),
-): Parcelable {
+) : Parcelable {
     fun isEmpty() = products.isEmpty()
 
     fun size() = products.size

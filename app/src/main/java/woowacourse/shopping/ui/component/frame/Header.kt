@@ -30,8 +30,7 @@ fun Header(
                 .fillMaxWidth()
                 .background(
                     color = Color(0xFF555555),
-                )
-                .padding(26.dp, 16.dp),
+                ).padding(26.dp, 16.dp),
     ) {
         headerContent()
     }

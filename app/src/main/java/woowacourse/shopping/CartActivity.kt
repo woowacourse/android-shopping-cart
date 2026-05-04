@@ -29,7 +29,7 @@ class CartActivity : ComponentActivity() {
             val stateHolder = rememberSaveable(saver = CartStateHolder.Saver) { CartStateHolder(0) }
             var cart by rememberSaveable {
                 mutableStateOf(
-                    intent.getParcelableExtra<Cart>(IntentKeys.CART_KEY)!!
+                    intent.getParcelableExtra<Cart>(IntentKeys.CART_KEY)!!,
                 )
             }
             var displayedProducts by remember { mutableStateOf(Products()) }
@@ -66,9 +66,10 @@ class CartActivity : ComponentActivity() {
                     previousEnable = stateHolder.checkPreviousAvailable(),
                     nextEnable = stateHolder.checkNextAvailable(cart.size()),
                     isPageable = cart.size() > PAGE_SIZE,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 )
             }
         }
@@ -82,6 +83,4 @@ class CartActivity : ComponentActivity() {
 private suspend fun Cart.getPartedItem(
     page: Int,
     pageSize: Int,
-): Products {
-    return products.getPartedItem(page, pageSize)
-}
+): Products = products.getPartedItem(page, pageSize)

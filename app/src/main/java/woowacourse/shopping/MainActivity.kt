@@ -14,8 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -43,42 +41,46 @@ class MainActivity : ComponentActivity() {
                 currentProducts += loadProducts(currentIndex, MAX_PRODUCT)
             }
 
-            val startForProductDetailResult = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
-                    if (product != null) {
-                        cart = cart.addProduct(product)
+            val startForProductDetailResult =
+                rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult(),
+                ) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                        val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
+                        if (product != null) {
+                            cart = cart.addProduct(product)
+                        }
                     }
                 }
-            }
 
-            val startForCartResult = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val updatedCart = result.data?.getParcelableExtra<Cart>(IntentKeys.CART_KEY)
-                    if (updatedCart != null) {
-                        cart = updatedCart
+            val startForCartResult =
+                rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult(),
+                ) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                        val updatedCart = result.data?.getParcelableExtra<Cart>(IntentKeys.CART_KEY)
+                        if (updatedCart != null) {
+                            cart = updatedCart
+                        }
                     }
                 }
-            }
 
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
                         catalog = currentProducts,
                         onItemClick = { product ->
-                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
-                            }
+                            val intent =
+                                Intent(this, ProductDetailActivity::class.java).apply {
+                                    putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
+                                }
                             startForProductDetailResult.launch(intent)
                         },
                         onCartClick = {
-                            val intent = Intent(this, CartActivity::class.java).apply {
-                                putExtra(IntentKeys.CART_KEY, cart)
-                            }
+                            val intent =
+                                Intent(this, CartActivity::class.java).apply {
+                                    putExtra(IntentKeys.CART_KEY, cart)
+                                }
                             startForCartResult.launch(intent)
                         },
                         onLoadClick = {

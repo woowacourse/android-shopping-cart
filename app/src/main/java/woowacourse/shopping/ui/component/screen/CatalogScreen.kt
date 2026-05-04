@@ -28,7 +28,6 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ShoppingItem
-import java.util.UUID
 
 @Composable
 fun CatalogScreen(
@@ -42,7 +41,7 @@ fun CatalogScreen(
         headerContent = { CatalogHeader(onCartClick) },
         bodyContent = {
             CatalogBody(
-                catalog = catalog ,
+                catalog = catalog,
                 onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
             )
@@ -130,30 +129,31 @@ private fun LoadBtn(
 @Preview(showBackground = true)
 @Composable
 private fun CatalogScreenPreview() {
-    val catalog = Products(
-        listOf(
-            Product(
-                imageUri = "hello",
-                name = "너무너무너무긴아이템이름",
-                price = 100000,
-            ),
-            Product(
-                imageUri = "디디",
-                name = "당근주스",
-                price = 1000,
-            ),
-            Product(
-                imageUri = "hello",
-                name = "우유",
-                price = 100,
-            ),
-            Product(
-                imageUri = "hello",
-                name = "투핸더",
-                price = 100000000,
+    val catalog =
+        Products(
+            listOf(
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
             ),
         )
-    )
 
     CatalogScreen(catalog, {}, {}, {})
 }

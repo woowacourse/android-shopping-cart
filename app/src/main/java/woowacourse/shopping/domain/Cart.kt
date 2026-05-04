@@ -7,7 +7,7 @@ import java.util.UUID
 @Parcelize
 class Cart(
     val products: Products = Products(),
-): Parcelable {
+) : Parcelable {
     fun addProduct(product: Product): Cart {
         val product = products.add(product)
         return Cart(product)

@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
 import java.util.UUID
@@ -173,8 +173,7 @@ fun PagingBtn(
                     .clickable(
                         onClick = onPrevious,
                         enabled = previousEnable,
-                    )
-                    .wrapContentSize(Alignment.Center),
+                    ).wrapContentSize(Alignment.Center),
         )
         Text(
             text = (currentPage + 1).toString(),
@@ -200,15 +199,13 @@ fun PagingBtn(
                     .clickable(
                         onClick = onNext,
                         enabled = nextEnable,
-                    )
-                    .background(color = btnAvailable(nextEnable))
+                    ).background(color = btnAvailable(nextEnable))
                     .wrapContentHeight(Alignment.CenterVertically),
         )
     }
 }
 
-private fun btnAvailable(btnFlag: Boolean): Color =
-    if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
+private fun btnAvailable(btnFlag: Boolean): Color = if (btnFlag) Color(0xFF04C09E) else Color(0xFFAAAAAA)
 
 @Preview
 @Composable
@@ -221,40 +218,41 @@ private fun CartScreenPreview() {
         onNext = {},
         previousEnable = false,
         nextEnable = false,
-        cart = Products(
-            listOf(
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
-                ),
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
-                ),
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
-                ),
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
-                ),
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
-                ),
-                Product(
-                    imageUri = "uri",
-                    name = "무엘사",
-                    price = 10000000,
+        cart =
+            Products(
+                listOf(
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
+                    Product(
+                        imageUri = "uri",
+                        name = "무엘사",
+                        price = 10000000,
+                    ),
                 ),
             ),
-        ),
         isPageable = true,
     )
 }
