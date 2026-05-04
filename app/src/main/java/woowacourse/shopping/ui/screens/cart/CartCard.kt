@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
 fun CartItemCard(
@@ -81,7 +82,7 @@ fun CartItemCard(
             )
 
             Text(
-                text = "${"%,d".format(price)}원",
+                text = price.toFormattedPrice(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400,
             )
