@@ -12,7 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val topAppBarColor = Color(0xFF555555)
 
-val dividerColor = Color(0xFFaaaaaaa)
+val dividerColor = Color(0xFFAAAAAA)
 
 val buttonColor = Color(0xFF04C09E)
 
