@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSource
 import woowacourse.shopping.domain.CartItem
@@ -16,6 +17,32 @@ class CartRepositoryImplTest {
     @BeforeEach
     fun setUp() {
         cartRepository = CartRepositoryImpl(FakeCartDataSource())
+    }
+
+    @Test
+    fun `장바구니가 비어있을 때 1페이지를 조회하면 빈 리스트를 반환한다`() {
+        runTest {
+            cartRepository.getCartItemByPage(1).size shouldEqual 0
+        }
+    }
+
+    @Test
+    fun `존재하지 않는 페이지 조회 시 예외가 발생한다`() {
+        runTest {
+            assertThrows<IllegalArgumentException> {
+                cartRepository.getCartItemByPage(0)
+            }
+        }
+    }
+
+    @Test
+    fun `마지막 페이지 여부를 올바르게 계산한다`() {
+        runTest {
+            repeat(5) {
+                cartRepository.addItem(product = ShoppingFixture.getProduct(id = "$it"), amount = 1)
+            }
+            cartRepository.isLastPage(1) shouldEqual true
+        }
     }
 
     @Test
