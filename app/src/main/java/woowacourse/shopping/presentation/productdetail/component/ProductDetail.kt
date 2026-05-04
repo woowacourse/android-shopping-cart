@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.product.Price
-import woowacourse.shopping.domain.model.product.Product
+import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
 import woowacourse.shopping.presentation.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun ProductDetail(
-    product: Product,
+    product: ProductUiModel,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -44,7 +44,7 @@ fun ProductDetail(
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
         ProductPrice(
-            price = product.price.value,
+            price = product.price,
         )
     }
 }
@@ -55,10 +55,11 @@ fun ProductDetail(
 private fun ProductDetailPreview() {
     ProductDetail(
         product =
-            Product(
+            ProductUiModel(
+                productId = Uuid.random(),
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                 productName = "[든든] 동원 스위트콘",
-                price = Price(99800),
+                price = 99800,
             ),
     )
 }

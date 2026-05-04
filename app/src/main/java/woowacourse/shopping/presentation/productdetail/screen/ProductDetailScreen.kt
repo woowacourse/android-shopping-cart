@@ -17,19 +17,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.product.Price
-import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import woowacourse.shopping.presentation.productdetail.component.ProductDetail
 import woowacourse.shopping.presentation.productdetail.component.ProductDetailTopAppBar
+import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductDetailScreen(
-    product: Product,
+    product: ProductUiModel,
     onClose: () -> Unit,
-    onAddToCart: (Product) -> Unit,
+    onAddToCart: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -48,7 +48,7 @@ fun ProductDetailScreen(
             ProductDetail(product)
             ActionButton(
                 onClick = {
-                    onAddToCart(product)
+                    onAddToCart(product.productId)
                     scope.launch {
                         snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
                     }
@@ -69,10 +69,11 @@ fun ProductDetailScreen(
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         product =
-            Product(
+            ProductUiModel(
+                productId = Uuid.random(),
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                 productName = "[든든] 동원 스위트콘",
-                price = Price(99800),
+                price = 99800,
             ),
         onClose = {},
         onAddToCart = {},

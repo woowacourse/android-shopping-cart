@@ -30,7 +30,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ProductItem(
     product: Product,
-    onClick: (String) -> Unit,
+    onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -39,7 +39,7 @@ fun ProductItem(
                 containerColor = Color.White,
             ),
         shape = RectangleShape,
-        modifier = modifier.clickable { onClick(product.productId.toString()) },
+        modifier = modifier.clickable { onClick(product) },
     ) {
         Column {
             AsyncImage(

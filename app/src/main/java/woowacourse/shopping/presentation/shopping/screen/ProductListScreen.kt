@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import woowacourse.shopping.presentation.shopping.component.ProductItem
@@ -29,7 +30,7 @@ fun ProductListScreen(
     hasNextPage: Boolean,
     onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
-    onItemClick: (String) -> Unit,
+    onItemClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(

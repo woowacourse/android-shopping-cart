@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.productdetail.mapper.toUiModel
 import woowacourse.shopping.presentation.shopping.screen.ProductListScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
@@ -40,8 +41,8 @@ class ProductListActivity : ComponentActivity() {
                     onCartIconClick = {
                         startActivity(CartActivity.newIntent(this))
                     },
-                    onItemClick = { productId ->
-                        startActivity(ProductDetailActivity.newIntent(this, productId))
+                    onItemClick = { product ->
+                        startActivity(ProductDetailActivity.newIntent(this, product.toUiModel()))
                     },
                 )
             }
