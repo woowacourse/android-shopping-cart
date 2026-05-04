@@ -43,18 +43,21 @@ class CartRepositoryImplTest {
     @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품을 삭제하면 장바구니에서 삭제된다`() {
-        CartRepositoryImpl.addProduct(createProduct())
-        CartRepositoryImpl.deleteProduct(createProduct().productId)
+        val product = createProduct()
+
+        CartRepositoryImpl.addProduct(product)
+        CartRepositoryImpl.deleteProduct(product.productId)
 
         val cart = CartRepositoryImpl.getPagingItems(page = 0, pageSize = 10)
         assertThat(cart.cartItems).isEmpty()
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    private fun createProduct(): Product = Product(
-        productId = Uuid.random(),
-        imageUrl = "",
-        productName = "동원 스위트콘",
-        price = Price(99800),
-    )
+    private fun createProduct(): Product =
+        Product(
+            productId = Uuid.random(),
+            imageUrl = "",
+            productName = "동원 스위트콘",
+            price = Price(99800),
+        )
 }

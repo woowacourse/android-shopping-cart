@@ -46,9 +46,9 @@ fun CartScreen(
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                 ) {
-                    items(cart.cartItems) { productAndCount ->
+                    items(cart.cartItems) { cartItem ->
                         CartProductItem(
-                            cartItem = productAndCount,
+                            cartItem = cartItem,
                             onDelete = { id -> onDelete(id) },
                         )
                     }

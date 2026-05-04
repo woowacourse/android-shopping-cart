@@ -191,7 +191,7 @@ class CartStateHolderTest {
                 onPageIndexChanged = {},
             )
 
-        stateHolder.deleteProduct(CartFixture.cartItems[0].productId)
+        stateHolder.deleteProduct(CartFixture.cartItems[0].product.productId)
 
         assertThat(stateHolder.cart.cartItems).isEqualTo(CartFixture.cartItems.subList(1, 3))
     }
@@ -210,7 +210,7 @@ class CartStateHolderTest {
             )
 
         stateHolder.goToNextPage()
-        stateHolder.deleteProduct(CartFixture.cartItems[2].productId)
+        stateHolder.deleteProduct(CartFixture.cartItems[2].product.productId)
 
         assertThat(stateHolder.cart.cartItems).isEqualTo(CartFixture.cartItems.take(2))
         assertThat(stateHolder.currentPage).isEqualTo(1)

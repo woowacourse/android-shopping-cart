@@ -68,7 +68,7 @@ fun CartProductItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = cartItem.productName,
+                    text = cartItem.product.productName,
                     fontWeight = FontWeight.W700,
                     fontSize = 18.sp,
                     color = topAppBarColor,
@@ -80,7 +80,7 @@ fun CartProductItem(
                         Modifier
                             .size(16.dp)
                             .clickable {
-                                onDelete(cartItem.productId)
+                                onDelete(cartItem.product.productId)
                             },
                     colorFilter = ColorFilter.tint(topAppBarColor),
                 )

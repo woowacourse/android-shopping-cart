@@ -31,7 +31,7 @@ data class Cart(
         copy(
             cartItems =
                 cartItems.filterNot {
-                    it.productId == productId
+                    it.product.productId == productId
                 },
         )
 }
