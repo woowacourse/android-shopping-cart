@@ -16,12 +16,15 @@ class ProductStateHolder(
     var hasNext by mutableStateOf(false)
         private set
 
-//    init {
-//        getProducts()
-//    }
+    var isLoading by mutableStateOf(false)
+        private set
 
     suspend fun getProducts() {
+        if (isLoading) return
+
+        isLoading = true
         products += productRepository.getProducts()
         hasNext = productRepository.hasNext
+        isLoading = false
     }
 }

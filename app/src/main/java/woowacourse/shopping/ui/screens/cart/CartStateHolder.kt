@@ -22,28 +22,46 @@ class CartStateHolder(
     var cartItems: List<CartItem> by mutableStateOf(emptyList())
         private set
 
+    var isLoading by mutableStateOf(false)
+        private set
+
     suspend fun initCartItems() {
+        if (isLoading) return
+        isLoading = true
+
         cartItems = cartRepository.getCartItemByPage(curPage)
         isLast = cartRepository.isLastPage(curPage)
+
+        isLoading = false
     }
 
     suspend fun deleteCartItem(id: String) {
+        if (isLoading) return
+        isLoading = true
+
         cartRepository.deleteItem(id)
         updateCartItems()
+
+        isLoading = false
     }
 
     suspend fun getPrevPage() {
-        if (curPage == 1) return
+        if (curPage == 1 || isLoading) return
+        isLoading = true
 
         cartItems = cartRepository.getCartItemByPage(--curPage)
         isLast = cartRepository.isLastPage(curPage)
+        isLoading = false
     }
 
     suspend fun getNextPage() {
-        if (isLast) return
+        if (isLast || isLoading) return
+        isLoading = true
 
         cartItems = cartRepository.getCartItemByPage(++curPage)
         isLast = cartRepository.isLastPage(curPage)
+
+        isLoading = false
     }
 
     private suspend fun updateCartItems() {
