@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartContent
@@ -22,11 +24,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val productListStateHolder = ProductListStateHolder()
-
-        lifecycleScope.launch {
-            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
-                .map(productListStateHolder::toProductUiModel)
-        }
 
         val detailLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -56,9 +53,17 @@ class MainActivity : ComponentActivity() {
             productListStateHolder.uiModels = productListStateHolder.toProductUiModels()
         }
 
+        lifecycleScope.launch {
+            productListStateHolder.isLoading = true
+            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
+                .map(productListStateHolder::toProductUiModel)
+            productListStateHolder.isLoading = false
+        }
+
         setContent {
             AndroidshoppingTheme {
                 ProductListScreen(
+                    isLoading = productListStateHolder.isLoading,
                     productUiModels = productListStateHolder.uiModels,
                     isEnd = productListStateHolder.isEndList(),
                     onLoading = {

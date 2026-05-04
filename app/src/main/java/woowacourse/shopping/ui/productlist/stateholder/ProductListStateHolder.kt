@@ -1,6 +1,9 @@
 package woowacourse.shopping.ui.productlist.stateholder
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
 import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.domain.Cart
@@ -16,12 +19,13 @@ class ProductListStateHolder {
 
     var uiModels = emptyList<ProductUiModel>()
 
+    var isLoading by mutableStateOf(false)
     fun isEndList(): Boolean {
         return _products.size >= MockData.MOCK_PRODUCTS.size
     }
 
     suspend fun fetchProducts(): List<Product> {
-        delay(500) // 비동기 상황 가정
+        delay(2000) // 비동기 상황 가정
         val toOffset = minOf(_products.size + PAGE_SIZE, MockData.MOCK_PRODUCTS.size)
 
         _products.addAll(
