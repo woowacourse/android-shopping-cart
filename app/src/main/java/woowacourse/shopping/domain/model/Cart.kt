@@ -1,8 +1,9 @@
 package woowacourse.shopping.domain.model
 
 data class Cart(
-    val items: List<CartItem> = emptyList(),
+   private val _items: List<CartItem> = emptyList(),
 ) {
+    val items = _items.toList()
     val size = items.size
 
     fun addItem(product: Product): AddItemResult {
@@ -10,7 +11,7 @@ data class Cart(
         return if (existItem == null) {
             AddItemResult.NewAdded(
                 copy(
-                    items =
+                    _items =
                         items +
                             CartItem(
                                 product = product,
@@ -30,7 +31,7 @@ data class Cart(
         } else {
             RemoveItemResult.Success(
                 copy(
-                    items = items.filter { it.product.id != id },
+                    _items = items.filter { it.product.id != id },
                 ),
             )
         }
