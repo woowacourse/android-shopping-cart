@@ -8,7 +8,7 @@ class CartTest {
     fun `상품을 추가하면 추가된 Cart 를 반환한다`() {
         // given : 상품과 Cart가 주어진다
         val product = normalProduct("임시")
-        val cartContent = CartContent(product, Quantity(1))
+        val cartContent = CartContent(product, CartContentQuantity(1))
         val cart = Cart(emptyList())
 
         // when : 상품을 Cart에 추가하면
@@ -23,7 +23,7 @@ class CartTest {
     fun `product가 존재한다면 true를 반환한다`() {
         // given : 상품과 Cart가 주어진다
         val product = normalProduct("임시")
-        val cartContent = CartContent(product, Quantity(1))
+        val cartContent = CartContent(product, CartContentQuantity(1))
         val cart = Cart(listOf(cartContent))
 
         // when : 상품이 존재하는지 확인할 때
@@ -37,7 +37,7 @@ class CartTest {
     fun `product가 존재하지 않는다면 false를 반환한다`() {
         // given : 상품과 Cart, 다른 상품이 주어진다
         val product = normalProduct("임시")
-        val cartContent = CartContent(product, Quantity(1))
+        val cartContent = CartContent(product, CartContentQuantity(1))
         val cart = Cart(listOf(cartContent))
 
         val otherProduct = normalProduct("임시2")

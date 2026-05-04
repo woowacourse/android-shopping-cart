@@ -11,7 +11,7 @@ class CartContentTest {
         // given : 상품과 CartItem이 주어진다
         val product = normalProduct("임시", id = "1")
 
-        val cartContent = CartContent(product, Quantity(1))
+        val cartContent = CartContent(product, CartContentQuantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
         val result = cartContent.hasProductId(
@@ -29,7 +29,7 @@ class CartContentTest {
         val product = normalProduct("임시", "1")
         val other = normalProduct("임시2", "2")
 
-        val cartContent = CartContent(product, Quantity(1))
+        val cartContent = CartContent(product, CartContentQuantity(1))
 
         // when : 다른 상품을 입력받아 비교할 때
         val result = cartContent.hasProductId(

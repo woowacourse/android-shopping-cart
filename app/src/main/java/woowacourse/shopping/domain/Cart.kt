@@ -19,6 +19,7 @@ class Cart(private val cartContents: List<CartContent>) {
             cartContents.filter { cartItem ->
                 ids.any {
                     cartItem.hasProductId(it)
+                    String.equals()
                 }
             },
         )
