@@ -4,7 +4,7 @@ data class Cart(
    private val _items: List<CartItem> = emptyList(),
 ) {
     val items = _items.toList()
-    val size = items.size
+    val size: Int get() = items.size
 
     fun addItem(product: Product): AddItemResult {
         val existItem = items.firstOrNull { it.product == product }
