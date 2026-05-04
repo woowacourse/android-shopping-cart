@@ -5,7 +5,7 @@
   - `fromIndex`가 전체 크기보다 크거나 `limit`이 음수일 때 `subList` 범위가 깨지지 않도록 경계값 및 예외 처리 기준 정립 및 수정
 - [ ] 비동기 데이터 로딩 적용
   - 이미지가 아닌 장바구니와 상품 데이터를 불러올 때, 메인 스레드를 막지 않도록 비동기로 처리
-- [ ] `getProducts` 파라미터명 명확화
+- [x] `getProducts` 파라미터명 명확화
   - `ProductRepository`의 `limit` 변수가 '개수'인지 '끝 인덱스'인지 헷갈리지 않도록 직관적인 이름(`loadSize`)으로 변경
 - [x] `hasNext` 내부 로직 개선
   - `InMemoryProductRepository`에서 `toList()`로 인한 불필요한 리스트 복사 발생 제거

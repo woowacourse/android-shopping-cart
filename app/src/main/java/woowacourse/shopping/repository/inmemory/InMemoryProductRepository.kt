@@ -183,8 +183,8 @@ object InMemoryProductRepository : ProductRepository {
 
     override fun getProducts(
         fromIndex: Int,
-        limit: Int,
-    ): Products = products.getPagedProducts(fromIndex, limit)
+        loadSize: Int,
+    ): Products = products.getPagedProducts(fromIndex, loadSize)
 
     override fun hasNext(current: Int): Boolean = current < size - 1
 }

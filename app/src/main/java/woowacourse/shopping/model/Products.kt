@@ -9,10 +9,10 @@ class Products(
 
     fun getPagedProducts(
         fromIndex: Int,
-        limit: Int,
+        loadSize: Int,
     ): Products {
         val safeFrom = fromIndex.coerceAtLeast(0)
-        val safeTo = minOf(safeFrom + limit, value.size)
+        val safeTo = minOf(safeFrom + loadSize, value.size)
 
         return Products(value.subList(safeFrom, safeTo))
     }

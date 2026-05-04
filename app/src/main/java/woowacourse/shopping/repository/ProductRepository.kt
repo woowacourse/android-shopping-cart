@@ -7,7 +7,7 @@ interface ProductRepository {
 
     fun getProducts(
         fromIndex: Int,
-        limit: Int,
+        loadSize: Int,
     ): Products
 
     fun hasNext(current: Int): Boolean
