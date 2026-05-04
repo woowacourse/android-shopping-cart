@@ -22,7 +22,7 @@ data class Cart(
             items.toMutableMap().apply {
                 merge(productId, 1, Int::minus)
                 if (getValue(productId) == 0) remove(productId)
-        }
+            }
         return Cart(nextItems)
     }
 

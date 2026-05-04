@@ -1,9 +1,9 @@
 package woowacourse.shopping.repository
 
-import java.util.UUID
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductId
+import java.util.UUID
 
 object ProductRepositoryFixture {
     val products: List<Product> =

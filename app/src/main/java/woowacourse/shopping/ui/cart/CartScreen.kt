@@ -13,8 +13,6 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.component.CartHeader
 import woowacourse.shopping.ui.cart.component.CartItemBody
 
-private const val PAGE_SIZE = 5
-
 @Composable
 fun CartScreen(
     items: List<CartItemUiModel>,

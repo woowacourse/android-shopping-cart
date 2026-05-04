@@ -2,11 +2,11 @@
 
 package woowacourse.shopping.model
 
-import java.util.UUID
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class CartTest {
     private val productId = ProductId(UUID.fromString("00000000-0000-0000-0000-000000000001"))
