@@ -19,10 +19,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 class DetailProductActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
 
-    companion object {
-        private const val INVALID_PRODUCT_ID = -1L
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -55,5 +51,8 @@ class DetailProductActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    companion object {
+        private const val INVALID_PRODUCT_ID = -1L
     }
 }
