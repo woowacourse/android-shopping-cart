@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.ui
 
-import android.content.Intent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,14 +36,15 @@ import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import woowacourse.shopping.R
-import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.detail.DetailActivity
 
 @Composable
-fun ShoppingScreen(modifier: Modifier = Modifier) {
-    val activity = LocalActivity.current
+fun ShoppingScreen(
+    onNavigateToCart: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scope = rememberCoroutineScope()
     var products by rememberSaveable { mutableStateOf(emptyList<ProductUiModel>()) }
 
@@ -76,10 +76,7 @@ fun ShoppingScreen(modifier: Modifier = Modifier) {
                         modifier =
                             Modifier
                                 .size(24.dp)
-                                .clickable {
-                                    val intent = Intent(activity, CartActivity::class.java)
-                                    activity?.startActivity(intent)
-                                },
+                                .clickable { onNavigateToCart() },
                     )
                 },
                 modifier = modifier.fillMaxWidth(),
@@ -146,5 +143,7 @@ private fun ShoppingContents(
 @Preview
 @Composable
 private fun ShoppingScreenPreview() {
-    ShoppingScreen()
+    ShoppingScreen(
+        onNavigateToCart = {},
+    )
 }
