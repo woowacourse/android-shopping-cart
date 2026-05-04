@@ -8,15 +8,6 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class CartRepositoryImplTest {
-    @OptIn(ExperimentalUuidApi::class)
-    val product =
-        Product(
-            productId = Uuid.random(),
-            imageUrl = "",
-            productName = "동원 스위트콘",
-            price = Price(99800),
-        )
-
     @Test
     fun `page가 음수이면 빈 Cart를 반환한다`() {
         val cart = CartRepositoryImpl.getPagingItems(page = -1, pageSize = 10)
@@ -44,7 +35,7 @@ class CartRepositoryImplTest {
     @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품을 추가하면 장바구니에 저장된다`() {
-        CartRepositoryImpl.addProduct(product)
+        CartRepositoryImpl.addProduct(createProduct())
         val cart = CartRepositoryImpl.getPagingItems(page = 0, pageSize = 10)
         assertThat(cart.cartItems).hasSize(1)
     }
@@ -52,10 +43,18 @@ class CartRepositoryImplTest {
     @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품을 삭제하면 장바구니에서 삭제된다`() {
-        CartRepositoryImpl.addProduct(product)
-        CartRepositoryImpl.deleteProduct(product.productId)
+        CartRepositoryImpl.addProduct(createProduct())
+        CartRepositoryImpl.deleteProduct(createProduct().productId)
 
         val cart = CartRepositoryImpl.getPagingItems(page = 0, pageSize = 10)
         assertThat(cart.cartItems).isEmpty()
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createProduct(): Product = Product(
+        productId = Uuid.random(),
+        imageUrl = "",
+        productName = "동원 스위트콘",
+        price = Price(99800),
+    )
 }
