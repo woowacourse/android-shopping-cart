@@ -13,12 +13,7 @@ class ProductDetailStateHolder(
 ) {
     val product: Product = productRepository.getProductById(targetProductId)
 
-    fun addToCart(
-        productId: String,
-        amount: Int = 1,
-    ) {
-        val targetProduct = productRepository.getProductById(productId)
-
-        cartRepository.addItem(targetProduct, amount)
+    fun addToCart(amount: Int = 1) {
+        cartRepository.addItem(product, amount)
     }
 }

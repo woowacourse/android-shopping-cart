@@ -71,9 +71,7 @@ fun ProductDetailScreen(
 
             AddCartButton(
                 onClick = {
-                    productDetailStateHolder.addToCart(
-                        productId = product.id,
-                    )
+                    productDetailStateHolder.addToCart()
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
