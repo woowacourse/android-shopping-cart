@@ -1,7 +1,5 @@
 package woowacourse.shopping.domain
 
-import woowacourse.shopping.ProductFixture
-import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

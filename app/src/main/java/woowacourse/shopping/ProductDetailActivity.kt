@@ -19,11 +19,23 @@ class ProductDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         @OptIn(ExperimentalUuidApi::class)
-        val productId =
-            requireNotNull(intent.getStringExtra(PRODUCT_ID_EXTRA_KEY)).let(
-                Uuid.Companion::parse,
-            )
+        val productIdString = intent.getStringExtra(PRODUCT_ID_EXTRA_KEY)
+        if (productIdString == null) {
+            finish()
+            return
+        }
+        val productId = runCatching {
+            Uuid.parse(productIdString)
+        }.getOrNull()
+        if (productId == null) {
+            finish()
+            return
+        }
         val product = Products(ProductFixture.productList).findProductById(productId)
+        if (product == null) {
+            finish()
+            return
+        }
 
         setContent {
             androidshoppingTheme {
