@@ -65,8 +65,8 @@
 
 ### ProductDetailActivity
 
-- [ ] invalidProduct() 함수 제거
-- [ ] intent에 담긴 Product가 null이라면 Activity 종료 로직 추가
+- [x] invalidProduct() 함수 제거
+- [x] intent에 담긴 Product가 null이라면 Activity 종료 로직 추가
 
 ### CartRepository 제거
 

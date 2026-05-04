@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
@@ -39,14 +38,8 @@ class MainActivity : ComponentActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val product =
                         result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
-                    if (product != null && product != Product(
-                            imageUri = "INVALID",
-                            name = "상품을 찾을 수 없습니다.",
-                            price = 0,
-                        )
-                    ) {
-                        CartRepository.addProduct(product)
-                    }
+
+                    CartRepository.addProduct(product!!)
                 }
             }
 
@@ -58,7 +51,7 @@ class MainActivity : ComponentActivity() {
             var currentIndex by rememberSaveable { mutableIntStateOf(0) }
             var currentProducts by rememberSaveable { mutableStateOf(Products()) }
             LaunchedEffect(Unit) {
-                if(currentProducts.isEmpty()) {
+                if (currentProducts.isEmpty()) {
                     currentProducts = loadProducts(currentIndex, MAX_PRODUCT)
                 }
             }

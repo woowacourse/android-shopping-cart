@@ -17,7 +17,10 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val product = intent.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY) ?: invalidProduct()
+        val product = intent?.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY) ?: run {
+            finish()
+            return
+        }
 
         enableEdgeToEdge()
         setContent {
@@ -38,9 +41,3 @@ class ProductDetailActivity : ComponentActivity() {
         }
     }
 }
-
-private fun invalidProduct() = Product(
-    imageUri = "INVALID",
-    name = "상품을 찾을 수 없습니다.",
-    price = 0
-)
