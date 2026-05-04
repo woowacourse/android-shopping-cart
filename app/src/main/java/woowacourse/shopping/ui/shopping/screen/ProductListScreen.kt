@@ -24,7 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
+import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
+import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.ui.productdetail.component.mintButton
 import woowacourse.shopping.ui.shopping.component.productItem
 import woowacourse.shopping.ui.shopping.component.productListTopAppBar
@@ -37,7 +40,7 @@ fun productListScreen(
 ) {
     val context = LocalContext.current
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    val visibleProducts = products.getProducts(page = currentPageIndex)
+    val visibleProducts = products.products.toPage(PageRequest(0, SHOPPING_PAGE_SIZE))
 
     Scaffold(
         topBar = {
@@ -57,10 +60,10 @@ fun productListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(visibleProducts) { product ->
+                items(visibleProducts.items) { product ->
                     productItem(product)
                 }
-                if (products.hasNextPage(currentPage = currentPageIndex)) {
+                if (products.hasNextPage(currentPageIndex = currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         mintButton(
                             onClick = {

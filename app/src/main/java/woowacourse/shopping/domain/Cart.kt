@@ -34,12 +34,4 @@ data class Cart(
                 },
         )
 
-    fun getProductAndCounts(
-        page: Int,
-        pageSize: Int = CART_PAGE_SIZE,
-    ): List<ProductAndCount> {
-        val fromIndex = maxOf(1, page * pageSize)
-        val toIndex = minOf(fromIndex + pageSize, productAndCounts.size)
-        return productAndCounts.subList(fromIndex, toIndex)
-    }
 }
