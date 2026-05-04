@@ -11,10 +11,12 @@ object ProductRepositoryImpl : ProductRepository {
         page: Int,
         pageSize: Int,
     ): ProductItems {
+        require(page >= 0) { "페이지 번호는 0보다 크거나 같은 정수여야 합니다." }
+        require(pageSize >= 1) { "페이지 사이즈는 1보다 큰 정수여야 합니다." }
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, DUMMY_PRODUCTS.size)
 
-        if (fromIndex > toIndex) return ProductItems(emptyList())
+        require(fromIndex <= toIndex) { "끝 인덱스는 시작 인덱스보다 작거나 같아야 합니다." }
 
         val result = DUMMY_PRODUCTS.subList(fromIndex, toIndex)
         return ProductItems(result)

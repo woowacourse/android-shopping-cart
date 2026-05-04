@@ -19,9 +19,24 @@ class ProductRepositoryImplTest {
     }
 
     @Test
-    fun `마지막 페이지 이후 요청 시 빈 목록이 반환된다`() {
-        val result = repository.getProducts(10, 20)
-        assertEquals(0, result.items.size)
+    fun `마지막 페이지 이후 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getProducts(10, 20)
+        }
+    }
+
+    @Test
+    fun `잘못된 페이지 번호 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getProducts(-1, 20)
+        }
+    }
+
+    @Test
+    fun `잘못된 페이지 사이즈 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getProducts(0, 0)
+        }
     }
 
     @Test
