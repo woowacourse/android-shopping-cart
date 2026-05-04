@@ -17,7 +17,7 @@ class ProductDetailStateHolder {
 
     private fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
         name = product.name,
-        price = product.priceAmount(),
+        price = product.price.amount,
         imageUrl = product.imageUrl,
         id = product.id,
     )
