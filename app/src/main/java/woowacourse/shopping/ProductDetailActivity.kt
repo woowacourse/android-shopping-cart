@@ -10,6 +10,8 @@ import woowacourse.shopping.ui.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+const val PRODUCT_ID_EXTRA_KEY = "woowacourse.shopping.product_id"
+
 class ProductDetailActivity : ComponentActivity() {
     @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +20,7 @@ class ProductDetailActivity : ComponentActivity() {
 
         @OptIn(ExperimentalUuidApi::class)
         val productId =
-            requireNotNull(intent.getStringExtra("woowacourse.shopping.product_id")).let(
+            requireNotNull(intent.getStringExtra(PRODUCT_ID_EXTRA_KEY)).let(
                 Uuid.Companion::parse,
             )
         val product = Products(ProductFixture.productList).findProductById(productId)

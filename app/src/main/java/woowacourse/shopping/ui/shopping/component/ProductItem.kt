@@ -15,12 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import woowacourse.shopping.PRODUCT_ID_EXTRA_KEY
 import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
@@ -47,7 +49,7 @@ fun productItem(
             modifier.clickable {
                 val intent =
                     Intent(context, ProductDetailActivity::class.java).apply {
-                        putExtra("woowacourse.shopping.product_id", product.productId.toString())
+                        putExtra(PRODUCT_ID_EXTRA_KEY, product.productId.toString())
                     }
                 context.startActivity(intent)
             },
@@ -71,7 +73,7 @@ fun productItem(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = "${intFormatter(product.price.value)}원",
+                    text = stringResource(R.string.price_format, intFormatter(product.price.value)),
                     color = topAppBarColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W400,

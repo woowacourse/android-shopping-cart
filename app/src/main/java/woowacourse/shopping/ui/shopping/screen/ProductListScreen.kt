@@ -20,10 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.CartActivity
 import woowacourse.shopping.ProductFixture
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
@@ -70,7 +72,7 @@ fun productListScreen(
                             onClick = {
                                 currentPageIndex++
                             },
-                            text = "더보기",
+                            text = stringResource(R.string.see_more),
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,7 @@ fun cartTopAppBar(onClick: () -> Unit) {
         navigationIcon = {
             Image(
                 painter = painterResource(R.drawable.arrow_left_alt_24px),
-                contentDescription = "leftArrowIcon",
+                contentDescription = stringResource(R.string.left_arrow_icon),
                 modifier =
                     Modifier
                         .size(40.dp)
@@ -36,7 +37,7 @@ fun cartTopAppBar(onClick: () -> Unit) {
         },
         title = {
             Text(
-                text = "Cart",
+                text = stringResource(R.string.cart),
                 fontWeight = FontWeight.W500,
                 fontSize = 20.sp,
                 color = Color.White,

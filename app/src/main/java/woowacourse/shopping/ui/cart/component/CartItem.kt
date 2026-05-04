@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,7 @@ fun cartItem(
                 )
                 Image(
                     painter = painterResource(id = R.drawable.x_icon),
-                    contentDescription = "xButton",
+                    contentDescription = stringResource(R.string.delete_item_button),
                     modifier =
                         Modifier
                             .size(16.dp)
@@ -99,7 +100,11 @@ fun cartItem(
                 Box {
                     Text(
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        text = "${intFormatter(productAndCount.product.price.value)}원",
+                        text =
+                            stringResource(
+                                R.string.price_format,
+                                intFormatter(productAndCount.product.price.value),
+                            ),
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,
                         color = topAppBarColor,

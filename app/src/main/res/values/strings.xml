@@ -2,4 +2,17 @@
     <string name="app_name">Shopping</string>
     <string name="title_activity_product_detail">ProductDetailActivity</string>
     <string name="title_activity_cart">CartActivity</string>
+    <string name="delete_item_button">deleteItemButton</string>
+    <string name="left_arrow_icon">leftArrowIcon</string>
+    <string name="previous_page">이전 페이지</string>
+    <string name="see_more">더보기</string>
+    <string name="cart">Cart</string>
+    <string name="shopping">Shopping</string>
+    <string name="price">가격</string>
+    <string name="price_format">%1$s원</string>
+    <string name="add_to_the_shopping_cart">장바구니 담기</string>
+    <string name="add_to_the_shopping_cart_snackbar_text">장바구니에 상품을 담았습니다</string>
+    <string name="shopping_cart">shoppingCart</string>
+    <string name="next_page">다음 페이지</string>
+    <string name="close_button">closeButton</string>
 </resources>

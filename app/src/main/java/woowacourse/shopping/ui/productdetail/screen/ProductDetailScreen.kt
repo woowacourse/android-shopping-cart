@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
@@ -34,6 +35,8 @@ fun productDetailScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val addToCartText = stringResource(R.string.add_to_the_shopping_cart)
+    val addToCartSnackbarText = stringResource(R.string.add_to_the_shopping_cart_snackbar_text)
 
     Scaffold(
         topBar = { productDetailTopAppBar(onClose) },
@@ -51,10 +54,10 @@ fun productDetailScreen(
                     onClick = {
                         CartRepository.addProduct(product)
                         scope.launch {
-                            snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
+                            snackbarHostState.showSnackbar(addToCartSnackbarText)
                         }
                     },
-                    text = "장바구니 담기",
+                    text = addToCartText,
                     modifier =
                         Modifier
                             .fillMaxWidth()

@@ -8,10 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.R
 import woowacourse.shopping.util.intFormatter
 
 @Composable
@@ -27,13 +29,13 @@ fun productPrice(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = "가격",
+            text = stringResource(R.string.price),
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
             color = Color.Black,
         )
         Text(
-            text = "${intFormatter(price)}원",
+            text = stringResource(R.string.price_format, intFormatter(price)),
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
             color = Color.Black,

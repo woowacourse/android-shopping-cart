@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,7 +49,7 @@ fun pagination(
             Image(
                 modifier = Modifier.size(width = 12.dp, height = 19.dp),
                 painter = painterResource(R.drawable.previous_icon),
-                contentDescription = "previousIcon",
+                contentDescription = stringResource(R.string.previous_page)
             )
         }
         Box(
@@ -74,7 +75,7 @@ fun pagination(
         ) {
             Image(
                 painter = painterResource(R.drawable.next_icon),
-                contentDescription = "nextIcon",
+                contentDescription = stringResource(R.string.next_page),
                 modifier = Modifier.size(width = 12.dp, height = 19.dp),
             )
         }
