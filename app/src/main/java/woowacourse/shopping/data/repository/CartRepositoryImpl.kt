@@ -15,10 +15,12 @@ object CartRepositoryImpl : CartRepository {
         page: Int,
         pageSize: Int,
     ): CartItems {
+        require(page >= 0) { "페이지 번호는 0보다 크거나 같은 정수여야 합니다." }
+        require(pageSize >= 1) { "페이지 사이즈는 1보다 큰 정수여야 합니다." }
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, currentCart.items.size)
 
-        if (fromIndex > toIndex) return CartItems(emptyList())
+        require(fromIndex <= toIndex) { "끝 인덱스는 시작 인덱스보다 작거나 같아야합니다." }
 
         val result = currentCart.items.subList(fromIndex, toIndex)
 

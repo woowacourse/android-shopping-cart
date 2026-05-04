@@ -30,8 +30,23 @@ class CartRepositoryImplTest {
     }
 
     @Test
-    fun `페이지 범위를 벗어난 요청 시 빈 목록이 반환된다`() {
-        val result = repository.getPagingCartItems(10, 5)
-        assertEquals(0, result.items.size)
+    fun `페이지 범위를 벗어난 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getPagingCartItems(10, 5)
+        }
+    }
+
+    @Test
+    fun `잘못된 페이지 번호 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getPagingCartItems(-1, 5)
+        }
+    }
+
+    @Test
+    fun `잘못된 페이지 사이즈 요청 시 예외가 발생한다`() {
+        org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            repository.getPagingCartItems(0, 0)
+        }
     }
 }
