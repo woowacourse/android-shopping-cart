@@ -3,12 +3,17 @@
 package woowacourse.shopping.repository
 
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 
 class ProductRepositoryTest {
-    val repo: ProductRepository = InMemoryProductRepository
+    private lateinit var repo: ProductRepository
+
+    @BeforeEach
+    fun setUp() {
+        repo = FakeProductRepository(ProductRepositoryFixture.products)
+    }
 
     @Test
     fun `특정 오프셋과 사이즈(20개)를 요청했을 때, 정확히 해당 구간의 데이터를 반환한다`() =

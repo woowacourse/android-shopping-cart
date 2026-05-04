@@ -3,38 +3,23 @@
 package woowacourse.shopping.repository
 
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 
 class CartRepositoryTest {
-    val repo: CartRepository = InMemoryCartRepository
+    private lateinit var repo: CartRepository
 
-    val product1 =
-        Product(
-            name = "새우깡",
-            price = Money(3100),
-            imageUrl = "",
-        )
+    private val product1: Product = CartRepositoryFixture.shrimpCracker
+    private val product2: Product = CartRepositoryFixture.sourCandy
 
-    val product2 =
-        Product(
-            name = "아이셔",
-            price = Money(1300),
-            imageUrl = "",
-        )
-
-    @AfterEach
-    fun tearDown() =
-        runBlocking {
-            clearProduct(product1)
-            clearProduct(product2)
-        }
+    @BeforeEach
+    fun setUp() {
+        repo = FakeCartRepository()
+    }
 
     @Test
     fun `정상적인 상품 객체를 장바구니에 추가하면, 장바구니 내부 목록에 해당 상품이 올바르게 반영된다`() =
@@ -62,11 +47,4 @@ class CartRepositoryTest {
         runBlocking {
             assertThrows<IllegalArgumentException> { runBlocking { repo.delete(product1.id) } }
         }
-
-    private suspend fun clearProduct(product: Product) {
-        while (true) {
-            runCatching { repo.delete(product.id) }
-                .onFailure { return }
-        }
-    }
 }
