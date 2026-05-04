@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) {
-    var totalCartItems: List<ProductUiModel> = initialItems
+    var totalCartItems: List<ProductUiModel> = initialItems.toList()
     var page by mutableIntStateOf(initialPage)
     var cartItems by mutableStateOf(
         pagination(
