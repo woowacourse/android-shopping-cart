@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.screens.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +30,16 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     companion object {
-        const val PRODUCT_ID = "productId"
+        private const val PRODUCT_ID = "productId"
+
+        fun newIntent(
+            context: Context,
+            productId: String,
+        ): Intent {
+            val intent = Intent(context, ProductDetailActivity::class.java)
+            intent.putExtra(PRODUCT_ID, productId)
+
+            return intent
+        }
     }
 }
