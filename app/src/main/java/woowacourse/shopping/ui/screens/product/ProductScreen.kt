@@ -52,7 +52,6 @@ fun ProductScreen(
             MainTopBar(
                 title = "Shopping",
                 onCartClick = onCartClick,
-                modifier = Modifier.statusBarsPadding(),
             )
         },
         modifier = Modifier.statusBarsPadding(),
