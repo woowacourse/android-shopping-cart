@@ -11,11 +11,13 @@ import kotlin.uuid.Uuid
 class CartStateHolder(
     private val cartRepository: CartRepository,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
+    initialPageIndex: Int = 0,
+    private val onPageIndexChanged: (Int) -> Unit,
 ) {
     var cart by mutableStateOf(Cart())
         private set
 
-    private var currentPageIndex by mutableStateOf(0)
+    private var currentPageIndex = initialPageIndex
     private var totalItemCount by mutableStateOf(0)
 
     val currentPage: Int
@@ -50,6 +52,7 @@ class CartStateHolder(
         if (!hasPreviousPage) return
 
         currentPageIndex--
+        onPageIndexChanged(currentPageIndex)
         refreshPagedCart()
     }
 
@@ -57,6 +60,7 @@ class CartStateHolder(
         if (!hasNextPage) return
 
         currentPageIndex++
+        onPageIndexChanged(currentPageIndex)
         refreshPagedCart()
     }
 
@@ -81,6 +85,7 @@ class CartStateHolder(
     private fun adjustCurrentPage() {
         if (currentPageIndex > lastPageIndex) {
             currentPageIndex = lastPageIndex
+            onPageIndexChanged(currentPageIndex)
         }
     }
 

@@ -49,7 +49,11 @@ class ProductListStateHolderTest {
             FakeProductRepository(
                 products = Products(ProductFixture.productList),
             )
-        val stateHolder = ProductListStateHolder(productRepository = repository)
+        val stateHolder =
+            ProductListStateHolder(
+                productRepository = repository,
+                onPageIndexChanged = {},
+            )
 
         val expectedProducts = Products(ProductFixture.productList.subList(0, 20))
         assert(stateHolder.products == expectedProducts)
@@ -61,7 +65,11 @@ class ProductListStateHolderTest {
             FakeProductRepository(
                 products = Products(ProductFixture.productList),
             )
-        val stateHolder = ProductListStateHolder(productRepository = repository)
+        val stateHolder =
+            ProductListStateHolder(
+                productRepository = repository,
+                onPageIndexChanged = {},
+            )
 
         stateHolder.loadMore()
 
@@ -75,7 +83,12 @@ class ProductListStateHolderTest {
             FakeProductRepository(
                 products = Products(ProductFixture.productList.take(3)),
             )
-        val stateHolder = ProductListStateHolder(productRepository = repository, pageSize = 5)
+        val stateHolder =
+            ProductListStateHolder(
+                productRepository = repository,
+                pageSize = 5,
+                onPageIndexChanged = {},
+            )
 
         assertThat(stateHolder.hasNextPage).isFalse()
     }
@@ -86,7 +99,12 @@ class ProductListStateHolderTest {
             FakeProductRepository(
                 products = Products(ProductFixture.productList.take(3)),
             )
-        val stateHolder = ProductListStateHolder(productRepository = repository, pageSize = 2)
+        val stateHolder =
+            ProductListStateHolder(
+                productRepository = repository,
+                pageSize = 2,
+                onPageIndexChanged = {},
+            )
 
         assertThat(stateHolder.hasNextPage).isTrue()
         stateHolder.loadMore()
