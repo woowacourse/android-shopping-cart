@@ -7,7 +7,7 @@
 - 상품 목록은 최초에 20개만 표시한다.
 - 목록 하단의 더보기 버튼을 누르면 20개씩 추가로 로드된다.
 - 더 로드할 상품이 없으면 더보기 버튼을 숨긴다.
-- `ProductsStateHolder`는 현재까지 로드된 상품 목록과 추가 로드 가능 여부(`hasMore`)를 상태로 노출한다.
+- `ProductsStateHolder`는 현재까지 로드된 상품 목록과 추가 로드 가능 여부(`isLastPage`)를 상태로 노출한다.
 
 ### 장바구니 페이지네이션 구현
 
@@ -20,7 +20,7 @@
 ### 데이터 로딩 전략 구현
 
 - `ProductRepository`에 페이지 기반 상품 조회 메서드를 추가한다. (`getProducts(page, pageSize)`)
-- `CartRepository`에 페이지 기반 장바구니 조회 메서드를 추가한다. (`getCartItems(page, pageSize)`)
+- `CartRepository`에 페이지 기반 장바구니 조회 메서드를 추가한다. (`getPagingCartItems(page, pageSize)`)
 
 ## 2단계 테스트 명세
 
