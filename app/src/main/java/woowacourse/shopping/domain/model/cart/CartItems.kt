@@ -5,8 +5,9 @@ import woowacourse.shopping.domain.model.Quantity
 data class CartItems(
     private val _items: List<CartItem> = emptyList(),
 ) {
+    val safelist = _items.toList()
     val items: List<CartItem>
-        get() = _items
+        get() = safelist
 
     fun add(newItem: CartItem): CartItems {
         val existingItem = _items.find { it.product.id == newItem.product.id }
