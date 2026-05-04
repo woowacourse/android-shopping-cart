@@ -40,7 +40,6 @@ class DetailActivity : ComponentActivity() {
                                 Toast.makeText(this, R.string.already_product_in_cart, Toast.LENGTH_SHORT).show()
                         }
                     },
-                    modifier = Modifier,
                 )
             }
         }
