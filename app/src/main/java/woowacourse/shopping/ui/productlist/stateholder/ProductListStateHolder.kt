@@ -20,8 +20,20 @@ class ProductListStateHolder {
     var uiModels = emptyList<ProductUiModel>()
 
     var isLoading by mutableStateOf(false)
+        private set
+
     fun isEndList(): Boolean {
         return _products.size >= MockData.MOCK_PRODUCTS.size
+    }
+
+    suspend fun loadingFetch() {
+        isLoading = true
+        try {
+            uiModels = fetchProducts()
+                .map(this::toProductUiModel)
+        } finally {
+            isLoading = false
+        }
     }
 
     suspend fun fetchProducts(): List<Product> {

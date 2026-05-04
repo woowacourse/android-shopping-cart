@@ -54,10 +54,7 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            productListStateHolder.isLoading = true
-            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
-                .map(productListStateHolder::toProductUiModel)
-            productListStateHolder.isLoading = false
+            productListStateHolder.loadingFetch()
         }
 
         setContent {
@@ -68,8 +65,7 @@ class MainActivity : ComponentActivity() {
                     isEnd = productListStateHolder.isEndList(),
                     onLoading = {
                         lifecycleScope.launch {
-                            productListStateHolder.uiModels = productListStateHolder.fetchProducts()
-                                .map(productListStateHolder::toProductUiModel)
+                            productListStateHolder.loadingFetch()
                         }
                     },
                     onProductClick = { uiModel ->
