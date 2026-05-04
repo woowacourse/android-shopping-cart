@@ -19,7 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.CartActivity
+import woowacourse.shopping.PRODUCT_ID_EXTRA_KEY
+import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.PageRequest
@@ -30,11 +31,13 @@ import woowacourse.shopping.ui.productdetail.component.mintButton
 import woowacourse.shopping.ui.shopping.component.productItem
 import woowacourse.shopping.ui.shopping.component.productListTopAppBar
 import woowacourse.shopping.ui.shopping.state.rememberProductListState
+import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
     products: Products,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberProductListState()
@@ -46,8 +49,7 @@ fun ProductListScreen(
         topBar = {
             productListTopAppBar(
                 onClick = {
-                    val intent = Intent(context, CartActivity::class.java)
-                    context.startActivity(intent)
+                    onClick()
                 },
             )
         },
@@ -61,7 +63,16 @@ fun ProductListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(visibleProducts.items) { product ->
-                    productItem(product)
+                    productItem(
+                        product = product,
+                        onClick = {
+                            val intent =
+                                Intent(context, ProductDetailActivity::class.java).apply {
+                                    putExtra(PRODUCT_ID_EXTRA_KEY, product.productId.toString())
+                                }
+                            context.startActivity(intent)
+                        },
+                    )
                 }
                 if (products.hasNextPage(currentPageIndex = state.currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -84,5 +95,6 @@ fun ProductListScreen(
 private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(ProductFixture.productList),
+        onClick = {}
     )
 }

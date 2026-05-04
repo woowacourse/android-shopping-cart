@@ -35,6 +35,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun productItem(
     product: Product,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -47,11 +48,7 @@ fun productItem(
         shape = RectangleShape,
         modifier =
             modifier.clickable {
-                val intent =
-                    Intent(context, ProductDetailActivity::class.java).apply {
-                        putExtra(PRODUCT_ID_EXTRA_KEY, product.productId.toString())
-                    }
-                context.startActivity(intent)
+                onClick()
             },
     ) {
         Column {
@@ -94,6 +91,7 @@ private fun productItemPreview() {
                 productName = "PET보틀-정사각형(370ml)",
                 price = Price(10000),
             ),
+        onClick = {},
         modifier = Modifier.fillMaxWidth(),
     )
 }
