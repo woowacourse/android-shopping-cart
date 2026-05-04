@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
         val cartIntent = Intent(this, CartActivity::class.java)
 
         var restoredIndex = savedInstanceState?.getInt("CURRENT_INDEX") ?: 0
+        currentIndex = restoredIndex
 
         val currentProducts = runBlocking { getCurrentProducts(restoredIndex, MAX_PRODUCT) }
 
