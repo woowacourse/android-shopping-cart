@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,12 +11,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.presentation.cart.CartActivity
-import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.shopping.screen.ProductListScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
+import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivity : ComponentActivity() {
+    @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,15 +38,10 @@ class ProductListActivity : ComponentActivity() {
                     hasNextPage = stateHolder.hasNextPage,
                     onLoadMore = { stateHolder.loadMore() },
                     onCartIconClick = {
-                        val intent = Intent(this, CartActivity::class.java)
-                        startActivity(intent)
+                        startActivity(CartActivity.newIntent(this))
                     },
                     onItemClick = { productId ->
-                        val intent =
-                            Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra(IntentKeys.PRODUCT_ID, productId)
-                            }
-                        startActivity(intent)
+                        startActivity(ProductDetailActivity.newIntent(this, productId))
                     },
                 )
             }

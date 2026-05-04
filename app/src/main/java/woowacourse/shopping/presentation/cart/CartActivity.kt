@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,5 +48,10 @@ class CartActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    companion object {
+        @OptIn(ExperimentalUuidApi::class)
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

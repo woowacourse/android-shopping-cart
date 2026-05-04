@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -47,6 +49,17 @@ class ProductDetailActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        @OptIn(ExperimentalUuidApi::class)
+        fun newIntent(
+            context: Context,
+            productId: String,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(IntentKeys.PRODUCT_ID, productId)
+            }
     }
 }
 
