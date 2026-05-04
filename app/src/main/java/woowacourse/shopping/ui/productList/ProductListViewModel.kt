@@ -35,12 +35,12 @@ class ProductListViewModel(
                 .onSuccess { newProducts ->
                     accumulatedProducts.addAll(newProducts)
                     currentPage++
-                    _uiState.value = ProductListUiState.Success(
-                        products = accumulatedProducts.toList(),
-                        canLoadMore = newProducts.size == PAGE_SIZE,
-                    )
-                }
-                .onFailure { throwable ->
+                    _uiState.value =
+                        ProductListUiState.Success(
+                            products = accumulatedProducts.toList(),
+                            canLoadMore = newProducts.size == PAGE_SIZE,
+                        )
+                }.onFailure { throwable ->
                     _uiState.value = ProductListUiState.Error(throwable)
                 }
         }

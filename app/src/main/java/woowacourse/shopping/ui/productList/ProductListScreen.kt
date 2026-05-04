@@ -48,7 +48,7 @@ import woowacourse.shopping.repository.product.MockProductRepository
 @Composable
 fun ProductListScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProductListViewModel ,
+    viewModel: ProductListViewModel,
     onCartClick: () -> Unit = {},
     onProductClick: (Product) -> Unit = {},
 ) {
@@ -213,9 +213,10 @@ private fun ProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable {
-            onClick()
-        },
+        modifier =
+            modifier.clickable {
+                onClick()
+            },
     ) {
         AsyncImage(
             model = imageUrl,
@@ -277,6 +278,5 @@ private fun MoreButton(
 @Preview(showBackground = true)
 @Composable
 fun ProductListScreenPreview() {
-
     ProductListScreen(viewModel = ProductListViewModel(MockProductRepository()))
 }

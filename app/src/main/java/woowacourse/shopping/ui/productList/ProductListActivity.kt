@@ -19,10 +19,10 @@ class ProductListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
-            val viewModel: ProductListViewModel = viewModel(
-                factory = ProductListViewModel.factory(MockProductRepository()),
-            )
+            val viewModel: ProductListViewModel =
+                viewModel(
+                    factory = ProductListViewModel.factory(MockProductRepository()),
+                )
 
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductListScreen(

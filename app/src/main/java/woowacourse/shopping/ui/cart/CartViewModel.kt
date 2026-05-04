@@ -41,7 +41,7 @@ class CartViewModel(
         if (!current.hasNext) return
         currentPage++
         viewModelScope.launch {
-        loadCart()
+            loadCart()
         }
     }
 
@@ -50,7 +50,7 @@ class CartViewModel(
         if (!current.hasPrevious) return
         currentPage--
         viewModelScope.launch {
-        loadCart()
+            loadCart()
         }
     }
 
@@ -58,8 +58,7 @@ class CartViewModel(
         runCatching { cartRepository.getCart() }
             .onSuccess { cart ->
                 _uiState.value = mapToUiState(cart)
-            }
-            .onFailure { throwable ->
+            }.onFailure { throwable ->
                 _uiState.value = CartUiState.Error(throwable)
             }
     }
@@ -92,6 +91,5 @@ class CartViewModel(
                     CartViewModel(cartRepository)
                 }
             }
-
     }
 }

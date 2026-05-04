@@ -56,7 +56,7 @@ import woowacourse.shopping.repository.cart.MockCartRepository
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel ,
+    viewModel: CartViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current

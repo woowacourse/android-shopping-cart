@@ -9,7 +9,10 @@ data class Cart(
 
     fun removeCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.removeCartItem(cartItem))
 
-    fun getPage(page: Int, pageSize: Int): List<CartItem> {
+    fun getPage(
+        page: Int,
+        pageSize: Int,
+    ): List<CartItem> {
         require(page >= 0) { "page는 0 이상이어야 합니다. page=$page" }
         require(pageSize > 0) { "pageSize는 1 이상이어야 합니다. pageSize=$pageSize" }
 

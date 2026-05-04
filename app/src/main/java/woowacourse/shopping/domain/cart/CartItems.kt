@@ -9,12 +9,14 @@ class CartItems(
 
     fun searchCartItem(cartItem: CartItem): Boolean = value.any { it.isSameCartItem(cartItem) }
 
-    fun subList(fromIndex: Int, toIndex: Int): List<CartItem> {
+    fun subList(
+        fromIndex: Int,
+        toIndex: Int,
+    ): List<CartItem> {
         val safeFrom = fromIndex.coerceIn(0, value.size)
         val safeTo = toIndex.coerceIn(safeFrom, value.size)
         return value.subList(safeFrom, safeTo)
     }
 
     fun size(): Int = value.size
-
 }

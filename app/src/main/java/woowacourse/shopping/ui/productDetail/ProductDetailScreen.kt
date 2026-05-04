@@ -43,12 +43,11 @@ import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COL
 import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProductDetailViewModel ,
+    viewModel: ProductDetailViewModel,
     onAddToCartClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()

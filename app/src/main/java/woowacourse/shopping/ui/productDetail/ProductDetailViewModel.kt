@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.CartItem
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
@@ -19,7 +18,6 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
@@ -31,15 +29,15 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             runCatching { productRepository.getProduct(productId) }
                 .onSuccess { product ->
-                    _uiState.value = if (product != null) {
-                        ProductDetailUiState.Success(product)
-                    } else {
-                        ProductDetailUiState.Error(
-                            NoSuchElementException("상품을 찾을 수 없습니다. id=$productId")
-                        )
-                    }
-                }
-                .onFailure { throwable ->
+                    _uiState.value =
+                        if (product != null) {
+                            ProductDetailUiState.Success(product)
+                        } else {
+                            ProductDetailUiState.Error(
+                                NoSuchElementException("상품을 찾을 수 없습니다. id=$productId"),
+                            )
+                        }
+                }.onFailure { throwable ->
                     _uiState.value = ProductDetailUiState.Error(throwable)
                 }
         }
@@ -53,7 +51,6 @@ class ProductDetailViewModel(
     }
 
     companion object {
-
         fun factory(
             productId: String,
             productRepository: ProductRepository,

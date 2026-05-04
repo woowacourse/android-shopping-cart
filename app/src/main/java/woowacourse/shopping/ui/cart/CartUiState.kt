@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.cart.CartItem
 
 sealed interface CartUiState {
     data object Loading : CartUiState
+
     data object Empty : CartUiState
 
     data class Success(

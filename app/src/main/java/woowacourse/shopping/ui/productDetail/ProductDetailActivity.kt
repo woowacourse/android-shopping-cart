@@ -28,11 +28,12 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             val viewModel: ProductDetailViewModel =
                 viewModel(
-                    factory = ProductDetailViewModel.factory(
-                        productId = productId,
-                        productRepository = MockProductRepository(),
-                        cartRepository = MockCartRepository,
-                    ),
+                    factory =
+                        ProductDetailViewModel.factory(
+                            productId = productId,
+                            productRepository = MockProductRepository(),
+                            cartRepository = MockCartRepository,
+                        ),
                 )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
@@ -47,6 +48,7 @@ class ProductDetailActivity : ComponentActivity() {
             }
         }
     }
+
     companion object {
         private const val EXTRA_PRODUCT_ID = "PRODUCT_ID"
 
