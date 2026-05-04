@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,14 +64,14 @@ fun ShoppingCartScreen(
                     ),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState()),
+            LazyColumn(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                shoppingCartItems.forEach { shoppingCartItem ->
+                items(
+                    items = shoppingCartItems,
+                    key = { it.id },
+                ) { shoppingCartItem ->
                     ShoppingCartItems(
                         shoppingCartItem = shoppingCartItem,
                         onRemoveShoppingItemClick = onRemoveShoppingItemClick,
