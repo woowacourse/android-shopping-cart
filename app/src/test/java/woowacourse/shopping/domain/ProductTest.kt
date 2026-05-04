@@ -11,7 +11,6 @@ class ProductTest {
     fun `각 상품마다 다른 ID를 가진다`() {
         val product1 =
             Product(
-                productId = Uuid.random(),
                 imageUrl = "",
                 productName = "동원 스위트콘",
                 price = Price(99800),
@@ -19,7 +18,6 @@ class ProductTest {
 
         val product2 =
             Product(
-                productId = Uuid.random(),
                 imageUrl = "",
                 productName = "동원 참치",
                 price = Price(10000),
