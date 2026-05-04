@@ -34,7 +34,7 @@ private val LightColorScheme =
     )
 
 @Composable
-fun AndroidshoppingTheme(
+fun androidshoppingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
