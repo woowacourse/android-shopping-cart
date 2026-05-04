@@ -4,8 +4,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,9 +13,7 @@ import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.CartRepository.deleteProduct
 import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.cartTopAppBar
-import woowacourse.shopping.ui.cart.state.CartState
 import woowacourse.shopping.ui.cart.state.rememberCartState
-import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -31,7 +27,7 @@ fun cartScreen(
     val cartItems = cartProducts.getCartProducts()
     val lastPageIndex =
         if (cartItems.isEmpty()) 0 else (cartItems.size - 1) / CART_PAGE_SIZE
-    val effectivePageIndex = minOf(state.currentPageIndex,lastPageIndex)
+    val effectivePageIndex = minOf(state.currentPageIndex, lastPageIndex)
 
     Scaffold(
         topBar = {
@@ -56,7 +52,7 @@ fun cartScreen(
                     if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
 
                 state.adjustCurrentPage(
-                    updatedLastPageIndex = updatedLastPageIndex
+                    updatedLastPageIndex = updatedLastPageIndex,
                 )
             },
             modifier = modifier,

@@ -3,7 +3,6 @@ package woowacourse.shopping.domain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class ProductTest {
     @OptIn(ExperimentalUuidApi::class)

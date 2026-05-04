@@ -1,6 +1,5 @@
 package woowacourse.shopping.domain
 
-
 data class PageRequest(
     val index: Int,
     val size: Int,

@@ -20,10 +20,11 @@ class ProductListState {
     }
 
     companion object {
-        val Saver = Saver<ProductListState, Int>(
-            save = { it.currentPageIndex },
-            restore = { ProductListState() }
-        )
+        val Saver =
+            Saver<ProductListState, Int>(
+                save = { it.currentPageIndex },
+                restore = { ProductListState() },
+            )
     }
 }
 
@@ -32,5 +33,3 @@ fun rememberProductListState(): ProductListState =
     rememberSaveable(saver = ProductListState.Saver) {
         ProductListState()
     }
-
-

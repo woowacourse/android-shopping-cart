@@ -13,18 +13,18 @@ data class Cart(
     fun addProductToCart(product: Product): Cart {
         val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
         if (index != -1) {
-            val newProductAndCounts = productAndCounts.map { item ->
-                if (item.product == product) {
-                    item.copy(count = item.count() + 1)
-                } else {
-                    item
+            val newProductAndCounts =
+                productAndCounts.map { item ->
+                    if (item.product == product) {
+                        item.copy(count = item.count() + 1)
+                    } else {
+                        item
+                    }
                 }
-            }
             return copy(productAndCounts = newProductAndCounts)
         }
         return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
     }
-
 
     fun deleteProductFromCart(productId: Uuid): Cart =
         copy(
@@ -33,5 +33,4 @@ data class Cart(
                     it.productId == productId
                 },
         )
-
 }

@@ -49,7 +49,7 @@ fun pagination(
             Image(
                 modifier = Modifier.size(width = 12.dp, height = 19.dp),
                 painter = painterResource(R.drawable.previous_icon),
-                contentDescription = stringResource(R.string.previous_page)
+                contentDescription = stringResource(R.string.previous_page),
             )
         }
         Box(

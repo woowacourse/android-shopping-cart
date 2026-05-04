@@ -12,15 +12,14 @@ data class Products(
         currentPageIndex: Int,
         pageSize: Int = SHOPPING_PAGE_SIZE,
     ): Boolean =
-        products.toPage(
-            PageRequest(
-                index = currentPageIndex,
-                size = pageSize
-            )
-        ).hasNext
+        products
+            .toPage(
+                PageRequest(
+                    index = currentPageIndex,
+                    size = pageSize,
+                ),
+            ).hasNext
 
     @OptIn(ExperimentalUuidApi::class)
-    fun findProductById(
-        productId: Uuid,
-    ): Product? = products.firstOrNull { it.productId == productId }
+    fun findProductById(productId: Uuid): Product? = products.firstOrNull { it.productId == productId }
 }

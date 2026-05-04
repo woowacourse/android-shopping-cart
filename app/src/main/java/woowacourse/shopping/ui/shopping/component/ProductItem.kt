@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import woowacourse.shopping.R
 import woowacourse.shopping.ProductFixture
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter

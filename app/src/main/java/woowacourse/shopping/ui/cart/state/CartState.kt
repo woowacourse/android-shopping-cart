@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.ui.shopping.state.ProductListState
 
 class CartState {
     var currentPageIndex by mutableStateOf(0)
@@ -27,10 +26,11 @@ class CartState {
     }
 
     companion object {
-        val Saver = Saver<CartState, Int>(
-            save = { it.currentPageIndex },
-            restore = { CartState() }
-        )
+        val Saver =
+            Saver<CartState, Int>(
+                save = { it.currentPageIndex },
+                restore = { CartState() },
+            )
     }
 }
 

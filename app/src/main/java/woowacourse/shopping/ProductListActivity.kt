@@ -20,7 +20,7 @@ class ProductListActivity : ComponentActivity() {
                     onClick = {
                         val intent = Intent(this, CartActivity::class.java)
                         this.startActivity(intent)
-                    }
+                    },
                 )
             }
         }

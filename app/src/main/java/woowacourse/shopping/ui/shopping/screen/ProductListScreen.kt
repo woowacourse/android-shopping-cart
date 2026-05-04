@@ -97,6 +97,6 @@ private fun ProductListScreenPreview() {
 
     ProductListScreen(
         products = Products(ProductFixture.productList(packageName)),
-        onClick = {}
+        onClick = {},
     )
 }

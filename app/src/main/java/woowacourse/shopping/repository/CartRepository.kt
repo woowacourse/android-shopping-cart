@@ -3,7 +3,6 @@ package woowacourse.shopping.repository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductAndCount

@@ -24,9 +24,10 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val productId = runCatching {
-            Uuid.parse(productIdString)
-        }.getOrNull()
+        val productId =
+            runCatching {
+                Uuid.parse(productIdString)
+            }.getOrNull()
         if (productId == null) {
             finish()
             return
