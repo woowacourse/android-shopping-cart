@@ -22,6 +22,7 @@ data class Products(
         ).hasNext
 
     @OptIn(ExperimentalUuidApi::class)
-    fun findProductById(productId: Uuid): Product? =
-        ProductFixture.productList.firstOrNull { it.productId == productId }
+    fun findProductById(
+        productId: Uuid,
+    ): Product? = products.firstOrNull { it.productId == productId }
 }

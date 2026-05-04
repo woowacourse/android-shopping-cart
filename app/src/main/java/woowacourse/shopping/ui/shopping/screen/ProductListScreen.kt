@@ -40,7 +40,8 @@ fun productListScreen(
 ) {
     val context = LocalContext.current
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    val visibleProducts = products.products.toPage(PageRequest(0, SHOPPING_PAGE_SIZE))
+    val visibleCount = (currentPageIndex + 1) * SHOPPING_PAGE_SIZE
+    val visibleProducts = products.products.toPage(PageRequest(0, visibleCount))
 
     Scaffold(
         topBar = {
