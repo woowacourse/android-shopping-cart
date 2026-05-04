@@ -1,10 +1,5 @@
 package woowacourse.shopping.ui.cart.screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,9 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.cart.component.cartItem
+import woowacourse.shopping.repository.CartRepository.deleteProduct
+import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.cartTopAppBar
-import woowacourse.shopping.ui.cart.component.pagination
+import woowacourse.shopping.ui.cart.state.CartState
+import woowacourse.shopping.ui.cart.state.rememberCartState
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -29,8 +26,8 @@ fun cartScreen(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    var lastPageIndex =
+    val state = rememberCartState()
+    val lastPageIndex =
         if (cartProducts
                 .getCartProducts()
                 .isEmpty()
@@ -43,43 +40,31 @@ fun cartScreen(
     Scaffold(
         topBar = {
             cartTopAppBar(
-                onClick = { onClose },
+                onClick = { onClose() },
             )
         },
         containerColor = Color.White,
     ) { innerPadding ->
-        Box(modifier = modifier.padding(innerPadding)) {
-            Column {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    items(CartRepository.getCartProducts()) { productAndCount ->
-                        cartItem(
-                            productAndCount = productAndCount,
-                            onDelete = { id ->
-                                CartRepository.deleteProduct(productId = id)
+        CartBody(
+            innerPadding = innerPadding,
+            cartProducts = cartProducts,
+            currentPageIndex = state.currentPageIndex,
+            lastPageIndex = lastPageIndex,
+            onMoveToPreviousPage = { if (state.currentPageIndex > 0) state.decrease() },
+            onMoveToNextPage = { if (state.currentPageIndex < lastPageIndex) state.increase() },
+            onDeleteProduct = { id ->
+                deleteProduct(id)
 
-                                val updatedProducts = CartRepository.getCartProducts()
-                                val updatedLastPageIndex =
-                                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-                                if (currentPageIndex > updatedLastPageIndex) {
-                                    currentPageIndex = updatedLastPageIndex
-                                }
-                            },
-                        )
-                    }
-                }
-                if (cartProducts.getCartProducts().size > 5) {
-                    pagination(
-                        pageMoveToLeft = { if (currentPageIndex > 0) currentPageIndex-- },
-                        pageMoveToLeftButtonEnabled = currentPageIndex > 0,
-                        currentPageIndex = currentPageIndex,
-                        pageMoveToRight = { if (currentPageIndex < lastPageIndex) currentPageIndex++ },
-                        pageMoveToRightButtonEnabled = currentPageIndex < lastPageIndex,
-                    )
-                }
-            }
-        }
+                val updatedProducts = cartProducts.getCartProducts()
+                val updatedLastPageIndex =
+                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
+
+                state.adjustCurrentPage(
+                    updatedLastPageIndex = updatedLastPageIndex
+                )
+            },
+            modifier = modifier,
+        )
     }
 }
 
