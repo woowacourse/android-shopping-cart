@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.ui.DetailScreen
@@ -20,7 +21,7 @@ class DetailActivity : ComponentActivity() {
 
         val id = this.intent.getStringExtra(INTENT_PRODUCT_ID)
         if (id.isNullOrBlank()) {
-            Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.invalid_product, Toast.LENGTH_SHORT).show()
             this.finish()
             return
         }
@@ -36,7 +37,7 @@ class DetailActivity : ComponentActivity() {
                                 startActivity(intent)
                             }
                             is AddItemResult.DuplicateItem ->
-                                Toast.makeText(this, "이미 장바구니에 담긴 상품입니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, R.string.already_product_in_cart, Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier,

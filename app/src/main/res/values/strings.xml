@@ -3,4 +3,13 @@
     <string name="title_activity_shopping">ShoppingActivity</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_cart">CartActivity</string>
+    <string name="back">뒤로가기</string>
+    <string name="previous_page">이전 페이지</string>
+    <string name="next_page">다음 페이지</string>
+    <string name="shopping_cart">장바구니</string>
+    <string name="invalid_product">유효하지 않은 상품입니다.</string>
+    <string name="already_product_in_cart">이미 장바구니에 담긴 상품입니다.</string>
+    <string name="add_product_to_cart">장바구니 담기</string>
+    <string name="price">가격</string>
+    <string name="load_more">더보기</string>
 </resources>

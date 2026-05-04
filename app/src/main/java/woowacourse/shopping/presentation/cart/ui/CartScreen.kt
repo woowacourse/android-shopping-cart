@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import woowacourse.shopping.R
 import woowacourse.shopping.presentation.cart.model.CartItemUiModel
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
@@ -49,7 +51,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
                 contents = {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "뒤로 가기",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White,
                         modifier =
                             Modifier

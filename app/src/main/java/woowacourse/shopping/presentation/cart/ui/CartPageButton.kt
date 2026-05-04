@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.ui.theme.Green40
 
@@ -48,7 +50,7 @@ fun CartPageSection(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = "이전 페이지",
+                contentDescription = stringResource(R.string.previous_page),
                 modifier = Modifier.size(14.dp),
             )
         }
@@ -72,7 +74,7 @@ fun CartPageSection(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowForwardIos,
-                contentDescription = "다음 페이지",
+                contentDescription = stringResource(R.string.next_page),
                 tint = Color.White,
                 modifier = Modifier.size(14.dp),
             )

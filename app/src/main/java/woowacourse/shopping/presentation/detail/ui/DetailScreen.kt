@@ -28,11 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.ui.theme.Gray40
@@ -63,7 +65,7 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "뒤로 가기",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White,
                         modifier =
                             Modifier
@@ -91,7 +93,7 @@ fun DetailScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "장바구니 담기",
+                    text = stringResource(R.string.add_product_to_cart),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -145,7 +147,7 @@ private fun DetailContent(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
+                text = stringResource(R.string.price),
                 fontSize = 20.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Normal,
