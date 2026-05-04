@@ -38,4 +38,20 @@ class ProductRepositoryTest {
 
             assertEquals(expected, actual)
         }
+
+    @Test
+    fun `전체 데이터 개수보다 큰 오프셋을 요청했을 때 빈 결과를 반환한다`() =
+        runBlocking {
+            val actual = repo.getProducts(repo.size + 1, 20).count()
+
+            assertEquals(0, actual)
+        }
+
+    @Test
+    fun `음수 limit을 요청했을 때 빈 결과를 반환한다`() =
+        runBlocking {
+            val actual = repo.getProducts(0, -1).count()
+
+            assertEquals(0, actual)
+        }
 }

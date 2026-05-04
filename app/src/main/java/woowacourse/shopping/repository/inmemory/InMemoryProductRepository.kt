@@ -189,8 +189,9 @@ object InMemoryProductRepository : ProductRepository {
         fromIndex: Int,
         limit: Int,
     ): Products {
-        val safeFrom = fromIndex.coerceAtLeast(0)
-        val safeTo = minOf(safeFrom + limit, products.count())
+        val safeFrom = fromIndex.coerceIn(0, products.count())
+        val safeLimit = limit.coerceAtLeast(0)
+        val safeTo = minOf(safeFrom + safeLimit, products.count())
 
         return Products(products.toList().subList(safeFrom, safeTo))
     }

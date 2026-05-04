@@ -19,11 +19,15 @@ class FakeCartRepository : CartRepository {
     override suspend fun getCartItems(
         fromIndex: Int,
         limit: Int,
-    ): Map<ProductId, Int> =
-        items.entries
-            .drop(fromIndex)
-            .take(limit)
+    ): Map<ProductId, Int> {
+        val safeFrom = fromIndex.coerceIn(0, items.size)
+        val safeLimit = limit.coerceAtLeast(0)
+
+        return items.entries
+            .drop(safeFrom)
+            .take(safeLimit)
             .associate { it.toPair() }
+    }
 
     override suspend fun count(): Int = items.size
 }

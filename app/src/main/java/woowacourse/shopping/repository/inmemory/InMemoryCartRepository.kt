@@ -19,8 +19,9 @@ object InMemoryCartRepository : CartRepository {
         fromIndex: Int,
         limit: Int,
     ): Map<ProductId, Int> {
-        val safeFrom = fromIndex.coerceAtLeast(0)
-        val safeTo = minOf(safeFrom + limit, cart.items.size)
+        val safeFrom = fromIndex.coerceIn(0, cart.items.size)
+        val safeLimit = limit.coerceAtLeast(0)
+        val safeTo = minOf(safeFrom + safeLimit, cart.items.size)
 
         return cart.items.entries
             .toList()

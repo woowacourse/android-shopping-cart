@@ -3,12 +3,14 @@
 package woowacourse.shopping.repository
 
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductId
 
 class CartRepositoryTest {
     private lateinit var repo: CartRepository
@@ -46,5 +48,25 @@ class CartRepositoryTest {
     fun `존재하지 않는 상품의 삭제를 시도할 경우, 상태가 변경되지 않거나 올바르게 무시,예외 처리된다`(): Unit =
         runBlocking {
             assertThrows<IllegalArgumentException> { runBlocking { repo.delete(product1.id) } }
+        }
+
+    @Test
+    fun `전체 데이터 개수보다 큰 오프셋을 요청했을 때 빈 결과를 반환한다`() =
+        runBlocking {
+            repo.add(product1.id)
+
+            val actual = repo.getCartItems(repo.count() + 1, 20)
+
+            assertEquals(emptyMap<ProductId, Int>(), actual)
+        }
+
+    @Test
+    fun `음수 limit을 요청했을 때 빈 결과를 반환한다`() =
+        runBlocking {
+            repo.add(product1.id)
+
+            val actual = repo.getCartItems(0, -1)
+
+            assertEquals(emptyMap<ProductId, Int>(), actual)
         }
 }
