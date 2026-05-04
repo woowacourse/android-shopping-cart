@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.productlist.ProductListScreen
-import woowacourse.shopping.ui.productlist.stateholder.ProductListStateHolder
+import woowacourse.shopping.ui.productlist.stateholder.rememberProductListStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val productListStateHolder = ProductListStateHolder()
+            val productListStateHolder = rememberProductListStateHolder()
 
             val scope = rememberCoroutineScope()
             LaunchedEffect(Unit) {

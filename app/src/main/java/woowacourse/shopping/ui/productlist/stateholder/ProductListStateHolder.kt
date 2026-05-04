@@ -1,8 +1,12 @@
 package woowacourse.shopping.ui.productlist.stateholder
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.domain.Cart
@@ -11,7 +15,12 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.ui.state.ProductUiModel
 
-class ProductListStateHolder {
+@Composable
+fun rememberProductListStateHolder(): ProductListStateHolder = rememberSaveable(saver = ProductListStateHolder.Saver()) {
+    ProductListStateHolder()
+}
+
+class ProductListStateHolder(initialPage: Int = 0) {
     private val _products = mutableStateListOf<Product>()
 
     var cart = Cart()
@@ -23,20 +32,44 @@ class ProductListStateHolder {
     val cartUiModels: List<ProductUiModel>
         get() = cart.getProductList().map { toProductUiModel(it) }
 
+    private var currentPage = initialPage
+
     fun isEndList(): Boolean = _products.size >= MockData.MOCK_PRODUCTS.size
 
     fun loadInitialProducts() {
-        if (_products.isEmpty()) fetchProducts()
+        if (_products.isEmpty()) {
+            if (currentPage > 0) {
+                restoreProducts(currentPage)
+                return
+            }
+            fetchProducts()
+        }
     }
 
     fun fetchProducts(pageSize: Int = PAGE_SIZE) {
         if (isEndList()) return
-        val toOffset = minOf(_products.size + pageSize, MockData.MOCK_PRODUCTS.size)
+
+        val fromIndex = currentPage * pageSize
+        val toIndex = minOf(fromIndex + pageSize, MockData.MOCK_PRODUCTS.size)
 
         _products.addAll(
             MockData.MOCK_PRODUCTS.subList(
-                fromIndex = _products.size,
-                toIndex = toOffset,
+                fromIndex = fromIndex,
+                toIndex = toIndex,
+            ),
+        )
+        currentPage++
+        syncUiModels()
+    }
+
+    private fun restoreProducts(targetPage: Int) {
+        val totalItemsSize = targetPage * PAGE_SIZE
+        val toIndex = minOf(totalItemsSize, MockData.MOCK_PRODUCTS.size)
+
+        _products.addAll(
+            MockData.MOCK_PRODUCTS.subList(
+                fromIndex = 0,
+                toIndex = toIndex,
             ),
         )
         syncUiModels()
@@ -70,5 +103,19 @@ class ProductListStateHolder {
 
     companion object {
         private const val PAGE_SIZE = 20
+
+        fun Saver(): Saver<ProductListStateHolder, Any> = listSaver(
+            save = { stateHolder ->
+                listOf(
+                    stateHolder.currentPage,
+                )
+            },
+            restore = { savedList ->
+                val savedPage = savedList[0]
+
+                ProductListStateHolder(savedPage).apply {
+                }
+            },
+        )
     }
 }
