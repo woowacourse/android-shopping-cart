@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.component.MoreButton
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
@@ -40,8 +41,9 @@ fun ProductListScreen(
     products: List<ProductDto>,
     onNavigateToCartClick: () -> Unit,
     onProductClick: (Long) -> Unit,
+    onMoreClick: () -> Unit,
+    showMoreButton: Boolean,
     modifier: Modifier = Modifier,
-    bottomContent: (@Composable () -> Unit)? = null,
 ) {
     Scaffold(
         topBar = {
@@ -71,11 +73,11 @@ fun ProductListScreen(
                 )
             }
 
-            if (bottomContent != null) {
+            if (showMoreButton) {
                 item(
                     span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    bottomContent()
+                    MoreButton(onClick = onMoreClick)
                 }
             }
         }
@@ -185,6 +187,8 @@ private fun ProductListScreenPreview() {
                 ),
             onProductClick = {},
             onNavigateToCartClick = {},
+            onMoreClick = {},
+            showMoreButton = true,
         )
     }
 }

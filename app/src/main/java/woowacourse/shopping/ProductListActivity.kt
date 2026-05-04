@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import woowacourse.shopping.ui.ProductDto
 import woowacourse.shopping.ui.ProductListScreen
-import woowacourse.shopping.ui.component.MoreButton
 import woowacourse.shopping.ui.pagination.ProductPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
@@ -52,9 +51,9 @@ class ProductListActivity : ComponentActivity() {
                     onNavigateToCartClick = {
                         startActivity(Intent(this, ShoppingCartActivity::class.java))
                     },
-                ) {
-                    MoreButton(onClick = productPaginationStateHolder::nextPage)
-                }
+                    onMoreClick = productPaginationStateHolder::nextPage,
+                    showMoreButton = productPaginationStateHolder.canMoveToNextPage(),
+                )
             }
         }
     }

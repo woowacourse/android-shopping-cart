@@ -15,4 +15,6 @@ class ProductPageStateHolder(
     fun nextPage() {
         updateCurrentPage(currentPage + 1)
     }
+
+    fun canMoveToNextPage(): Boolean = isInPageRange(currentPage + 1)
 }

@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.ui.ShoppingCartScreen
-import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.pagination.ShoppingCartPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
@@ -37,15 +36,12 @@ class ShoppingCartActivity : ComponentActivity() {
                         shoppingCartRepository.remove(shoppingCartItem)
                         shoppingCartItems = shoppingCartRepository.getShoppingItems()
                     },
-                ) {
-                    PageNavigation(
-                        currentPage = shoppingCartPageStateHolder.currentPage,
-                        canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),
-                        canMoveToNextPage = shoppingCartPageStateHolder.canMoveToNextPage(),
-                        onBeforePageClick = shoppingCartPageStateHolder::beforePage,
-                        onNextPageClick = shoppingCartPageStateHolder::nextPage,
-                    )
-                }
+                    currentPage = shoppingCartPageStateHolder.currentPage,
+                    canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),
+                    canMoveToNextPage = shoppingCartPageStateHolder.canMoveToNextPage(),
+                    onBeforePageClick = shoppingCartPageStateHolder::beforePage,
+                    onNextPageClick = shoppingCartPageStateHolder::nextPage,
+                )
             }
         }
     }

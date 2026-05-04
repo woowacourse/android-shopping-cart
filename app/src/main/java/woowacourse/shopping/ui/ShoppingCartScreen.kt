@@ -42,6 +42,7 @@ import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
@@ -49,8 +50,12 @@ fun ShoppingCartScreen(
     shoppingCartItems: List<ShoppingCartItem>,
     onBackClick: () -> Unit,
     onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
+    currentPage: Int,
+    canMoveToPreviousPage: Boolean,
+    canMoveToNextPage: Boolean,
+    onBeforePageClick: () -> Unit,
+    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
-    bottomContent: @Composable () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -86,8 +91,13 @@ fun ShoppingCartScreen(
                     )
                 }
             }
-
-            bottomContent()
+            PageNavigation(
+                currentPage = currentPage,
+                canMoveToPreviousPage = canMoveToPreviousPage,
+                canMoveToNextPage = canMoveToNextPage,
+                onBeforePageClick = onBeforePageClick,
+                onNextPageClick = onNextPageClick,
+            )
         }
     }
 }
@@ -208,6 +218,11 @@ private fun ShoppingCartScreenPreview() {
                 ),
             onBackClick = { },
             onRemoveShoppingItemClick = { },
+            currentPage = 0,
+            canMoveToPreviousPage = false,
+            canMoveToNextPage = true,
+            onBeforePageClick = {},
+            onNextPageClick = {},
         )
     }
 }
