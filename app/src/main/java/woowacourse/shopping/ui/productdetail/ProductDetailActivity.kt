@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,16 +21,11 @@ class ProductDetailActivity : ComponentActivity() {
 
         val receivedProduct =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra("PRODUCT", Product::class.java)
+                intent.getParcelableExtra(EXTRA_PRODUCT, Product::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                intent.getParcelableExtra("PRODUCT")
-            }
-
-        if (receivedProduct == null) {
-            finish()
-            return
-        }
+                intent.getParcelableExtra(EXTRA_PRODUCT)
+            } ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product 데이터가 포함되어야 합니다.")
 
         enableEdgeToEdge()
         setContent {
@@ -46,6 +43,16 @@ class ProductDetailActivity : ComponentActivity() {
                         },
                     )
                 }
+            }
+        }
+    }
+
+    companion object {
+        private const val EXTRA_PRODUCT = "com.woowacourse.shopping.PRODUCT"
+
+        fun newIntent(context: Context, product: Product): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(EXTRA_PRODUCT, product)
             }
         }
     }

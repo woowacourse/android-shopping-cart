@@ -42,10 +42,7 @@ class ShoppingActivity : ComponentActivity() {
                             startActivity(Intent(this, CartActivity::class.java))
                         },
                         onProductClick = {
-                            val intent =
-                                Intent(this, ProductDetailActivity::class.java).apply {
-                                    putExtra("PRODUCT", it)
-                                }
+                            val intent = ProductDetailActivity.newIntent(context = this, product = it)
                             startActivity(intent)
                         },
                         onMoreClick = {
