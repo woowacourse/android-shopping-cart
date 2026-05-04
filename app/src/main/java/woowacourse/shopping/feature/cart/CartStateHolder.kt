@@ -34,9 +34,8 @@ class CartStateHolder(
     }
 
     fun removeFromCart(productId: String) {
-        val updated = cartRepository.getCartItems().remove(productId)
-        cartRepository.saveCartItems(updated)
-        totalSize = updated.items.size
+        cartRepository.deleteCartItem(productId)
+        totalSize = cartRepository.getCartItemCount()
         loadPage(minOf(currentPage, maxOf(0, totalPages - 1)))
     }
 

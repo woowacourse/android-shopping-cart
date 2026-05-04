@@ -49,4 +49,32 @@ class CartRepositoryImplTest {
             repository.getPagingCartItems(0, 0)
         }
     }
+
+    @Test
+    fun `상품 ID로 장바구니 항목을 조회할 수 있다`() {
+        val firstProduct = DUMMY_PRODUCTS[0]
+        val result = repository.getCartItem(firstProduct.id)
+        assertEquals(firstProduct.id, result?.product?.id)
+    }
+
+    @Test
+    fun `장바구니에 새로운 항목을 추가할 수 있다`() {
+        val initialCount = repository.getCartItemCount()
+        val newProduct = DUMMY_PRODUCTS[15]
+        repository.addCartItem(CartItem(newProduct, Quantity(1)))
+        
+        assertEquals(initialCount + 1, repository.getCartItemCount())
+        assertEquals(newProduct.id, repository.getCartItem(newProduct.id)?.product?.id)
+    }
+
+    @Test
+    fun `장바구니에서 항목을 삭제할 수 있다`() {
+        val firstProduct = DUMMY_PRODUCTS[0]
+        val initialCount = repository.getCartItemCount()
+        
+        repository.deleteCartItem(firstProduct.id)
+        
+        assertEquals(initialCount - 1, repository.getCartItemCount())
+        assertEquals(null, repository.getCartItem(firstProduct.id))
+    }
 }

@@ -21,10 +21,7 @@ class ProductDetailStateHolder(
 
     val productInfo: ProductInfo = product.toUiModel()
 
-    fun addToCart() {
-        val updated = cartRepository.getCartItems().add(CartItem(product, Quantity(1)))
-        cartRepository.saveCartItems(updated)
-    }
+    fun addToCart() = cartRepository.addCartItem(CartItem(product, Quantity(1)))
 }
 
 @Composable
