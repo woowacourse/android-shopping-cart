@@ -28,4 +28,31 @@ class ProductPageStateHolderTest {
             )
         productDataLoadStateHolder.getItems().size shouldBe expectedItemSize
     }
+
+    @ParameterizedTest
+    @CsvSource("20, 1, 20", "25, 2, 25", "50, 2, 40")
+    fun `다음 페이지로 이동하면 기존 상품에 추가된 상품을 반환한다`(
+        itemSize: Int,
+        pageMoveCount: Int,
+        expectedItemSize: Int,
+    ) {
+        val productDataLoadStateHolder =
+            ProductPageStateHolder(
+                products =
+                    List(itemSize) {
+                        Product(
+                            id = 1L,
+                            price = Price(10_000),
+                            title = ProductTitle("호날두"),
+                            imageUrl = "",
+                        )
+                    },
+            )
+
+        repeat(pageMoveCount - 1) {
+            productDataLoadStateHolder.nextPage()
+        }
+
+        productDataLoadStateHolder.getItems().size shouldBe expectedItemSize
+    }
 }

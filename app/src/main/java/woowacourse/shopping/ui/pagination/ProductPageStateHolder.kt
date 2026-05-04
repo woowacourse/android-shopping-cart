@@ -1,20 +1,40 @@
 package woowacourse.shopping.ui.pagination
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import woowacourse.shopping.model.Product
+import kotlin.math.min
 
 class ProductPageStateHolder(
     products: List<Product>,
-) : PageStateHolder<Product>(products) {
-    override val pageSize: Int = 20
+) {
+    private val pageSize: Int = 20
+    private val allProducts: List<Product> = products
 
-    override fun getPageRange(): IntRange {
-        val exclusiveEndPage = currentPage + 1
-        return initialPage..exclusiveEndPage
+    var currentPage: Int by mutableIntStateOf(0)
+        private set
+
+    private val pageCount: Int
+        get() {
+            val totalPageCount = allProducts.size / pageSize
+            return if (allProducts.size % pageSize == 0) {
+                totalPageCount
+            } else {
+                totalPageCount + 1
+            }
+        }
+
+    fun getItems(): List<Product> {
+        val endItemIndex = min((currentPage + 1) * pageSize, allProducts.size)
+        return allProducts.subList(0, endItemIndex)
     }
 
     fun nextPage() {
-        updateCurrentPage(currentPage + 1)
+        if (canMoveToNextPage()) {
+            currentPage++
+        }
     }
 
-    fun canMoveToNextPage(): Boolean = isInPageRange(currentPage + 1)
+    fun canMoveToNextPage(): Boolean = currentPage + 1 < pageCount
 }
