@@ -76,9 +76,15 @@
 
 - [ ] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
 
+### MainActivity
+
+- [x] LaunchedEffect를 통한 비동기 데이터 로딩 적용
+
 ### CartActivity
 
-- [ ] onDelete 내부 구현 CoroutineScope 하나로 통합
+- [ ] Cart 객체를 주고 받도록 수정
+- [ ] 이중 CoroutineScope 제거
+- [ ] LaunchedEffect를 통한 비동기 데이터 로딩 적용
 
 ### MockCatalog
 
