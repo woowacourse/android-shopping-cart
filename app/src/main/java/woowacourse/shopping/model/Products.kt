@@ -11,9 +11,11 @@ class Products(
         fromIndex: Int,
         loadSize: Int,
     ): Products {
-        val safeFrom = fromIndex.coerceAtLeast(0)
-        val safeTo = minOf(safeFrom + loadSize, value.size)
+        require(loadSize >= 0) { "loadSize는 0 이상의 수여야 합니다." }
+        require(fromIndex in 0..value.size) { "fromIndex는 0 이상의 정수이자, 사이즈를 벗어나는 index일 수 없습니다." }
 
-        return Products(value.subList(safeFrom, safeTo))
+        val toIndex = minOf(fromIndex + loadSize, value.size)
+
+        return Products(value.subList(fromIndex, toIndex))
     }
 }
