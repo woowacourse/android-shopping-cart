@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain
 
 import java.util.Collections.emptyList
-import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -14,15 +13,18 @@ data class Cart(
     fun addProductToCart(product: Product): Cart {
         val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
         if (index != -1) {
-            val existProductAndCount = productAndCounts[index]
-            val newProductAndCount = existProductAndCount.increaseQuantity()
-            val updated = productAndCounts.toMutableList()
-            updated[index] = newProductAndCount
-            return copy(productAndCounts = updated)
-        } else {
-            return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
+            val newProductAndCounts = productAndCounts.map { item ->
+                if (item.product == product) {
+                    item.copy(count = item.count() + 1)
+                } else {
+                    item
+                }
+            }
+            return copy(productAndCounts = newProductAndCounts)
         }
+        return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
     }
+
 
     fun deleteProductFromCart(productId: Uuid): Cart =
         copy(
@@ -36,8 +38,8 @@ data class Cart(
         page: Int,
         pageSize: Int = CART_PAGE_SIZE,
     ): List<ProductAndCount> {
-        val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + CART_PAGE_SIZE, productAndCounts.size)
+        val fromIndex = maxOf(1, page * pageSize)
+        val toIndex = minOf(fromIndex + pageSize, productAndCounts.size)
         return productAndCounts.subList(fromIndex, toIndex)
     }
 }
