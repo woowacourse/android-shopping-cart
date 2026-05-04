@@ -35,10 +35,11 @@ class ProductsStateHolder(
                 .map { it.toUiModel() }
                 .toImmutableList()
 
-        if (currentProducts.isEmpty()) return
+        if (currentProducts.isNotEmpty()) {
+            products = (products + currentProducts).toImmutableList()
+            pageCount++
+        }
 
-        products = (products + currentProducts).toImmutableList()
-        pageCount++
         isLastPage = products.size >= totalCount
     }
 }
