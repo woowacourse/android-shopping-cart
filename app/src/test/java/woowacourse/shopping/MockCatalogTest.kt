@@ -26,9 +26,8 @@ class MockCatalogTest {
         // when: 두 번째 페이지 로드
         val secondPage = MockCatalog.loadMoreProducts(1, pageSize).await()
         // then
-        assertEquals(5, secondPage.size)
-        assertEquals(MockCatalog.catalog[5], secondPage[0])
-
+        assertEquals(10, secondPage.size)
+        assertEquals(MockCatalog.catalog[5], secondPage[5])
     }
 
     @Test
@@ -44,7 +43,7 @@ class MockCatalogTest {
             ).await()
 
         assertTrue(
-            result.size < pageSize
+            result.size == totalSize
         )
     }
 }
