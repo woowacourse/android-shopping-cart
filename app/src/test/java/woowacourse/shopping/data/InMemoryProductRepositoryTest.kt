@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class InMemoryProductRepositoryTest {
     private val products = ProductData.products
     private val size = products.size
-    private val repository = InMemoryProductRepository(source = products)
+    private val repository = InMemoryProductRepository()
 
     @Test
     fun `offset과 limit의 범위에 따라 리스트를 반환한다`() =

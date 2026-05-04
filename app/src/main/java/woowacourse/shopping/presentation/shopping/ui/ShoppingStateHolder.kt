@@ -7,14 +7,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.InMemoryProductRepository
+import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.common.model.toUiModel
 
 class ShoppingStateHolder(
     private val scope: CoroutineScope,
-    private val productRepository: ProductRepository = InMemoryProductRepository(),
+    private val productRepository: ProductRepository = RepositoryProvider.productRepository,
     private val getCurrentProducts: () -> List<ProductUiModel>,
     private val onProductsChanged: (List<ProductUiModel>) -> Unit,
 ) {
