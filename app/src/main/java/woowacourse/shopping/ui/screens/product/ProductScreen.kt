@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
@@ -34,9 +36,14 @@ fun ProductScreen(
     productStateHolder: ProductStateHolder = rememberSaveable(
         saver = Saver(
             save = { it.products.size },
-            restore = { ProductStateHolder(initialSize = it) },
+            restore = {
+                ProductStateHolder(
+                    productRepository = ProductRepositoryImpl(ProductDataSourceImpl),
+                    initialSize = it,
+                )
+            },
         ),
-    ) { ProductStateHolder() },
+    ) { ProductStateHolder(productRepository = ProductRepositoryImpl(ProductDataSourceImpl)) },
     onCartClick: () -> Unit,
     onProductCardClick: (String) -> Unit,
 ) {
@@ -108,7 +115,6 @@ fun ProductScreen(
 @Composable
 fun ProductScreenPreview() {
     ProductScreen(
-        productStateHolder = ProductStateHolder(),
         onCartClick = { },
         onProductCardClick = { },
     )

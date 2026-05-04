@@ -26,13 +26,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.source.CartDataSourceImpl
+import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
 fun ProductDetailScreen(
     productId: String,
-    productDetailStateHolder: ProductDetailStateHolder = remember { ProductDetailStateHolder(targetProductId = productId) },
+    productDetailStateHolder: ProductDetailStateHolder = remember {
+        ProductDetailStateHolder(
+            cartRepository = CartRepositoryImpl(CartDataSourceImpl),
+            productRepository = ProductRepositoryImpl(ProductDataSourceImpl),
+            targetProductId = productId,
+        )
+    },
     onDismiss: () -> Unit,
 ) {
     val product = productDetailStateHolder.product

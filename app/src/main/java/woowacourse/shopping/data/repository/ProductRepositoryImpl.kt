@@ -1,12 +1,11 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.source.ProductDataSource
-import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
-    productDataSource: ProductDataSource = ProductDataSourceImpl,
+    productDataSource: ProductDataSource,
 ) : ProductRepository {
     private val products = productDataSource.products
     override val productSize get() = products.size

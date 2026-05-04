@@ -5,13 +5,14 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.fixture.ShoppingFixture
 
 class CartRepositoryImplTest {
     @Test
     fun `장바구니에 아이템을 추가할 수 있다`() =
         runTest {
-            val cartRepository = CartRepositoryImpl()
+            val cartRepository = CartRepositoryImpl(cartDataSource = CartDataSourceImpl)
             cartRepository.addItem(product = ShoppingFixture.getProduct(), amount = 1)
 
             cartRepository.getCartItemByPage(1).size shouldEqual 1
@@ -20,7 +21,7 @@ class CartRepositoryImplTest {
     @Test
     fun `장바구니에 동일한 아이템을 추가할 경우 해당 아이템의 개수가 증가한다`() =
         runTest {
-            val cartRepository = CartRepositoryImpl()
+            val cartRepository = CartRepositoryImpl(cartDataSource = CartDataSourceImpl)
 
             val product = ShoppingFixture.getProduct(id = "1")
 
@@ -33,7 +34,7 @@ class CartRepositoryImplTest {
     @Test
     fun `장바구니에 존재하는 아이템을 삭제할 수 있다`() =
         runTest {
-            val cartRepository = CartRepositoryImpl()
+            val cartRepository = CartRepositoryImpl(cartDataSource = CartDataSourceImpl)
 
             val product = ShoppingFixture.getProduct(id = "1")
 

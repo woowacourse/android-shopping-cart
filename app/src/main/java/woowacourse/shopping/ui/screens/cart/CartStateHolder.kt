@@ -4,12 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartStateHolder(
-    private val cartRepository: CartRepository = CartRepositoryImpl(),
+    private val cartRepository: CartRepository,
     initialPage: Int = 1,
 ) {
     var curPage by mutableIntStateOf(initialPage)

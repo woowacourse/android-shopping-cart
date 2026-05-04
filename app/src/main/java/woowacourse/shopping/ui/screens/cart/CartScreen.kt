@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
@@ -33,9 +35,14 @@ fun CartScreen(
     cartStateHolder: CartStateHolder = rememberSaveable(
         saver = Saver(
             save = { it.curPage },
-            restore = { CartStateHolder(initialPage = it) },
+            restore = {
+                CartStateHolder(
+                    cartRepository = CartRepositoryImpl(CartDataSourceImpl),
+                    initialPage = it,
+                )
+            },
         ),
-    ) { CartStateHolder() },
+    ) { CartStateHolder(cartRepository = CartRepositoryImpl(CartDataSourceImpl)) },
     onNavigateUp: () -> Unit,
 ) {
     val cartItems = cartStateHolder.cartItems

@@ -1,13 +1,12 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.source.CartDataSource
-import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
-    private val cartDataSource: CartDataSource = CartDataSourceImpl,
+    private val cartDataSource: CartDataSource,
 ) : CartRepository {
     private val cartItems
         get() = cartDataSource.items
