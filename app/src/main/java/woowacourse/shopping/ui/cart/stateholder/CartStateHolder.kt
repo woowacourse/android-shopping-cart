@@ -1,12 +1,12 @@
 package woowacourse.shopping.ui.cart.stateholder
 
-import android.os.Build
 import android.os.Bundle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
+import androidx.core.os.BundleCompat
 import woowacourse.shopping.ui.state.ProductUiModel
 
 class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) {
@@ -71,14 +71,9 @@ class CartStateHolder(initialItems: List<ProductUiModel>, initialPage: Int = 1) 
                 }
             },
             restore = { bundle ->
-                val items: List<ProductUiModel> =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        bundle.getParcelableArrayList(KEY_ITEMS, ProductUiModel::class.java)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        bundle.getParcelableArrayList(KEY_ITEMS)
-                    }
-                        ?: emptyList()
+                val items: List<ProductUiModel> = BundleCompat.getParcelableArrayList(bundle, KEY_ITEMS, ProductUiModel::class.java)
+                    ?: emptyList()
+
                 val page = bundle.getInt(KEY_PAGE, 1)
                 CartStateHolder(items, page)
             },

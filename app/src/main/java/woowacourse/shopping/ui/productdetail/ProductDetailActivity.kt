@@ -2,11 +2,11 @@ package woowacourse.shopping.ui.productdetail
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.IntentCompat
 import kotlin.jvm.java
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 import woowacourse.shopping.ui.productlist.ProductDetailErrorScreen
@@ -18,12 +18,7 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val uiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(DETAIL_PRODUCT, ProductUiModel::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(DETAIL_PRODUCT)
-        }
+        val uiModel = IntentCompat.getParcelableExtra(intent, DETAIL_PRODUCT, ProductUiModel::class.java)
 
         setContent {
             AndroidshoppingcartTheme {
