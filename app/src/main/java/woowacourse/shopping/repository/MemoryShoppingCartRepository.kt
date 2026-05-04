@@ -3,30 +3,32 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 
-class MemoryShoppingCartRepository(
-    initialProducts: List<Product>,
+data class MemoryShoppingCartRepository(
+    private val items: List<ShoppingCartItem>,
+    private val nextShoppingCartItemId: Long = 0L,
 ) : ShoppingCartRepository {
-    private var nextShoppingCartItemId: Long = 0L
-    private val items: MutableList<ShoppingCartItem> =
-        initialProducts
-            .map {
-                ShoppingCartItem(
-                    id = nextShoppingCartItemId++,
-                    product = it,
-                )
-            }.toMutableList()
+    constructor(initialProducts: List<Product>) : this(
+        items =
+            initialProducts.mapIndexed { index, product ->
+                ShoppingCartItem(id = index.toLong(), product = product)
+            },
+        nextShoppingCartItemId = initialProducts.size.toLong(),
+    )
 
-    override fun add(product: Product) {
-        items.add(
+    override fun add(product: Product): ShoppingCartRepository {
+        val newItem =
             ShoppingCartItem(
-                id = nextShoppingCartItemId++,
+                id = nextShoppingCartItemId,
                 product = product,
-            ),
+            )
+        return copy(
+            items = items + newItem,
+            nextShoppingCartItemId = nextShoppingCartItemId + 1,
         )
     }
 
-    override fun remove(shoppingCartItem: ShoppingCartItem): ShoppingCartItem? =
-        if (items.remove(shoppingCartItem)) shoppingCartItem else null
+    override fun remove(shoppingCartItem: ShoppingCartItem): ShoppingCartRepository =
+        copy(items = items.filter { it.id != shoppingCartItem.id })
 
-    override fun getShoppingItems(): List<ShoppingCartItem> = items.toList()
+    override fun getShoppingItems(): List<ShoppingCartItem> = items
 }

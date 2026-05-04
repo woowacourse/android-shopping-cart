@@ -18,7 +18,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 @OptIn(ExperimentalMaterial3Api::class)
 class DetailProductActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
-    private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
 
     companion object {
         private const val INVALID_PRODUCT_ID = -1L
@@ -42,7 +41,8 @@ class DetailProductActivity : ComponentActivity() {
                                     imageUrl = product.imageUrl,
                                 ),
                             onAddToCartClick = {
-                                shoppingCartRepository.add(product)
+                                ShoppingApplication.shoppingCartRepository =
+                                    ShoppingApplication.shoppingCartRepository.add(product)
                                 this.finish()
                             },
                             onBackClick = this::finish,

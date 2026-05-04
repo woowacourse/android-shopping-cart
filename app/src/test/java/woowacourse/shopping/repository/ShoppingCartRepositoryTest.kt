@@ -2,7 +2,6 @@ package woowacourse.shopping.repository
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.ShoppingApplication.Companion.shoppingCartRepository
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
@@ -13,8 +12,8 @@ class ShoppingCartRepositoryTest {
 
     @Test
     fun `장바구니에 상품을 추가할 수 있다`() {
-        val shoppingCartRepository = MemoryShoppingCartRepository(emptyList())
-        shoppingCartRepository.add(product)
+        var shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository(emptyList<Product>())
+        shoppingCartRepository = shoppingCartRepository.add(product)
         val shoppingCartItems = shoppingCartRepository.getShoppingItems()
 
         shoppingCartItems.size shouldBe 1
@@ -22,17 +21,20 @@ class ShoppingCartRepositoryTest {
     }
 
     @Test
-    fun `장바구니에 추가된 상품은 삭제할 수 있으며 삭제된 아이템이 반환된다`() {
-        shoppingCartRepository.add(product)
+    fun `장바구니에 추가된 상품은 삭제할 수 있다`() {
+        var shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository(listOf(product))
         val addedShoppingCartItem = shoppingCartRepository.getShoppingItems().single()
 
-        shoppingCartRepository.remove(addedShoppingCartItem) shouldBe addedShoppingCartItem
+        shoppingCartRepository = shoppingCartRepository.remove(addedShoppingCartItem)
         shoppingCartRepository.getShoppingItems() shouldBe emptyList()
     }
 
     @Test
-    fun `장바구니에 없는 상품을 삭제하면 null이 반환된다`() {
-        val shoppingCartRepository = MemoryShoppingCartRepository(emptyList())
-        shoppingCartRepository.remove(ShoppingCartItem(1, product)) shouldBe null
+    fun `장바구니에 없는 상품을 삭제해도 에러가 발생하지 않으며 상태가 유지된다`() {
+        var shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository(emptyList<Product>())
+        val initialItems = shoppingCartRepository.getShoppingItems()
+        shoppingCartRepository = shoppingCartRepository.remove(ShoppingCartItem(1, product))
+
+        shoppingCartRepository.getShoppingItems() shouldBe initialItems
     }
 }
