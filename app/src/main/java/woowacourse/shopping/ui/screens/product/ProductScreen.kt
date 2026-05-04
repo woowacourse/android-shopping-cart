@@ -12,12 +12,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,16 +31,20 @@ import woowacourse.shopping.ui.component.topbar.MainTapBar
 
 @Composable
 fun ProductScreen(
-    productStateHolder: ProductStateHolder = remember { ProductStateHolder() },
     onIconClick: () -> Unit,
     onItemClick: (String) -> Unit,
 ) {
-    val products = productStateHolder.products
-    val scope = rememberCoroutineScope()
+    val productStateHolder = rememberSaveable(saver = ProductStateHolder.Saver) {
+        ProductStateHolder()
+    }
+    val listState = rememberLazyGridState()
 
     LaunchedEffect(Unit) {
-        productStateHolder.getProducts()
+        productStateHolder.initProducts()
     }
+
+    val products = productStateHolder.products
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -57,6 +62,7 @@ fun ProductScreen(
             contentPadding = PaddingValues(20.dp),
             modifier = Modifier
                 .padding(innerPadding),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -104,7 +110,6 @@ fun ProductScreen(
 @Composable
 fun ProductScreenPreview() {
     ProductScreen(
-        productStateHolder = ProductStateHolder(),
         onIconClick = { },
         onItemClick = { },
     )
