@@ -14,6 +14,6 @@ class PriceTest {
 
     @Test
     fun `가격의 Int값을 가져올 수 있다`() {
-        Price(1000).toInt() shouldBe 1000
+        Price(1000).value shouldBe 1000
     }
 }

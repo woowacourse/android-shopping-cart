@@ -13,7 +13,7 @@ class Product(
 
     override fun hashCode(): Int = id.hashCode()
 
-    fun getPrice(): Int = price.toInt()
+    fun getPrice(): Int = price.value
 
-    fun getTitle(): String = title.toString()
+    fun getTitle(): String = title.value
 }
