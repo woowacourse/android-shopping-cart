@@ -29,7 +29,11 @@ import woowacourse.shopping.ui.component.topbar.DismissTopBar
 @Composable
 fun ProductDetailScreen(
     productId: String,
-    productDetailStateHolder: ProductDetailStateHolder = remember { ProductDetailStateHolder(targetProductId = productId) },
+    productDetailStateHolder: ProductDetailStateHolder = remember(productId) {
+        ProductDetailStateHolder(
+            targetProductId = productId,
+        )
+    },
     onDismiss: () -> Unit,
 ) {
     val product = productDetailStateHolder.product
