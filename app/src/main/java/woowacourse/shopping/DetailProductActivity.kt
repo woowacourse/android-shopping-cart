@@ -52,6 +52,7 @@ class DetailProductActivity : ComponentActivity() {
             }
         }
     }
+
     companion object {
         private const val INVALID_PRODUCT_ID = -1L
     }
