@@ -28,8 +28,14 @@ class DetailProductActivity : ComponentActivity() {
         setContent {
             AndroidShoppingTheme {
                 val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
-                if (productId != INVALID_PRODUCT_ID) {
-                    val product = productRepository.getProduct(productId)
+                val product =
+                    if (productId == INVALID_PRODUCT_ID) {
+                        null
+                    } else {
+                        productRepository.getProductOrNull(productId)
+                    }
+
+                if (product != null) {
                     DetailProductScreen(
                         product = product,
                         onAddToCartClick = {
