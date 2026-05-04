@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.core.designsystem.component.NetworkImage
+import woowacourse.shopping.core.designsystem.component.AppImage
 
 @Composable
 fun CartItem(
@@ -72,7 +72,7 @@ fun CartItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
-            NetworkImage(
+            AppImage(
                 imageUrl = productUrl,
                 modifier =
                     Modifier

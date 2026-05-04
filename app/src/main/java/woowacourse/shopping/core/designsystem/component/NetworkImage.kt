@@ -19,7 +19,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 
 @Composable
-fun NetworkImage(
+fun AppImage(
     imageUrl: String,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
@@ -48,20 +48,20 @@ fun NetworkImage(
 
 @Preview
 @Composable
-private fun NetworkImagePreview() {
+private fun AppImagePreview() {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        NetworkImage(
+        AppImage(
             imageUrl = "",
             modifier = Modifier.size(100.dp),
         )
 
-        NetworkImage(
+        AppImage(
             imageUrl = "",
             contentScale = ContentScale.Fit,
             modifier = Modifier.size(100.dp),
         )
 
-        NetworkImage(
+        AppImage(
             imageUrl = "",
             shape = CircleShape,
             modifier = Modifier.size(100.dp),

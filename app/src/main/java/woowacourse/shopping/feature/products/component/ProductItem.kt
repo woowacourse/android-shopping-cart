@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.core.designsystem.component.NetworkImage
+import woowacourse.shopping.core.designsystem.component.AppImage
 
 @Composable
 fun ProductItem(
@@ -34,7 +34,7 @@ fun ProductItem(
                 .background(Color.White)
                 .clickable(onClick = onClick),
     ) {
-        NetworkImage(
+        AppImage(
             imageUrl = productImageUrl,
             modifier = Modifier.aspectRatio(1f),
         )

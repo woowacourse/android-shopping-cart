@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.core.designsystem.component.NetworkImage
+import woowacourse.shopping.core.designsystem.component.AppImage
 import woowacourse.shopping.feature.productDetail.component.AddCartButton
 import woowacourse.shopping.feature.productDetail.component.ProductDetailTopAppBar
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
@@ -41,7 +41,7 @@ fun ProductDetailScreen(
     ) {
         ProductDetailTopAppBar(onClick = onCloseClick)
 
-        NetworkImage(
+        AppImage(
             imageUrl = productInfo.productImageUrl,
             modifier =
                 Modifier
