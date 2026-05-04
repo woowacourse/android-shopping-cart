@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.cart
 
 class CartItems(
-    private val value: List<CartItem> = emptyList(),
+    val value: List<CartItem> = emptyList(),
 ) {
     fun addCartItem(cartItem: CartItem): CartItems = CartItems(value + cartItem)
 
@@ -9,10 +9,12 @@ class CartItems(
 
     fun searchCartItem(cartItem: CartItem): Boolean = value.any { it.isSameCartItem(cartItem) }
 
-    fun subList(
-        fromIndex: Int,
-        toIndex: Int,
-    ): List<CartItem> = value.subList(fromIndex, minOf(toIndex, value.size))
+    fun subList(fromIndex: Int, toIndex: Int): List<CartItem> {
+        val safeFrom = fromIndex.coerceIn(0, value.size)
+        val safeTo = toIndex.coerceIn(safeFrom, value.size)
+        return value.subList(safeFrom, safeTo)
+    }
 
     fun size(): Int = value.size
+
 }
