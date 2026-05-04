@@ -175,7 +175,8 @@ object MockCatalog {
     ): Deferred<List<Product>> =
         runBlocking {
             async {
-//            delay(2000)
+                require(page >= 0) { "현재 페이지는 0 이상이여야 합니다" }
+                require(pageSize > 0) { "한 페이지에 보여질 상품의 개수는 0보다 커야 합니다" }
                 val fromIndex =
                     if (page * pageSize > catalog.size) catalog.size else page * pageSize
                 val toIndex = min(fromIndex + pageSize, catalog.size)
