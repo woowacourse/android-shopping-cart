@@ -1,50 +1,76 @@
 package woowacourse.shopping
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.runBlocking
+import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
+    private var currentIndex: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
+        val cartIntent = Intent(this, CartActivity::class.java)
+
+        var restoredIndex = savedInstanceState?.getInt("CURRENT_INDEX") ?: 0
+        currentIndex = restoredIndex
+
+        val currentProducts = runBlocking { getCurrentProducts(restoredIndex, MAX_PRODUCT) }
+
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    CatalogScreen(
+                        catalog = currentProducts.value,
+                        onItemClick = { id ->
+                            productDetailIntent.putExtra("id", id.toString())
+                            startActivity(productDetailIntent)
+                        },
+                        onCartClick = {
+                            startActivity(cartIntent)
+                        },
+                        onLoadClick = {
+                            currentIndex++
+                            restoredIndex++
+                            currentProducts.value = runBlocking {
+                                getCurrentProducts(
+                                    restoredIndex,
+                                    MAX_PRODUCT
+                                )
+                            }.value
+                        },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-    )
-}
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("CURRENT_INDEX", currentIndex)
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AndroidshoppingTheme {
-        Greeting("Android")
+    suspend fun getCurrentProducts(
+        currentIndex: Int,
+        size: Int,
+    ) = mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
+
+    companion object {
+        const val MAX_PRODUCT = 20
     }
 }
