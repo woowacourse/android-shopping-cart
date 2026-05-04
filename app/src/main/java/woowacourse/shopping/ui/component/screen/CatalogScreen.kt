@@ -92,7 +92,10 @@ private fun CatalogBody(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
     ) {
-        items(catalog.size) { item ->
+        items(
+            count = catalog.size,
+            key = { index -> catalog[index].uuid },
+        ) { item ->
             ShoppingItem(
                 product = catalog[item],
                 onClick = onItemClick,
