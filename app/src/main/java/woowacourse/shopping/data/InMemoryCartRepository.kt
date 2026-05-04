@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
-object InMemoryCartRepository : CartRepository {
+class InMemoryCartRepository : CartRepository {
     private var cart: Cart = Cart()
 
     override suspend fun getCart(): Cart = cart

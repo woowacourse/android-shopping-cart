@@ -4,14 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.data.InMemoryCartRepository
+import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.cart.model.CartItemUiModel
 import woowacourse.shopping.presentation.cart.model.toUiModel
 import kotlin.math.min
 
 class CartStateHolder(
-    private val cartRepository: CartRepository = InMemoryCartRepository,
+    private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
 ) {
     var page by mutableIntStateOf(0)
     var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())

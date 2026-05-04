@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductName
 
 class InMemoryCartRepositoryTest {
-    private val repository = InMemoryCartRepository
+    private val repository = InMemoryCartRepository()
 
     @Test
     fun `등록되지 않은 상품을 등록하면 NewAdded를 반환한다`() =
