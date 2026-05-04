@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.ui.shopping.screen.productListScreen
+import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.theme.androidshoppingTheme
 
 class ProductListActivity : ComponentActivity() {
@@ -14,7 +14,7 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             androidshoppingTheme {
-                productListScreen(
+                ProductListScreen(
                     products = Products(ProductFixture.productList),
                 )
             }

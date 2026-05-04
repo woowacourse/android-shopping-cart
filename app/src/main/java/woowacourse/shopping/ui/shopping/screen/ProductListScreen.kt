@@ -13,10 +13,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,16 +29,17 @@ import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.ui.productdetail.component.mintButton
 import woowacourse.shopping.ui.shopping.component.productItem
 import woowacourse.shopping.ui.shopping.component.productListTopAppBar
+import woowacourse.shopping.ui.shopping.state.rememberProductListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun productListScreen(
+fun ProductListScreen(
     products: Products,
     modifier: Modifier = Modifier,
 ) {
+    val state = rememberProductListState()
     val context = LocalContext.current
-    var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    val visibleCount = (currentPageIndex + 1) * SHOPPING_PAGE_SIZE
+    val visibleCount = (state.currentPageIndex + 1) * SHOPPING_PAGE_SIZE
     val visibleProducts = products.products.toPage(PageRequest(0, visibleCount))
 
     Scaffold(
@@ -66,11 +63,11 @@ fun productListScreen(
                 items(visibleProducts.items) { product ->
                     productItem(product)
                 }
-                if (products.hasNextPage(currentPageIndex = currentPageIndex)) {
+                if (products.hasNextPage(currentPageIndex = state.currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         mintButton(
                             onClick = {
-                                currentPageIndex++
+                                state.increase()
                             },
                             text = stringResource(R.string.see_more),
                             modifier = Modifier.fillMaxWidth(),
@@ -84,8 +81,8 @@ fun productListScreen(
 
 @Preview
 @Composable
-private fun productListScreenPreview() {
-    productListScreen(
+private fun ProductListScreenPreview() {
+    ProductListScreen(
         products = Products(ProductFixture.productList),
     )
 }
