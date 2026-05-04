@@ -8,8 +8,7 @@ class ShoppingCartPageStateHolder(
     override val pageSize: Int = 5
 
     override fun getPageRange(): IntRange {
-        val exclusiveEndPage = currentPage + 1
-        return currentPage..exclusiveEndPage
+        return currentPage..getExclusiveEndPage()
     }
 
     fun beforePage() {

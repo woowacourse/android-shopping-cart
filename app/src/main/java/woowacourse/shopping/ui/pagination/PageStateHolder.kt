@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.pagination
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlin.math.max
 import kotlin.math.min
@@ -27,7 +28,7 @@ abstract class PageStateHolder<T : Any>(
     var currentPage: Int by mutableIntStateOf(initialPage)
         private set
 
-    private var loadedItems: MutableList<T> = items.toMutableList()
+    private var loadedItems: List<T> by mutableStateOf(items.toList())
 
     protected abstract fun getPageRange(): IntRange
 
@@ -39,10 +40,29 @@ abstract class PageStateHolder<T : Any>(
         )
     }
 
+    fun updateItems(items: List<T>) {
+        loadedItems = items.toList()
+        syncCurrentPageWithItems()
+    }
+
+    private fun syncCurrentPageWithItems() {
+        if (loadedItems.isEmpty()) {
+            currentPage = initialPage
+            return
+        }
+
+        val lastPage = pageCount - 1
+        if (currentPage > lastPage) {
+            currentPage = lastPage
+        }
+    }
+
     protected fun isInPageRange(page: Int): Boolean = page in (initialPage..<pageCount)
 
     protected fun updateCurrentPage(page: Int) {
         if (pageCount == 0) return
         currentPage = page.coerceIn(initialPage..<pageCount)
     }
+
+    protected fun getExclusiveEndPage(): Int = currentPage + 1
 }

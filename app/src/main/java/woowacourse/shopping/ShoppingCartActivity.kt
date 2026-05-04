@@ -35,7 +35,7 @@ class ShoppingCartActivity : ComponentActivity() {
                     onBackClick = this::finish,
                     onRemoveShoppingItemClick = { shoppingCartItem ->
                         shoppingCartRepository.remove(shoppingCartItem)
-                        shoppingCartItems = shoppingCartRepository.getShoppingItems()
+                        shoppingCartPageStateHolder.updateItems(shoppingCartRepository.getShoppingItems())
                     },
                 ) {
                     PageNavigation(
