@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart.screen
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -15,10 +14,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.domain.CART_PAGE_SIZE
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.cart.component.cartItem
 import woowacourse.shopping.ui.cart.component.cartTopAppBar
@@ -29,18 +26,24 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun cartScreen(
     cartProducts: CartRepository,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current as? Activity
     var currentPageIndex by rememberSaveable { mutableStateOf(0) }
-    var lastPageIndex = if (cartProducts.getCartProducts()
-            .isEmpty()
-    ) 0 else (cartProducts.getCartProducts().size - 1) / CART_PAGE_SIZE
+    var lastPageIndex =
+        if (cartProducts
+                .getCartProducts()
+                .isEmpty()
+        ) {
+            0
+        } else {
+            (cartProducts.getCartProducts().size - 1) / CART_PAGE_SIZE
+        }
 
     Scaffold(
         topBar = {
             cartTopAppBar(
-                onClick = { context?.finish() },
+                onClick = { onClose },
             )
         },
         containerColor = Color.White,
@@ -85,6 +88,7 @@ fun cartScreen(
 @Composable
 private fun cartScreenPreview() {
     cartScreen(
-        cartProducts = CartRepository
+        cartProducts = CartRepository,
+        onClose = {},
     )
 }
