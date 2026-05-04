@@ -9,7 +9,7 @@ data class CartItems(
     val items: List<CartItem>
         get() = safelist
 
-    fun add(newItem: CartItem): CartItems {
+    fun addOrMerge(newItem: CartItem): CartItems {
         val existingItem = _items.find { it.product.id == newItem.product.id }
 
         val newItems =

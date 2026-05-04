@@ -30,8 +30,8 @@ class CartItemsTest {
     fun `이미 담긴 상품을 장바구니에 추가하면 신규 항목이 추가되지 않는다`() {
         val cartItems =
             CartItems()
-                .add(CartItem(product1, Quantity(1)))
-                .add(CartItem(product1, Quantity(1)))
+                .addOrMerge(CartItem(product1, Quantity(1)))
+                .addOrMerge(CartItem(product1, Quantity(1)))
 
         assertEquals(1, cartItems.items.size)
     }
