@@ -34,6 +34,7 @@ class CartItemsTest {
                 .addOrMerge(CartItem(product1, Quantity(1)))
 
         assertEquals(1, cartItems.items.size)
+        assertEquals(2, cartItems.items[0].quantity.value)
     }
 
     @Test
