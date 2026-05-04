@@ -28,7 +28,7 @@ import woowacourse.shopping.feature.productDetail.model.ProductInfo
 
 @Composable
 fun ProductDetailScreen(
-    productInfo: ProductInfo,
+    productInfo: ProductInfo?,
     onCloseClick: () -> Unit,
     onAddCartClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -42,7 +42,7 @@ fun ProductDetailScreen(
         ProductDetailTopAppBar(onClick = onCloseClick)
 
         AppImage(
-            imageUrl = productInfo.productImageUrl,
+            imageUrl = productInfo?.productImageUrl ?: "",
             modifier =
                 Modifier
                     .fillMaxWidth()
@@ -52,7 +52,7 @@ fun ProductDetailScreen(
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = productInfo.productName,
+            text = productInfo?.productName ?: "",
             color = Color.Black,
             fontSize = 24.sp,
             fontWeight = FontWeight.W700,
@@ -89,7 +89,7 @@ fun ProductDetailScreen(
             )
 
             Text(
-                text = productInfo.price,
+                text = productInfo?.price ?: "",
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W400,
@@ -108,6 +108,16 @@ fun ProductDetailScreen(
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productInfo = ProductInfo.PREVIEW,
+        onCloseClick = {},
+        onAddCartClick = {},
+    )
+}
+
+@Preview
+@Composable
+private fun ProductDetailScreenLoadingPreview() {
+    ProductDetailScreen(
+        productInfo = null,
         onCloseClick = {},
         onAddCartClick = {},
     )

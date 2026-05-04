@@ -17,11 +17,15 @@ class ProductDetailStateHolder(
     private val cartRepository: CartRepository,
     productId: String,
 ) {
-    private val product: Product = productRepository.getProduct(productId)
+    private val product: Product? = productRepository.getProduct(productId)
 
-    val productInfo: ProductInfo = product.toUiModel()
+    val productInfo: ProductInfo? = product?.toUiModel()
 
-    fun addToCart() = cartRepository.addCartItem(CartItem(product, Quantity(1)))
+    fun addToCart() {
+        product?.let {
+            cartRepository.addCartItem(CartItem(it, Quantity(1)))
+        }
+    }
 }
 
 @Composable

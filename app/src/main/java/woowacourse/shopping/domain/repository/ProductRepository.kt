@@ -11,5 +11,5 @@ interface ProductRepository {
 
     fun getProductCount(): Int
 
-    fun getProduct(id: String): Product
+    fun getProduct(id: String): Product?
 }
