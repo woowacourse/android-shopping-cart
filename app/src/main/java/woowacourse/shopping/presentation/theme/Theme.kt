@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.theme
+package woowacourse.shopping.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -34,7 +34,7 @@ private val LightColorScheme =
     )
 
 @Composable
-fun AndroidshoppingTheme(
+fun androidshoppingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,

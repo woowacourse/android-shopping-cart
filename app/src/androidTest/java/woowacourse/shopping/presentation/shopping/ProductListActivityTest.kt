@@ -1,0 +1,74 @@
+package woowacourse.shopping.presentation.shopping
+
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.rule.IntentsRule
+import org.junit.Rule
+import org.junit.Test
+import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.navigation.IntentKeys
+import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import kotlin.uuid.ExperimentalUuidApi
+
+class ProductListActivityTest {
+    @get:Rule
+    val intentsRule = IntentsRule()
+
+    @get:Rule
+    val composeRule = createAndroidComposeRule<ProductListActivity>()
+
+    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
+    @Test
+    fun openProductDetailWhenProductClicked() {
+        val product = ProductFixture.productList.first()
+
+        composeRule
+            .onNodeWithText(product.productName)
+            .performClick()
+
+        Intents.intended(IntentMatchers.hasComponent(ProductDetailActivity::class.java.name))
+        Intents.intended(
+            IntentMatchers.hasExtra(
+                IntentKeys.PRODUCT_ID,
+                product.productId.toString(),
+            ),
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
+    @Test
+    fun openCartWhenCartIconClicked() {
+        composeRule
+            .onNodeWithContentDescription("shoppingCart")
+            .performClick()
+
+        Intents.intended(IntentMatchers.hasComponent(CartActivity::class.java.name))
+    }
+
+    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
+    @Test
+    fun returnToProductListWhenLeftArrowClickedInCart() {
+        composeRule
+            .onNodeWithContentDescription("shoppingCart")
+            .performClick()
+
+        composeRule
+            .onNodeWithContentDescription("leftArrowIcon")
+            .assertIsDisplayed()
+
+        composeRule
+            .onNodeWithContentDescription("leftArrowIcon")
+            .performClick()
+
+        composeRule
+            .onNodeWithText("Shopping")
+            .assertIsDisplayed()
+    }
+}
