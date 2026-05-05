@@ -44,8 +44,8 @@ import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKG
 @Composable
 fun ProductDetailScreen(
     product: Product,
+    onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onAddToCartClick: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
 
@@ -85,8 +85,8 @@ fun ProductDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductDetailTopAppBar(
-    modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -116,10 +116,10 @@ private fun ProductDetailTopAppBar(
 
 @Composable
 private fun ProductDetailContent(
-    modifier: Modifier = Modifier,
     imageUrl: String,
     productName: String,
     price: Int,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -148,8 +148,8 @@ private fun ProductDetailContent(
 
 @Composable
 private fun ProductImageSection(
-    modifier: Modifier = Modifier,
     imageUrl: String,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier,
@@ -208,8 +208,8 @@ private fun ProductPriceSection(
 
 @Composable
 private fun ProductImage(
-    modifier: Modifier = Modifier,
     imageUrl: String,
+    modifier: Modifier = Modifier,
 ) {
     AsyncImage(
         modifier = modifier,
@@ -220,8 +220,8 @@ private fun ProductImage(
 
 @Composable
 private fun CardAddButton(
-    modifier: Modifier = Modifier,
     onAddToCartClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Button(
         modifier = modifier,
@@ -246,5 +246,6 @@ private fun CardAddButton(
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         product = MockData.productInfo,
+        onAddToCartClick = {},
     )
 }

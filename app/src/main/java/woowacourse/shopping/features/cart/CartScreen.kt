@@ -113,8 +113,8 @@ fun CartScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CartTopAppBar(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -149,9 +149,9 @@ private fun CartTopAppBar(
 
 @Composable
 private fun CartItemCard(
-    modifier: Modifier = Modifier,
     cartItem: CartItem,
     onRemoveClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
@@ -261,8 +261,8 @@ private fun PageNavigator(
 
 @Composable
 private fun ProductImage(
-    modifier: Modifier = Modifier,
     imageUrl: String,
+    modifier: Modifier = Modifier,
 ) {
     AsyncImage(
         model = imageUrl,

@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
@@ -19,7 +18,6 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val scope = rememberCoroutineScope()
                 val stateHolder = retainProductListStateHolder()
                 ProductListScreen(
                     productList = stateHolder.products,

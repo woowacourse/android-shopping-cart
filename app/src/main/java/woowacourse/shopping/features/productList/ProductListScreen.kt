@@ -40,18 +40,15 @@ import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     productList: List<Product>,
     isLastPage: Boolean,
+    onCartClick: () -> Unit,
+    loadProducts: () -> Unit,
+    onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    onCartClick: () -> Unit = {},
-    loadProducts: () -> Unit = {},
-    onProductClick: (Product) -> Unit = {},
 ) {
-    println("[123123] ${productList.size}")
-    println("[123123] $isLastPage")
     Column(
         modifier = modifier,
     ) {
@@ -81,8 +78,8 @@ fun ProductListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductListTopAppBar(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
 ) {
     TopAppBar(
         modifier = modifier,
@@ -118,9 +115,9 @@ private fun ProductListTopAppBar(
 private fun ProductCardGrid(
     products: List<Product>,
     isLastPage: Boolean,
+    onProductClick: (Product) -> Unit,
+    onMoreClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onProductClick: (Product) -> Unit = {},
-    onMoreClick: () -> Unit = {},
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -146,6 +143,7 @@ private fun ProductCardGrid(
                 span = { GridItemSpan(2) },
             ) {
                 MoreButton(
+                    onClick = { onMoreClick() },
                     modifier =
                         Modifier
                             .fillMaxWidth()
@@ -154,9 +152,7 @@ private fun ProductCardGrid(
                                 color = Color(0xFF555555),
                                 shape = RoundedCornerShape(size = 45.dp),
                             ),
-                ) {
-                    onMoreClick()
-                }
+                )
             }
         }
     }
@@ -221,8 +217,8 @@ private fun ProductInfoColumn(
 
 @Composable
 private fun MoreButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
 ) {
     TextButton(
         modifier = modifier,
@@ -238,5 +234,8 @@ fun ProductListScreenPreview() {
     ProductListScreen(
         productList = MockData.products,
         isLastPage = false,
+        onCartClick = {},
+        loadProducts = {},
+        onProductClick = {},
     )
 }
