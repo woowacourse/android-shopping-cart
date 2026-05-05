@@ -62,6 +62,3 @@ class ProductDetailActivity : ComponentActivity() {
             }
     }
 }
-
-@OptIn(ExperimentalUuidApi::class)
-private fun String.toUuidOrNull(): Uuid? = runCatching { Uuid.parse(this) }.getOrNull()
