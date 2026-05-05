@@ -4,9 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.di.RepositoryProvider
-import woowacourse.shopping.di.RepositoryProvider.cartRepository
-import woowacourse.shopping.di.RepositoryProvider.productRepository
 import woowacourse.shopping.domain.model.AddItemResult
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.common.model.ProductUiModel
@@ -17,6 +16,8 @@ class DetailStateHolder(
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
 ) {
+    private var loadedProduct: Product? = null
+
     var product by mutableStateOf(
         ProductUiModel(
             id = "",
@@ -27,11 +28,16 @@ class DetailStateHolder(
     )
 
     suspend fun loadProduct() {
-        product = productRepository.getProductById(id).toUiModel()
+        val loaded = productRepository.getProductById(id)
+        loadedProduct = loaded
+        product = loaded.toUiModel()
     }
 
     suspend fun addToCart(): AddItemResult {
-        val product = productRepository.getProductById(id)
-        return cartRepository.addItem(product)
+        val target =
+            loadedProduct ?: productRepository.getProductById(id).also {
+                loadedProduct = it
+            }
+        return cartRepository.addItem(target)
     }
 }
