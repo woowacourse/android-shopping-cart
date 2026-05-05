@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
+        android:name=".ShoppingApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +16,17 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ShoppingCartActivity"
+            android:exported="false"
+            android:label="@string/title_activity_shopping_cart"
+            android:theme="@style/Theme.Shopping" />
+        <activity
+            android:name=".DetailProductActivity"
+            android:exported="false"
+            android:label="@string/title_activity_detail_product"
+            android:theme="@style/Theme.Shopping" />
+        <activity
+            android:name=".ProductListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
