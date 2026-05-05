@@ -1,12 +1,11 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
 
 object CartRepository {
     private var cart: Cart = Cart()
-
-    fun getCart(): Cart = cart
 
     fun addItem(product: Product): Boolean {
         try {
@@ -20,4 +19,15 @@ object CartRepository {
     fun deleteItem(id: String) {
         cart = cart.deleteItem(id)
     }
+
+    fun getCartPage(
+        page: Int,
+        pageSize: Int,
+    ): CartPage =
+        cart.getPage(
+            page = page,
+            pageSize = pageSize,
+        )
+
+    fun getCartSize(): Int = cart.getTotalSize()
 }

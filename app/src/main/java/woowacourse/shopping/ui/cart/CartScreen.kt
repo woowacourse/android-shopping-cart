@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -38,20 +37,20 @@ import woowacourse.shopping.ui.model.ProductUiModel
 @Composable
 fun CartScreen(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
     var savedPage by rememberSaveable {
         mutableIntStateOf(0)
     }
-    val state = remember {
-        CartStateHolder(
-            initialPage = savedPage,
-            onPageChanged = { page ->
-                savedPage = page
-            },
-        )
-    }
+    val state =
+        remember {
+            CartStateHolder(
+                initialPage = savedPage,
+                onPageChanged = { page ->
+                    savedPage = page
+                },
+            )
+        }
 
     Scaffold(
         topBar = {

@@ -12,7 +12,6 @@ class CartStateHolder(
     initialPage: Int = 0,
     private val onPageChanged: (Int) -> Unit = {},
     private val cartRepository: CartRepository = CartRepository,
-    private val cartPageLoader: CartPageLoader = CartPageLoader(),
 ) {
     var page by mutableIntStateOf(initialPage)
     var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())
@@ -22,7 +21,7 @@ class CartStateHolder(
         getCartItems()
     }
 
-    fun getTotalCartSize(): Int = cartRepository.getCart().items.size
+    fun getTotalCartSize(): Int = cartRepository.getCartSize()
 
     fun removeFromCart(productId: String) {
         cartRepository.deleteItem(productId)
@@ -40,13 +39,13 @@ class CartStateHolder(
     }
 
     private fun getCartItems() {
-        val items = cartRepository.getCart().items.map { it.toUiModel() }
-        val cartPage = cartPageLoader.getCartPage(
-            page = page,
-            items = items
-        )
+        val cartPage =
+            cartRepository.getCartPage(
+                page = page,
+                pageSize = 5,
+            )
 
-        currentCartItems = cartPage.items
+        currentCartItems = cartPage.items.map { it.toUiModel() }
         isCanMoveNext = cartPage.isCanMoveNext
         page = cartPage.page
 
