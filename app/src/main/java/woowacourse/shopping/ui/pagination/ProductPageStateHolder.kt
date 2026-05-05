@@ -14,4 +14,8 @@ class ProductPageStateHolder(
     fun nextPage() {
         updateCurrentPage(currentPage + 1)
     }
+
+    fun restoreCurrentPage(page: Int) {
+        updateCurrentPage(page)
+    }
 }

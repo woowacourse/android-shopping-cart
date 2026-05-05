@@ -22,4 +22,8 @@ class ShoppingCartPageStateHolder(
     fun canMoveToPreviousPage(): Boolean = isInPageRange(currentPage - 1)
 
     fun canMoveToNextPage(): Boolean = isInPageRange(currentPage + 1)
+
+    fun restoreCurrentPage(page: Int) {
+        updateCurrentPage(page)
+    }
 }
