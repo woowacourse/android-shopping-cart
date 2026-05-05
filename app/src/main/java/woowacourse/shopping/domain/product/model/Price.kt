@@ -5,6 +5,10 @@ value class Price(
     val value: Int,
 ) {
     init {
-        require(value >= 0) { "가격이 음수입니다." }
+        require(isValueValid(value)) { "가격이 음수입니다." }
+    }
+
+    companion object {
+        fun isValueValid(value: Int) = value >= 0
     }
 }
