@@ -16,17 +16,22 @@ class CartState {
     var currentPageIndex by mutableStateOf(0)
         private set
 
+    fun lastPageIndex(cartItems: List<ProductAndCount>): Int =
+        if (cartItems.isEmpty()) 0 else (cartItems.size - 1) / CART_PAGE_SIZE
+
     fun visibleProducts(cartItems: List<ProductAndCount>): List<ProductAndCount> =
         cartItems
             .toPage(PageRequest(index = currentPageIndex, size = CART_PAGE_SIZE))
             .items
-    fun increase() {
-        currentPageIndex++
+
+    fun canNavigateToRight(cartItems: List<ProductAndCount>): Boolean =
+        currentPageIndex < lastPageIndex(cartItems)
+
+    fun moveToNextPage(cartItems:List<ProductAndCount>){
+        if(canNavigateToRight(cartItems)) currentPageIndex++
     }
 
-    fun decrease() {
-        currentPageIndex--
-    }
+    fun canNavigateToLeft(): Boolean = currentPageIndex > 0
 
     fun adjustCurrentPage(updatedLastPageIndex: Int) {
         if (currentPageIndex > updatedLastPageIndex) {

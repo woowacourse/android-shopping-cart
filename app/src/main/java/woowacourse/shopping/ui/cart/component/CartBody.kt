@@ -22,10 +22,6 @@ fun CartBody(
     state: CartState,
     innerPadding: PaddingValues,
     cartItems: List<ProductAndCount>,
-    currentPageIndex: Int,
-    lastPageIndex: Int,
-    onMoveToPreviousPage: () -> Unit,
-    onMoveToNextPage: () -> Unit,
     onDeleteProduct: (Uuid) -> Unit,
     modifier: Modifier,
 ) {
@@ -41,13 +37,13 @@ fun CartBody(
                     )
                 }
             }
-            if (cartItems.size > 5) {
+            if (cartItems.size > CART_PAGE_SIZE) {
                 Pagination(
-                    pageMoveToLeft = { onMoveToPreviousPage() },
-                    pageMoveToLeftButtonEnabled = currentPageIndex > 0,
-                    currentPageIndex = currentPageIndex,
-                    pageMoveToRight = { onMoveToNextPage() },
-                    pageMoveToRightButtonEnabled = currentPageIndex < lastPageIndex,
+                    pageMoveToLeft = { state.canNavigateToLeft() },
+                    pageMoveToLeftButtonEnabled = state.canNavigateToLeft(),
+                    currentPageIndex = state.currentPageIndex,
+                    pageMoveToRight = { state.canNavigateToRight(cartItems) },
+                    pageMoveToRightButtonEnabled = state.currentPageIndex < state.lastPageIndex(cartItems),
                 )
             }
         }

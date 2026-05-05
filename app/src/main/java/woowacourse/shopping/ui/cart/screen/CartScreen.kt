@@ -23,9 +23,6 @@ fun CartScreen(
 ) {
     val state = rememberCartState()
     val cartItems = cartProducts.getCartProducts()
-    val lastPageIndex =
-        if (cartItems.isEmpty()) 0 else (cartItems.size - 1) / CART_PAGE_SIZE
-
     Scaffold(
         topBar = {
             CartTopAppBar(
@@ -38,17 +35,11 @@ fun CartScreen(
             state = state,
             innerPadding = innerPadding,
             cartItems = cartItems,
-            currentPageIndex = state.currentPageIndex,
-            lastPageIndex = lastPageIndex,
-            onMoveToPreviousPage = { if (state.currentPageIndex > 0) state.decrease() },
-            onMoveToNextPage = { if (state.currentPageIndex < lastPageIndex) state.increase() },
             onDeleteProduct = { id ->
                 cartProducts.deleteProduct(id)
-
                 val updatedProducts = cartProducts.getCartProducts()
                 val updatedLastPageIndex =
                     if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-
                 state.adjustCurrentPage(
                     updatedLastPageIndex = updatedLastPageIndex,
                 )
