@@ -40,6 +40,10 @@ class CartStateHolder(
         isLoading = true
 
         cartRepository.deleteItem(id)
+
+        if (curPage > 1 && cartRepository.isLastPage(curPage - 1)) {
+            curPage--
+        }
         updateCartItems()
 
         isLoading = false
@@ -49,8 +53,9 @@ class CartStateHolder(
         if (curPage == 1 || isLoading) return
         isLoading = true
 
-        cartItems = cartRepository.getCartItemByPage(--curPage)
-        isLast = cartRepository.isLastPage(curPage)
+        curPage--
+        updateCartItems()
+
         isLoading = false
     }
 
@@ -58,8 +63,8 @@ class CartStateHolder(
         if (isLast || isLoading) return
         isLoading = true
 
-        cartItems = cartRepository.getCartItemByPage(++curPage)
-        isLast = cartRepository.isLastPage(curPage)
+        curPage++
+        updateCartItems()
 
         isLoading = false
     }
@@ -67,10 +72,6 @@ class CartStateHolder(
     private suspend fun updateCartItems() {
         cartItems = cartRepository.getCartItemByPage(curPage)
         isLast = cartRepository.isLastPage(curPage)
-
-        if (cartItems.isEmpty()) {
-            getPrevPage()
-        }
     }
 
     companion object {
