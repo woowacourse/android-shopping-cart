@@ -32,7 +32,7 @@ class ProductDetailActivity : ComponentActivity() {
     companion object {
         private const val PRODUCT_ID = "productId"
 
-        fun newIntent(
+        fun getNewIntent(
             context: Context,
             productId: String,
         ): Intent {
