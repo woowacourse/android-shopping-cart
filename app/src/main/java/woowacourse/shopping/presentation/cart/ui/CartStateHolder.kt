@@ -12,9 +12,10 @@ import woowacourse.shopping.presentation.cart.model.toUiModel
 import kotlin.math.min
 
 class CartStateHolder(
+    initialPage: Int = 0,
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
 ) {
-    var page by mutableIntStateOf(0)
+    var page by mutableIntStateOf(initialPage)
     var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())
     var isCanMoveNext by mutableStateOf(false)
     var totalCartSize by mutableIntStateOf(0)

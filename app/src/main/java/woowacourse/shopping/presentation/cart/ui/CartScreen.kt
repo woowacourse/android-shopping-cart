@@ -19,8 +19,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -41,12 +44,17 @@ import woowacourse.shopping.presentation.common.model.ProductUiModel
 @Composable
 fun CartScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
-    val state = remember { CartStateHolder() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val page = rememberSaveable { mutableStateOf(0) }
+    val state = remember { CartStateHolder(initialPage = page.value) }
 
     LaunchedEffect(Unit) {
         state.loadCartItems()
+    }
+
+    LaunchedEffect(state.page) {
+        page.value = state.page
     }
 
     Scaffold(
