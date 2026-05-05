@@ -33,7 +33,6 @@ import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.ProductAndCount
 import woowacourse.shopping.ui.theme.topAppBarColor
-import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -100,11 +99,7 @@ fun CartItem(
                 Box {
                     Text(
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        text =
-                            stringResource(
-                                R.string.cart_item_total_price,
-                                intFormatter(productAndCount.totalPrice()),
-                            ),
+                        text = stringResource(R.string.cart_item_total_price, productAndCount.totalPrice()),
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,
                         color = topAppBarColor,

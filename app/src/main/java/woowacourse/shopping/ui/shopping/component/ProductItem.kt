@@ -25,7 +25,6 @@ import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.theme.topAppBarColor
-import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -65,7 +64,7 @@ fun ProductItem(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = stringResource(R.string.price_format, intFormatter(product.price.value)),
+                    text = stringResource(R.string.price_format, product.price.value),
                     color = topAppBarColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W400,

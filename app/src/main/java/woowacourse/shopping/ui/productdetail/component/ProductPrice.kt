@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.util.intFormatter
 
 @Composable
 fun ProductPrice(
@@ -35,7 +34,7 @@ fun ProductPrice(
             color = Color.Black,
         )
         Text(
-            text = stringResource(R.string.price_format, intFormatter(price)),
+            text = stringResource(R.string.price_format, price),
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
             color = Color.Black,
