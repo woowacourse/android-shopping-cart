@@ -10,9 +10,11 @@ import woowacourse.shopping.ui.model.toUiModel
 import kotlin.math.min
 
 class CartStateHolder(
+    initialPage: Int = 0,
+    private val onPageChanged: (Int) -> Unit = {},
     private val cartRepository: CartRepository = CartRepository,
 ) {
-    var page by mutableIntStateOf(0)
+    var page by mutableIntStateOf(initialPage)
     var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())
     var isCanMoveNext by mutableStateOf(false)
 
@@ -46,6 +48,7 @@ class CartStateHolder(
         val toIndex = min(fromIndex + pageSize, items.size)
         currentCartItems = items.subList(fromIndex, toIndex)
         isCanMoveNext = toIndex < items.size
+        onPageChanged(page)
     }
 
     fun nextPage() {

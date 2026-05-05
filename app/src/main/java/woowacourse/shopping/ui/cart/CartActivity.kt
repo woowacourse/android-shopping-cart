@@ -18,7 +18,9 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidshoppingTheme {
-                CartScreen()
+                CartScreen(
+                    onClick = { finish() },
+                )
             }
         }
     }

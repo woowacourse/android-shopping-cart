@@ -18,7 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,9 +36,22 @@ import woowacourse.shopping.ui.model.CartItemUiModel
 import woowacourse.shopping.ui.model.ProductUiModel
 
 @Composable
-fun CartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val activity = LocalActivity.current
-    val state = remember { CartStateHolder() }
+    var savedPage by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    val state = remember {
+        CartStateHolder(
+            initialPage = savedPage,
+            onPageChanged = { page ->
+                savedPage = page
+            },
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -47,9 +64,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
                         modifier =
                             Modifier
                                 .size(16.dp)
-                                .clickable {
-                                    activity?.finish()
-                                },
+                                .clickable { onClick() },
                     )
                     Spacer(modifier = Modifier.width(21.dp))
                     Text(
@@ -118,7 +133,9 @@ private fun CartContent(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen()
+    CartScreen(
+        onClick = {},
+    )
 }
 
 @Preview(showBackground = true)
