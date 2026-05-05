@@ -49,7 +49,7 @@ fun CartScreen(
                     items(cart.cartItems) { cartItem ->
                         CartProductItem(
                             cartItem = cartItem,
-                            onDelete = { id -> onDelete(id) },
+                            onDelete = onDelete,
                         )
                     }
                 }
