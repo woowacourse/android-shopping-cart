@@ -19,18 +19,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ui.component.image.ShoppingImage
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
@@ -62,14 +61,13 @@ fun ProductDetailScreen(
                 .padding(innerPadding)
                 .fillMaxWidth(),
         ) {
-            AsyncImage(
-                model = product.imageUrl,
+            ShoppingImage(
+                imageUrl = product.imageUrl,
                 contentDescription = "${product.name} 이미지",
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                placeholder = painterResource(R.drawable.ic_progress_circle),
-                error = painterResource(R.drawable.ic_error),
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -24,9 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ui.component.image.ShoppingImage
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
@@ -71,15 +71,13 @@ fun CartItemCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
-            AsyncImage(
-                model = imageUrl,
+            ShoppingImage(
+                imageUrl = imageUrl,
                 contentDescription = "$name 상품 이미지",
                 modifier = Modifier
                     .width(136.dp)
                     .height(72.dp),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.ic_progress_circle),
-                error = painterResource(R.drawable.ic_error),
             )
 
             Text(
