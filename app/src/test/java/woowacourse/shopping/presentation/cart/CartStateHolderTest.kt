@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.cart
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.model.cart.Cart
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -10,7 +11,7 @@ class CartStateHolderTest {
     @Test
     fun `초기화 시 첫 페이지 CartItem을 보여준다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -26,7 +27,7 @@ class CartStateHolderTest {
     @Test
     fun `초기화 시 현재 페이지는 1이다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -42,7 +43,7 @@ class CartStateHolderTest {
     @Test
     fun `상품 개수가 pageSize보다 많으면 hasMoreItems는 true이다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -58,7 +59,7 @@ class CartStateHolderTest {
     @Test
     fun `상품 개수가 pageSize 이하이면 hasMoreItems는 false이다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -74,7 +75,7 @@ class CartStateHolderTest {
     @Test
     fun `첫 페이지에서는 hasPreviousPage가 false이다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -90,7 +91,7 @@ class CartStateHolderTest {
     @Test
     fun `다음 페이지가 있으면 hasNextPage가 true이다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -106,7 +107,7 @@ class CartStateHolderTest {
     @Test
     fun `goToNextPage 호출 시 currentPage가 증가하고 다음 페이지 CartItem을 보여준다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -125,7 +126,7 @@ class CartStateHolderTest {
     @Test
     fun `goToPreviousPage 호출 시 currentPage가 감소하고 이전 페이지 CartItem을 보여준다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -144,7 +145,7 @@ class CartStateHolderTest {
     @Test
     fun `상품 삭제 시 Cart에서 해당 상품이 삭제된다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems),
             )
         val stateHolder =
@@ -162,7 +163,7 @@ class CartStateHolderTest {
     @Test
     fun `마지막 페이지의 유일한 상품을 삭제하면 이전 페이지로 보정한다`() {
         val repository =
-            FakeCartRepository(
+            CartRepositoryImpl(
                 cart = Cart(cartItems = CartFixture.cartItems.take(3)),
             )
         val stateHolder =
