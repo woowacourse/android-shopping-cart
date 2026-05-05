@@ -9,18 +9,10 @@ import woowacourse.shopping.domain.ProductAndCount
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-object CartRepository {
-    private var cart by mutableStateOf(Cart())
-
-    fun getCartProducts(): List<ProductAndCount> = cart.productAndCounts
-
+interface CartRepository {
+    fun getCartProducts(): List<ProductAndCount>
     @OptIn(ExperimentalUuidApi::class)
-    fun addProduct(product: Product) {
-        cart = cart.addProductToCart(product)
-    }
-
+    fun addProduct(product: Product)
     @OptIn(ExperimentalUuidApi::class)
-    fun deleteProduct(productId: Uuid) {
-        cart = cart.deleteProductFromCart(productId)
-    }
+    fun deleteProduct(productId: Uuid)
 }

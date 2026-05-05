@@ -19,7 +19,7 @@ class CartActivity : ComponentActivity() {
         setContent {
             AndroidShoppingTheme {
                 CartScreen(
-                    cartProducts = CartRepository,
+                    cartProducts = AppContainer.cartRepository,
                     onClose = { finish() },
                 )
             }

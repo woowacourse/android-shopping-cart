@@ -42,6 +42,7 @@ class ProductDetailActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 ProductDetailScreen(
                     product = product,
+                    onAddToCart = { AppContainer.cartRepository.addProduct(it) },
                     onClose = { finish() },
                 )
             }

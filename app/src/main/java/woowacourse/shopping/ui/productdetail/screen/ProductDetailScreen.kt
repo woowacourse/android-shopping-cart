@@ -22,6 +22,7 @@ import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.InMemoryCartRepository
 import woowacourse.shopping.ui.productdetail.component.MintButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetail
 import woowacourse.shopping.ui.productdetail.component.ProductDetailTopAppBar
@@ -31,6 +32,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ProductDetailScreen(
     product: Product?,
+    onAddToCart:(Product) -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +55,7 @@ fun ProductDetailScreen(
                 ProductDetail(product)
                 MintButton(
                     onClick = {
-                        CartRepository.addProduct(product)
+                        onAddToCart(product)
                         scope.launch {
                             snackbarHostState.showSnackbar(addToCartSnackbarText)
                         }
@@ -77,6 +79,7 @@ private fun ProductDetailScreenPreview() {
 
     ProductDetailScreen(
         product = ProductFixture.productList(packageName).last(),
+        onAddToCart = {},
         onClose = {},
     )
 }
