@@ -5,15 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.di.RepositoryProvider.productRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.common.model.toUiModel
 
 class ShoppingStateHolder(
-    private val scope: CoroutineScope,
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
     private val getCurrentProducts: () -> List<ProductUiModel>,
     private val onProductsChanged: (List<ProductUiModel>) -> Unit,
@@ -25,26 +23,25 @@ class ShoppingStateHolder(
 
     init {
         offset = getCurrentProducts().size
-        if (offset == 0) {
-            loadMore()
-        }
     }
 
-    fun loadMore() {
+    suspend fun initialize() {
+        if (offset == 0) loadMore()
+    }
+
+    suspend fun loadMore() {
         if (isLoading || !canLoadMore) return
         isLoading = true
-        scope.launch {
-            try {
-                val loadData = getProductData(offset, pageSize)
-                val currentProducts = getCurrentProducts().plus(loadData)
-                onProductsChanged(currentProducts)
-                offset += loadData.size
-                canLoadMore = loadData.size == pageSize
-            } catch (e: Exception) {
-                throw e
-            } finally {
-                isLoading = false
-            }
+        try {
+            val loadData = getProductData(offset, pageSize)
+            val currentProducts = getCurrentProducts().plus(loadData)
+            onProductsChanged(currentProducts)
+            offset += loadData.size
+            canLoadMore = loadData.size == pageSize
+        } catch (e: Exception) {
+            throw e
+        } finally {
+            isLoading = false
         }
     }
 

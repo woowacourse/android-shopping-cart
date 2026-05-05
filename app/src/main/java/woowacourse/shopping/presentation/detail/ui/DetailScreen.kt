@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.common.ShoppingAppBar
@@ -50,14 +52,15 @@ fun DetailScreen(
     val scope = rememberCoroutineScope()
     val state =
         remember {
-            DetailStateHolder(
-                scope = scope,
-                id = id,
-            )
+            DetailStateHolder(id = id)
         }
     val product = state.product
-
     val activity = LocalActivity.current
+
+    LaunchedEffect(Unit) {
+        state.loadProduct()
+    }
+
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -86,8 +89,9 @@ fun DetailScreen(
                         .height(48.dp)
                         .background(Green40)
                         .clickable {
-                            state.addToCart { onResult ->
-                                onNavigateToCart(onResult)
+                            scope.launch {
+                                val result = state.addToCart()
+                                onNavigateToCart(result)
                             }
                         },
                 contentAlignment = Alignment.Center,

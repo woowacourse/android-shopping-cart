@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
@@ -51,12 +53,14 @@ fun ShoppingScreen(
     val state =
         remember {
             ShoppingStateHolder(
-                scope = scope,
                 getCurrentProducts = { products },
                 onProductsChanged = { newList -> products = newList },
             )
         }
 
+    LaunchedEffect(Unit) {
+        state.initialize()
+    }
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -87,7 +91,11 @@ fun ShoppingScreen(
         ShoppingContents(
             products = products.toImmutableList(),
             modifier = Modifier.padding(innerPadding),
-            onLoad = { state.loadMore() },
+            onLoad = {
+                scope.launch {
+                    state.loadMore()
+                }
+            },
             isCanLoadMore = state.canLoadMore,
         )
     }
