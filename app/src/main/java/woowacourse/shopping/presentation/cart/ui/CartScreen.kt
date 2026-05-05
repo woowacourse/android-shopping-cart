@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -95,33 +97,39 @@ fun CartScreen(modifier: Modifier = Modifier) {
         },
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
-        CartContent(
-            onDeleteItem = {
-                scope.launch {
-                    val result = state.deleteItem(it)
-                    when (result) {
-                        is RemoveItemResult.Success -> {
-                            Toast
-                                .makeText(
-                                    context,
-                                    R.string.delete_item_success,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                        is RemoveItemResult.NotFoundItem -> {
-                            Toast
-                                .makeText(context, R.string.not_found_item, Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                }
-            },
-            cartItems = state.currentCartItems.toImmutableList(),
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-        )
+        ) {
+            if (state.isLoading) CircularProgressIndicator()
+            CartContent(
+                onDeleteItem = {
+                    scope.launch {
+                        val result = state.deleteItem(it)
+                        when (result) {
+                            is RemoveItemResult.Success -> {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        R.string.delete_item_success,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+
+                            is RemoveItemResult.NotFoundItem -> {
+                                Toast
+                                    .makeText(context, R.string.not_found_item, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                    }
+                },
+                cartItems = state.currentCartItems.toImmutableList(),
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 

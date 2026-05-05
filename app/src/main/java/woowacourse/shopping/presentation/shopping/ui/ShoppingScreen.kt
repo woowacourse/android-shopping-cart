@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.shopping.ui
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -88,16 +90,24 @@ fun ShoppingScreen(
         },
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
-        ShoppingContents(
-            products = products.toImmutableList(),
-            modifier = Modifier.padding(innerPadding),
-            onLoad = {
-                scope.launch {
-                    state.loadMore()
-                }
-            },
-            isCanLoadMore = state.canLoadMore,
-        )
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (state.isLoading) CircularProgressIndicator()
+            ShoppingContents(
+                products = products.toImmutableList(),
+                onLoad = {
+                    scope.launch {
+                        state.loadMore()
+                    }
+                },
+                isCanLoadMore = state.canLoadMore,
+            )
+        }
     }
 }
 
