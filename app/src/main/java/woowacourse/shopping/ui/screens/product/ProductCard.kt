@@ -19,13 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Price
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
 fun ProductCard(
     imageUrl: String,
     name: String,
-    price: Int,
+    price: Price,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -55,7 +56,7 @@ fun ProductCard(
 @Composable
 private fun ProductInfoText(
     name: String,
-    price: Int,
+    price: Price,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -88,7 +89,7 @@ private fun ProductCardPreview() {
             "https://cdn.eyesmag.com/content/uploads/posts/2024/10/23/shutterstock_250" +
                 "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
         name = "고양이",
-        price = 999999999,
+        price = Price(999999999),
         onClick = { },
     )
 }

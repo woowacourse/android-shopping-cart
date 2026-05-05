@@ -25,7 +25,7 @@ class CartItemTest {
                 quantity = 2,
             )
 
-        cartItem.totalPrice shouldEqual 20_000
+        cartItem.totalPrice shouldEqual Price(20_000)
     }
 
     @Test

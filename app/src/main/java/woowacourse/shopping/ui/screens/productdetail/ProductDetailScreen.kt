@@ -30,6 +30,7 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.data.source.ProductDataSourceImpl
+import woowacourse.shopping.domain.Price
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
@@ -95,7 +96,7 @@ fun ProductDetailScreen(
 @Composable
 private fun ProductInfoText(
     name: String,
-    price: Int,
+    price: Price,
     modifier: Modifier = Modifier,
 ) {
     Column(

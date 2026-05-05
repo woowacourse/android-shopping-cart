@@ -26,13 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Price
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
 fun CartItemCard(
     imageUrl: String,
     name: String,
-    price: Int,
+    price: Price,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -96,7 +97,7 @@ private fun CartItemCardPreview() {
     CartItemCard(
         imageUrl = "",
         name = "우주선",
-        price = 10_000_000,
+        price = Price(10_000_000),
         onDelete = { },
         modifier = Modifier.padding(5.dp),
     )

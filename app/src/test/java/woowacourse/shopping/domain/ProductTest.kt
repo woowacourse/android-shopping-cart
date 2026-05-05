@@ -11,7 +11,7 @@ class ProductTest {
             Product(
                 id = "1",
                 name = "product",
-                price = 10_000,
+                price = Price(10_000),
                 imageUrl = "",
             )
         }
@@ -23,19 +23,7 @@ class ProductTest {
             Product(
                 id = "1",
                 name = "       ",
-                price = 10_000,
-                imageUrl = "",
-            )
-        }
-    }
-
-    @Test
-    fun `상품의 가격이 0원 미만일 경우 예외가 발생한다`() {
-        assertThrows<IllegalArgumentException> {
-            Product(
-                id = "1",
-                name = "product",
-                price = -1,
+                price = Price(10_000),
                 imageUrl = "",
             )
         }
