@@ -2,6 +2,8 @@ package woowacourse.shopping.presentation.shopping.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -13,17 +15,15 @@ import woowacourse.shopping.presentation.common.model.toUiModel
 
 class ShoppingStateHolder(
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
-    private val getCurrentProducts: () -> List<ProductUiModel>,
-    private val onProductsChanged: (List<ProductUiModel>) -> Unit,
+    initialProducts: List<ProductUiModel> = emptyList(),
+    initialCanLoadMore: Boolean = true,
+    initialOffset: Int = 0,
 ) {
-    var canLoadMore by mutableStateOf(true)
+    var products by mutableStateOf(initialProducts)
+    var canLoadMore by mutableStateOf(initialCanLoadMore)
     var isLoading by mutableStateOf(false)
-    private var offset = 0
+    private var offset = initialOffset
     private val pageSize = 20
-
-    init {
-        offset = getCurrentProducts().size
-    }
 
     suspend fun initialize() {
         if (offset == 0) loadMore()
@@ -34,8 +34,7 @@ class ShoppingStateHolder(
         isLoading = true
         try {
             val loadData = getProductData(offset, pageSize)
-            val currentProducts = getCurrentProducts().plus(loadData)
-            onProductsChanged(currentProducts)
+            products = products.plus(loadData)
             offset += loadData.size
             canLoadMore = loadData.size == pageSize
         } catch (e: Exception) {
@@ -49,4 +48,26 @@ class ShoppingStateHolder(
         offset: Int,
         limit: Int,
     ): ImmutableList<ProductUiModel> = productRepository.getProducts(offset, limit).map { it.toUiModel() }.toImmutableList()
+
+    companion object {
+        fun Saver(productRepository: ProductRepository = RepositoryProvider.productRepository): Saver<ShoppingStateHolder, *> =
+            listSaver(
+                save = { holder ->
+                    listOf(
+                        holder.products,
+                        holder.offset,
+                        holder.canLoadMore,
+                    )
+                },
+                restore = { savedList ->
+                    @Suppress("UNCHECKED_CAST")
+                    ShoppingStateHolder(
+                        productRepository = productRepository,
+                        initialProducts = savedList[0] as List<ProductUiModel>,
+                        initialOffset = savedList[1] as Int,
+                        initialCanLoadMore = savedList[2] as Boolean,
+                    )
+                },
+            )
+    }
 }

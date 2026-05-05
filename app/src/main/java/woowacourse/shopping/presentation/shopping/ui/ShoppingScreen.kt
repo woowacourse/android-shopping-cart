@@ -23,8 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -40,6 +38,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ProductData.products
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.detail.DetailActivity
@@ -50,14 +49,9 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
-    var products by rememberSaveable { mutableStateOf(emptyList<ProductUiModel>()) }
-
     val state =
-        remember {
-            ShoppingStateHolder(
-                getCurrentProducts = { products },
-                onProductsChanged = { newList -> products = newList },
-            )
+        rememberSaveable(saver = ShoppingStateHolder.Saver()) {
+            ShoppingStateHolder()
         }
 
     LaunchedEffect(Unit) {
@@ -99,7 +93,7 @@ fun ShoppingScreen(
         ) {
             if (state.isLoading) CircularProgressIndicator()
             ShoppingContents(
-                products = products.toImmutableList(),
+                products = state.products.toImmutableList(),
                 onLoad = {
                     scope.launch {
                         state.loadMore()
