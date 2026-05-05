@@ -31,8 +31,8 @@
 ### 3차 리팩토링
 - [X] UI의 책임 명확화
 - [X] CartScreen 구성변경 대응 로직 추가
-- [ ] CartStateHolder 책임 분리
-- [ ] 내부 함수 캡슐화
+- [x] CartStateHolder 책임 분리
+- [x] 내부 함수 캡슐화
 - [ ] Cart 책임 확립
 
 ## 상품명(ProductName)

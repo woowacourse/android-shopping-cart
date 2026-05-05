@@ -7,18 +7,16 @@ import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.ui.model.CartItemUiModel
 import woowacourse.shopping.ui.model.toUiModel
-import kotlin.math.min
 
 class CartStateHolder(
     initialPage: Int = 0,
     private val onPageChanged: (Int) -> Unit = {},
     private val cartRepository: CartRepository = CartRepository,
+    private val cartPageLoader: CartPageLoader = CartPageLoader(),
 ) {
     var page by mutableIntStateOf(initialPage)
     var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())
     var isCanMoveNext by mutableStateOf(false)
-
-    private val pageSize = 5
 
     init {
         getCartItems()
@@ -31,26 +29,6 @@ class CartStateHolder(
         getCartItems()
     }
 
-    fun getCartItems() {
-        val items = cartRepository.getCart().items.map { it.toUiModel() }
-        val lastPage =
-            if (items.isEmpty()) {
-                0
-            } else {
-                items.lastIndex / pageSize
-            }
-        if (page < 0) {
-            page = 0
-        } else if (page > lastPage) {
-            page = lastPage
-        }
-        val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, items.size)
-        currentCartItems = items.subList(fromIndex, toIndex)
-        isCanMoveNext = toIndex < items.size
-        onPageChanged(page)
-    }
-
     fun nextPage() {
         page++
         getCartItems()
@@ -59,5 +37,19 @@ class CartStateHolder(
     fun previousPage() {
         page--
         getCartItems()
+    }
+
+    private fun getCartItems() {
+        val items = cartRepository.getCart().items.map { it.toUiModel() }
+        val cartPage = cartPageLoader.getCartPage(
+            page = page,
+            items = items
+        )
+
+        currentCartItems = cartPage.items
+        isCanMoveNext = cartPage.isCanMoveNext
+        page = cartPage.page
+
+        onPageChanged(page)
     }
 }
