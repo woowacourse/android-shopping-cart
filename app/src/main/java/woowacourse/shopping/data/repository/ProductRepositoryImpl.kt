@@ -8,9 +8,9 @@ import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-object ProductRepositoryImpl : ProductRepository {
-    private val products = Products(ProductFixture.productList)
-
+class ProductRepositoryImpl(
+    private val products: Products,
+) : ProductRepository {
     override fun getProducts(): Products = products
 
     override fun getPagingProducts(

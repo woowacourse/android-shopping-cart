@@ -9,8 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.remember
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
 import woowacourse.shopping.presentation.productdetail.screen.ProductDetailErrorScreen
@@ -33,8 +32,8 @@ class ProductDetailActivity : ComponentActivity() {
                 val stateHolder =
                     remember {
                         ProductDetailStateHolder(
-                            productRepository = ProductRepositoryImpl,
-                            cartRepository = CartRepositoryImpl,
+                            productRepository = AppContainer.productRepository,
+                            cartRepository = AppContainer.cartRepository,
                         )
                     }
                 if (product != null) {

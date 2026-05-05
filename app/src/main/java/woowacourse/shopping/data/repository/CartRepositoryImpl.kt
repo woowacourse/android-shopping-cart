@@ -7,9 +7,9 @@ import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-object CartRepositoryImpl : CartRepository {
-    private var cart = Cart()
-
+class CartRepositoryImpl(
+    private var cart: Cart,
+) : CartRepository {
     override fun getItems(): Cart = cart
 
     override fun getPagingItems(

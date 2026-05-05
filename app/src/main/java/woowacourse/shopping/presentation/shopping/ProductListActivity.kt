@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productdetail.mapper.toUiModel
@@ -29,7 +29,7 @@ class ProductListActivity : ComponentActivity() {
                 val stateHolder =
                     remember {
                         ProductListStateHolder(
-                            productRepository = ProductRepositoryImpl,
+                            productRepository = AppContainer.productRepository,
                             initialPageIndex = pageIndex,
                             onPageIndexChanged = { pageIndex = it },
                         )

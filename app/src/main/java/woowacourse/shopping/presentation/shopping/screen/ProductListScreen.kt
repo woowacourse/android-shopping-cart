@@ -4,7 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.shopping.ProductListStateHolder
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
@@ -37,7 +37,7 @@ private fun ProductListScreenPreview() {
     ProductListScreen(
         stateHolder =
             ProductListStateHolder(
-                productRepository = ProductRepositoryImpl,
+                productRepository = AppContainer.productRepository,
                 initialPageIndex = 0,
                 onPageIndexChanged = {},
             ),

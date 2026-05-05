@@ -4,7 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.CartStateHolder
 import woowacourse.shopping.presentation.cart.component.CartContent
 import woowacourse.shopping.presentation.cart.component.CartScaffold
@@ -41,7 +41,7 @@ private fun CartScreenPreview() {
     CartScreen(
         stateHolder =
             CartStateHolder(
-                cartRepository = CartRepositoryImpl,
+                cartRepository = AppContainer.cartRepository,
                 initialPageIndex = 1,
                 onPageIndexChanged = {},
             ),
