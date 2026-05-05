@@ -57,7 +57,7 @@ fun CartScreen(
         onBackClick = onBackClick,
         onDeleteClick = { state.delete(it) },
         onPreviousClick = { currentPage = (currentPage - 1).coerceAtLeast(1) },
-        onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) }
+        onNextClick = { currentPage = (currentPage + 1).coerceAtMost(totalPages) },
     )
 }
 
@@ -97,9 +97,8 @@ fun CartScreen(
 @Composable
 fun rememberCartScreenState(
     cartRepo: CartRepository,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-): CartScreenState =
-    remember(cartRepo, coroutineScope) { CartScreenState(cartRepo, coroutineScope) }
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+): CartScreenState = remember(cartRepo, coroutineScope) { CartScreenState(cartRepo, coroutineScope) }
 
 @Composable
 @Preview(showBackground = true)
@@ -114,6 +113,6 @@ private fun CartScreenPreview() {
         showPagination = true,
         modifier = Modifier,
         onPreviousClick = {},
-        onNextClick = {}
+        onNextClick = {},
     )
 }

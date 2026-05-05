@@ -48,10 +48,12 @@ class ProductDetailActivity : ComponentActivity() {
     companion object {
         private const val EXTRA_PRODUCT = "com.woowacourse.shopping.PRODUCT"
 
-        fun newIntent(context: Context, product: Product): Intent {
-            return Intent(context, ProductDetailActivity::class.java).apply {
+        fun newIntent(
+            context: Context,
+            product: Product,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
             }
-        }
     }
 }

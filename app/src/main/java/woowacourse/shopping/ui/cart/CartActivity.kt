@@ -23,7 +23,7 @@ class CartActivity : ComponentActivity() {
                     CartScreen(
                         cartRepo = cartRepo,
                         modifier = Modifier.padding(innerPadding),
-                        onBackClick = ::finish
+                        onBackClick = ::finish,
                     )
                 }
             }

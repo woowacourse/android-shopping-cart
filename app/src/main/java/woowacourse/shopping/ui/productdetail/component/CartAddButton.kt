@@ -22,10 +22,11 @@ fun CartAddButton(
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(if (enabled) Color(0xFF04C09E) else Color.Gray)
-            .clickable(enabled = enabled, onClick = onClick),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(if (enabled) Color(0xFF04C09E) else Color.Gray)
+                .clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Text(

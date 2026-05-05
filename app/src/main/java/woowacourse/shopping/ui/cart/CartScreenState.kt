@@ -19,7 +19,6 @@ class CartScreenState(
     init {
         coroutineScope.launch {
             cart = cartRepo.showAll()
-
         }
     }
 

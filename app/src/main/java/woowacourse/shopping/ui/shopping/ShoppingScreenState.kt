@@ -12,7 +12,7 @@ import woowacourse.shopping.repository.ProductRepository
 class ShoppingScreenState(
     private val productRepo: ProductRepository,
     private val coroutineScope: CoroutineScope,
-    visibleCount: Int
+    visibleCount: Int,
 ) {
     var visibleProducts: Products by mutableStateOf(Products(emptyList()))
         private set

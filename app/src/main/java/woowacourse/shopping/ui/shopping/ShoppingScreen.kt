@@ -28,7 +28,7 @@ fun ShoppingScreen(
     productRepo: ProductRepository,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
-    onProductClick: (Product) -> Unit
+    onProductClick: (Product) -> Unit,
 ) {
     var visibleCount: Int by rememberSaveable { mutableIntStateOf(PAGE_SIZE) }
     val state = rememberShoppingScreenState(productRepo = productRepo, visibleCount = visibleCount)
@@ -42,7 +42,7 @@ fun ShoppingScreen(
         onMoreClick = {
             visibleCount = minOf(visibleCount + PAGE_SIZE, state.sizeInRepo)
             state.loadProducts(visibleCount)
-        }
+        },
     )
 }
 
@@ -78,16 +78,15 @@ fun ShoppingScreen(
 private fun rememberShoppingScreenState(
     productRepo: ProductRepository,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    visibleCount: Int = PAGE_SIZE
-): ShoppingScreenState {
-    return remember {
+    visibleCount: Int = PAGE_SIZE,
+): ShoppingScreenState =
+    remember {
         ShoppingScreenState(
             productRepo = productRepo,
             coroutineScope = coroutineScope,
-            visibleCount = visibleCount
+            visibleCount = visibleCount,
         )
     }
-}
 
 @Preview(showBackground = true)
 @Composable
