@@ -43,7 +43,13 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
     }
 
     private fun pagination(page: Int, productUiModels: List<ProductUiModel>): List<ProductUiModel> {
-        val toIndex = minOf(page * PAGE_SIZE, productUiModels.size)
+        if (productUiModels.isEmpty() || page <= 0) return emptyList()
+
+        val fromIndex = (page - 1) * PAGE_SIZE
+
+        if (fromIndex >= productUiModels.size) return emptyList()
+
+        val toIndex = minOf(fromIndex + PAGE_SIZE, productUiModels.size)
         return productUiModels.subList((page - 1) * PAGE_SIZE, toIndex)
     }
 

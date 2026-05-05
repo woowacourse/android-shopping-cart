@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.R
 import woowacourse.shopping.ui.state.ProductUiModel
 
 @Composable
@@ -39,7 +42,6 @@ fun CartScreen(
     isLeftEnable: Boolean,
     isRightEnable: Boolean,
 ) {
-
     Scaffold(
         containerColor = Color.White,
         modifier = modifier
@@ -48,27 +50,69 @@ fun CartScreen(
             CartAppBar(onCloseClick = onCloseClick)
         },
     ) { innerPadding ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding),
-        ) {
-            CartItemList(
-                cartItems,
-                modifier = Modifier.weight(1f),
-                onDelete = onDelete,
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            PageNavigator(
-                page = page,
-                onLeftClick = onLeftClick,
-                onRightClick = onRightClick,
-                isLeftEnable = isLeftEnable,
-                isRightEnable = isRightEnable,
-            )
-            Spacer(modifier = Modifier.height(40.dp))
+        when {
+            cartItems.isEmpty() -> {
+                EmptyCartView(
+                    message = stringResource(R.string.cart_empty_message),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+            page <= 0 -> {
+                EmptyCartView(
+                    message = stringResource(R.string.cart_invalid_page_message),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+            else -> {
+                CartListContent(
+                    cartItems = cartItems,
+                    page = page,
+                    onDelete = onDelete,
+                    onLeftClick = onLeftClick,
+                    onRightClick = onRightClick,
+                    isLeftEnable = isLeftEnable,
+                    isRightEnable = isRightEnable,
+                    modifier = Modifier.padding(innerPadding),
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun CartListContent(
+    cartItems: List<ProductUiModel>,
+    page: Int,
+    onDelete: (String) -> Unit,
+    onLeftClick: () -> Unit,
+    onRightClick: () -> Unit,
+    isLeftEnable: Boolean,
+    isRightEnable: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth(),
+    ) {
+        CartItemList(
+            cartItems = cartItems,
+            modifier = Modifier.weight(1f),
+            onDelete = onDelete,
+        )
+        Spacer(modifier = Modifier.height(40.dp))
+        PageNavigator(
+            page = page,
+            onLeftClick = onLeftClick,
+            onRightClick = onRightClick,
+            isLeftEnable = isLeftEnable,
+            isRightEnable = isRightEnable,
+        )
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
 
@@ -153,9 +197,23 @@ private fun CartItemList(cartItems: List<ProductUiModel>, onDelete: (String) -> 
     }
 }
 
+@Composable
+private fun EmptyCartView(message: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = message,
+            fontSize = 20.sp,
+            color = Color.Gray,
+        )
+    }
+}
+
 @Preview
 @Composable
-private fun CartScreenPreview() {
+private fun EmptyCartScreenPreview() {
     CartScreen(
         cartItems = emptyList(),
         onCloseClick = {},
@@ -165,5 +223,49 @@ private fun CartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = true,
+    )
+}
+
+@Preview
+@Composable
+private fun CartScreenPreview() {
+    CartScreen(
+        cartItems = listOf(
+            ProductUiModel.of(
+                name = "카트 상품 1",
+                price = 1000,
+                imageUrl = "",
+                id = "1",
+            ),
+        ),
+        onCloseClick = {},
+        onDelete = {},
+        page = 1,
+        onLeftClick = {},
+        onRightClick = {},
+        isLeftEnable = false,
+        isRightEnable = false,
+    )
+}
+
+@Preview
+@Composable
+private fun InvalidPageCartScreenPreview() {
+    CartScreen(
+        cartItems = listOf(
+            ProductUiModel.of(
+                name = "카트 상품 1",
+                price = 1000,
+                imageUrl = "",
+                id = "1",
+            ),
+        ),
+        onCloseClick = {},
+        onDelete = {},
+        page = -1,
+        onLeftClick = {},
+        onRightClick = {},
+        isLeftEnable = false,
+        isRightEnable = false,
     )
 }
