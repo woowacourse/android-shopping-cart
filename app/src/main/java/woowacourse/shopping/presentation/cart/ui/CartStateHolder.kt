@@ -3,6 +3,8 @@ package woowacourse.shopping.presentation.cart.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.model.RemoveItemResult
@@ -13,10 +15,11 @@ import kotlin.math.min
 
 class CartStateHolder(
     initialPage: Int = 0,
+    initialCartItems: List<CartItemUiModel> = emptyList(),
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
 ) {
     var page by mutableIntStateOf(initialPage)
-    var currentCartItems by mutableStateOf(emptyList<CartItemUiModel>())
+    var currentCartItems by mutableStateOf(initialCartItems)
     var isCanMoveNext by mutableStateOf(false)
     var totalCartSize by mutableIntStateOf(0)
     var isLoading by mutableStateOf(false)
@@ -60,5 +63,22 @@ class CartStateHolder(
         if (page == 0) return
         page--
         loadCartItems()
+    }
+
+    companion object {
+        fun Saver(cartRepository: CartRepository = RepositoryProvider.cartRepository): Saver<CartStateHolder, *> =
+            listSaver(
+                save = { holder ->
+                    listOf(
+                        holder.page,
+                    )
+                },
+                restore = { savedList ->
+                    CartStateHolder(
+                        initialPage = savedList[0],
+                        cartRepository = cartRepository,
+                    )
+                },
+            )
     }
 }

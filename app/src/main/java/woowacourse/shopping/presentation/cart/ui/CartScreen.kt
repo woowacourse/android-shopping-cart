@@ -22,8 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -48,15 +46,13 @@ fun CartScreen(modifier: Modifier = Modifier) {
     val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val page = rememberSaveable { mutableStateOf(0) }
-    val state = remember { CartStateHolder(initialPage = page.value) }
+    val state =
+        rememberSaveable(saver = CartStateHolder.Saver()) {
+            CartStateHolder()
+        }
 
     LaunchedEffect(Unit) {
         state.loadCartItems()
-    }
-
-    LaunchedEffect(state.page) {
-        page.value = state.page
     }
 
     Scaffold(
