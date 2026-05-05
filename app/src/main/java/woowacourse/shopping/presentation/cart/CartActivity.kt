@@ -36,14 +36,7 @@ class CartActivity : ComponentActivity() {
                         )
                     }
                 CartScreen(
-                    cart = stateHolder.cart,
-                    currentPage = stateHolder.currentPage,
-                    hasMoreItems = stateHolder.hasMoreItems,
-                    onPreviousPageClick = { stateHolder.goToPreviousPage() },
-                    onNextPageClick = { stateHolder.goToNextPage() },
-                    hasPreviousPage = stateHolder.hasPreviousPage,
-                    hasNextPage = stateHolder.hasNextPage,
-                    onDelete = { productId -> stateHolder.deleteProduct(productId) },
+                    stateHolder = stateHolder,
                     onBack = { finish() },
                 )
             }

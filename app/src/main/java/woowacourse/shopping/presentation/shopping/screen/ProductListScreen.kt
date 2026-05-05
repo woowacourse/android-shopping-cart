@@ -1,70 +1,33 @@
 package woowacourse.shopping.presentation.shopping.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.model.product.Product
-import woowacourse.shopping.domain.model.product.Products
-import woowacourse.shopping.presentation.productdetail.component.ActionButton
-import woowacourse.shopping.presentation.shopping.component.ProductItem
-import woowacourse.shopping.presentation.shopping.component.ProductListTopAppBar
+import woowacourse.shopping.presentation.shopping.ProductListStateHolder
+import woowacourse.shopping.presentation.shopping.component.ProductListContent
+import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
-    products: Products,
-    hasNextPage: Boolean,
-    onLoadMore: () -> Unit,
+    stateHolder: ProductListStateHolder,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
-            ProductListTopAppBar(
-                onClick = onCartIconClick,
-            )
-        },
-        containerColor = Color.White,
-    ) { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding)) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                items(products.productItems) { product ->
-                    ProductItem(
-                        product = product,
-                        onClick = onItemClick,
-                    )
-                }
-                if (hasNextPage) {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        ActionButton(
-                            onClick = onLoadMore,
-                            text = "더보기",
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-                }
-            }
-        }
+    ProductListScaffold(
+        onClick = onCartIconClick,
+        modifier = modifier,
+    ) {
+        ProductListContent(
+            products = stateHolder.products,
+            hasNextPage = stateHolder.hasNextPage,
+            onLoadMore = { stateHolder.loadMore() },
+            onItemClick = { product -> onItemClick(product) },
+        )
     }
 }
 
@@ -72,9 +35,12 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     ProductListScreen(
-        products = Products(ProductFixture.productList),
-        hasNextPage = true,
-        onLoadMore = {},
+        stateHolder =
+            ProductListStateHolder(
+                productRepository = ProductRepositoryImpl,
+                initialPageIndex = 0,
+                onPageIndexChanged = {},
+            ),
         onCartIconClick = {},
         onItemClick = {},
     )

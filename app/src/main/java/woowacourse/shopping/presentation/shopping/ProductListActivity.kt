@@ -35,9 +35,7 @@ class ProductListActivity : ComponentActivity() {
                         )
                     }
                 ProductListScreen(
-                    products = stateHolder.products,
-                    hasNextPage = stateHolder.hasNextPage,
-                    onLoadMore = { stateHolder.loadMore() },
+                    stateHolder = stateHolder,
                     onCartIconClick = {
                         startActivity(CartActivity.newIntent(this))
                     },
