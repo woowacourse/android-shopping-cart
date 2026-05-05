@@ -9,8 +9,6 @@ data class Cart(
 
     fun removeCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.removeCartItem(cartItem))
 
-    fun searchCartItem(cartItem: CartItem): Boolean = cartItems.searchCartItem(cartItem)
-
     fun getPage(
         page: Int,
         pageSize: Int,

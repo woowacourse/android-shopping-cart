@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -14,27 +15,13 @@ import woowacourse.shopping.domain.product.model.ProductName
 
 class CartTest {
     @Test
-    fun `장바구니 아이템이 장바구니 안에 존재한다면 true를 반환한다`() {
-        val cart = Cart(cartItems = cartItemsValue)
-
-        assertTrue(cart.searchCartItem(cartItem1))
-    }
-
-    @Test
-    fun `장바구니 아이템이 장바구니 안에 존재하지 않는다면 false 반환한다`() {
-        val cart = Cart(cartItems = cartItemsValue)
-
-        assertFalse(cart.searchCartItem(cartItem4))
-    }
-
-    @Test
     fun `장바구니에 상품을 추가했을 때 장바구니에 추가된다`() {
         val cart = Cart(cartItems = cartItemsValue)
         val targetCartItem = cartItem4
 
         val addedCart = cart.addCartItem(targetCartItem)
 
-        assertTrue(addedCart.searchCartItem(targetCartItem))
+        addedCart.getPage(0, 5) shouldBe listOf(cartItem1, cartItem2, cartItem3, cartItem4)
     }
 
     @Test
@@ -44,7 +31,7 @@ class CartTest {
 
         val removedCartItems = cart.removeCartItem(targetCartItem)
 
-        assertFalse(removedCartItems.searchCartItem(targetCartItem))
+        removedCartItems.getPage(0, 5) shouldBe listOf(cartItem1, cartItem2)
     }
 
     @Test

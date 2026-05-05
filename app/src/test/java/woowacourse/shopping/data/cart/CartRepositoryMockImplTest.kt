@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.cart
 
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -18,7 +19,7 @@ class CartRepositoryMockImplTest {
         cartRepository.addCartItem(cartItem1)
         val updatedCart = cartRepository.getCart()
 
-        assertTrue(updatedCart.searchCartItem(cartItem1))
+        updatedCart.getPage(0, 5) shouldBe listOf(cartItem1)
     }
 
     @Test
@@ -33,9 +34,7 @@ class CartRepositoryMockImplTest {
 
         val updatedCart = cartRepository.getCart()
 
-        assertTrue(updatedCart.searchCartItem(cartItem1))
-        assertFalse(updatedCart.searchCartItem(cartItem2))
-        assertTrue(updatedCart.searchCartItem(cartItem3))
+        updatedCart.getPage(0, 5) shouldBe listOf(cartItem1, cartItem3)
     }
 
     private val cartItem1 =
