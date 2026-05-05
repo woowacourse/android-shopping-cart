@@ -30,6 +30,8 @@ class ProductListStateHolder(
         isLastPage = products.size >= totalProductCount
     }
 
+    fun isHasProductId(productId: String): Boolean = productRepository.isProductExist(productId)
+
     companion object {
         const val PAGE_SIZE = 20
     }

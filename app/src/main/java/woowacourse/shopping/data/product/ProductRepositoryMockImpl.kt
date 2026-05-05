@@ -9,6 +9,8 @@ class ProductRepositoryMockImpl : ProductRepository {
 
     override fun getProduct(id: String): Product = MockData.products.find { it.id == id }!!
 
+    override fun isProductExist(productId: String): Boolean = MockData.products.any { it.id == productId }
+
     override fun getPagedProducts(
         page: Int,
         pageSize: Int,

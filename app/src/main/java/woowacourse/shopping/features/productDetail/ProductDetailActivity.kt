@@ -29,7 +29,7 @@ class ProductDetailActivity : ComponentActivity() {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
-                    product = stateHolder.detailProduct,
+                    product = stateHolder.detailProduct(),
                     onAddToCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
                         stateHolder.addToCart()

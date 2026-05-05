@@ -7,6 +7,8 @@ interface ProductRepository {
 
     fun getProduct(id: String): Product
 
+    fun isProductExist(productId: String): Boolean
+
     fun getPagedProducts(
         page: Int,
         pageSize: Int,
