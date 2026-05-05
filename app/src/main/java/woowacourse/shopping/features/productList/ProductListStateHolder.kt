@@ -6,16 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.DataProvider
-import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.repository.ProductRepository
 
 class ProductListStateHolder(
     private val productRepository: ProductRepository,
 ) {
+    val totalProductCount = productRepository.getProductsSize()
+    var pageCount = 0
     var products by mutableStateOf(emptyList<Product>())
-    var pageCount by mutableStateOf(0)
-    var totalProductCount = productRepository.getProductsSize()
     var isLastPage by mutableStateOf(false)
 
     init {

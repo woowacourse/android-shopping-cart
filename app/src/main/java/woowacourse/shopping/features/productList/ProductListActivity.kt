@@ -1,5 +1,6 @@
 package woowacourse.shopping.features.productList
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -14,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import woowacourse.shopping.data.MockData
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
+import woowacourse.shopping.features.productDetail.ProductDetailStateHolder
 
 class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +39,11 @@ class ProductListActivity : ComponentActivity() {
                             Toast.makeText(context, "상품이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
                             return@ProductListScreen
                         }
-                        val detailIntent =
-                            Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra("PRODUCT_ID", product.id)
-                            }
+
+                        val detailIntent = ProductDetailActivity.newIntent(
+                            this,
+                            ProductDetailStateHolder.from(product)
+                        )
                         startActivity(detailIntent)
                     },
                     loadProducts = {
@@ -50,4 +53,6 @@ class ProductListActivity : ComponentActivity() {
             }
         }
     }
+
+
 }

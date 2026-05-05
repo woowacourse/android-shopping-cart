@@ -43,7 +43,9 @@ import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKG
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    product: Product,
+    productName: String,
+    productPrice: Int,
+    productImageUrl: String,
     onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -67,9 +69,9 @@ fun ProductDetailScreen(
                 Modifier
                     .background(Color.White)
                     .weight(1f),
-            imageUrl = product.imageUrl.value,
-            productName = product.name.value,
-            price = product.price.value,
+            imageUrl = productImageUrl,
+            productName = productName,
+            price = productPrice,
         )
 
         CardAddButton(
@@ -245,7 +247,9 @@ private fun CardAddButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        product = MockData.productInfo,
+        productName = "케로로",
+        productPrice = 10000,
+        productImageUrl = "https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI",
         onAddToCartClick = {},
     )
 }
