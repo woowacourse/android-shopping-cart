@@ -11,17 +11,16 @@ data class Cart(
     val productAndCounts: List<ProductAndCount> = emptyList(),
 ) {
     fun addProductToCart(product: Product): Cart {
-        val index = productAndCounts.indexOfFirst { product.productId == it.product.productId }
-        if (index != -1) {
-            val newProductAndCounts =
-                productAndCounts.map { item ->
-                    if (item.product == product) {
-                        item.copy(count = item.count() + 1)
+        if (productAndCounts.any { it.hasSameProduct(product) }) {
+            return copy(
+                productAndCounts = productAndCounts.map { item ->
+                    if (item.hasSameProduct(product)) {
+                        item.increaseQuantity()
                     } else {
                         item
                     }
                 }
-            return copy(productAndCounts = newProductAndCounts)
+            )
         }
         return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
     }

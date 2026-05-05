@@ -94,7 +94,7 @@ fun CartItem(
             ) {
                 AsyncImage(
                     model = productAndCount.imageUrl,
-                    contentDescription = productAndCount.product.productName,
+                    contentDescription = productAndCount.productName,
                     modifier = Modifier.size(136.dp, 72.dp),
                 )
                 Box {

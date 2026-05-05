@@ -5,7 +5,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class ProductAndCount(
-    val product: Product,
+    private val product: Product,
     private val count: Int,
 ) {
     init {
@@ -28,7 +28,7 @@ data class ProductAndCount(
     val price: Price
         get() = product.price
 
-    fun count(): Int = count
+    fun hasSameProduct(product: Product): Boolean = productId == product.productId
 
-    fun totalPrice(): Int = (product.price.value * count())
+    fun totalPrice(): Int = (product.price.value * count)
 }
