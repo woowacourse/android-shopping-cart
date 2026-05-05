@@ -18,10 +18,12 @@ class CartStateHolder(
         private set
 
     private var currentPageIndex = initialPageIndex
-    private var totalItemCount by mutableStateOf(0)
 
     val currentPage: Int
         get() = currentPageIndex + 1
+
+    val totalItemCount: Int
+        get() = cartRepository.getTotalItemCount()
 
     val lastPageIndex: Int
         get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / pageSize
@@ -63,13 +65,8 @@ class CartStateHolder(
     }
 
     private fun refresh() {
-        refreshTotalItemCount()
         adjustCurrentPage()
         refreshPagedCart()
-    }
-
-    private fun refreshTotalItemCount() {
-        totalItemCount = cartRepository.getTotalItemCount()
     }
 
     private fun refreshPagedCart() {

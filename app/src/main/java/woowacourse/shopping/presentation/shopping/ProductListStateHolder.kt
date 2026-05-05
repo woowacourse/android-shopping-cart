@@ -16,8 +16,13 @@ class ProductListStateHolder(
 
     var products by mutableStateOf(Products())
         private set
-    var hasNextPage by mutableStateOf(false)
-        private set
+
+    val hasNextPage: Boolean
+        get() =
+            productRepository.hasNextPage(
+                currentPage = currentPageIndex,
+                pageSize = pageSize,
+            )
 
     init {
         loadPages(currentPageIndex)
@@ -36,7 +41,6 @@ class ProductListStateHolder(
             )
 
         products += nextProducts
-        updateHasNextPage()
     }
 
     private fun loadPages(currentPageIndex: Int) {
@@ -49,16 +53,6 @@ class ProductListStateHolder(
                     pageSize = pageSize,
                 )
         }
-
-        updateHasNextPage()
-    }
-
-    private fun updateHasNextPage() {
-        hasNextPage =
-            productRepository.hasNextPage(
-                currentPage = currentPageIndex,
-                pageSize = pageSize,
-            )
     }
 
     companion object {
