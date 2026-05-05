@@ -1,1 +1,91 @@
 # android-shopping-cart
+
+## 기능 구현 목록
+
+### 도메인
+
+#### Product
+
+- [x] 상품은 id를 갖는다
+- [x] 이미지 uri를 문자로 갖는다
+- [x] 상품은 이름과 가격을 갖는다
+- [x] 가격은 0 초과 이어야 한다
+
+#### CartProducts
+
+- [x] 카트에 넣은 상품들의 목록을 갖는다
+- [x] 상품을 추가하거나 제거할 수 있다
+- [x] 상품을 `id`로 검색 한다
+
+#### Cart
+
+- [x] 사용자가 선택한 상품을 갖는다
+- [x] 사용자가 선택한 상품을 추가할 수 있다
+- [x] 사용자가 선택한 상품을 제거할 수 있다
+
+### UI
+
+#### CatalogScreen
+
+- [x] LazyVerticalGrid를 사용한다
+- [x] 카트 아이콘을 클릭하면 CartScreen으로 이동한다
+- [x] 상품 목록에서 스크롤을 20개 했을 때 더보기 버튼을 눌러 추가 20개를 로드할 수 있다
+    - [x] 비동기로 데이터를 가지고 온다
+
+**ShoppingItem**
+- [x] 아이템을 클릭하면 해당 Item의 ProductDetailScreen으로 이동한다
+- [x] 이미지 로딩으로 Coil을 사용한다
+
+#### ProductDetailScreen
+
+- [x] 카트에 담기 버튼을 클릭하면 해당 Item을 카트에 추가한다
+- [x] 카트에 담았다면 상품 목록 화면으로 돌아간다
+- [x] `x` 버튼을 누르면 ProductDetailScreen 으로 돌아간다
+- [x] 이미지 로딩으로 Coil을 사용한다
+
+#### CartScreen
+
+- [x] 뒤로가기 버튼을 누르면 ProductDetailScreen 으로 돌아간다
+- [x] 담긴 아이템의 개수가 5개 이하일 경우 페이지네이션 버튼이 뜨지 않는다
+- [x] 담긴 아이템의 개수가 5개 초과일 경우 페이지네이션 버튼이 뜬다
+- [x] 한 화면에서 최대 5개의 아이템을 스크롤하여 보여줄 수 있다
+- [x] 페이지 개수를 계산한다
+- [x] 맨 처음 페이지일 경우 이전 버튼을 비활성화 한다
+- [x] 마지막 페이지일 경우 다음 버튼을 비활성화 한다
+  **CartItem**
+- [x] `x` 버튼을 누르면 해당 CartItem이 Cart에서 제거된다
+- [x] 이미지 로딩으로 Coil을 사용한다
+
+### 추후 추가 기능
+
+- [ ] 데이터 로드 전략에서 상품 목록을 더이상 불러올 게 없다면 버튼 비활성화
+- [ ] 카트에 담기 성공했다면 "장바구니에 담았습니다" Snackbar를 노출한다
+
+## 2차 피드백 구현 사항
+
+### ProductDetailActivity
+
+- [x] invalidProduct() 함수 제거
+- [x] intent에 담긴 Product가 null이라면 Activity 종료 로직 추가
+
+### CartRepository 제거
+
+- [x] MainActivity와 CartActivity가 Cart객체 자체를 주고 받도록 수정
+
+### CartStateHolder
+
+- [x] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
+
+### MainActivity
+
+- [x] LaunchedEffect를 통한 비동기 데이터 로딩 적용
+
+### CartActivity
+
+- [x] Cart 객체를 주고 받도록 수정
+- [x] 이중 CoroutineScope 제거
+- [x] LaunchedEffect를 통한 비동기 데이터 로딩 적용
+
+### MockCatalog
+
+- [x] loadMoreProducts 함수 suspend 키워드 제거
