@@ -17,15 +17,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CartAddButton(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     Box(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .background(Color(0xFF04C09E))
-                .clickable(onClick = onClick),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(if (enabled) Color(0xFF04C09E) else Color.Gray)
+            .clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Text(

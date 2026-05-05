@@ -4,9 +4,9 @@ import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 
 interface CartRepository {
-    fun add(item: Product)
+    suspend fun showAll(): Cart
 
-    fun delete(item: Product)
+    suspend fun add(item: Product)
 
-    fun showAll(): Cart
+    suspend fun delete(item: Product)
 }

@@ -4,8 +4,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
@@ -21,13 +27,17 @@ fun ProductDetailScreen(
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     ProductDetailScreen(
         product = productToShow,
         modifier = modifier,
         onCloseClick = onCloseClick,
         onAddToCartClick = {
-            cartRepo.add(productToShow)
-            onAddToCartClick()
+            coroutineScope.launch {
+                cartRepo.add(productToShow)
+                onAddToCartClick()
+            }
         }
     )
 }

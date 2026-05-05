@@ -179,12 +179,14 @@ object InMemoryProductRepository : ProductRepository {
                 SYANTI4,
             ),
         )
-    override val size: Int = products.count()
+    private val size = products.count()
 
-    override fun getProducts(
+    override suspend fun getSize(): Int = size
+
+    override suspend fun getProducts(
         fromIndex: Int,
         loadSize: Int,
     ): Products = products.getPagedProducts(fromIndex, loadSize)
 
-    override fun hasNext(current: Int): Boolean = current < size - 1
+    override suspend fun hasNext(current: Int): Boolean = current < size - 1
 }
