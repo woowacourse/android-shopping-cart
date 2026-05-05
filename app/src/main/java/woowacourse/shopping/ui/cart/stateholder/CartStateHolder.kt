@@ -21,6 +21,8 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
     var page by mutableIntStateOf(1)
     var cartItems by mutableStateOf(pagination(1, totalCartItems))
 
+    var deletedItemIds by mutableStateOf(emptyList<String>())
+
     fun isStartPage(): Boolean = page == 1
 
     fun isEndPage(): Boolean = page >= lastPage()
@@ -59,6 +61,7 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
             page = lastPage()
         }
         cartItems = pagination(page, totalCartItems)
+        deletedItemIds = deletedItemIds + id
     }
 
     companion object {
@@ -69,15 +72,18 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
                 listOf(
                     stateHolder.totalCartItems,
                     stateHolder.page,
+                    stateHolder.deletedItemIds,
                 )
             },
             restore = { savedList ->
                 val restoredItems = savedList[0] as List<ProductUiModel>
                 val restoredPage = savedList[1] as Int
+                val restoredDeletedIds = savedList[2] as List<String>
 
                 CartStateHolder(restoredItems).apply {
                     this.page = restoredPage
                     this.cartItems = pagination(this.page, this.totalCartItems)
+                    this.deletedItemIds = restoredDeletedIds
                 }
             },
         )

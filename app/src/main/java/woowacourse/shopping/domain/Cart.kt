@@ -12,9 +12,9 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
 
     fun isContains(product: Product): Boolean = cartItems.any { it.hasProduct(product) }
 
-    fun filterById(ids: List<String>): Cart = Cart(
+    fun removeCartItems(ids: List<String>): Cart = Cart(
         cartItems.filter { cartItem ->
-            ids.any {
+            ids.none {
                 cartItem.hasProductId(it)
             }
         },

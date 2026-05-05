@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 val deletedCartItems = CartActivity.getDeletedList(result.data)
                     ?: return@rememberLauncherForActivityResult
 
-                productListStateHolder.syncDeletedCartItems(deletedCartItems)
+                productListStateHolder.removeCartItems(deletedCartItems)
             }
             AndroidshoppingTheme {
                 ProductListScreen(

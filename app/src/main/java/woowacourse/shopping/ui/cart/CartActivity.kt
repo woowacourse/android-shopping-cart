@@ -22,7 +22,7 @@ class CartActivity : ComponentActivity() {
                 CartScreen(
                     cartItems = stateHolder.cartItems,
                     onCloseClick = {
-                        setResult(RESULT_OK, deletedListResult(stateHolder.totalCartItems))
+                        setResult(RESULT_OK, deletedListResult(stateHolder.deletedItemIds))
                         finish()
                     },
                     onDelete = { id ->
@@ -49,7 +49,7 @@ class CartActivity : ComponentActivity() {
         fun newIntent(context: Context, cartItems: List<ProductUiModel>): Intent = Intent(context, CartActivity::class.java)
             .putParcelableArrayListExtra(EXTRA_CART_ITEMS, ArrayList(cartItems))
 
-        fun getDeletedList(intent: Intent?): List<ProductUiModel>? = intent?.getParcelableArrayList(EXTRA_DELETED_LIST)
+        fun getDeletedList(intent: Intent?): List<String>? = intent?.getStringArrayListExtra(EXTRA_DELETED_LIST)
 
         private fun getCartItems(intent: Intent): List<ProductUiModel> = intent.getParcelableArrayList(EXTRA_CART_ITEMS) ?: emptyList()
 
@@ -61,7 +61,6 @@ class CartActivity : ComponentActivity() {
                 getParcelableArrayListExtra(name)
             }
 
-        private fun deletedListResult(items: List<ProductUiModel>): Intent =
-            Intent().putParcelableArrayListExtra(EXTRA_DELETED_LIST, ArrayList(items))
+        private fun deletedListResult(ids: List<String>): Intent = Intent().putStringArrayListExtra(EXTRA_DELETED_LIST, ArrayList(ids))
     }
 }

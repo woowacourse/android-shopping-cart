@@ -90,8 +90,8 @@ class ProductListStateHolder(initialPage: Int = 0) {
         return true
     }
 
-    fun syncDeletedCartItems(deletedUiModels: List<ProductUiModel>) {
-        this.cart = cart.filterById(deletedUiModels.map { it.id })
+    fun removeCartItems(deletedIds: List<String>) {
+        this.cart = cart.removeCartItems(deletedIds)
     }
 
     private fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
