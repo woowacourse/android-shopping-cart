@@ -9,6 +9,9 @@ composeBom = "2026.04.01"
 junit-jupiter = "5.13.4"
 kotest-runner-junit5 = "6.1.11"
 ktlint = "14.2.0"
+coil-compose = "3.4.0"
+coil-network-okhttp = "3.4.0"
+material-icons-extended = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,7 +27,9 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-runner-junit5" }
-
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil-network-okhttp" }
+compose-material-icons-extended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
