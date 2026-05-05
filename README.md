@@ -28,6 +28,13 @@
 - [x] kotlin default parameter 활용
 - [x] DetailActivity 내 companion object 위치 변경 및 캡슐화
 
+### 3차 리팩토링
+- [ ] UI의 책임 명확화
+- [ ] CartScreen 구성변경 대응 로직 추가
+- [ ] CartStateHolder 책임 분리
+- [ ] 내부 함수 캡슐화
+- [ ] Cart 책임 확립
+
 ## 상품명(ProductName)
 - 상품의 이름(String)을 나타낸다.
 - [x] 이름이 빈 값일 경우 예외를 반환한다.
