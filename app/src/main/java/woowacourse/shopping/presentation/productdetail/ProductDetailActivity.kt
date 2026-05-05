@@ -17,7 +17,6 @@ import woowacourse.shopping.presentation.productdetail.screen.ProductDetailError
 import woowacourse.shopping.presentation.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class ProductDetailActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
