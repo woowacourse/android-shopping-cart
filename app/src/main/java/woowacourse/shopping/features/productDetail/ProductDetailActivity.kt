@@ -43,10 +43,12 @@ class ProductDetailActivity : ComponentActivity() {
     companion object {
         const val PRODUCT = "PRODUCT"
 
-        fun newIntent(context: Context, parcelProduct: ParcelProduct): Intent {
-            return Intent(context, ProductDetailActivity::class.java).apply {
+        fun newIntent(
+            context: Context,
+            parcelProduct: ParcelProduct,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT, parcelProduct)
             }
-        }
     }
 }

@@ -4,6 +4,7 @@ class CartItems(
     _value: List<CartItem> = emptyList(),
 ) {
     private val value: List<CartItem> = _value.toList()
+
     fun addCartItem(cartItem: CartItem): CartItems = CartItems(value + cartItem)
 
     fun removeCartItem(cartItem: CartItem): CartItems = CartItems(value.filter { !it.isSameCartItem(cartItem) })

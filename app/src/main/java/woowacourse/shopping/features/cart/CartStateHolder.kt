@@ -6,10 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.DataProvider
-import woowacourse.shopping.data.cart.CartRepositoryMockImpl
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.repository.CartRepository
-import woowacourse.shopping.domain.product.repository.ProductRepository
 import kotlin.math.ceil
 import kotlin.math.max
 

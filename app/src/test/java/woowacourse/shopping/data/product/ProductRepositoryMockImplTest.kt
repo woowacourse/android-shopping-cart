@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.product
 
 import io.kotest.matchers.equals.shouldBeEqual
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.MockData

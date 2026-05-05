@@ -1,6 +1,5 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product

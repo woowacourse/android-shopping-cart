@@ -33,8 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import woowacourse.shopping.data.MockData
-import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
@@ -249,7 +247,11 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productName = "케로로",
         productPrice = 10000,
-        productImageUrl = "https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI",
+        productImageUrl =
+            """
+            https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=
+            http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
+            """.trimIndent(),
         onAddToCartClick = {},
     )
 }

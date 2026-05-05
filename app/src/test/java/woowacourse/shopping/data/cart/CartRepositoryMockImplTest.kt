@@ -1,9 +1,6 @@
 package woowacourse.shopping.data.cart
 
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.product.model.ImageUrl
