@@ -30,7 +30,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun productItem(
+fun ProductItem(
     product: Product,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -78,10 +78,10 @@ fun productItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun productItemPreview() {
+private fun ProductItemPreview() {
     val packageName = LocalContext.current.packageName
 
-    productItem(
+    ProductItem(
         product = ProductFixture.productList(packageName).first(),
         onClick = {},
         modifier = Modifier.fillMaxWidth(),

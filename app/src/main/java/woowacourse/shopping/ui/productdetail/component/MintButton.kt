@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.ui.theme.buttonColor
 
 @Composable
-fun mintButton(
+fun MintButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
@@ -38,8 +38,8 @@ fun mintButton(
 
 @Preview
 @Composable
-private fun mintButtonPreview() {
-    mintButton(
+private fun MintButtonPreview() {
+    MintButton(
         onClick = {},
         text = "",
     )

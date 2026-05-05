@@ -12,13 +12,13 @@ import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.CartRepository.deleteProduct
 import woowacourse.shopping.ui.cart.component.CartBody
-import woowacourse.shopping.ui.cart.component.cartTopAppBar
+import woowacourse.shopping.ui.cart.component.CartTopAppBar
 import woowacourse.shopping.ui.cart.state.rememberCartState
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun cartScreen(
+fun CartScreen(
     cartProducts: CartRepository,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -31,7 +31,7 @@ fun cartScreen(
 
     Scaffold(
         topBar = {
-            cartTopAppBar(
+            CartTopAppBar(
                 onClick = { onClose() },
             )
         },
@@ -63,8 +63,8 @@ fun cartScreen(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun cartScreenPreview() {
-    cartScreen(
+private fun CartScreenPreview() {
+    CartScreen(
         cartProducts = CartRepository,
         onClose = {},
     )

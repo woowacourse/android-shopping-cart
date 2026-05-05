@@ -40,14 +40,14 @@ fun CartBody(
                 modifier = Modifier.weight(1f),
             ) {
                 items(visibleProducts.items) { productAndCount ->
-                    cartItem(
+                    CartItem(
                         productAndCount = productAndCount,
                         onDelete = onDeleteProduct,
                     )
                 }
             }
             if (cartItems.size > 5) {
-                pagination(
+                Pagination(
                     pageMoveToLeft = { onMoveToPreviousPage() },
                     pageMoveToLeftButtonEnabled = currentPageIndex > 0,
                     currentPageIndex = currentPageIndex,

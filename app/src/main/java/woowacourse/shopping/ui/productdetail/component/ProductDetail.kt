@@ -21,7 +21,7 @@ import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun productDetail(
+fun ProductDetail(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
@@ -43,7 +43,7 @@ fun productDetail(
         }
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
-        productPrice(
+        ProductPrice(
             price = product.price.value,
         )
     }
@@ -52,10 +52,10 @@ fun productDetail(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun productDetailPreview() {
+private fun ProductDetailPreview() {
     val packageName = LocalContext.current.packageName
 
-    productDetail(
+    ProductDetail(
         product = ProductFixture.productList(packageName).last(),
     )
 }

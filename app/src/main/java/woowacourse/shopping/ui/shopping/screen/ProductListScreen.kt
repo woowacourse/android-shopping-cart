@@ -27,9 +27,9 @@ import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
 import woowacourse.shopping.domain.toPage
-import woowacourse.shopping.ui.productdetail.component.mintButton
-import woowacourse.shopping.ui.shopping.component.productItem
-import woowacourse.shopping.ui.shopping.component.productListTopAppBar
+import woowacourse.shopping.ui.productdetail.component.MintButton
+import woowacourse.shopping.ui.shopping.component.ProductItem
+import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 import woowacourse.shopping.ui.shopping.state.rememberProductListState
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -47,7 +47,7 @@ fun ProductListScreen(
 
     Scaffold(
         topBar = {
-            productListTopAppBar(
+            ProductListTopAppBar(
                 onClick = {
                     onClick()
                 },
@@ -63,7 +63,7 @@ fun ProductListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(visibleProducts.items) { product ->
-                    productItem(
+                    ProductItem(
                         product = product,
                         onClick = {
                             val intent =
@@ -76,7 +76,7 @@ fun ProductListScreen(
                 }
                 if (products.hasNextPage(currentPageIndex = state.currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        mintButton(
+                        MintButton(
                             onClick = {
                                 state.increase()
                             },

@@ -7,14 +7,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
-import woowacourse.shopping.ui.theme.androidshoppingTheme
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            androidshoppingTheme {
+            AndroidShoppingTheme {
                 ProductListScreen(
                     products = Products(ProductFixture.productList(packageName)),
                     onClick = {

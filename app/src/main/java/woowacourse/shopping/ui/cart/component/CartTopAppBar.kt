@@ -22,7 +22,7 @@ import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun cartTopAppBar(onClick: () -> Unit) {
+fun CartTopAppBar(onClick: () -> Unit) {
     TopAppBar(
         navigationIcon = {
             Image(
@@ -53,6 +53,6 @@ fun cartTopAppBar(onClick: () -> Unit) {
 
 @Preview
 @Composable
-private fun cartTopAppBarPreview() {
-    cartTopAppBar(onClick = {})
+private fun CartTopAppBarPreview() {
+    CartTopAppBar(onClick = {})
 }

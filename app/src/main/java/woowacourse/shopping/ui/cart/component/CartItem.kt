@@ -39,7 +39,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun cartItem(
+fun CartItem(
     productAndCount: ProductAndCount,
     onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
@@ -118,10 +118,10 @@ fun cartItem(
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
-private fun cartItemPreview() {
+private fun CartItemPreview() {
     val packageName = LocalContext.current.packageName
 
-    cartItem(
+    CartItem(
         productAndCount = ProductAndCount(ProductFixture.productList(packageName).last(), 1),
         onDelete = {},
     )

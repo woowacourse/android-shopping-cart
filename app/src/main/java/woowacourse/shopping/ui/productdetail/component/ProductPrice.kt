@@ -17,7 +17,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.util.intFormatter
 
 @Composable
-fun productPrice(
+fun ProductPrice(
     price: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -45,6 +45,6 @@ fun productPrice(
 
 @Preview
 @Composable
-private fun productPricePreview() {
-    productPrice(100)
+private fun ProductPricePreview() {
+    ProductPrice(100)
 }

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 
 @Composable
-fun pagination(
+fun Pagination(
     pageMoveToLeft: () -> Unit,
     pageMoveToLeftButtonEnabled: Boolean,
     currentPageIndex: Int,
@@ -35,7 +35,7 @@ fun pagination(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        pageMoveButton(
+        PageMoveButton(
             onClick = pageMoveToLeft,
             shape =
                 RoundedCornerShape(
@@ -62,7 +62,7 @@ fun pagination(
                 fontSize = 22.sp,
             )
         }
-        pageMoveButton(
+        PageMoveButton(
             onClick = pageMoveToRight,
             shape =
                 RoundedCornerShape(
@@ -84,8 +84,8 @@ fun pagination(
 
 @Preview
 @Composable
-private fun paginationPreview() {
-    pagination(
+private fun PaginationPreview() {
+    Pagination(
         pageMoveToLeft = {},
         pageMoveToLeftButtonEnabled = true,
         currentPageIndex = 1,
