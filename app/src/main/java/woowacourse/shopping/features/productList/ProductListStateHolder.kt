@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import woowacourse.shopping.data.DataProvider
 import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.repository.ProductRepository
@@ -40,5 +41,5 @@ class ProductListStateHolder(
 @Composable
 fun retainProductListStateHolder(): ProductListStateHolder =
     retain {
-        ProductListStateHolder(productRepository = ProductRepositoryMockImpl())
+        ProductListStateHolder(productRepository = DataProvider.productRepository)
     }

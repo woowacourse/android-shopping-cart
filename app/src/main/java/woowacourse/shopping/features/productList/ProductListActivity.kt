@@ -33,7 +33,7 @@ class ProductListActivity : ComponentActivity() {
                         startActivity(cartIntent)
                     },
                     onProductClick = { product ->
-                        if (!stateHolder.isHasProductId(MockData.productInfo.id)) {
+                        if (!stateHolder.isHasProductId(product.id)) {
                             Toast.makeText(context, "상품이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
                             return@ProductListScreen
                         }

@@ -180,7 +180,7 @@
 - [] 예상 가능한 예외 처리하기
 - [x] 잘못된 상품 id인 경우 처리하기
 - [x] Modifier 리펙터링
-- [] CartRepositoryMockImpl의 독립성에 대하여
+- [x] CartRepositoryMockImpl의 독립성에 대하여
 - [] 장바구니 테스트에서 테스트를 위한 로직 수정하기
 - [x] Flow, ViewModel을 사용하지 않는 방향으로 수정하기
 - [] 사용하지 않는 코드 제거하기!

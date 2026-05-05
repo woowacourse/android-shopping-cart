@@ -13,35 +13,25 @@ import woowacourse.shopping.domain.product.model.ProductName
 class CartRepositoryMockImplTest {
     @Test
     fun `장바구니에 상품을 추가할 수 있다`() {
-        val cartRepository = CartRepositoryMockImpl
+        val cartRepository = CartRepositoryMockImpl()
 
-        runBlocking {
-            cartRepository.addCartItem(cartItem1)
-        }
-        val updatedCart =
-            runBlocking {
-                cartRepository.getCart()
-            }
+        cartRepository.addCartItem(cartItem1)
+        val updatedCart = cartRepository.getCart()
+
         assertTrue(updatedCart.searchCartItem(cartItem1))
     }
 
     @Test
     fun `장바구니에 상품을 제거할 수 있다`() {
-        val cartRepository = CartRepositoryMockImpl
+        val cartRepository = CartRepositoryMockImpl()
 
-        runBlocking {
-            cartRepository.addCartItem(cartItem1)
-            cartRepository.addCartItem(cartItem2)
-            cartRepository.addCartItem(cartItem3)
-        }
-        runBlocking {
-            cartRepository.removeCartItem(cartItem2)
-        }
+        cartRepository.addCartItem(cartItem1)
+        cartRepository.addCartItem(cartItem2)
+        cartRepository.addCartItem(cartItem3)
 
-        val updatedCart =
-            runBlocking {
-                cartRepository.getCart()
-            }
+        cartRepository.removeCartItem(cartItem2)
+
+        val updatedCart = cartRepository.getCart()
 
         assertTrue(updatedCart.searchCartItem(cartItem1))
         assertFalse(updatedCart.searchCartItem(cartItem2))
