@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping.screen
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,35 +18,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.PRODUCT_ID_EXTRA_KEY
-import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
-import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.ui.productdetail.component.MintButton
 import woowacourse.shopping.ui.shopping.component.ProductItem
 import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
 import woowacourse.shopping.ui.shopping.state.rememberProductListState
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
     products: Products,
-    onClick: () -> Unit,
+    onCartClick: () -> Unit,
+    onProductClick: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberProductListState()
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
             ProductListTopAppBar(
                 onClick = {
-                    onClick()
+                    onCartClick()
                 },
             )
         },
@@ -63,13 +58,7 @@ fun ProductListScreen(
                 items(state.visibleProducts(products)) { product ->
                     ProductItem(
                         product = product,
-                        onClick = {
-                            val intent =
-                                Intent(context, ProductDetailActivity::class.java).apply {
-                                    putExtra(PRODUCT_ID_EXTRA_KEY, product.productId.toString())
-                                }
-                            context.startActivity(intent)
-                        },
+                        onClick = { onProductClick(product.productId) },
                     )
                 }
                 if (products.hasNextPage(currentPageIndex = state.currentPageIndex)) {
@@ -88,6 +77,7 @@ fun ProductListScreen(
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductListScreenPreview() {
@@ -95,6 +85,7 @@ private fun ProductListScreenPreview() {
 
     ProductListScreen(
         products = Products(ProductFixture.productList(packageName)),
-        onClick = {},
+        onCartClick = {},
+        onProductClick = {},
     )
 }

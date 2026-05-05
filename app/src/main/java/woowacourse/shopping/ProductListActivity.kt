@@ -8,8 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
+import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivity : ComponentActivity() {
+    @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -17,9 +19,9 @@ class ProductListActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 ProductListScreen(
                     products = Products(ProductFixture.productList(packageName)),
-                    onClick = {
-                        val intent = Intent(this, CartActivity::class.java)
-                        this.startActivity(intent)
+                    onCartClick = { startActivity(Intent(this, CartActivity::class.java)) },
+                    onProductClick = { productId ->
+                        ProductDetailActivity.start(this, productId)
                     },
                 )
             }

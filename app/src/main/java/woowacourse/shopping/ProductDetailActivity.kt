@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,8 +11,6 @@ import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-const val PRODUCT_ID_EXTRA_KEY = "woowacourse.shopping.product_id"
 
 class ProductDetailActivity : ComponentActivity() {
     @OptIn(ExperimentalUuidApi::class)
@@ -46,6 +46,22 @@ class ProductDetailActivity : ComponentActivity() {
                     onClose = { finish() },
                 )
             }
+        }
+    }
+
+    companion object {
+        private const val PRODUCT_ID_EXTRA_KEY = "woowacourse.shopping.product_id"
+
+        @OptIn(ExperimentalUuidApi::class)
+        fun start(
+            context: Context,
+            productId: Uuid,
+        ) {
+            val intent =
+                Intent(context, ProductDetailActivity::class.java).apply {
+                    putExtra(PRODUCT_ID_EXTRA_KEY, productId.toString())
+                }
+            context.startActivity(intent)
         }
     }
 }
