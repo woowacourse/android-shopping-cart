@@ -22,8 +22,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductRepositoryMockImpl
+import woowacourse.shopping.data.MockData
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
@@ -43,13 +43,15 @@ import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
+    productList: List<Product>,
+    isLastPage: Boolean,
     modifier: Modifier = Modifier,
-    viewModel: ProductListViewModel,
     onCartClick: () -> Unit = {},
+    loadProducts: () -> Unit = {},
     onProductClick: (Product) -> Unit = {},
 ) {
-    val productListState by viewModel.productListUiState.collectAsState()
-
+    println("[123123] ${productList.size}")
+    println("[123123] $isLastPage")
     Column(
         modifier = modifier,
     ) {
@@ -62,14 +64,16 @@ fun ProductListScreen(
         )
 
         ProductCardGrid(
-            products = productListState.products,
+            products = productList,
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(20.dp),
             onProductClick = { product -> onProductClick(product) },
-            onMoreClick = { viewModel.moreProducts() },
-            totalProductCount = productListState.totalProductCount,
+            onMoreClick = {
+                loadProducts()
+            },
+            isLastPage = isLastPage,
         )
     }
 }
@@ -113,10 +117,10 @@ private fun ProductListTopAppBar(
 @Composable
 private fun ProductCardGrid(
     products: List<Product>,
+    isLastPage: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
     onMoreClick: () -> Unit = {},
-    totalProductCount: Int = 0,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -137,7 +141,7 @@ private fun ProductCardGrid(
                 },
             )
         }
-        if (totalProductCount > products.size) {
+        if (!isLastPage) {
             item(
                 span = { GridItemSpan(2) },
             ) {
@@ -231,5 +235,8 @@ private fun MoreButton(
 @Preview(showBackground = true)
 @Composable
 fun ProductListScreenPreview() {
-    ProductListScreen(viewModel = ProductListViewModel(ProductRepositoryMockImpl()))
+    ProductListScreen(
+        productList = MockData.products,
+        isLastPage = false,
+    )
 }

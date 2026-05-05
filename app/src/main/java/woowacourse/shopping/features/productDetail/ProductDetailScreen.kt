@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import woowacourse.shopping.data.cart.CartRepositoryMockImpl
-import woowacourse.shopping.data.product.ProductRepositoryMockImpl
+import woowacourse.shopping.data.MockData
+import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
@@ -44,12 +43,10 @@ import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKG
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    viewModel: ProductDetailViewModel,
+    product: Product,
     modifier: Modifier = Modifier,
     onAddToCartClick: () -> Unit = {},
 ) {
-    val productDetailState by viewModel.productDetailState.collectAsState()
-    val product = productDetailState.product!!
     val activity = LocalActivity.current
 
     Column(
@@ -248,12 +245,6 @@ private fun CardAddButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        viewModel =
-            ProductDetailViewModel(
-                "0",
-                ProductRepositoryMockImpl(),
-                CartRepositoryMockImpl,
-            ),
-        onAddToCartClick = {},
+        product = MockData.productInfo,
     )
 }

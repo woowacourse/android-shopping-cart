@@ -8,13 +8,15 @@ import woowacourse.shopping.domain.cart.repository.CartRepository
 object CartRepositoryMockImpl : CartRepository {
     private var cart: Cart = Cart(cartItems = CartItems(mutableListOf()))
 
-    override suspend fun getCart(): Cart = cart
+    override fun getCart(): Cart = cart
 
-    override suspend fun addCartItem(cartItem: CartItem) {
+    override fun getTotalCartCount(): Int = cart.totalCount
+
+    override fun addCartItem(cartItem: CartItem) {
         cart = cart.addCartItem(cartItem)
     }
 
-    override suspend fun removeCartItem(cartItem: CartItem) {
+    override fun removeCartItem(cartItem: CartItem) {
         cart = cart.removeCartItem(cartItem)
     }
 }

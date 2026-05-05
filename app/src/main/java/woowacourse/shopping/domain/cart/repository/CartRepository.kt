@@ -4,9 +4,11 @@ import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
 
 interface CartRepository {
-    suspend fun getCart(): Cart
+    fun getCart(): Cart
 
-    suspend fun addCartItem(cartItem: CartItem)
+    fun getTotalCartCount(): Int
 
-    suspend fun removeCartItem(cartItem: CartItem)
+    fun addCartItem(cartItem: CartItem)
+
+    fun removeCartItem(cartItem: CartItem)
 }

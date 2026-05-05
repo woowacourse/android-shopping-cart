@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import woowacourse.shopping.data.cart.CartRepositoryMockImpl
 import woowacourse.shopping.data.product.ProductRepositoryMockImpl
 import woowacourse.shopping.features.cart.CartActivity
@@ -20,8 +18,8 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val productId = intent.getStringExtra("PRODUCT_ID") ?: ""
-        val viewModel =
-            ProductDetailViewModel(
+        val stateHolder =
+            ProductDetailStateHolder(
                 productId = productId,
                 productRepository = ProductRepositoryMockImpl(),
                 cartRepository = CartRepositoryMockImpl,
@@ -31,14 +29,11 @@ class ProductDetailActivity : ComponentActivity() {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewModel = viewModel,
+                    product = stateHolder.detailProduct,
                     onAddToCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
-
-                        lifecycleScope.launch {
-                            viewModel.addToCart()
-                            startActivity(cartIntent)
-                        }
+                        stateHolder.addToCart()
+                        startActivity(cartIntent)
                     },
                 )
             }

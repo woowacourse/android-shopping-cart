@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import woowacourse.shopping.data.cart.CartRepositoryMockImpl
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
@@ -52,10 +50,16 @@ import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_INA
 
 @Composable
 fun CartScreen(
+    cartItems: List<CartItem>,
+    totalPages: Int,
+    currentPage: Int,
+    hasPrevious: Boolean,
+    hasNext: Boolean,
+    goToPreviousPage: () -> Unit,
+    goToNextPage: () -> Unit,
+    removeCartItem: (CartItem) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel,
 ) {
-    val cartUiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
 
     Column(
@@ -76,7 +80,7 @@ fun CartScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 4.dp),
         ) {
-            items(cartUiState.cartItems) { cartItem ->
+            items(cartItems) { cartItem ->
                 CartItemCard(
                     modifier =
                         Modifier
@@ -84,19 +88,19 @@ fun CartScreen(
                             .padding(top = 8.dp, start = 16.dp, end = 16.dp),
                     cartItem = cartItem,
                     onRemoveClick = {
-                        viewModel.removeCartItem(cartItem)
+                        removeCartItem(cartItem)
                     },
                 )
             }
         }
 
-        if (cartUiState.totalPages > 1) {
+        if (totalPages > 1) {
             PageNavigator(
-                currentPage = cartUiState.currentPage,
-                hasPrevious = cartUiState.hasPrevious,
-                hasNext = cartUiState.hasNext,
-                onPreviousClick = { viewModel.goToPreviousPage() },
-                onNextClick = { viewModel.goToNextPage() },
+                currentPage = currentPage,
+                hasPrevious = hasPrevious,
+                hasNext = hasNext,
+                onPreviousClick = { goToPreviousPage() },
+                onNextClick = { goToNextPage() },
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -273,9 +277,14 @@ private fun ProductImage(
 @Preview(showBackground = true)
 @Composable
 private fun CartScreenPreview() {
-    val viewModel = CartViewModel(CartRepositoryMockImpl)
-
     CartScreen(
-        viewModel = viewModel,
+        cartItems = emptyList(),
+        totalPages = 0,
+        currentPage = 0,
+        hasPrevious = false,
+        hasNext = false,
+        goToPreviousPage = {},
+        goToNextPage = {},
+        removeCartItem = {},
     )
 }
