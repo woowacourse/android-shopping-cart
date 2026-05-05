@@ -15,15 +15,17 @@ class ProductActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val cartIntent = Intent(this, CartActivity::class.java)
-        val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
         setContent {
             AndroidshoppingTheme {
                 ProductScreen(
-                    onIconClick = { startActivity(cartIntent) },
+                    onIconClick = {
+                        val intent = Intent(this, CartActivity::class.java)
+                        startActivity(intent)
+                    },
                     onItemClick = { id ->
-                        productDetailIntent.putExtra(KEY_PRODUCT_ID, id)
-                        startActivity(productDetailIntent)
+                        val intent = Intent(this, ProductDetailActivity::class.java)
+                        intent.putExtra(KEY_PRODUCT_ID, id)
+                        startActivity(intent)
                     },
                 )
             }
