@@ -12,7 +12,6 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
