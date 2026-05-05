@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="cart_name">Cart</string>
+
+    <string name="cart_description">장바구니 화면으로 이동</string>
+    <string name="left_arrow_description">이전 화면으로 돌아가기</string>
+    <string name="close_description">현재 화면 닫기</string>
+
+    <string name="product_detail_price">가격</string>
+    <string name="product_detail_select">장바구니 담기</string>
+    <string name="title_activity_cart">CartActivity</string>
+    <string name="title_activity_product_detail">ProductDetailActivity</string>
+
+    <string name="cart_empty_message">장바구니가 비어있습니다</string>
+    <string name="cart_invalid_page_message">잘못된 페이지 접근입니다</string>
+
 </resources>
