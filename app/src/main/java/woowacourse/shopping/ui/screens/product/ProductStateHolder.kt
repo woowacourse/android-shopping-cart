@@ -24,7 +24,7 @@ class ProductStateHolder(
         isProductLoading = true
 
         try {
-            products += productRepository.getProducts(products.size, PAGE_SIZE)
+            products = productRepository.getProducts(0, products.size + PAGE_SIZE)
             hasNext = productRepository.productSize > products.size
         } finally {
             isProductLoading = false
