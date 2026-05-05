@@ -12,12 +12,14 @@ import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.ProductAndCount
 import woowacourse.shopping.domain.toPage
+import woowacourse.shopping.ui.cart.state.CartState
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartBody(
+    state: CartState,
     innerPadding: PaddingValues,
     cartItems: List<ProductAndCount>,
     currentPageIndex: Int,
@@ -27,19 +29,12 @@ fun CartBody(
     onDeleteProduct: (Uuid) -> Unit,
     modifier: Modifier,
 ) {
-    val visibleProducts =
-        cartItems.toPage(
-            PageRequest(
-                index = currentPageIndex,
-                size = CART_PAGE_SIZE,
-            ),
-        )
     Box(modifier = modifier.padding(innerPadding)) {
         Column {
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
-                items(visibleProducts.items) { productAndCount ->
+                items(state.visibleProducts(cartItems)) { productAndCount ->
                     CartItem(
                         productAndCount = productAndCount,
                         onDelete = onDeleteProduct,

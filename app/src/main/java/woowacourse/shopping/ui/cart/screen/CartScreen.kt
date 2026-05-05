@@ -35,6 +35,7 @@ fun CartScreen(
         containerColor = Color.White,
     ) { innerPadding ->
         CartBody(
+            state = state,
             innerPadding = innerPadding,
             cartItems = cartItems,
             currentPageIndex = state.currentPageIndex,

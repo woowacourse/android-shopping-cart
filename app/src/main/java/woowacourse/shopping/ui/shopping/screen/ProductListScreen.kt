@@ -42,8 +42,6 @@ fun ProductListScreen(
 ) {
     val state = rememberProductListState()
     val context = LocalContext.current
-    val visibleCount = (state.currentPageIndex + 1) * SHOPPING_PAGE_SIZE
-    val visibleProducts = products.products.toPage(PageRequest(0, visibleCount))
 
     Scaffold(
         topBar = {
@@ -62,7 +60,7 @@ fun ProductListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(visibleProducts.items) { product ->
+                items(state.visibleProducts(products)) { product ->
                     ProductItem(
                         product = product,
                         onClick = {

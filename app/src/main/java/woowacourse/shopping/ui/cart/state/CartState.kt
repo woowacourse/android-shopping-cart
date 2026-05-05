@@ -6,11 +6,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import woowacourse.shopping.domain.CART_PAGE_SIZE
+import woowacourse.shopping.domain.Page
+import woowacourse.shopping.domain.PageRequest
+import woowacourse.shopping.domain.ProductAndCount
+import woowacourse.shopping.domain.toPage
 
 class CartState {
     var currentPageIndex by mutableStateOf(0)
         private set
 
+    fun visibleProducts(cartItems: List<ProductAndCount>): List<ProductAndCount> =
+        cartItems
+            .toPage(PageRequest(index = currentPageIndex, size = CART_PAGE_SIZE))
+            .items
     fun increase() {
         currentPageIndex++
     }
