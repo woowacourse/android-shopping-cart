@@ -16,7 +16,6 @@ class ProductListStateHolderTest {
         val stateHolder =
             ProductListStateHolder(
                 productRepository = repository,
-                onPageIndexChanged = {},
             )
 
         val expectedProducts = Products(ProductFixture.productList.subList(0, 20))
@@ -32,7 +31,6 @@ class ProductListStateHolderTest {
         val stateHolder =
             ProductListStateHolder(
                 productRepository = repository,
-                onPageIndexChanged = {},
             )
 
         stateHolder.loadMore()
@@ -51,7 +49,6 @@ class ProductListStateHolderTest {
             ProductListStateHolder(
                 productRepository = repository,
                 pageSize = 5,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasNextPage).isFalse()
@@ -67,7 +64,6 @@ class ProductListStateHolderTest {
             ProductListStateHolder(
                 productRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasNextPage).isTrue()

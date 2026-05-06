@@ -18,7 +18,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.cart.cartItems).isEqualTo(CartFixture.cartItems.take(2))
@@ -34,7 +33,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.currentPage).isEqualTo(1)
@@ -50,7 +48,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasMoreItems).isTrue()
@@ -66,7 +63,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 10,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasMoreItems).isFalse()
@@ -82,7 +78,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasPreviousPage).isFalse()
@@ -98,7 +93,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         assertThat(stateHolder.hasNextPage).isTrue()
@@ -114,7 +108,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         stateHolder.goToNextPage()
@@ -133,7 +126,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         stateHolder.goToNextPage()
@@ -152,7 +144,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         stateHolder.deleteProduct(CartFixture.cartItems[0].product.productId)
@@ -170,7 +161,6 @@ class CartStateHolderTest {
             CartStateHolder(
                 cartRepository = repository,
                 pageSize = 2,
-                onPageIndexChanged = {},
             )
 
         stateHolder.goToNextPage()

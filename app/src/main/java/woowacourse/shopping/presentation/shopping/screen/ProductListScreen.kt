@@ -38,8 +38,6 @@ private fun ProductListScreenPreview() {
         stateHolder =
             ProductListStateHolder(
                 productRepository = AppContainer.productRepository,
-                initialPageIndex = 0,
-                onPageIndexChanged = {},
             ),
         onCartIconClick = {},
         onItemClick = {},

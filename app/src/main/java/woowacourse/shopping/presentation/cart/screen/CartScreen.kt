@@ -42,8 +42,6 @@ private fun CartScreenPreview() {
         stateHolder =
             CartStateHolder(
                 cartRepository = AppContainer.cartRepository,
-                initialPageIndex = 1,
-                onPageIndexChanged = {},
             ),
         onBack = {},
     )
