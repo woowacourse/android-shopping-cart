@@ -60,10 +60,10 @@
 ### 단위 테스트 목록
 
 - Money
-    - [ ] 두 Money를 더하면 금액의 합인 Money를 반환한다
-    - [ ] 두 Money를 빼면 금액의 차인 Money를 반환한다
-    - [ ] Money에 수량(Quantity)을 곱하면 금액이 곱해진 Money를 반환한다
-    - [ ] 금액이 같은 두 Money는 동등하다
+    - [x] 두 Money를 더하면 금액의 합인 Money를 반환한다
+    - [x] 두 Money를 빼면 금액의 차인 Money를 반환한다
+    - [x] Money에 수량(Quantity)을 곱하면 금액이 곱해진 Money를 반환한다
+    - [x] 금액이 같은 두 Money는 동등하다
 - Quantity
     - [ ] 수량이 1개 미만이면 오류가 발생한다
     - [ ] 수량을 더하면 더한 새 Quantity를 반환한다
