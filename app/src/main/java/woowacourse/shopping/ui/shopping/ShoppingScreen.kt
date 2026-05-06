@@ -27,7 +27,7 @@ fun ShoppingScreen(
 
     if (!state.isLoading) {
         ShoppingScreen(
-            products = state.visibleProducts,
+            products = Products(state.visibleProducts),
             hasNext = state.hasNext,
             lazyGridState = lazyGridState,
             modifier = modifier,

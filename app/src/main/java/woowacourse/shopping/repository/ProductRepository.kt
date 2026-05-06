@@ -1,6 +1,6 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.model.Products
+import woowacourse.shopping.model.Product
 
 interface ProductRepository {
     suspend fun getSize(): Int
@@ -8,7 +8,7 @@ interface ProductRepository {
     suspend fun getProducts(
         fromIndex: Int,
         loadSize: Int,
-    ): Products
+    ): List<Product>
 
     suspend fun hasNext(current: Int): Boolean
 }

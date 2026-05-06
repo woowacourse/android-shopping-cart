@@ -186,7 +186,7 @@ object InMemoryProductRepository : ProductRepository {
     override suspend fun getProducts(
         fromIndex: Int,
         loadSize: Int,
-    ): Products = products.getPagedProducts(fromIndex, loadSize)
+    ): List<Product> = products.getPagedProducts(fromIndex, loadSize)
 
     override suspend fun hasNext(current: Int): Boolean = current < size - 1
 }

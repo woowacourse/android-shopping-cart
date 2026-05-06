@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
@@ -24,7 +25,7 @@ class ShoppingScreenState(
         private set
     var visibleCount: Int by mutableIntStateOf(initialVisibleCount)
         private set
-    var visibleProducts: Products by mutableStateOf(Products(emptyList()))
+    var visibleProducts: List<Product> by mutableStateOf(emptyList())
         private set
     var hasNext: Boolean by mutableStateOf(false)
         private set
@@ -32,22 +33,33 @@ class ShoppingScreenState(
         private set
 
     init {
-        if (visibleProducts.toList().isEmpty()) {
-            loadProducts()
+        if (visibleProducts.isEmpty()) {
+            isLoading = true
+            coroutineScope.launch {
+                try {
+                    visibleProducts = productRepo.getProducts(0, visibleCount)
+                    hasNext = productRepo.hasNext(visibleProducts.count() - 1)
+                    sizeInRepo = productRepo.getSize()
+                } finally {
+                    isLoading = false
+                }
+            }
         }
     }
 
     fun loadMore() {
         visibleCount = minOf(visibleCount + LOAD_SIZE, sizeInRepo)
-        loadProducts()
-    }
 
-    private fun loadProducts() {
         isLoading = true
         coroutineScope.launch {
             try {
-                visibleProducts = productRepo.getProducts(0, visibleCount)
-                hasNext = productRepo.hasNext(visibleProducts.count() - 1)
+                val newProducts = productRepo.getProducts(
+                    fromIndex = visibleProducts.size,
+                    loadSize = LOAD_SIZE
+                )
+                visibleProducts = visibleProducts + newProducts
+
+                hasNext = productRepo.hasNext(visibleProducts.lastIndex)
                 sizeInRepo = productRepo.getSize()
             } finally {
                 isLoading = false
