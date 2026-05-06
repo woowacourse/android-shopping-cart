@@ -8,11 +8,12 @@ import kotlin.math.min
 
 class ProductPageStateHolder(
     products: List<Product>,
+    private val pageSize: Int,
+    initialPage: Int = 0,
 ) {
-    private val pageSize: Int = 20
     private val allProducts: List<Product> = products
 
-    var currentPage: Int by mutableIntStateOf(0)
+    var currentPage: Int by mutableIntStateOf(initialPage)
         private set
 
     private val pageCount: Int

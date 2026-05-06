@@ -18,6 +18,7 @@ class ShoppingCartPageStateHolderTest {
                 List(6) { index ->
                     ShoppingCartItem(index.toLong(), product)
                 },
+                pageSize = 5,
             )
         shoppingCartPageStateHolder.canMoveToNextPage() shouldBe true
         shoppingCartPageStateHolder.canMoveToPreviousPage() shouldBe false
@@ -39,6 +40,7 @@ class ShoppingCartPageStateHolderTest {
                 List(6) { index ->
                     ShoppingCartItem(index.toLong(), product)
                 },
+                pageSize = 5,
             )
         while (shoppingCartPageStateHolder.canMoveToNextPage()) {
             shoppingCartPageStateHolder.nextPage()

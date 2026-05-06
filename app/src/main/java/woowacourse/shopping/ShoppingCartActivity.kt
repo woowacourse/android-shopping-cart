@@ -30,7 +30,11 @@ class ShoppingCartActivity : ComponentActivity() {
                 var savedPageNumber by rememberSaveable { mutableIntStateOf(0) }
                 val shoppingCartPageStateHolder =
                     remember(shoppingCartItems) {
-                        ShoppingCartPageStateHolder(shoppingCartItems, savedPageNumber)
+                        ShoppingCartPageStateHolder(
+                            shoppingCartItems,
+                            initialPage = savedPageNumber,
+                            pageSize = 5,
+                        )
                     }
                 ShoppingCartScreen(
                     shoppingCartItems = shoppingCartPageStateHolder.getItems(),

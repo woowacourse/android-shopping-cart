@@ -28,7 +28,7 @@ class ProductListActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 val productPaginationStateHolder =
                     remember {
-                        ProductPageStateHolder(productRepository.getProducts())
+                        ProductPageStateHolder(productRepository.getProducts(), pageSize = 20)
                     }
                 ProductListScreen(
                     products = productPaginationStateHolder.getItems(),

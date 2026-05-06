@@ -25,6 +25,7 @@ class ProductPageStateHolderTest {
                             imageUrl = "",
                         )
                     },
+                pageSize = 20,
             )
         productDataLoadStateHolder.getItems().size shouldBe expectedItemSize
     }
@@ -47,6 +48,7 @@ class ProductPageStateHolderTest {
                             imageUrl = "",
                         )
                     },
+                pageSize = 20,
             )
 
         repeat(pageMoveCount - 1) {

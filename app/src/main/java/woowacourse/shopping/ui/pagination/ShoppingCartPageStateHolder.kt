@@ -9,12 +9,12 @@ import kotlin.math.min
 class ShoppingCartPageStateHolder(
     shoppingCartItems: List<ShoppingCartItem>,
     initialPage: Int = 0,
+    private val pageSize: Int,
 ) {
     init {
         require(initialPage >= 0) { "페이지 번호는 음수일 수 없습니다." }
     }
 
-    private val pageSize: Int = 5
     private val allItems: List<ShoppingCartItem> = shoppingCartItems
 
     var currentPage: Int by mutableIntStateOf(initialPage)
