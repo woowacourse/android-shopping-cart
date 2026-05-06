@@ -5,9 +5,10 @@ import kotlinx.parcelize.Parcelize
 import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 
+@Parcelize
 class Cart(
     val purchaseProducts: PurchaseProducts = PurchaseProducts(),
-) {
+): Parcelable {
     fun add(purchaseProduct: PurchaseProduct) = Cart(purchaseProducts.add(purchaseProduct))
 
     fun updateCountWithId(
