@@ -5,7 +5,7 @@ import woowacourse.shopping.model.ShoppingCartItem
 class ShoppingCartPageStateHolder(
     shoppingCartItems: List<ShoppingCartItem>,
 ) : PageStateHolder<ShoppingCartItem>(shoppingCartItems) {
-    override val pageSize: Int = 5
+    override val pageItemSize: Int = 5
 
     override fun getPageRange(): IntRange {
         return currentPage..getExclusiveEndPage()

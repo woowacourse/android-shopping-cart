@@ -27,14 +27,15 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             var savedCurrentPage by rememberSaveable { mutableIntStateOf(0) }
             AndroidShoppingTheme {
-                val productPaginationStateHolder =
+                val productPageStateHolder =
                     remember {
-                        ProductPageStateHolder(productRepository.getProducts()).apply {
-                            restoreCurrentPage(savedCurrentPage)
-                        }
+                        ProductPageStateHolder(
+                            products = productRepository.getProducts(),
+                            initialPage = savedCurrentPage,
+                        )
                     }
                 ProductListScreen(
-                    products = productPaginationStateHolder.getItems(),
+                    products = productPageStateHolder.getItems(),
                     onProductClick = { productId ->
                         DetailProductActivity.start(this, productId)
                     },
@@ -44,8 +45,8 @@ class ProductListActivity : ComponentActivity() {
                 ) {
                     MoreButton(
                         onClick = {
-                            productPaginationStateHolder.nextPage()
-                            savedCurrentPage = productPaginationStateHolder.currentPage
+                            productPageStateHolder.nextPage()
+                            savedCurrentPage = productPageStateHolder.currentPage
                         },
                     )
                 }

@@ -4,8 +4,13 @@ import woowacourse.shopping.model.Product
 
 class ProductPageStateHolder(
     products: List<Product>,
+    initialPage: Int = 0,
 ) : PageStateHolder<Product>(products) {
-    override val pageSize: Int = 20
+    init {
+        restoreCurrentPage(initialPage)
+    }
+
+    override val pageItemSize: Int = 20
 
     override fun getPageRange(): IntRange {
         return initialPage..getExclusiveEndPage()

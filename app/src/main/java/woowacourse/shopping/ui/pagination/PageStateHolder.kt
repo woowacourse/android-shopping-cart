@@ -10,15 +10,15 @@ import kotlin.math.min
 abstract class PageStateHolder<T : Any>(
     items: List<T>,
 ) {
-    protected abstract val pageSize: Int
+    protected abstract val pageItemSize: Int
 
     protected val initialPage: Int = 0
     private val pageCount: Int get() {
-        if (pageSize == 0) return 0
+        if (pageItemSize == 0) return 0
 
         val loadedItemSize = loadedItems.size
-        val totalPageCount = loadedItemSize / pageSize
-        return if (loadedItemSize % pageSize == 0) {
+        val totalPageCount = loadedItemSize / pageItemSize
+        return if (loadedItemSize % pageItemSize == 0) {
             totalPageCount
         } else {
             totalPageCount + 1
@@ -35,8 +35,8 @@ abstract class PageStateHolder<T : Any>(
     fun getItems(): List<T> {
         val range = getPageRange()
         return loadedItems.subList(
-            max(range.first * pageSize, initialPage),
-            min(range.last * pageSize, loadedItems.size),
+            max(range.first * pageItemSize, initialPage),
+            min(range.last * pageItemSize, loadedItems.size),
         )
     }
 
