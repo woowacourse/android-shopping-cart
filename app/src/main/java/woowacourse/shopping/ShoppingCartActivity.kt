@@ -2,6 +2,8 @@
 
 package woowacourse.shopping
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +23,13 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 @OptIn(ExperimentalMaterial3Api::class)
 class ShoppingCartActivity : ComponentActivity() {
     private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
+
+    companion object {
+        fun start(context: Context) {
+            val intent = Intent(context, ShoppingCartActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

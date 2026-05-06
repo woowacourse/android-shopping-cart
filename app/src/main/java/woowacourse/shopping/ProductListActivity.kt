@@ -2,7 +2,6 @@
 
 package woowacourse.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,10 +21,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 class ProductListActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
 
-    companion object {
-        const val EXTRA_PRODUCT_ID = "productId"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,12 +36,10 @@ class ProductListActivity : ComponentActivity() {
                 ProductListScreen(
                     products = productPaginationStateHolder.getItems(),
                     onProductClick = { productId ->
-                        val intent = Intent(this, DetailProductActivity::class.java)
-                        intent.putExtra(EXTRA_PRODUCT_ID, productId)
-                        startActivity(intent)
+                        DetailProductActivity.start(this, productId)
                     },
                     onNavigateToCartClick = {
-                        startActivity(Intent(this, ShoppingCartActivity::class.java))
+                        ShoppingCartActivity.start(this)
                     },
                 ) {
                     MoreButton(
