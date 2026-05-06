@@ -1,0 +1,27 @@
+package woowacourse.shopping.data
+
+import woowacourse.shopping.domain.model.AddItemResult
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RemoveItemResult
+import woowacourse.shopping.domain.repository.CartRepository
+
+class InMemoryCartRepository : CartRepository {
+    private var cart: Cart = Cart()
+
+    override suspend fun getCart(): Cart = cart
+
+    override suspend fun getTotalCartSize(): Int = cart.size
+
+    override suspend fun addItem(product: Product): AddItemResult {
+        val result = cart.addItem(product)
+        if (result is AddItemResult.NewAdded) cart = result.cart
+        return result
+    }
+
+    override suspend fun deleteItem(id: String): RemoveItemResult {
+        val result = cart.deleteItem(id)
+        if (result is RemoveItemResult.Success) cart = result.cart
+        return result
+    }
+}
