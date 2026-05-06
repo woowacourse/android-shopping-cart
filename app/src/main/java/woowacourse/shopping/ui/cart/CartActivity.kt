@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
+import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class CartActivity : ComponentActivity() {
-    val cartRepo = InMemoryCartRepository
+    val cartRepo = AppContainer.cartRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

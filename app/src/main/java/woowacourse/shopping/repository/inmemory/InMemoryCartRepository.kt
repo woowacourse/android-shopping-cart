@@ -5,8 +5,10 @@ import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 
-object InMemoryCartRepository : CartRepository {
-    private val items = mutableListOf<CartItem>()
+class InMemoryCartRepository(
+    initialItems: List<CartItem> = emptyList()
+) : CartRepository {
+    private val items = initialItems.toMutableList()
 
     override suspend fun add(item: Product) {
         val existingIndex = items.indexOfFirst { it.product.id == item.id }

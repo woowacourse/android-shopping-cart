@@ -31,8 +31,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
 
 @Composable
@@ -126,17 +126,32 @@ private fun ImageAndPrice(
 @Preview(showBackground = true, name = "카트 아이템 유닛")
 @Composable
 private fun CartItemUnitPreview() {
-    CartItemUnit(product = InMemoryProductRepository.APPLE, onDeleteClick = {})
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    CartItemUnit(product = product, onDeleteClick = {})
 }
 
 @Preview(showBackground = true, name = "이름과 닫기아이콘")
 @Composable
 private fun NameAndCloseIconPreview() {
-    NameAndCloseIcon(product = InMemoryProductRepository.APPLE, onClick = {})
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    NameAndCloseIcon(product = product, onClick = {})
 }
 
 @Preview(showBackground = true, name = "사진과 금액")
 @Composable
 private fun ImageAndPricePreview() {
-    ImageAndPrice(InMemoryProductRepository.APPLE)
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    ImageAndPrice(product)
 }

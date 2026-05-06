@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
 
 @SuppressLint("DefaultLocale")
@@ -71,7 +70,12 @@ fun ProductUnit(
 @Composable
 @Preview(showBackground = true)
 private fun ProductUnitPreview() {
-    ProductUnit(product = InMemoryProductRepository.APPLE, onClick = {})
+    val product = Product(
+        name = "연금복권",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    ProductUnit(product = product, onClick = {})
 }
 
 @Composable

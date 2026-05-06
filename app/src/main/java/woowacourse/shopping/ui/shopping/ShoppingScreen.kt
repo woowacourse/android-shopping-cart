@@ -9,9 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.shopping.component.ShoppingBody
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
@@ -71,8 +71,24 @@ fun ShoppingScreen(
 @Preview(showBackground = true, name = "상품 여러개")
 @Composable
 private fun ShoppingScreenPreview1() {
+    val product1 = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    val product2 = Product(
+        name = "연금복권",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    val product3 = Product(
+        name = "로또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+
     ShoppingScreen(
-        products = InMemoryProductRepository.products,
+        products = Products(listOf(product1, product2, product3)),
         hasNext = true,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},

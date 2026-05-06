@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
@@ -31,7 +31,7 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val cartRepo = InMemoryCartRepository
+                    val cartRepo = AppContainer.cartRepository
 
                     ProductDetailScreen(
                         productToShow = receivedProduct,

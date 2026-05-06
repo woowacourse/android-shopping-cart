@@ -8,9 +8,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.productdetail.component.CartAddButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetailBody
 import woowacourse.shopping.ui.productdetail.component.ProductDetailHeader
@@ -59,7 +59,12 @@ fun ProductDetailScreen(
 @Composable
 @Preview(showBackground = true)
 private fun ProductDetailScreenPreview() {
-    val product = InMemoryProductRepository.APPLE
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+
     ProductDetailScreen(
         product = product,
         onCloseClick = {},

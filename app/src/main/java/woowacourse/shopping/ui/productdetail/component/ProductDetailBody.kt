@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 
 @Composable
 fun ProductDetailBody(
@@ -94,11 +94,21 @@ private fun ProductLabel(
 @Composable
 @Preview(showBackground = true, name = "상품 유닛")
 private fun ProductUnitPreview() {
-    ProductDetailBody(InMemoryProductRepository.APPLE)
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    ProductDetailBody(product)
 }
 
 @Composable
 @Preview(showBackground = true, name = "상품 이름만")
 private fun ProductLabelPreview() {
-    ProductLabel(product = InMemoryProductRepository.APPLE)
+    val product = Product(
+        name = "스피또",
+        price = Money(1000),
+        imageUrl = ""
+    )
+    ProductLabel(product = product)
 }

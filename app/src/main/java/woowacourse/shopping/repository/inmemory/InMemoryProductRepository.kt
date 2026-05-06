@@ -5,7 +5,9 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
-object InMemoryProductRepository : ProductRepository {
+class InMemoryProductRepository(
+    initialProducts: List<Product> = emptyList()
+) : ProductRepository {
     val DARAM =
         Product(
             name = "다람",
@@ -151,34 +153,40 @@ object InMemoryProductRepository : ProductRepository {
             imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
         )
     val products: Products =
-        Products(
-            listOf(
-                DARAM,
-                BBOYAMI,
-                BANILLA,
-                APPLE,
-                GLLUMIN,
-                SYANTI,
-                DARAM2,
-                BBOYAMI2,
-                BANILLA2,
-                APPLE2,
-                GLLUMIN2,
-                SYANTI2,
-                DARAM3,
-                BBOYAMI3,
-                BANILLA3,
-                APPLE3,
-                GLLUMIN3,
-                SYANTI3,
-                DARAM4,
-                BBOYAMI4,
-                BANILLA4,
-                APPLE4,
-                GLLUMIN4,
-                SYANTI4,
-            ),
-        )
+        if (initialProducts.isEmpty()) {
+            Products(
+                listOf(
+                    DARAM,
+                    BBOYAMI,
+                    BANILLA,
+                    APPLE,
+                    GLLUMIN,
+                    SYANTI,
+                    DARAM2,
+                    BBOYAMI2,
+                    BANILLA2,
+                    APPLE2,
+                    GLLUMIN2,
+                    SYANTI2,
+                    DARAM3,
+                    BBOYAMI3,
+                    BANILLA3,
+                    APPLE3,
+                    GLLUMIN3,
+                    SYANTI3,
+                    DARAM4,
+                    BBOYAMI4,
+                    BANILLA4,
+                    APPLE4,
+                    GLLUMIN4,
+                    SYANTI4,
+                ),
+            )
+        } else {
+            Products(initialProducts)
+        }
+
+
     private val size = products.count()
 
     override suspend fun getSize(): Int = size
