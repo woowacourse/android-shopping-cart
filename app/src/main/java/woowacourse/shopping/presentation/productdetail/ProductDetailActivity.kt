@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.remember
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.navigation.IntentKeys
@@ -18,14 +17,12 @@ import woowacourse.shopping.presentation.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductDetailActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val product =
-            intent.getParcelableExtra<ProductUiModel>(IntentKeys.PRODUCT, ProductUiModel::class.java)
+        val product = intent.getProduct()
 
         setContent {
             androidshoppingTheme {
@@ -60,3 +57,11 @@ class ProductDetailActivity : ComponentActivity() {
             }
     }
 }
+
+@Suppress("DEPRECATION")
+private fun Intent.getProduct(): ProductUiModel? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelableExtra(IntentKeys.PRODUCT, ProductUiModel::class.java)
+    } else {
+        getParcelableExtra(IntentKeys.PRODUCT)
+    }
