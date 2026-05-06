@@ -74,6 +74,7 @@ fun ProductListScreen(
                 ProductCardGrid(
                     visibleProducts = state.products,
                     canLoadMore = state.canLoadMore,
+                    isLoadingMore = state.isLoadingMore,
                     modifier =
                         Modifier
                             .fillMaxSize()
@@ -160,6 +161,7 @@ private fun ProductListTopAppBar(
 private fun ProductCardGrid(
     visibleProducts: List<Product>,
     canLoadMore: Boolean,
+    isLoadingMore:Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
     onMoreClick: () -> Unit = {},
@@ -183,7 +185,19 @@ private fun ProductCardGrid(
                 },
             )
         }
-        if (canLoadMore) {
+        if (isLoadingMore){
+           item(
+               span = {GridItemSpan(2)},
+           ) {
+               Box(
+                   modifier = Modifier.fillMaxWidth()
+                       .padding(vertical = 16.dp),
+                   contentAlignment = Alignment.Center,
+               ){
+                   CircularProgressIndicator()
+               }
+           }
+        } else if (canLoadMore) {
             item(
                 span = { GridItemSpan(2) },
             ) {

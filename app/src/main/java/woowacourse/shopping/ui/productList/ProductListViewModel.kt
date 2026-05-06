@@ -20,6 +20,7 @@ class ProductListViewModel(
 
     private var currentPage = 0
     private val accumulatedProducts = mutableListOf<Product>()
+    private var isLoading = false
 
     init {
         loadNextPage()
@@ -30,7 +31,16 @@ class ProductListViewModel(
     }
 
     private fun loadNextPage() {
+        if(isLoading)   return
+
         viewModelScope.launch {
+            isLoading = true
+            val currentState = _uiState.value
+            if (currentState is ProductListUiState.Success) {
+                _uiState.value = currentState.copy(isLoadingMore = true)
+            } else {
+                _uiState.value = ProductListUiState.Loading
+            }
             runCatching { productRepository.getProducts(currentPage, PAGE_SIZE) }
                 .onSuccess { newProducts ->
                     accumulatedProducts.addAll(newProducts)
@@ -39,10 +49,12 @@ class ProductListViewModel(
                         ProductListUiState.Success(
                             products = accumulatedProducts.toList(),
                             canLoadMore = newProducts.size == PAGE_SIZE,
+                            isLoadingMore = false,
                         )
                 }.onFailure { throwable ->
                     _uiState.value = ProductListUiState.Error(throwable)
                 }
+            isLoading = false
         }
     }
 

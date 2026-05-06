@@ -8,6 +8,7 @@ sealed interface ProductListUiState {
     data class Success(
         val products: List<Product>,
         val canLoadMore: Boolean,
+        val isLoadingMore: Boolean = false,
     ) : ProductListUiState
 
     data class Error(
