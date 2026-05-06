@@ -2,7 +2,12 @@ package woowacourse.shopping.domain
 
 import java.util.UUID
 
-class Product(val name: String, val price: Money, val imageUrl: String, val id: String = UUID.randomUUID().toString()) {
+class Product(
+    val name: String,
+    val price: Money,
+    val imageUrl: String,
+    val id: String = UUID.randomUUID().toString(),
+) {
     init {
         require(name.isNotBlank()) { "상품 제목은 공백일 수 없습니다." }
     }

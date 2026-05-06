@@ -10,7 +10,11 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 
 @Composable
-fun PreviewableAsyncImage(imageUrl: String, description: String, modifier: Modifier = Modifier) {
+fun PreviewableAsyncImage(
+    imageUrl: String,
+    description: String,
+    modifier: Modifier = Modifier,
+) {
     val isPreview = LocalInspectionMode.current
     AsyncImage(
         model = imageUrl,

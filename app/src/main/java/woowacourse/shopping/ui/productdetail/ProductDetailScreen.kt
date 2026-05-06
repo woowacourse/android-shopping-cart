@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productlist
+package woowacourse.shopping.ui.productdetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.productdetail.ProductAppBar
+import woowacourse.shopping.ui.productlist.PreviewableAsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,7 +92,10 @@ fun ProductDetailScreen(
 }
 
 @Composable
-private fun CartPutButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun CartPutButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

@@ -44,7 +44,10 @@ class CartStateHolder(initCartItems: List<ProductUiModel>) {
         cartItems = pagination(page, totalCartItems)
     }
 
-    private fun pagination(page: Int, productUiModels: List<ProductUiModel>): List<ProductUiModel> {
+    private fun pagination(
+        page: Int,
+        productUiModels: List<ProductUiModel>,
+    ): List<ProductUiModel> {
         if (productUiModels.isEmpty() || page <= 0) return emptyList()
 
         val fromIndex = (page - 1) * PAGE_SIZE

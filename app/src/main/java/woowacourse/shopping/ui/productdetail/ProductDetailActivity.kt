@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.ui.productdetail.stateholder.ProductDetailStateHolder
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
-import woowacourse.shopping.ui.productlist.ProductDetailScreen
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,10 @@ class ProductDetailActivity : ComponentActivity() {
         private const val EXTRA_PRODUCT_ID = "product_id"
         private const val EXTRA_ADDED_ID = "added_to_cart_id"
 
-        fun newIntent(context: Context, productId: String): Intent = Intent(context, ProductDetailActivity::class.java)
+        fun newIntent(
+            context: Context,
+            productId: String,
+        ): Intent = Intent(context, ProductDetailActivity::class.java)
             .putExtra(EXTRA_PRODUCT_ID, productId)
 
         fun getAddedId(intent: Intent?): String? = intent?.getStringExtra(EXTRA_ADDED_ID)

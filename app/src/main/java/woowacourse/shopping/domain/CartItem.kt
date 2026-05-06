@@ -1,6 +1,9 @@
 package woowacourse.shopping.domain
 
-class CartItem(val product: Product, private val quantity: Quantity) {
+class CartItem(
+    val product: Product,
+    val quantity: Quantity,
+) {
     fun hasProduct(targetProduct: Product): Boolean = this.product == targetProduct
 
     fun hasProductId(targetId: String): Boolean = product.hasId(targetId)
