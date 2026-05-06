@@ -1,0 +1,30 @@
+package woowacourse.shopping.product
+
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import woowacourse.shopping.domain.product.model.ImageUrl
+
+class ImageUrlTest {
+    @Test
+    fun `이미지 링크가 비어있으면 예외가 발생한다`() {
+        val emptyImageUrl = ""
+        assertThrows(IllegalArgumentException::class.java) {
+            ImageUrl(emptyImageUrl)
+        }
+    }
+
+    @Test
+    fun `이미지 링크가 공백이면 예외가 발생한다`() {
+        val emptyImageUrl = " "
+        assertThrows(IllegalArgumentException::class.java) {
+            ImageUrl(emptyImageUrl)
+        }
+    }
+
+    @Test
+    fun `이미지 링크가 존재하면 검증 값이 참이 된다`() {
+        val value = "https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
+        assertTrue(ImageUrl.isValueValid(value))
+    }
+}
