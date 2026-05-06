@@ -65,10 +65,10 @@
     - [x] Money에 수량(Quantity)을 곱하면 금액이 곱해진 Money를 반환한다
     - [x] 금액이 같은 두 Money는 동등하다
 - Quantity
-    - [ ] 수량이 1개 미만이면 오류가 발생한다
-    - [ ] 수량을 더하면 더한 새 Quantity를 반환한다
-    - [ ] 수량을 빼면 빠진 새 Quantity를 반환한다
-    - [ ] 수량이 같으면 두 Quantity는 동등하다
+    - [x] 수량이 1개 미만이면 오류가 발생한다
+    - [x] 수량을 더하면 더한 새 Quantity를 반환한다
+    - [x] 수량을 빼면 빠진 새 Quantity를 반환한다
+    - [x] 수량이 같으면 두 Quantity는 동등하다
 - CartItem
     - [ ] ID에 해당하는 상품의 개수를 더한 CartItem을 반환한다
     - [ ] ID에 해당하는 상품의 개수를 뺀 CartItem을 반환한다
