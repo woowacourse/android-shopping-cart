@@ -21,7 +21,7 @@ class CartActivity : ComponentActivity() {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CartScreen(
-                        cartRepo = cartRepo,
+                        state = rememberCartScreenState(cartRepo),
                         modifier = Modifier.padding(innerPadding),
                         onBackClick = ::finish,
                     )

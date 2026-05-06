@@ -24,7 +24,7 @@ class ShoppingActivity : ComponentActivity() {
                     val productRepo = InMemoryProductRepository
 
                     ShoppingScreen(
-                        productRepo = productRepo,
+                        state = rememberShoppingScreenState(productRepo),
                         modifier = Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))

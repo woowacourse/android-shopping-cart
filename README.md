@@ -1,7 +1,7 @@
 # 1단계, 2단계 - 리팩토링 2번째
 
 ## 아키텍처 및 상태 관리
-- [ ] StateHolder 역할 위임
+- [x] StateHolder 역할 위임
   - Activity에서 `StateHolder`를 생성해 주입하는 구조로 변경
 - [x] UI 상태 보존 
   - 화면 회전 등 구성 변경시에도 상태가 초기화되지 않도록 `isLoading` 변수 추가

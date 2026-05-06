@@ -14,9 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.component.CartHeader
 import woowacourse.shopping.ui.cart.component.CartItemBody
 
@@ -24,12 +23,10 @@ private const val PAGE_SIZE = 5
 
 @Composable
 fun CartScreen(
-    cartRepo: CartRepository,
+    state: CartScreenState,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    val state = rememberCartScreenState(cartRepo = cartRepo)
-
     var currentPage by rememberSaveable { mutableIntStateOf(1) }
     val totalPages = (state.cart.items.size - 1) / PAGE_SIZE + 1
     val currentIsLoading = state.isLoading
@@ -96,16 +93,43 @@ fun CartScreen(
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun CartScreenPreview() {
-    val cart = Cart(InMemoryProductRepository.products.associateWith { 1 })
+@Preview(showBackground = true, name = "상품 5개 넘을 때")
+private fun CartScreenPreview1() {
+    val products = listOf(
+        Product(name = "1번", price = Money(1000), imageUrl = ""),
+        Product(name = "2번", price = Money(1000), imageUrl = ""),
+        Product(name = "3번", price = Money(1000), imageUrl = ""),
+        Product(name = "4번", price = Money(1000), imageUrl = ""),
+        Product(name = "5번", price = Money(1000), imageUrl = ""),
+    )
+    val cart = Cart(products.associateWith { 1 })
+
     CartScreen(
         cart = cart,
         onBackClick = {},
         onDeleteClick = {},
         currentPage = 1,
-        totalPages = 5,
+        totalPages = 2,
         showPagination = true,
+        modifier = Modifier,
+        onPreviousClick = {},
+        onNextClick = {},
+    )
+}
+
+@Composable
+@Preview(showBackground = true, name = "상품 없을 때")
+private fun CartScreenPreview2() {
+    val products = emptyList<Product>()
+    val cart = Cart(products.associateWith { 1 })
+
+    CartScreen(
+        cart = cart,
+        onBackClick = {},
+        onDeleteClick = {},
+        currentPage = 1,
+        totalPages = 1,
+        showPagination = false,
         modifier = Modifier,
         onPreviousClick = {},
         onNextClick = {},

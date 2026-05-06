@@ -4,20 +4,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
+private const val PAGE_SIZE = 20
+
 class ShoppingScreenState(
     private val productRepo: ProductRepository,
     private val coroutineScope: CoroutineScope,
-    visibleCount: Int,
+    initialVisibleCount: Int,
 ) {
     var isLoading: Boolean by mutableStateOf(false)
+        private set
+    var visibleCount: Int by mutableIntStateOf(initialVisibleCount)
+        private set
     var visibleProducts: Products by mutableStateOf(Products(emptyList()))
         private set
     var hasNext: Boolean by mutableStateOf(false)
@@ -27,20 +33,45 @@ class ShoppingScreenState(
 
     init {
         if (visibleProducts.toList().isEmpty()) {
-            loadProducts(visibleCount)
+            loadProducts()
         }
     }
 
-    fun loadProducts(newCount: Int) {
+    fun loadMore() {
+        visibleCount = minOf(visibleCount + PAGE_SIZE, sizeInRepo)
+        loadProducts()
+    }
+
+    private fun loadProducts() {
         isLoading = true
         coroutineScope.launch {
             try {
-                visibleProducts = productRepo.getProducts(0, newCount)
+                visibleProducts = productRepo.getProducts(0, visibleCount)
                 hasNext = productRepo.hasNext(visibleProducts.count() - 1)
                 sizeInRepo = productRepo.getSize()
             } finally {
                 isLoading = false
             }
+        }
+    }
+
+    companion object {
+        fun Saver(
+            productRepo: ProductRepository,
+            coroutineScope: CoroutineScope
+        ): Saver<ShoppingScreenState, Int> {
+            return Saver(
+                save = { state ->
+                    state.visibleCount
+                },
+                restore = { savedCount ->
+                    ShoppingScreenState(
+                        productRepo = productRepo,
+                        coroutineScope = coroutineScope,
+                        initialVisibleCount = savedCount
+                    )
+                }
+            )
         }
     }
 }
@@ -49,13 +80,13 @@ class ShoppingScreenState(
 fun rememberShoppingScreenState(
     productRepo: ProductRepository,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    visibleCount: Int,
 ): ShoppingScreenState {
-    return remember {
+    val saver = ShoppingScreenState.Saver(productRepo, coroutineScope)
+    return rememberSaveable(saver = saver) {
         ShoppingScreenState(
             productRepo = productRepo,
             coroutineScope = coroutineScope,
-            visibleCount = visibleCount,
+            initialVisibleCount = PAGE_SIZE,
         )
     }
 }
