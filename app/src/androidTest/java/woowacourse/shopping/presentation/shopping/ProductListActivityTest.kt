@@ -36,7 +36,7 @@ class ProductListActivityTest {
         Intents.intended(IntentMatchers.hasComponent(ProductDetailActivity::class.java.name))
         Intents.intended(
             IntentMatchers.hasExtra(
-                IntentKeys.PRODUCT_ID,
+                IntentKeys.PRODUCT,
                 product.productId.toString(),
             ),
         )
