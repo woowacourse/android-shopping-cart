@@ -1,6 +1,7 @@
 package woowacourse.shopping.domain
 
 import woowacourse.shopping.domain.util.CountUpdateType
+import java.util.UUID
 
 data class PurchaseProduct(
     private val product: Product,
@@ -18,5 +19,9 @@ data class PurchaseProduct(
         return copy(count = newCount)
     }
 
+    val uuid = product.uuid
+
     fun totalPrice() = product.price * count
+
+    fun isSameUUID(uuid: UUID) = uuid == product.uuid
 }
