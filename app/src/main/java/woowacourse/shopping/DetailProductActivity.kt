@@ -25,16 +25,15 @@ class DetailProductActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
+        val product =
+            if (productId == INVALID_PRODUCT_ID) {
+                null
+            } else {
+                productRepository.getProductOrNull(productId)
+            }
         setContent {
             AndroidShoppingTheme {
-                val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
-                val product =
-                    if (productId == INVALID_PRODUCT_ID) {
-                        null
-                    } else {
-                        productRepository.getProductOrNull(productId)
-                    }
-
                 if (product != null) {
                     DetailProductScreen(
                         product = product,
