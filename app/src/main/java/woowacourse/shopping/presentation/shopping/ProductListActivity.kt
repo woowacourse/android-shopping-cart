@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.activity.viewModels
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -20,14 +20,15 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             androidshoppingTheme {
-                val stateHolder =
-                    rememberSaveable(saver = ProductListStateHolder.Saver) {
-                        ProductListStateHolder(
-                            productRepository = AppContainer.productRepository,
-                        )
-                    }
+                val viewModel: ProductListViewModel by viewModels {
+                    ProductListViewModelFactory(
+                        productRepository = AppContainer.productRepository,
+                    )
+                }
                 ProductListScreen(
-                    stateHolder = stateHolder,
+                    products = viewModel.products,
+                    hasNextPage = viewModel.hasNextPage,
+                    onLoadMore = viewModel::loadMore,
                     onCartIconClick = {
                         startActivity(CartActivity.newIntent(this))
                     },

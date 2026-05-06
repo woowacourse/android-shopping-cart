@@ -4,16 +4,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.product.Product
-import woowacourse.shopping.presentation.shopping.ProductListStateHolder
+import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
-    stateHolder: ProductListStateHolder,
+    products: Products,
+    hasNextPage: Boolean,
+    onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
@@ -23,9 +24,9 @@ fun ProductListScreen(
         modifier = modifier,
     ) {
         ProductListContent(
-            products = stateHolder.products,
-            hasNextPage = stateHolder.hasNextPage,
-            onLoadMore = { stateHolder.loadMore() },
+            products = products,
+            hasNextPage = hasNextPage,
+            onLoadMore = onLoadMore,
             onItemClick = { product -> onItemClick(product) },
         )
     }
@@ -35,10 +36,9 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     ProductListScreen(
-        stateHolder =
-            ProductListStateHolder(
-                productRepository = AppContainer.productRepository,
-            ),
+        products = Products(emptyList()),
+        hasNextPage = true,
+        onLoadMore = {},
         onCartIconClick = {},
         onItemClick = {},
     )

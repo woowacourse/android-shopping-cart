@@ -2,16 +2,16 @@ package woowacourse.shopping.presentation.shopping
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.app.AppContainer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductListStateHolder(
+class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
-) {
+) : ViewModel() {
     var currentPageIndex by mutableStateOf(0)
 
     var products by mutableStateOf(Products())
@@ -56,11 +56,20 @@ class ProductListStateHolder(
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 20
+    }
+}
 
-        val Saver: Saver<ProductListStateHolder, Int> =
-            Saver(
-                save = { it.currentPageIndex },
-                restore = { ProductListStateHolder(AppContainer.productRepository, it) },
-            )
+class ProductListViewModelFactory(
+    private val productRepository: ProductRepository,
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ProductListViewModel(
+                productRepository = productRepository,
+            ) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
