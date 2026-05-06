@@ -10,8 +10,6 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         return Cart(cartItems + cartItem)
     }
 
-    fun isContains(product: Product): Boolean = cartItems.any { it.hasProduct(product) }
-
     fun removeCartItems(ids: List<String>): Cart = Cart(
         cartItems.filter { cartItem ->
             ids.none {
