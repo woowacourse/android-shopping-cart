@@ -7,11 +7,8 @@ class MemoryProductRepository(
 ) : ProductRepository {
     private val products: List<Product> = products.toList()
 
-    override fun getProduct(productId: Long): Product =
-        products.find { it.id == productId } ?: throw IllegalArgumentException("해당 상품을 찾을 수 없습니다.")
-
     override fun getProductOrNull(productId: Long): Product? =
-        products.find { it.id == productId }
+        products.find { it.id == productId } ?: throw IllegalArgumentException("해당 상품을 찾을 수 없습니다.")
 
     override fun getProducts(): List<Product> = products.toList()
 }
