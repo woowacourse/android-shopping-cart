@@ -133,4 +133,25 @@ class PurchaseProductsTest {
 
         assert(purchaseProducts.totalCount() == 13)
     }
+
+    @Test
+    fun `동일한 ID를 갖는 PurchaseProduct가 추가되면 기존에 담겨있던 객체의 count가 증가한다`() {
+        val newPurchaseProduct = PurchaseProduct(
+            product = Product(
+                imageUri = "uri",
+                name = "테스트 상품",
+                price = 1000
+            ),
+        )
+
+        val productId = newPurchaseProduct.uuid
+
+        val purchaseProducts = PurchaseProducts(
+            purchaseProducts = listOf(newPurchaseProduct)
+        )
+
+        val updatedPurchaseProducts = purchaseProducts.add(newPurchaseProduct)
+
+        assert(updatedPurchaseProducts.findById(productId)?.count == 2)
+    }
 }

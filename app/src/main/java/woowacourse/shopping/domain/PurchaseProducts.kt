@@ -6,7 +6,9 @@ import java.util.UUID
 class PurchaseProducts(
     val purchaseProducts: List<PurchaseProduct> = emptyList()
 ) {
-    fun add(purchaseProduct: PurchaseProduct) = PurchaseProducts(purchaseProducts + purchaseProduct)
+    fun add(purchaseProduct: PurchaseProduct) =
+        if(findById(purchaseProduct.uuid) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
+        else updateCountWithUuid(purchaseProduct.uuid, CountUpdateType.INCREASE)
 
     fun updateCountWithUuid(uuid: UUID, updateType: CountUpdateType) = PurchaseProducts (
         purchaseProducts.map {

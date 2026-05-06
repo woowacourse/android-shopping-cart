@@ -18,7 +18,7 @@
 - [x] 특정 `PurchaseProduct`를 제거할 수 있다
 - [x] 특정 `PurchaseProduct`의 총 가격을 알 수 있다
 - [x] `PurchaseProduct`의 `count`의 총합을 알 수 있다
-- [ ] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
+- [x] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
 
 ### Cart
 
