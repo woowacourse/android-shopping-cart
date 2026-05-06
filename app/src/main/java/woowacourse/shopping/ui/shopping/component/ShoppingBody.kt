@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 fun ShoppingBody(
     products: Products,
     showMoreButton: Boolean,
+    lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
@@ -27,6 +30,7 @@ fun ShoppingBody(
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 154.dp),
         modifier = modifier,
+        state = lazyGridState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -53,6 +57,7 @@ private fun ShoppingBodyPreview() {
     ShoppingBody(
         products = InMemoryProductRepository.products,
         showMoreButton = true,
+        lazyGridState = rememberLazyGridState(),
         onProductClick = {},
         onMoreClick = {},
     )

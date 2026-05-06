@@ -8,13 +8,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
@@ -34,9 +32,12 @@ fun CartScreen(
 
     var currentPage by rememberSaveable { mutableIntStateOf(1) }
     val totalPages = (state.cart.items.size - 1) / PAGE_SIZE + 1
+    val currentIsLoading = state.isLoading
 
-    LaunchedEffect(totalPages) {
-        currentPage = currentPage.coerceAtMost(totalPages)
+    LaunchedEffect(totalPages, currentIsLoading) {
+        if (!currentIsLoading) {
+            currentPage = currentPage.coerceAtMost(totalPages)
+        }
     }
 
     val pagedItems =
@@ -93,12 +94,6 @@ fun CartScreen(
         )
     }
 }
-
-@Composable
-fun rememberCartScreenState(
-    cartRepo: CartRepository,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-): CartScreenState = remember(cartRepo, coroutineScope) { CartScreenState(cartRepo, coroutineScope) }
 
 @Composable
 @Preview(showBackground = true)
