@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 
 @Composable
-fun CartItemBody(
+fun CartBody(
     cart: Cart,
     showPagination: Boolean,
     currentPage: Int,
@@ -25,17 +26,17 @@ fun CartItemBody(
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
-    val products = cart.items.keys
+    val cartItems = cart.items
 
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(items = products.toList(), key = { it.id }) { product ->
+        items(items = cartItems, key = { it.product.id }) { cartItem ->
             CartItemUnit(
-                product = product,
-                onDeleteClick = { onDeleteClick(product) },
+                product = cartItem.product,
+                onDeleteClick = { onDeleteClick(cartItem.product) },
             )
         }
 
@@ -56,13 +57,16 @@ fun CartItemBody(
 
 @Composable
 @Preview(showBackground = true)
-private fun CartItemBodyPreview() {
-    CartItemBody(
+private fun CartBodyPreview() {
+    val product1 = Product(name = "1번", price = Money(1000), imageUrl = "")
+    val product2 = Product(name = "2번", price = Money(1000), imageUrl = "")
+
+    CartBody(
         cart =
             Cart(
-                mapOf(
-                    Pair(InMemoryProductRepository.APPLE, 1),
-                    Pair(InMemoryProductRepository.BBOYAMI, 1),
+                listOf(
+                    CartItem(product1, 1),
+                    CartItem(product2, 1),
                 ),
             ),
         onDeleteClick = {},

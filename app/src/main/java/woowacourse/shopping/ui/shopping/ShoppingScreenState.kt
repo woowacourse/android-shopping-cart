@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
-private const val PAGE_SIZE = 20
+private const val LOAD_SIZE = 20
 
 class ShoppingScreenState(
     private val productRepo: ProductRepository,
@@ -38,7 +38,7 @@ class ShoppingScreenState(
     }
 
     fun loadMore() {
-        visibleCount = minOf(visibleCount + PAGE_SIZE, sizeInRepo)
+        visibleCount = minOf(visibleCount + LOAD_SIZE, sizeInRepo)
         loadProducts()
     }
 
@@ -86,7 +86,7 @@ fun rememberShoppingScreenState(
         ShoppingScreenState(
             productRepo = productRepo,
             coroutineScope = coroutineScope,
-            initialVisibleCount = PAGE_SIZE,
+            initialVisibleCount = LOAD_SIZE,
         )
     }
 }

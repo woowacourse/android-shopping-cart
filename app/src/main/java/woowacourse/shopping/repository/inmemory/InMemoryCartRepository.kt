@@ -1,22 +1,36 @@
 package woowacourse.shopping.repository.inmemory
 
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 
 object InMemoryCartRepository : CartRepository {
-    private val items = mutableMapOf<Product, Int>()
+    private val items = mutableListOf<CartItem>()
 
-    override suspend fun showAll() = Cart(items.toMap())
+    override suspend fun showAll() = Cart(items.toList())
 
     override suspend fun add(item: Product) {
-        items.merge(item, 1, Int::plus)
+        val existingIndex = items.indexOfFirst { it.product.id == item.id }
+
+        if (existingIndex != -1) {
+            val existingItem = items[existingIndex]
+            items[existingIndex] = existingItem.copy(quantity = existingItem.quantity + 1)
+        } else {
+            items.add(CartItem(product = item, quantity = 1))
+        }
     }
 
     override suspend fun delete(item: Product) {
-        require(items.containsKey(item)) { "해당 상품은 장바구니에 존재하지 않습니다." }
+        val index = items.indexOfFirst { it.product.id == item.id }
+        require(index != -1) { "장바구니에 해당 제품(${item.name})이 없습니다." }
 
-        items.merge(item, 1, Int::minus)
-        if (items.getValue(item) == 0) items.remove(item)
+        val cartItem = items[index]
+
+        if (cartItem.quantity > 1) {
+            items[index] = cartItem.copy(quantity = cartItem.quantity - 1)
+        } else {
+            items.removeAt(index)
+        }
     }
 }
