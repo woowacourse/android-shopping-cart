@@ -8,8 +8,6 @@ import woowacourse.shopping.repository.CartRepository
 object InMemoryCartRepository : CartRepository {
     private val items = mutableListOf<CartItem>()
 
-    override suspend fun showAll() = Cart(items.toList())
-
     override suspend fun add(item: Product) {
         val existingIndex = items.indexOfFirst { it.product.id == item.id }
 
@@ -33,4 +31,11 @@ object InMemoryCartRepository : CartRepository {
             items.removeAt(index)
         }
     }
+
+    override suspend fun getPagedItems(
+        fromIndex: Int,
+        count: Int
+    ): List<CartItem> = Cart(items).getPagedItems(fromIndex, count)
+
+    override suspend fun getSize(): Int = items.size
 }

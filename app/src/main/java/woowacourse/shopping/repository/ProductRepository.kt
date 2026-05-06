@@ -7,7 +7,7 @@ interface ProductRepository {
 
     suspend fun getProducts(
         fromIndex: Int,
-        loadSize: Int,
+        count: Int,
     ): List<Product>
 
     suspend fun hasNext(current: Int): Boolean

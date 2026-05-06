@@ -11,6 +11,6 @@ data class Cart(
         require(fromIndex in 0..items.size) { "fromIndex는 0 이상의 정수이자, 사이즈를 벗어나는 index일 수 없습니다." }
 
         val toIndex = minOf(fromIndex + pageSize, items.size)
-        return items.subList(fromIndex, toIndex)
+        return items.drop(fromIndex).take(pageSize)
     }
 }

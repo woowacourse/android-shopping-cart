@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 
 private const val LOAD_SIZE = 20
@@ -55,7 +54,7 @@ class ShoppingScreenState(
             try {
                 val newProducts = productRepo.getProducts(
                     fromIndex = visibleProducts.size,
-                    loadSize = LOAD_SIZE
+                    count = LOAD_SIZE
                 )
                 visibleProducts = visibleProducts + newProducts
 
