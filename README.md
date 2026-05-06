@@ -22,13 +22,13 @@
 
 ### Cart
 
-- [ ] `PurchaseProducts`를 갖는다
-- [ ] `PurchaseProduct`를 추가할 수 있다
-- [ ] `ID`를 통해 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
-- [ ] `ID`를 통해 특정 `PurchaseProduct`를 제거할 수 있다
-- [ ] `ID`를 통해 특정 `PurchaseProduct`의 총 가격을 알 수 있다
-- [ ] `Cart`에 담긴 `PurchaseProduct`의 count의 총합을 알 수 있다
-- [ ] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
+- [x] `PurchaseProducts`를 갖는다
+- [x] `PurchaseProduct`를 추가할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`를 제거할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`의 총 가격을 알 수 있다
+- [x] `Cart`에 담긴 `PurchaseProduct`의 count의 총합을 알 수 있다
+- [x] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
 
 ## UI
 
