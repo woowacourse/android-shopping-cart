@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,15 +21,29 @@ import woowacourse.shopping.ui.theme.ShoppingTheme
 class ProductDetailActivity : ComponentActivity() {
     private val viewModel: ProductDetailViewModel by viewModels()
 
+    companion object {
+        private const val PUT_EXTRA_KEY_PRODUCT = "PRODUCT"
+
+        fun startActivity(
+            context: Context,
+            product: Product,
+        ) {
+            val intent = Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(PUT_EXTRA_KEY_PRODUCT, product)
+            }
+            context.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val receivedProduct =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra("PRODUCT", Product::class.java)
+                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT, Product::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                intent.getParcelableExtra("PRODUCT")
+                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT)
             }
 
         if (receivedProduct == null) {

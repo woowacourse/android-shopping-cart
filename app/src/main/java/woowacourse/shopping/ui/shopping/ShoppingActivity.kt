@@ -31,16 +31,12 @@ class ShoppingActivity : ComponentActivity() {
                         products = uiState.products,
                         hasNext = uiState.hasNext,
                         isLoading = uiState.isLoading,
-                        modifier = Modifier.padding(innerPadding),
+                        modifier= Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))
                         },
                         onProductClick = {
-                            val intent =
-                                Intent(this, ProductDetailActivity::class.java).apply {
-                                    putExtra("PRODUCT", it)
-                                }
-                            startActivity(intent)
+                            ProductDetailActivity.startActivity(this, it)
                         },
                         onMoreClick = viewModel::loadMore,
                     )
