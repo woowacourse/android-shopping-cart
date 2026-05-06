@@ -95,7 +95,7 @@ class PurchaseProductsTest {
             purchaseProducts = listOf(newPurchaseProduct)
         )
 
-        assert(purchaseProducts.priceOfSpecificPurchaseProduct(productsId) == 3000)
+        assert(purchaseProducts.totalPriceOfSpecificPurchaseProduct(productsId) == 3000)
     }
 
     @Test

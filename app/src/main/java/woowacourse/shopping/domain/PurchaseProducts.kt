@@ -19,12 +19,12 @@ class PurchaseProducts(
         return PurchaseProducts(purchaseProducts - targetPurchaseProduct)
     }
 
-    fun priceOfSpecificPurchaseProduct(uuid: UUID): Int {
+    fun totalPriceOfSpecificPurchaseProduct(uuid: UUID): Int {
         val targetProduct = findById(uuid) ?: return 0
         return targetProduct.totalPrice()
     }
 
     fun totalCount() = purchaseProducts.sumOf { it.count }
 
-    private fun findById(uuid: UUID) = purchaseProducts.find { it.isSameUUID(uuid) }
+    fun findById(uuid: UUID) = purchaseProducts.find { it.isSameUUID(uuid) }
 }
