@@ -71,19 +71,19 @@ class CartViewModel(
         val currentPage = page.coerceIn(1, maxOf(totalPages, 1))
         val fromIndex = (currentPage - 1) * PAGE_SIZE
 
-        val idToQuantity = cartRepository.getCartItems(fromIndex, PAGE_SIZE)
-        val productMap = productRepository.findAllByIds(idToQuantity.keys)
+        val cartItems = cartRepository.getCartItems(fromIndex, PAGE_SIZE)
+        val productMap = productRepository.findAllByIds(cartItems.map { it.productId }.toSet())
 
         val items =
-            idToQuantity.mapNotNull { (productId, quantity) ->
-                val product = productMap[productId] ?: return@mapNotNull null
+            cartItems.mapNotNull { cartItem ->
+                val product = productMap[cartItem.productId] ?: return@mapNotNull null
 
                 CartItemUiModel(
-                    productId = productId,
+                    productId = cartItem.productId,
                     name = product.name,
                     imageUrl = product.imageUrl,
                     price = product.price.value,
-                    quantity = quantity,
+                    quantity = cartItem.quantity,
                 )
             }
 

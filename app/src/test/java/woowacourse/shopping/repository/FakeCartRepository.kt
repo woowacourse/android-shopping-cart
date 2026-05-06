@@ -1,33 +1,30 @@
 package woowacourse.shopping.repository
 
+import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.ProductId
 
 class FakeCartRepository : CartRepository {
-    private val items = mutableMapOf<ProductId, Int>()
+    private var cart = Cart(emptyList())
 
     override suspend fun add(item: ProductId) {
-        items.merge(item, 1, Int::plus)
+        cart = cart.add(item)
     }
 
     override suspend fun delete(item: ProductId) {
-        require(items.containsKey(item)) { "해당 상품은 장바구니에 존재하지 않습니다." }
-
-        items.merge(item, 1, Int::minus)
-        if (items.getValue(item) == 0) items.remove(item)
+        cart = cart.delete(item)
     }
 
     override suspend fun getCartItems(
         fromIndex: Int,
         limit: Int,
-    ): Map<ProductId, Int> {
-        val safeFrom = fromIndex.coerceIn(0, items.size)
+    ): List<CartItem> {
+        val safeFrom = fromIndex.coerceIn(0, cart.items.size)
         val safeLimit = limit.coerceAtLeast(0)
+        val safeTo = minOf(safeFrom + safeLimit, cart.items.size)
 
-        return items.entries
-            .drop(safeFrom)
-            .take(safeLimit)
-            .associate { it.toPair() }
+        return cart.items.subList(safeFrom, safeTo)
     }
 
-    override suspend fun count(): Int = items.size
+    override suspend fun count(): Int = cart.count()
 }

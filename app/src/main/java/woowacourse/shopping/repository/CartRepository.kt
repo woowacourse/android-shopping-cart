@@ -1,5 +1,6 @@
 package woowacourse.shopping.repository
 
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.ProductId
 
 interface CartRepository {
@@ -10,7 +11,7 @@ interface CartRepository {
     suspend fun getCartItems(
         fromIndex: Int,
         limit: Int,
-    ): Map<ProductId, Int>
+    ): List<CartItem>
 
     suspend fun count(): Int
 }
