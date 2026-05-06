@@ -12,13 +12,12 @@
 
 ### PurchaseProducts
 
-- [ ] 여러개의 `PurchaseProduct`를 갖는다
-- [ ] `PurchaseProduct`를 추가할 수 있다
-- [ ] 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
-- [ ] 특정 `PurchaseProduct`의 `count`가 0이 되면 해당 PurchaseProduct는 제거된다
-- [ ] 특정 `PurchaseProduct`를 제거할 수 있다
-- [ ] 특정 `PurchaseProduct`의 총 가격을 알 수 있다
-- [ ] `PurchaseProduct`의 `count`의 총합을 알 수 있다
+- [x] 여러개의 `PurchaseProduct`를 갖는다
+- [x] `PurchaseProduct`를 추가할 수 있다
+- [x] 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
+- [x] 특정 `PurchaseProduct`를 제거할 수 있다
+- [x] 특정 `PurchaseProduct`의 총 가격을 알 수 있다
+- [x] `PurchaseProduct`의 `count`의 총합을 알 수 있다
 
 ### Cart
 
