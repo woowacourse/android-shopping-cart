@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.CartItem
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
@@ -27,6 +28,7 @@ class ProductDetailViewModel(
 
     private fun loadProduct() {
         viewModelScope.launch {
+            _uiState.value = ProductDetailUiState.Loading
             runCatching { productRepository.getProduct(productId) }
                 .onSuccess { product ->
                     _uiState.value =

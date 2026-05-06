@@ -24,7 +24,6 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-
         setContent {
             val viewModel: ProductDetailViewModel =
                 viewModel(

@@ -12,5 +12,5 @@ class MockProductRepository : ProductRepository {
         pageSize: Int,
     ): List<Product> = products.getPage(page, pageSize)
 
-    override suspend fun getProduct(id: String): Product? = MockData.products.find { it.id == id } ?: MockData.productInfo
+    override suspend fun getProduct(id: String): Product? = MockData.products.find { it.id == id }
 }
