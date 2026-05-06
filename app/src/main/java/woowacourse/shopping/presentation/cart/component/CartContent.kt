@@ -30,7 +30,10 @@ fun CartContent(
         LazyColumn(
             modifier = Modifier.weight(1f),
         ) {
-            items(cart.cartItems) { cartItem ->
+            items(
+                items = cart.cartItems,
+                key = { cartItem -> cartItem.product.productId },
+            ) { cartItem ->
                 CartProductItem(
                     cartItem = cartItem,
                     onDelete = onDelete,

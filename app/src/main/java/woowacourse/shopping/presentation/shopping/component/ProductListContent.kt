@@ -14,7 +14,9 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductListContent(
     products: Products,
@@ -30,7 +32,10 @@ fun ProductListContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier,
     ) {
-        items(products.productItems) { product ->
+        items(
+            items = products.productItems,
+            key = { product -> product.productId },
+        ) { product ->
             ProductItem(
                 product = product,
                 onClick = onItemClick,
