@@ -16,7 +16,7 @@ class CartItemTest {
 
         val newCartItem = cartItem.increaseQuantity()
 
-        assertThat(newCartItem.count).isEqualTo(2)
+        assertThat(newCartItem.quantity).isEqualTo(2)
     }
 
     @Test
@@ -25,7 +25,7 @@ class CartItemTest {
 
         val newCartItem = cartItem.decreaseQuantity()
 
-        assertThat(newCartItem.count).isEqualTo(0)
+        assertThat(newCartItem.quantity).isEqualTo(0)
     }
 
     @Test
@@ -34,7 +34,7 @@ class CartItemTest {
 
         val newCartItem = cartItem.decreaseQuantity()
 
-        assertThat(newCartItem.count).isEqualTo(0)
+        assertThat(newCartItem.quantity).isEqualTo(0)
     }
 
     @OptIn(ExperimentalUuidApi::class)

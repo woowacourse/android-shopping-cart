@@ -17,7 +17,7 @@ object CartFixture {
                         productName = "PET보틀-정사각형(370ml)1",
                         price = Price(10000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -26,7 +26,7 @@ object CartFixture {
                         productName = "PET보틀-밀크티(500ml)",
                         price = Price(12000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -35,7 +35,7 @@ object CartFixture {
                         productName = "PET보틀-정사각형(500ml)",
                         price = Price(10000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -44,7 +44,7 @@ object CartFixture {
                         productName = "PET보틀-납작(200ml)",
                         price = Price(12000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -53,7 +53,7 @@ object CartFixture {
                         productName = "PET보틀-밀크티(500ml)",
                         price = Price(12000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -62,7 +62,7 @@ object CartFixture {
                         productName = "PET보틀-단지(200ml)",
                         price = Price(12000),
                     ),
-                count = 1,
+                quantity = 1,
             ),
             CartItem(
                 product =
@@ -71,7 +71,7 @@ object CartFixture {
                         productName = "[든든] 동원 스위트콘",
                         price = Price(99800),
                     ),
-                count = 1,
+                quantity = 1,
             ),
         )
 }

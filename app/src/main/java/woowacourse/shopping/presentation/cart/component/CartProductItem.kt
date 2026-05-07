@@ -122,7 +122,7 @@ private fun CartProductItemPreview() {
                     productName = "[든든] 동원 스위트콘",
                     price = Price(99800),
                 ),
-                count = 1,
+                quantity = 1,
             ),
         onDelete = {},
     )

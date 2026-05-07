@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 data class Cart(
     val cartItems: List<CartItem> = emptyList(),
 ) {
-    fun addProductToCart(product: Product): Cart {
+    fun increaseQuantity(product: Product): Cart {
         val exists = cartItems.any { product.productId == it.product.productId }
 
         if (!exists) {

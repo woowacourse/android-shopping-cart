@@ -32,8 +32,10 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ProductItem(
     product: Product,
+    quantity: Int,
     onClick: (Product) -> Unit,
-    onAddButtonClick: (Product) -> Unit,
+    onQuantityIncrease: (Product) -> Unit,
+    onQuantityDecrease: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -47,7 +49,9 @@ fun ProductItem(
         Column {
             ProductItemImage(
                 product = product,
-                onAddButtonClick = { onAddButtonClick(product) },
+                quantity = quantity,
+                onQuantityIncrease = { onQuantityIncrease(product) },
+                onQuantityDecrease = { onQuantityDecrease(product) },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -69,7 +73,9 @@ fun ProductItem(
 @Composable
 private fun ProductItemImage(
     product: Product,
-    onAddButtonClick: () -> Unit,
+    quantity: Int,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -80,13 +86,25 @@ private fun ProductItemImage(
             contentDescription = product.productName,
             modifier = Modifier.fillMaxWidth(),
         )
-        AddButton(
-            onClick = onAddButtonClick,
-            modifier =
-                Modifier
-                    .padding(8.dp)
-                    .align(Alignment.BottomEnd),
-        )
+        if (quantity == 0) {
+            AddButton(
+                onClick = onQuantityIncrease,
+                modifier =
+                    Modifier
+                        .padding(8.dp)
+                        .align(Alignment.BottomEnd),
+            )
+        } else {
+            QuantitySelector(
+                quantity = quantity,
+                onDecrease = onQuantityDecrease,
+                onIncrease = onQuantityIncrease,
+                modifier =
+                    Modifier
+                        .padding(8.dp)
+                        .align(Alignment.BottomCenter),
+            )
+        }
     }
 }
 
@@ -131,8 +149,10 @@ private fun ProductItemPreview() {
                 productName = "PET보틀-정사각형(370ml)",
                 price = Price(10000),
             ),
+        quantity = 1,
         onClick = {},
-        onAddButtonClick = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
         modifier = Modifier.fillMaxWidth(),
     )
 }

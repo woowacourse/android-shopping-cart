@@ -15,15 +15,18 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductListContent(
     products: Products,
     hasNextPage: Boolean,
+    productQuantity: (Uuid) -> Int,
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
-    onAddButtonClick: (Product) -> Unit,
+    onQuantityIncrease: (Product) -> Unit,
+    onQuantityDecrease: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -39,8 +42,10 @@ fun ProductListContent(
         ) { product ->
             ProductItem(
                 product = product,
+                quantity = productQuantity(product.productId),
                 onClick = onItemClick,
-                onAddButtonClick = onAddButtonClick,
+                onQuantityIncrease = onQuantityIncrease,
+                onQuantityDecrease = onQuantityDecrease,
             )
         }
         if (hasNextPage) {
@@ -55,14 +60,17 @@ fun ProductListContent(
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun ProductListContentPreview() {
     ProductListContent(
         products = Products(emptyList()),
         hasNextPage = true,
+        productQuantity = { 0 },
         onLoadMore = {},
         onItemClick = {},
-        onAddButtonClick = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

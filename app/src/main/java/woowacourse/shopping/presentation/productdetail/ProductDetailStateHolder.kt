@@ -12,6 +12,6 @@ class ProductDetailStateHolder(
     @OptIn(ExperimentalUuidApi::class)
     fun addToCart(productId: Uuid) {
         val product = productRepository.findProductById(productId) ?: return
-        cartRepository.addProduct(product)
+        cartRepository.increaseQuantity(product)
     }
 }

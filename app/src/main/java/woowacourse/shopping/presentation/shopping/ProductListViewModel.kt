@@ -10,6 +10,8 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -21,6 +23,9 @@ class ProductListViewModel(
     var products by mutableStateOf(Products())
         private set
 
+    var cart by mutableStateOf(cartRepository.getItems())
+        private set
+
     val hasNextPage: Boolean
         get() =
             productRepository.hasNextPage(
@@ -30,6 +35,7 @@ class ProductListViewModel(
 
     init {
         loadPages(currentPageIndex)
+        refreshCart()
     }
 
     fun loadMore() {
@@ -46,9 +52,16 @@ class ProductListViewModel(
         products += nextProducts
     }
 
-    fun addProductToCart(product: Product) {
-        cartRepository.addProduct(product)
+    fun increaseQuantity(product: Product) {
+        cartRepository.increaseQuantity(product)
+        refreshCart()
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun getQuantity(productId: Uuid): Int =
+        cart.cartItems
+            .find { it.product.productId == productId }
+            ?.quantity ?: 0
 
     private fun loadPages(currentPageIndex: Int) {
         products = Products()
@@ -60,6 +73,10 @@ class ProductListViewModel(
                     pageSize = pageSize,
                 )
         }
+    }
+
+    private fun refreshCart() {
+        cart = cartRepository.getItems()
     }
 
     companion object {

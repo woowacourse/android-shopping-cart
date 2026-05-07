@@ -8,16 +8,20 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
     products: Products,
     hasNextPage: Boolean,
+    productQuantity: (Uuid) -> Int,
     onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
-    onAddButtonClick: (Product) -> Unit,
+    onQuantityIncrease: (Product) -> Unit,
+    onQuantityDecrease: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ProductListScaffold(
@@ -26,23 +30,28 @@ fun ProductListScreen(
     ) {
         ProductListContent(
             products = products,
+            productQuantity = productQuantity,
             hasNextPage = hasNextPage,
             onLoadMore = onLoadMore,
-            onItemClick = { product -> onItemClick(product) },
-            onAddButtonClick = onAddButtonClick,
+            onItemClick = onItemClick,
+            onQuantityIncrease = onQuantityIncrease,
+            onQuantityDecrease = onQuantityDecrease,
         )
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(emptyList()),
         hasNextPage = true,
+        productQuantity = { 0 },
         onLoadMore = {},
         onCartIconClick = {},
         onItemClick = {},
-        onAddButtonClick = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

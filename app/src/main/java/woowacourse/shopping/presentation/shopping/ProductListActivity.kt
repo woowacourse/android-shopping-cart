@@ -14,20 +14,22 @@ import woowacourse.shopping.presentation.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivity : ComponentActivity() {
+    private val viewModel: ProductListViewModel by viewModels {
+        ProductListViewModelFactory(
+            productRepository = AppContainer.productRepository,
+        )
+    }
+
     @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             androidshoppingTheme {
-                val viewModel: ProductListViewModel by viewModels {
-                    ProductListViewModelFactory(
-                        productRepository = AppContainer.productRepository,
-                    )
-                }
                 ProductListScreen(
                     products = viewModel.products,
                     hasNextPage = viewModel.hasNextPage,
+                    productQuantity = viewModel::getQuantity,
                     onLoadMore = viewModel::loadMore,
                     onCartIconClick = {
                         startActivity(CartActivity.newIntent(this))
@@ -35,7 +37,8 @@ class ProductListActivity : ComponentActivity() {
                     onItemClick = { product ->
                         startActivity(ProductDetailActivity.newIntent(this, product.toUiModel()))
                     },
-                    onAddButtonClick = viewModel::addProductToCart,
+                    onQuantityIncrease = viewModel::increaseQuantity,
+                    onQuantityDecrease = {},
                 )
             }
         }
