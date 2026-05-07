@@ -2,9 +2,11 @@ package woowacourse.shopping.ui.component.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -71,7 +73,21 @@ fun CartItem(
                     product.imageUri,
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
-                ProductPrice(product.price)
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    QuantitySelector(
+                        count = 0,
+                        onAdd = {  },
+                        onMinus = {  },
+                        onDelete = {  },
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    )
+                    ProductPrice(
+                        product.price,
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    )
+                }
             }
         }
     }
@@ -130,7 +146,7 @@ private fun CartItemPreview() {
         Product(
             imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
             name = "진짜진짜정말정말매우매우긴상품명입니다",
-            price = 1000000000,
+            price = 30000,
         ),
         {},
     )

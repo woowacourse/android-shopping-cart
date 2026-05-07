@@ -28,6 +28,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ProductImage
+import woowacourse.shopping.ui.component.item.QuantitySelector
 import woowacourse.shopping.ui.component.item.toPriceString
 
 @Composable
@@ -133,12 +134,15 @@ private fun ProductDetailInfo(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "가격",
-                fontSize = 20.sp,
-            )
-            Text(
                 text = product.price.toPriceString(),
                 fontSize = 20.sp,
+            )
+
+            QuantitySelector(
+                count = 0,
+                onAdd = {  },
+                onMinus = {  },
+                onDelete = {  }
             )
         }
     }
