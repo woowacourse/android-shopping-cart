@@ -17,15 +17,19 @@ class CartRepositoryImpl(
 
     override fun isLastPage(page: Int) = page == totalPage
 
-    override fun addItem(
+    override suspend fun addItem(
         product: Product,
         amount: Int,
     ) {
         cartDataSource.add(CartItem(product, amount))
     }
 
-    override fun deleteItem(id: String) {
+    override suspend fun deleteItem(id: String) {
         cartDataSource.deleteItem(id)
+    }
+
+    override suspend fun minusItemAmount(id: String) {
+        cartDataSource.minusItemAmount(id)
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {

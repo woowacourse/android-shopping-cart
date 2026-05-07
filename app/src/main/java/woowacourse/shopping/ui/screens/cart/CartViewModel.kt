@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.compareTo
 
 class CartViewModel(
     private val cartRepository: CartRepository = CartRepositoryImpl(),
@@ -27,13 +27,17 @@ class CartViewModel(
             refreshPage(_uiState.value.curPage)
         }
 
-    fun plusAmount(id: String) {
-        // TODO
-    }
+    fun plusAmount(product: Product) =
+        launchWithLoading {
+            cartRepository.addItem(product, 1)
+            refreshPage(_uiState.value.curPage)
+        }
 
-    fun minusAmount(id: String) {
-        // TODO
-    }
+    fun minusAmount(id: String) =
+        launchWithLoading {
+            cartRepository.minusItemAmount(id)
+            refreshPage(_uiState.value.curPage)
+        }
 
     fun deleteCartItem(id: String) =
         launchWithLoading {

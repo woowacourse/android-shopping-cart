@@ -20,4 +20,11 @@ object CartDataSourceImpl : CartDataSource {
     override fun deleteItem(id: String) {
         _items.removeIf { it.product.id == id }
     }
+
+    override fun minusItemAmount(id: String) {
+        val idx = _items.indexOfFirst { it.product.id == id }
+        if (idx == -1) return
+
+        _items[idx] = items[idx].minusQuantity()
+    }
 }

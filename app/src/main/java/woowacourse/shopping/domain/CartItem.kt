@@ -11,4 +11,6 @@ data class CartItem(
     }
 
     fun addQuantity(amount: Int): CartItem = this.copy(amount = this@CartItem.amount + amount)
+
+    fun minusQuantity(amount: Int = 1): CartItem = this.copy(amount = this@CartItem.amount - amount)
 }
