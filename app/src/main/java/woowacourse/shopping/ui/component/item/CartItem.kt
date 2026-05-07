@@ -27,11 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.PurchaseProduct
+import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 
 @Composable
 fun CartItem(
-    product: Product,
+    product: PurchaseProduct,
+    onAdd: (UUID, CountUpdateType) -> Unit,
+    onMinus: (UUID, CountUpdateType) -> Unit,
     onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -55,7 +59,7 @@ fun CartItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ProductName(product.name)
+                ProductName(product.name())
                 CloseBtn(
                     product = product,
                     onClick = onDelete,
@@ -70,21 +74,21 @@ fun CartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 ProductImage(
-                    product.imageUri,
+                    product.imageUri(),
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ){
                     QuantitySelector(
-                        count = 0,
-                        onAdd = {  },
-                        onMinus = {  },
-                        onDelete = {  },
+                        count = product.count,
+                        onAdd = { onAdd(product.uuid(), CountUpdateType.INCREASE) },
+                        onMinus = { onMinus(product.uuid(), CountUpdateType.DECREASE) },
+                        onDelete = { onDelete(product.uuid()) },
                         modifier = Modifier.align(Alignment.CenterEnd)
                     )
                     ProductPrice(
-                        product.price,
+                        product.price(),
                         modifier = Modifier.align(Alignment.BottomEnd)
                     )
                 }
@@ -110,7 +114,7 @@ private fun ProductName(
 
 @Composable
 private fun CloseBtn(
-    product: Product,
+    product: PurchaseProduct,
     onClick: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -121,7 +125,7 @@ private fun CloseBtn(
             modifier
                 .size(16.dp)
                 .clickable(
-                    onClick = { onClick(product.uuid) },
+                    onClick = { onClick(product.uuid()) },
                 ),
     )
 }
@@ -143,11 +147,15 @@ private fun ProductPrice(
 @Composable
 private fun CartItemPreview() {
     CartItem(
-        Product(
-            imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
-            name = "진짜진짜정말정말매우매우긴상품명입니다",
-            price = 30000,
+        PurchaseProduct(
+            Product(
+                imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
+                name = "진짜진짜정말정말매우매우긴상품명입니다",
+                price = 30000,
+            )
         ),
-        {},
+        onAdd = { id, type -> },
+        onMinus = { id, type -> },
+        onDelete = {  },
     )
 }
