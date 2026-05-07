@@ -20,8 +20,9 @@ class CartItemsTest {
             product = product1,
             quantity = CartItemQuantity(1)
         )
+        val targetQuantity = 1
 
-        val addedCartItems = cartItems.addCartItem(targetCartItem)
+        val addedCartItems = cartItems.addCartItem(targetCartItem, targetQuantity)
 
         assertTrue(addedCartItems.searchCartItem(targetCartItem))
     }
@@ -58,23 +59,9 @@ class CartItemsTest {
             quantity = CartItemQuantity(1)
         )
 
-
         assertFalse(cartItems.searchCartItem(cartItem4))
     }
 
-    @Test
-    fun `장바구니 상품 중 우아한두유의 개수를 2 증가시켰을 때 우아한 두유의 개수는 2만큼 증가한다`() {
-        val cartItems = CartItems(_value = cartItemsValue)
-        val targetCartItem = CartItem(
-            product = product1,
-            quantity = CartItemQuantity(2)
-        )
-
-        val increaseCartItems = cartItems.increaseCartItem(targetCartItem)
-
-        increaseCartItems.getTotalCartItemCount() shouldBe 8
-
-    }
 
     @Test
     fun `장바구니 상품 중 우아한물의 개수를 1 감소시켰을 때 우아한 두유의 개수는 1만큼 감소한다`() {
@@ -83,8 +70,9 @@ class CartItemsTest {
             product = product1,
             quantity = CartItemQuantity(1)
         )
+        val targetQuantity = 1
 
-        val decreaseCartItems = cartItems.decreaseCartItem(targetCartItem)
+        val decreaseCartItems = cartItems.minusCartItem(targetCartItem, targetQuantity)
 
         decreaseCartItems.getTotalCartItemCount() shouldBe 5
     }

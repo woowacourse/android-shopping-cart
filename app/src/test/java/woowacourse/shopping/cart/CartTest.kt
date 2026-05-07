@@ -20,8 +20,9 @@ class CartTest {
             product = product4,
             quantity = CartItemQuantity(1)
         )
+        val targetQuantity = 1
 
-        val addedCart = cart.addCartItem(targetCartItem)
+        val addedCart = cart.addCartItem(targetCartItem, targetQuantity)
 
         addedCart.searchCartItem(targetCartItem) shouldBe true
     }
@@ -92,8 +93,9 @@ class CartTest {
             product = product3,
             quantity = CartItemQuantity(2)
         )
+        val targetQuantity = 2
 
-        val increasedCart = cart.getIncreaseCart(targetCartItem)
+        val increasedCart = cart.addCartItem(targetCartItem, targetQuantity)
 
         increasedCart.getTotalCartItemCount() shouldBe 8
     }
@@ -105,8 +107,9 @@ class CartTest {
             product = product2,
             quantity = CartItemQuantity(1)
         )
+        val targetQuantity = 1
 
-        val decreaseCart = cart.getDecreaseCart(targetCartItem)
+        val decreaseCart = cart.minusCartItem(targetCartItem, targetQuantity)
 
         decreaseCart.getTotalCartItemCount() shouldBe 5
     }

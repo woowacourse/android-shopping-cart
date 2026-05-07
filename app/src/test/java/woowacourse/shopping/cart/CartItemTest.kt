@@ -36,12 +36,9 @@ class CartItemTest {
     @Test
     fun `해당 장바구니 상품의 개수를 3만큼 증가지킬 수 있다`() {
         val cartItem = cartItem1
+        val targetQuantity = 3
 
-        val targetCartItem = CartItem(
-            product = mockProduct,
-            quantity = CartItemQuantity(3)
-        )
-        val increasedCartItem = cartItem.increaseQuantity(targetCartItem)
+        val increasedCartItem = cartItem.increaseQuantity(targetQuantity)
 
         increasedCartItem.quantity.value shouldBe 6
     }
@@ -49,12 +46,9 @@ class CartItemTest {
     @Test
     fun `해당 장바구니 상품의 개수를 2만큼 줄일 수 있다`() {
         val cartItem = cartItem1
-        val targetCartItem = CartItem(
-            product = mockProduct,
-            quantity = CartItemQuantity(2)
-        )
-        val decreasedCartItem = cartItem.decreaseQuantity(targetCartItem)
+        val targetQuantity = 2
 
+        val decreasedCartItem = cartItem.decreaseQuantity(targetQuantity)
 
         decreasedCartItem.quantity.value shouldBe 1
     }
