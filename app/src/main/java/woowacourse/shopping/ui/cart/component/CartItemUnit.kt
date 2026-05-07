@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,15 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.component.ShoppingImage
 
 @Composable
 fun CartItemUnit(
@@ -103,16 +99,12 @@ private fun ImageAndPrice(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom,
     ) {
-        AsyncImage(
+        ShoppingImage(
             model = product.imageUrl,
-            contentDescription = "이미지",
-            placeholder = rememberVectorPainter(Icons.Default.Image),
-            error = rememberVectorPainter(Icons.Default.WarningAmber),
-            modifier =
-                Modifier
-                    .width(136.dp)
-                    .height(72.dp),
-            contentScale = ContentScale.Crop,
+            contentDescription = "상품 이미지",
+            modifier = Modifier
+                .width(136.dp)
+                .height(72.dp)
         )
         Text(
             text = "$formatted 원",
