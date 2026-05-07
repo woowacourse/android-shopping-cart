@@ -37,4 +37,19 @@ data class Cart(
                     it.productId == productId
                 },
         )
+    fun decreaseProductQuantity(productId: Uuid, quantity: Int): Cart {
+        val targetProduct = productsWithQuantity.find { it.productId == productId }
+        if (targetProduct != null) {
+            return copy(
+                productsWithQuantity = productsWithQuantity.map { item ->
+                    if (item.productId == productId) {
+                        item.decreaseQuantity(quantity)
+                    } else {
+                        item
+                    }
+                }.filter { it.quantity > 0 }
+            )
+        }
+        return this
+    }
 }
