@@ -54,8 +54,8 @@ class CartActivity : ComponentActivity() {
                     onDelete = { cartStateHolder.onDeleteProduct(it) },
                     onNext = { cartStateHolder.onNext() },
                     onPrevious = { cartStateHolder.onPrevious() },
-                    previousEnable = cartStateHolder.checkPreviousAvailable(),
-                    nextEnable = cartStateHolder.checkNextAvailable(),
+                    previousEnable = cartStateHolder.hasPreviousPage(),
+                    nextEnable = cartStateHolder.hasNextPage(),
                     currentPage = cartStateHolder.currentPage,
                     onClose = {
                         returnResultAndFinish()

@@ -18,11 +18,11 @@ class CartStateHolder(
     var currentPage by mutableIntStateOf(initialPage)
 
     fun onPrevious() {
-        if (checkPreviousAvailable()) currentPage--
+        if (hasPreviousPage()) currentPage--
     }
 
     fun onNext() {
-        if (checkNextAvailable()) currentPage++
+        if (hasNextPage()) currentPage++
     }
 
     fun onDeleteProduct(id: UUID) {
@@ -32,9 +32,9 @@ class CartStateHolder(
         if (currentPage > maxValidPage) currentPage = maxValidPage
     }
 
-    fun checkPreviousAvailable(): Boolean = currentPage > 0
+    fun hasPreviousPage(): Boolean = currentPage > 0
 
-    fun checkNextAvailable(): Boolean = currentPage < (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
+    fun hasNextPage(): Boolean = currentPage < (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
 
     fun isPageable(): Boolean = cart.size() > ONE_PAGE_ITEM_COUNT
 

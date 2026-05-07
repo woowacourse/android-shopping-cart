@@ -66,4 +66,4 @@
 - [x] 전역적인 Cart 객체가 아닌 Intent로 데이터 전환
 - [ ] 패키지 구조 변경 (고민중)
 - [x] MainActivity StateHolder 적용
-- [ ] 이름 변경
+- [x] 이름 변경
