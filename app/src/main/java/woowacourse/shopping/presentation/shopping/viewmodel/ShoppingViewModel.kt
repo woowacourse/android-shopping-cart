@@ -8,13 +8,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.common.model.toUiModel
+import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
 import woowacourse.shopping.presentation.shopping.model.ShoppingUiState
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
+    private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -23,6 +26,28 @@ class ShoppingViewModel(
 
     suspend fun initialize() {
         if (uiState.value.offset == 0) loadMore()
+    }
+
+    suspend fun loadCartItemQuantities() {
+        val quantities = cartRepository.getAllQuantities()
+        _uiState.update {
+            it.copy(
+                products =
+                    it.products.map { product ->
+                        ShoppingItemUiModel(product.product, quantities[product.product.id] ?: 0)
+                    },
+            )
+        }
+    }
+
+    suspend fun increase(productId: String) {
+        cartRepository.addItem(productId)
+        loadCartItemQuantities()
+    }
+
+    suspend fun decrease(productId: String) {
+        cartRepository.decrease(productId)
+        loadCartItemQuantities()
     }
 
     suspend fun loadMore() {
@@ -37,13 +62,15 @@ class ShoppingViewModel(
                     offset = uiState.value.offset,
                     limit = pageSize,
                 )
+            val newItems = loadData.map { ShoppingItemUiModel(it, quantity = 0) }
             _uiState.update {
                 it.copy(
-                    products = it.products.plus(loadData),
+                    products = it.products.plus(newItems),
                     offset = it.offset + loadData.size,
                     canLoadMore = loadData.size == pageSize,
                 )
             }
+            loadCartItemQuantities()
         } catch (e: Exception) {
             throw e
         } finally {

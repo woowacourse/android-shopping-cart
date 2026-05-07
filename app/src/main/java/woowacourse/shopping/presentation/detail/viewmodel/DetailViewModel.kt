@@ -39,6 +39,6 @@ class DetailViewModel(
             loadedProduct ?: productRepository.getProductById(id).also {
                 loadedProduct = it
             }
-        return cartRepository.addItem(product)
+        return cartRepository.addItem(product.id)
     }
 }

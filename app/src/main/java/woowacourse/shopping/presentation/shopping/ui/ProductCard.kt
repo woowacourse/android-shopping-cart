@@ -1,28 +1,48 @@
 package woowacourse.shopping.presentation.shopping.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.R
+import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.presentation.common.QuantityCounter
+import woowacourse.shopping.presentation.common.model.ProductUiModel
+import woowacourse.shopping.presentation.common.model.toUiModel
+import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.util.formattedPrice
 
 @Composable
 fun ProductCard(
+    product: ProductUiModel,
+    quantity: Int,
     onClick: () -> Unit,
-    imageUrl: String,
-    productName: String,
-    price: Long,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -33,14 +53,46 @@ fun ProductCard(
                     onClick()
                 },
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = productName,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-        )
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+        ) {
+            AsyncImage(
+                model = product.imageUrl,
+                contentDescription = product.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+            if (quantity == 0) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.add_product_to_cart),
+                    tint = Gray50,
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(14.dp)
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .clickable { onIncrease() },
+                )
+            } else {
+                QuantityCounter(
+                    quantity = quantity,
+                    onIncrease = onIncrease,
+                    onDecrease = onDecrease,
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(vertical = 8.dp, horizontal = 14.dp),
+                )
+            }
+        }
         Text(
-            text = productName,
+            text = product.name,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 24.sp,
@@ -49,7 +101,7 @@ fun ProductCard(
             color = Color.Black,
         )
         Text(
-            text = formattedPrice(price),
+            text = formattedPrice(product.price),
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             lineHeight = 20.sp,
@@ -60,11 +112,28 @@ fun ProductCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun ProductCardPreview() {
+private fun InCartProductCardPreview() {
+    val product = ProductData.products.first()
     ProductCard(
-        imageUrl = "",
-        productName = "커피",
-        price = 1000,
+        product = product.toUiModel(),
+        quantity = 1,
         onClick = {},
+        onIncrease = {},
+        onDecrease = {},
     )
+}
+
+@Preview(showBackground = false)
+@Composable
+private fun NoCartProductCardPreview() {
+    val product = ProductData.products.first()
+    AndroidshoppingTheme {
+        ProductCard(
+            product = product.toUiModel(),
+            quantity = 0,
+            onClick = {},
+            onIncrease = {},
+            onDecrease = {},
+        )
+    }
 }

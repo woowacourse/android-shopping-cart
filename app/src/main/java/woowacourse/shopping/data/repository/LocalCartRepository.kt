@@ -4,7 +4,6 @@ import woowacourse.shopping.data.source.local.CartDao
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -26,9 +25,9 @@ class LocalCartRepository(
 
     override suspend fun getTotalCartSize(): Int = cartDao.getTotalCartSize()
 
-    override suspend fun addItem(product: Product): AddItemResult {
-        val before = cartDao.findById(product.id)
-        cartDao.addOrIncrement(product.id)
+    override suspend fun addItem(id: String): AddItemResult {
+        val before = cartDao.findById(id)
+        cartDao.addOrIncrement(id)
         val cart = getCart()
         return if (before == null) {
             AddItemResult.NewAdded(cart)
@@ -45,4 +44,12 @@ class LocalCartRepository(
             RemoveItemResult.NotFoundItem
         }
     }
+
+    override suspend fun decrease(id: String): RemoveItemResult {
+        val existing = cartDao.findById(id) ?: return RemoveItemResult.NotFoundItem
+        cartDao.deleteOrDecrement(existing.productId)
+        return RemoveItemResult.Success(getCart())
+    }
+
+    override suspend fun getAllQuantities(): Map<String, Int> = cartDao.getAll().associate { it.productId to it.quantity }
 }

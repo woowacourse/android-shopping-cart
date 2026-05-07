@@ -41,8 +41,8 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductData.products
 import woowacourse.shopping.presentation.common.ShoppingAppBar
-import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
 import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 
 @Composable
@@ -94,7 +94,7 @@ fun ShoppingScreen(
         ) {
             if (state.isLoading) CircularProgressIndicator()
             ShoppingContents(
-                products = state.products.toImmutableList(),
+                items = state.products.toImmutableList(),
                 onLoad = {
                     scope.launch {
                         viewModel.loadMore()
@@ -104,6 +104,12 @@ fun ShoppingScreen(
                 onProductCardClick = {
                     activity?.startActivity(DetailActivity.newIntent(activity, it))
                 },
+                onIncrease = { id ->
+                    scope.launch { viewModel.increase(id) }
+                },
+                onDecrease = { id ->
+                    scope.launch { viewModel.decrease(id) }
+                },
             )
         }
     }
@@ -111,9 +117,11 @@ fun ShoppingScreen(
 
 @Composable
 private fun ShoppingContents(
-    products: ImmutableList<ProductUiModel>,
+    items: ImmutableList<ShoppingItemUiModel>,
     onLoad: () -> Unit,
     onProductCardClick: (String) -> Unit,
+    onIncrease: (String) -> Unit,
+    onDecrease: (String) -> Unit,
     isCanLoadMore: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -131,16 +139,15 @@ private fun ShoppingContents(
             modifier = Modifier.padding(top = 20.dp),
         ) {
             items(
-                items = products,
-                key = { product -> product.id },
-            ) { product ->
+                items = items,
+                key = { it.product.id },
+            ) { item ->
                 ProductCard(
-                    onClick = {
-                        onProductCardClick(product.id)
-                    },
-                    imageUrl = product.imageUrl,
-                    productName = product.name,
-                    price = product.price,
+                    product = item.product,
+                    quantity = item.quantity,
+                    onClick = { onProductCardClick(item.product.id) },
+                    onIncrease = { onIncrease(item.product.id) },
+                    onDecrease = { onDecrease(item.product.id) },
                 )
             }
             if (isCanLoadMore) {
