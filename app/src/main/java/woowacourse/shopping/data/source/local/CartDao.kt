@@ -28,12 +28,15 @@ interface CartDao {
     suspend fun deleteItem(id: String): Int
 
     @Transaction
-    suspend fun addOrIncrement(id: String) {
+    suspend fun addOrIncrement(
+        id: String,
+        quantity: Int = 1,
+    ) {
         val existing = findById(id)
         if (existing == null) {
-            insertItem(CartEntity(id, 1))
+            insertItem(CartEntity(id, quantity))
         } else {
-            updateItem(existing.copy(quantity = existing.quantity + 1))
+            updateItem(existing.copy(quantity = existing.quantity + quantity))
         }
     }
 

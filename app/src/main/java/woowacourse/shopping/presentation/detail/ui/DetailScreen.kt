@@ -40,6 +40,7 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
+import woowacourse.shopping.presentation.common.QuantityCounter
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.ui.theme.Gray40
@@ -91,7 +92,11 @@ fun DetailScreen(
                         .background(Green40)
                         .clickable {
                             scope.launch {
-                                val result = viewModel.addToCart(id)
+                                val result =
+                                    viewModel.addToCart(
+                                        id = id,
+                                        quantity = uiState.quantity,
+                                    )
                                 onNavigateToCart(result)
                             }
                         },
@@ -105,12 +110,21 @@ fun DetailScreen(
                 )
             }
         },
-        modifier = modifier.statusBarsPadding(),
+        modifier =
+            modifier
+                .statusBarsPadding(),
     ) { innerPadding ->
         DetailContent(
             imageUrl = product.imageUrl,
             productName = product.name,
             price = product.price,
+            quantity = uiState.quantity,
+            onIncrease = {
+                scope.launch { viewModel.increase() }
+            },
+            onDecrease = {
+                scope.launch { viewModel.decrease() }
+            },
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -121,6 +135,9 @@ private fun DetailContent(
     imageUrl: String,
     productName: String,
     price: Long,
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -144,6 +161,11 @@ private fun DetailContent(
             modifier = Modifier.padding(horizontal = 18.dp),
         )
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Gray40)
+        QuantityCounter(
+            quantity = quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+        )
         Row(
             modifier =
                 Modifier
@@ -185,5 +207,8 @@ private fun DetailContentPreview() {
         imageUrl = "",
         productName = "Test",
         price = 10000,
+        onDecrease = {},
+        onIncrease = {},
+        quantity = 3,
     )
 }

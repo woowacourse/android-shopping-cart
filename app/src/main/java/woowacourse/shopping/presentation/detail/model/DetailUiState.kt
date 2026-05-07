@@ -10,4 +10,5 @@ data class DetailUiState(
             imageUrl = "",
             price = 0,
         ),
+    val quantity: Int = 0,
 )

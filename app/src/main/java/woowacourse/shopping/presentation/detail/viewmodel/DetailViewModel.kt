@@ -30,15 +30,35 @@ class DetailViewModel(
         _uiState.update {
             it.copy(
                 product = loaded.toUiModel(),
+                quantity = cartRepository.getQuantity(loaded.id),
             )
         }
     }
 
-    suspend fun addToCart(id: String): AddItemResult {
+    fun increase() {
+        _uiState.update {
+            it.copy(
+                quantity = it.quantity + 1,
+            )
+        }
+    }
+
+    fun decrease() {
+        _uiState.update {
+            it.copy(
+                quantity = it.quantity - 1,
+            )
+        }
+    }
+
+    suspend fun addToCart(
+        id: String,
+        quantity: Int,
+    ): AddItemResult {
         val product =
             loadedProduct ?: productRepository.getProductById(id).also {
                 loadedProduct = it
             }
-        return cartRepository.addItem(product.id)
+        return cartRepository.addItem(product.id, quantity)
     }
 }

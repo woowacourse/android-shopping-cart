@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.ui.DetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -29,15 +28,9 @@ class DetailActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 DetailScreen(
                     id = id,
-                    onNavigateToCart = { result ->
-                        when (result) {
-                            is AddItemResult.NewAdded -> {
-                                val intent = Intent(this, CartActivity::class.java)
-                                startActivity(intent)
-                            }
-                            is AddItemResult.Incremented ->
-                                Toast.makeText(this, R.string.already_product_in_cart, Toast.LENGTH_SHORT).show()
-                        }
+                    onNavigateToCart = {
+                        val intent = Intent(this, CartActivity::class.java)
+                        startActivity(intent)
                     },
                 )
             }

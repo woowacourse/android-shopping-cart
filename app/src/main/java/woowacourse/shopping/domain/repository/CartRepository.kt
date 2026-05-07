@@ -9,11 +9,16 @@ interface CartRepository {
 
     suspend fun getTotalCartSize(): Int
 
-    suspend fun addItem(id: String): AddItemResult
+    suspend fun addItem(
+        id: String,
+        quantity: Int = 1,
+    ): AddItemResult
 
     suspend fun deleteItem(id: String): RemoveItemResult
 
     suspend fun decrease(id: String): RemoveItemResult
 
     suspend fun getAllQuantities(): Map<String, Int>
+
+    suspend fun getQuantity(id: String): Int
 }
