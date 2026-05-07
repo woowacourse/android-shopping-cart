@@ -35,7 +35,7 @@ fun CartPageButton(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        NextPageButton(
+        MovePageButton(
             enabled = isPreviousEnabled,
             onClick = onPreviousClick,
             text = "<",
@@ -53,7 +53,7 @@ fun CartPageButton(
             fontSize = 22.sp,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
-        NextPageButton(
+        MovePageButton(
             enabled = isNextEnabled,
             onClick = onNextClick,
             text = ">",
@@ -70,7 +70,7 @@ fun CartPageButton(
 }
 
 @Composable
-private fun NextPageButton(
+private fun MovePageButton(
     text: String,
     buttonShape: RoundedCornerShape,
     contentDescription: String,
