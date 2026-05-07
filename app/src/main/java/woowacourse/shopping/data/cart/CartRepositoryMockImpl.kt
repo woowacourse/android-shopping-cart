@@ -10,7 +10,7 @@ class CartRepositoryMockImpl : CartRepository {
 
     override fun getCart(): Cart = cart
 
-    override fun getTotalCartCount(): Int = cart.totalCount
+    override fun getTotalCartCount(): Int = cart.getCartSize()
 
     override fun addCartItem(cartItem: CartItem) {
         cart = cart.addCartItem(cartItem)

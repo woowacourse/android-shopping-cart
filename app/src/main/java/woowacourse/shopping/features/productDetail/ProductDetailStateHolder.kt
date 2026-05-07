@@ -1,6 +1,7 @@
 package woowacourse.shopping.features.productDetail
 
 import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
@@ -10,8 +11,8 @@ import woowacourse.shopping.domain.product.model.ProductName
 class ProductDetailStateHolder(
     private val cartRepository: CartRepository,
 ) {
-    fun addToCart(parcelProduct: ParcelProduct) {
-        cartRepository.addCartItem(CartItem(product = toProduct(parcelProduct)))
+    fun addToCart(parcelProduct: ParcelProduct, count: Int = 1) {
+        cartRepository.addCartItem(CartItem(product = toProduct(parcelProduct), quantity = CartItemQuantity(count)))
     }
 
     companion object {

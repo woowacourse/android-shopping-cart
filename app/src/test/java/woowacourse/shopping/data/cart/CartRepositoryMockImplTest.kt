@@ -3,6 +3,7 @@ package woowacourse.shopping.data.cart
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
@@ -42,6 +43,7 @@ class CartRepositoryMockImplTest {
                     price = Price(3000),
                     imageUrl = ImageUrl("https://velog.io"),
                 ),
+            quantity = CartItemQuantity(1)
         )
 
     private val cartItem2 =
@@ -52,6 +54,7 @@ class CartRepositoryMockImplTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://naver.com"),
                 ),
+            quantity = CartItemQuantity(2)
         )
 
     private val cartItem3 =
@@ -62,6 +65,7 @@ class CartRepositoryMockImplTest {
                     price = Price(2000),
                     imageUrl = ImageUrl("https://google.com"),
                 ),
+            quantity = CartItemQuantity(3)
         )
 
     private val cartItem4 =
@@ -72,5 +76,6 @@ class CartRepositoryMockImplTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://daum.net"),
                 ),
+            quantity = CartItemQuantity(4)
         )
 }

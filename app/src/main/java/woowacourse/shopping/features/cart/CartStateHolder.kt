@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.DataProvider
+import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import kotlin.math.ceil
@@ -27,9 +28,10 @@ class CartStateHolder(
     fun isLastPage(): Boolean = currentPage == totalPages - 1 || totalPages == 0
 
     fun loadCartPage() {
+        if (!Cart.isPageValid(currentPage)) currentPage = 0
         totalPages = ceil(cartRepository.getTotalCartCount().toDouble() / PAGE_SIZE).toInt()
         if (currentPage >= totalPages) {
-            currentPage = max(0, totalPages - 1)
+            currentPage = totalPages - 1
         }
         val cart = cartRepository.getCart()
         pageCartItems = cart.getPage(currentPage, PAGE_SIZE)

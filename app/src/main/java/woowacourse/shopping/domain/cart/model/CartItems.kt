@@ -11,6 +11,12 @@ class CartItems(
 
     fun searchCartItem(cartItem: CartItem): Boolean = value.any { it.isSameCartItem(cartItem) }
 
+    fun increaseCartItem(cartItem: CartItem): CartItems = CartItems(value.map { if (it.isSameCartItem(cartItem)) it.increaseQuantity(cartItem) else it })
+
+    fun decreaseCartItem(cartItem: CartItem): CartItems = CartItems(value.map { if (it.isSameCartItem(cartItem)) it.decreaseQuantity(cartItem) else it })
+
+    fun getTotalCartItemCount(): Int = value.sumOf { it.quantity.value }
+
     fun subList(
         fromIndex: Int,
         toIndex: Int,
