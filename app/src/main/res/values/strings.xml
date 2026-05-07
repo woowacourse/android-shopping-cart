@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="title_activity_shopping">ShoppingActivity</string>
+    <string name="title_activity_product_detail">ProductDetailActivity</string>
+    <string name="title_activity_cart">CartActivity</string>
+    <string name="shopping_title">Shopping</string>
+    <string name="cart_title">Cart</string>
+    <string name="content_description_cart">장바구니</string>
+    <string name="content_description_previous">이전</string>
+    <string name="content_description_next">다음</string>
+    <string name="content_description_close">닫기</string>
+    <string name="content_description_image">이미지</string>
+    <string name="more_button">더보기</string>
+    <string name="cart_add_button">장바구니 담기</string>
+    <string name="price_label">가격</string>
+    <string name="price_format">%1$s 원</string>
+    <string name="page_format">%1$d</string>
 </resources>
