@@ -15,33 +15,58 @@ import woowacourse.shopping.ui.productdetail.component.ProductDetailHeader
 @Composable
 fun ProductDetailScreen(
     product: Product,
+    quantity: Int,
     isAdding: Boolean,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCart: () -> Unit,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProductDetailHeader(onCloseClick = onCloseClick)
 
-        ProductDetailBody(product = product)
+        ProductDetailBody(
+            product = product,
+            quantity = quantity,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity,
+        )
 
         Spacer(modifier = Modifier.weight(1f))
-
         CartAddButton(
             isEnabled = !isAdding,
             onClick = onAddToCart,
-        )
+            )
     }
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun ProductDetailScreenPreview() {
+@Preview(showBackground = true, name = "장바구니 담기")
+private fun ProductDetailScreenAddToCartPreview() {
     val product = InMemoryProductRepository.APPLE
     ProductDetailScreen(
         product = product,
+        quantity = 0,
         isAdding = false,
         onCloseClick = {},
         onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+    )
+}
+
+@Composable
+@Preview(showBackground = true, name = "수량 스테퍼")
+private fun ProductDetailScreenQuantityPreview() {
+    val product = InMemoryProductRepository.APPLE
+    ProductDetailScreen(
+        product = product,
+        quantity = 2,
+        isAdding = false,
+        onCloseClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }

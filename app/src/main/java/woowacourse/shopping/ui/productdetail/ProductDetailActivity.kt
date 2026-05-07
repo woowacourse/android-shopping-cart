@@ -15,21 +15,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
     private val viewModel: ProductDetailViewModel by viewModels()
 
     companion object {
-        private const val PUT_EXTRA_KEY_PRODUCT = "PRODUCT"
+        private const val PUT_EXTRA_KEY_PRODUCT_ID = "PRODUCT_ID"
 
         fun startActivity(
             context: Context,
-            product: Product,
+            productId: ProductId,
         ) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PUT_EXTRA_KEY_PRODUCT, product)
+                putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId)
             }
             context.startActivity(intent)
         }
@@ -38,15 +38,15 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val receivedProduct =
+        val receivedProductId =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT, Product::class.java)
+                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT_ID, ProductId::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT)
+                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT_ID)
             }
 
-        if (receivedProduct == null) {
+        if (receivedProductId == null) {
             finish()
             return
         }
@@ -55,8 +55,8 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            LaunchedEffect(receivedProduct) {
-                viewModel.setProduct(receivedProduct)
+            LaunchedEffect(receivedProductId) {
+                viewModel.loadProduct(receivedProductId)
             }
 
             ShoppingTheme {
@@ -65,10 +65,13 @@ class ProductDetailActivity : ComponentActivity() {
 
                     ProductDetailScreen(
                         product = product,
+                        quantity = uiState.quantity,
                         isAdding = uiState.isAdding,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
                         onAddToCart = viewModel::addToCart,
+                        onIncreaseQuantity = viewModel::increaseQuantity,
+                        onDecreaseQuantity = viewModel::decreaseQuantity,
                     )
                 }
             }

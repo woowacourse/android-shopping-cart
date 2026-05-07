@@ -41,7 +41,7 @@ class ShoppingActivity : ComponentActivity() {
                             startActivity(Intent(this, CartActivity::class.java))
                         },
                         onProductClick = {
-                            ProductDetailActivity.startActivity(this, it)
+                            ProductDetailActivity.startActivity(this, it.id)
                         },
                         onMoreClick = viewModel::loadMore,
                         onAddToCart = viewModel::addToCart,
