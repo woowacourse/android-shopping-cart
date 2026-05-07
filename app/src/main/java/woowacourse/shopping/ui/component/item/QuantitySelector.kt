@@ -23,8 +23,9 @@ fun QuantitySelector(
     count: Int,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDelete: () -> Unit = { },
+
 ) {
     Box(
         contentAlignment = Alignment.Center,
