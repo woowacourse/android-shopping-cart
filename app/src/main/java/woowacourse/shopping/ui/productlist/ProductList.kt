@@ -23,10 +23,12 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @Composable
 fun ProductList(
     products: List<ProductUiModel>,
+    isEnd: Boolean,
     onProductClick: (String) -> Unit,
     onLoading: () -> Unit,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnd: Boolean,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -48,6 +50,9 @@ fun ProductList(
                         onProductClick(it.id)
                     },
                 ),
+                quantity = 0,
+                onIncrement = onIncrement,
+                onDecrement = onDecrement,
             )
         }
         if (isEnd.not())

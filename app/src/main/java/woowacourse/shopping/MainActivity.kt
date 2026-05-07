@@ -71,6 +71,8 @@ class MainActivity : ComponentActivity() {
                     onCartIconClick = {
                         cartLauncher.launch(CartActivity.newIntent(this, productListStateHolder.cartUiModels))
                     },
+                    onIncrement = {},
+                    onDecrement = {},
                 )
             }
         }

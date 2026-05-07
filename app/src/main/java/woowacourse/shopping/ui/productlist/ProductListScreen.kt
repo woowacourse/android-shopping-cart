@@ -15,12 +15,14 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
+    productUiModels: List<ProductUiModel>,
+    isEnd: Boolean,
     onProductClick: (String) -> Unit,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onCartIconClick: () -> Unit,
     onLoading: () -> Unit,
     modifier: Modifier = Modifier,
-    productUiModels: List<ProductUiModel>,
-    isEnd: Boolean,
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -40,6 +42,8 @@ fun ProductListScreen(
                 modifier = Modifier.weight(1f),
                 onLoading = onLoading,
                 isEnd = isEnd,
+                onIncrement = onIncrement,
+                onDecrement = onDecrement,
             )
         }
     }
@@ -54,5 +58,7 @@ private fun PreviewProductListScreen() {
         onLoading = {},
         productUiModels = emptyList(),
         isEnd = false,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
