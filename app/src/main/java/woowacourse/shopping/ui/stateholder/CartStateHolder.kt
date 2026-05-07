@@ -4,15 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.CartProvider
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 import kotlin.math.min
 
 class CartStateHolder(
+    initialCart: Cart,
     initialPage: Int = 0,
 ) {
-    var cart by mutableStateOf(CartProvider.cart)
+    var cart by mutableStateOf(initialCart)
 
     var currentPage by mutableIntStateOf(initialPage)
 
@@ -25,9 +26,7 @@ class CartStateHolder(
     }
 
     fun onDeleteProduct(id: UUID) {
-        val removingItem = cart.cartProducts.findWithId(id) ?: return
-        CartProvider.removeItem(removingItem)
-        cart = CartProvider.cart
+        cart = cart.removeProduct(id)
 
         val maxValidPage = if (cart.size() == 0) 0 else (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
         if (currentPage > maxValidPage) currentPage = maxValidPage

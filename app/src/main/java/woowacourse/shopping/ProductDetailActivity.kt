@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -8,12 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import java.util.UUID
@@ -23,7 +21,13 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val productId = runCatching { UUID.fromString(intent.getStringExtra("id")) }.getOrNull()
-        if(productId == null) {
+        var cart = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("extra_cart", Cart::class.java)
+        } else {
+            intent.getParcelableExtra("extra_cart")
+        }
+
+        if (productId == null || cart == null) {
             finish()
             return
         }
@@ -39,7 +43,11 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         onAddRequest = {
-                            CartProvider.addItem(product)
+                            cart = cart?.addProduct(product)
+                            val resultIntent = Intent().apply {
+                                putExtra("extra_cart", cart)
+                            }
+                            setResult(RESULT_OK, resultIntent)
                             toast.show()
                             finish()
                         },

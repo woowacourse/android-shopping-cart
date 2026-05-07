@@ -31,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
 import woowacourse.shopping.ui.stateholder.CartStateHolder
@@ -208,7 +210,12 @@ private fun btnAvailable(btnFlag: Boolean): Color =
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        stateHolder = CartStateHolder(),
+        stateHolder = CartStateHolder(
+            initialCart = Cart(
+                cartProducts = CartProducts(emptyList())
+            ),
+            initialPage = 1
+        ),
         onClose = {},
     )
 }

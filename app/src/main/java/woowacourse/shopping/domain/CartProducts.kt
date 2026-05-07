@@ -1,10 +1,13 @@
 package woowacourse.shopping.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 class CartProducts(
-    private val products: List<Product> = emptyList(),
-) {
+    val products: List<Product> = emptyList(),
+) : Parcelable {
     val items: List<Product>
         get() = products.toList()
 
