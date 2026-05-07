@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.pagination
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.model.Product
 import kotlin.math.min
@@ -38,4 +39,15 @@ class ProductPageStateHolder(
     }
 
     fun canMoveToNextPage(): Boolean = currentPage + 1 < pageCount
+
+    companion object {
+        fun Saver(
+            products: List<Product>,
+            pageSize: Int,
+        ): Saver<ProductPageStateHolder, Int> =
+            Saver(
+                save = { it.currentPage },
+                restore = { ProductPageStateHolder(products, pageSize, it) },
+            )
+    }
 }

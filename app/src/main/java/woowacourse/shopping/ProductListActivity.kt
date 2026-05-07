@@ -8,7 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import woowacourse.shopping.ui.ProductListScreen
 import woowacourse.shopping.ui.pagination.ProductPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
@@ -17,18 +17,17 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 class ProductListActivity : ComponentActivity() {
     private val productRepository = ShoppingApplication.productRepository
 
-    companion object {
-        const val EXTRA_PRODUCT_ID = "productId"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
+                val products = productRepository.getProducts()
                 val productPaginationStateHolder =
-                    remember {
-                        ProductPageStateHolder(productRepository.getProducts(), pageSize = 20)
+                    rememberSaveable(
+                        saver = ProductPageStateHolder.Saver(products, 20),
+                    ) {
+                        ProductPageStateHolder(products, pageSize = 20)
                     }
                 ProductListScreen(
                     products = productPaginationStateHolder.getItems(),
@@ -45,5 +44,9 @@ class ProductListActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    companion object {
+        const val EXTRA_PRODUCT_ID = "productId"
     }
 }
