@@ -15,32 +15,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.AppContainer
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.ProductWithQuantity
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.repository.cart.CartRepository
+import woowacourse.shopping.repository.cart.InMemoryCartRepository
+import woowacourse.shopping.repository.product.InMemoryProductRepository
 import woowacourse.shopping.ui.productdetail.component.MintButton
 import woowacourse.shopping.ui.shopping.component.ProductItem
 import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
-import woowacourse.shopping.ui.shopping.state.rememberProductListState
+import woowacourse.shopping.ui.shopping.viewmodel.ProductListViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
+    viewModel: ProductListViewModel = viewModel(),
     products: Products,
     onCartClick: () -> Unit,
     onProductClick: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val state = rememberProductListState()
-
     Scaffold(
         topBar = {
             ProductListTopAppBar(
+                totalProductQuantity = viewModel.totalProductQuantity,
                 onClick = {
                     onCartClick()
                 },
@@ -54,19 +61,33 @@ fun ProductListScreen(
                 contentPadding = PaddingValues(20.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.testTag("product_grid"),
             ) {
-                items(state.visibleProducts(products)) { product ->
+                items(viewModel.visibleProducts()) { product ->
+                    val quantity = viewModel.getProductQuantity(product.productId)
+
                     ProductItem(
-                        product = product,
+                        productWithQuantity = ProductWithQuantity(product, quantity),
                         onClick = { onProductClick(product.productId) },
+                        onIncrease = {
+                            viewModel.addProduct(
+                                product = product,
+                                quantityToAdd = 1
+                            )
+                        },
+                        onDecrease = {
+                            viewModel.decreaseProduct(
+                                productId = product.productId,
+                                quantityToRemove = 1
+                            )
+                        },
+                        modifier = Modifier.testTag("product_item_${product.productId}"),
                     )
                 }
-                if (products.hasNextPage(currentPageIndex = state.currentPageIndex)) {
+                if (products.hasNextPage(currentPageIndex = viewModel.currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         MintButton(
-                            onClick = {
-                                state.increase()
-                            },
+                            onClick = { viewModel.increasePageIndex() },
                             text = stringResource(R.string.see_more),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -82,9 +103,10 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     val packageName = LocalContext.current.packageName
+    val productRepository = AppContainer.createProductRepository(packageName)
 
     ProductListScreen(
-        products = Products(ProductFixture.productList(packageName)),
+        products = productRepository.getAllProducts(),
         onCartClick = {},
         onProductClick = {},
     )
