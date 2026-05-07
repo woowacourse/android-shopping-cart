@@ -10,10 +10,10 @@ import woowacourse.shopping.domain.model.cart.CartItems
 
 class CartRepositoryImplTest {
     private val repository = CartRepositoryImpl
-
+    private val dataSource = DUMMY_PRODUCTS
     @BeforeEach
     fun setUp() {
-        val cartItems = CartItems(DUMMY_PRODUCTS.take(13).map { CartItem(it, Quantity(1)) })
+        val cartItems = CartItems(dataSource.take(13).map { CartItem(it, Quantity(1)) })
         repository.saveCartItems(cartItems)
     }
 
@@ -52,7 +52,7 @@ class CartRepositoryImplTest {
 
     @Test
     fun `상품 ID로 장바구니 항목을 조회할 수 있다`() {
-        val firstProduct = DUMMY_PRODUCTS[0]
+        val firstProduct = dataSource[0]
         val result = repository.getCartItem(firstProduct.id)
         assertEquals(firstProduct.id, result?.product?.id)
     }
@@ -60,7 +60,7 @@ class CartRepositoryImplTest {
     @Test
     fun `장바구니에 새로운 항목을 추가할 수 있다`() {
         val initialCount = repository.getCartItemCount()
-        val newProduct = DUMMY_PRODUCTS[15]
+        val newProduct = dataSource[15]
         repository.addCartItem(CartItem(newProduct, Quantity(1)))
         
         assertEquals(initialCount + 1, repository.getCartItemCount())
@@ -69,7 +69,7 @@ class CartRepositoryImplTest {
 
     @Test
     fun `장바구니에서 항목을 삭제할 수 있다`() {
-        val firstProduct = DUMMY_PRODUCTS[0]
+        val firstProduct = dataSource[0]
         val initialCount = repository.getCartItemCount()
         
         repository.deleteCartItem(firstProduct.id)

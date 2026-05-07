@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 object ProductRepositoryImpl : ProductRepository {
+    val dataSource = DUMMY_PRODUCTS
     override fun getProducts(
         page: Int,
         pageSize: Int,
@@ -14,16 +15,16 @@ object ProductRepositoryImpl : ProductRepository {
         require(page >= 0) { "페이지 번호는 0보다 크거나 같은 정수여야 합니다." }
         require(pageSize >= 1) { "페이지 사이즈는 1보다 큰 정수여야 합니다." }
         val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, DUMMY_PRODUCTS.size)
+        val toIndex = min(fromIndex + pageSize, dataSource.size)
 
         require(fromIndex <= toIndex) { "끝 인덱스는 시작 인덱스보다 작거나 같아야 합니다." }
 
-        val result = DUMMY_PRODUCTS.subList(fromIndex, toIndex)
+        val result = dataSource.subList(fromIndex, toIndex)
         return ProductItems(result)
     }
 
-    override fun getProductCount(): Int = DUMMY_PRODUCTS.size
+    override fun getProductCount(): Int = dataSource.size
 
     override fun getProduct(id: String): Product? =
-        DUMMY_PRODUCTS.find { it.id == id }
+        dataSource.find { it.id == id }
 }
