@@ -7,24 +7,42 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.CartRepository
+import woowacourse.shopping.data.MockProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
+    private val viewModel: DetailViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val id = intent.getStringExtra(PRODUCT_ID)
+
         if (id == null) {
             Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
+        val application = application as ShoppingApplication
+
+        viewModel.initialize(
+            id = id,
+            productRepository = MockProductRepository(),
+            cartRepository = CartRepository(application.database.cartItemDao()),
+        )
+
         setContent {
             AndroidshoppingTheme {
+                val uiState = viewModel.uiState.collectAsState()
                 DetailScreen(
                     id = id,
                     onNavigateToCart = {

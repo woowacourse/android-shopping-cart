@@ -24,7 +24,7 @@
 - [ ] 상품 목록 수량과 장바구니 상태 동기화 로직 작성
 
 ### Detail
-- [ ] DetailViewModel 추가
+- [x] DetailViewModel 추가
 - [ ] 상품 상세 수량 선택 UI 추가
 - [ ] 상품 상세 장바구니 추가 기능 연결
 

@@ -3,11 +3,13 @@ package woowacourse.shopping.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.localdb.dao.CartItemDao
+import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.localdb.mapper.toDomain
 import woowacourse.shopping.data.localdb.mapper.toEntity
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductName
 
 class CartRepository(
     private val cartItemDao: CartItemDao,
@@ -18,15 +20,16 @@ class CartRepository(
                 Cart(items = entities.map { it.toDomain() })
             }
 
-    suspend fun addItem(product: Product) {
-        val item = cartItemDao.findById(product.id)?.toDomain()
-        val cartItem =
-            item?.increaseQuantity()
-                ?: CartItem(
-                    product = product,
-                    quantity = 1,
-                )
-        cartItemDao.insert(cartItem.toEntity(System.currentTimeMillis()))
+    suspend fun addItem(product: Product, quantity: Int) {
+        val cartItem = CartItemEntity(
+            product.id,
+            product.getName(),
+            product.getPrice(),
+            product.imageUrl,
+            quantity,
+            System.currentTimeMillis()
+        )
+        cartItemDao.insert(cartItem)
     }
 
     suspend fun increaseQuantity(id: String) {
@@ -47,6 +50,11 @@ class CartRepository(
 
     suspend fun deleteItem(id: String) {
         cartItemDao.deleteById(id)
+    }
+
+    suspend fun getCartItemQuantity(id: String): Int {
+        val item = cartItemDao.findById(id)?.toDomain() ?: return 1
+        return item.quantity
     }
 
     suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
