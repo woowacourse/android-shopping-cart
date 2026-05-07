@@ -44,7 +44,7 @@ class CartStateHolder(
 
     @OptIn(ExperimentalUuidApi::class)
     fun deleteProduct(productId: Uuid) {
-        cartRepository.deleteProduct(productId)
+        cartRepository.decreaseQuantity(productId)
 
         refresh()
     }

@@ -35,7 +35,7 @@ class CartRepositoryImpl(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    override fun deleteProduct(productId: Uuid) {
+    override fun decreaseQuantity(productId: Uuid) {
         cart = cart.decreaseQuantity(productId)
     }
 }

@@ -58,6 +58,12 @@ class ProductListViewModel(
     }
 
     @OptIn(ExperimentalUuidApi::class)
+    fun decreaseQuantity(productId: Uuid) {
+        cartRepository.decreaseQuantity(productId)
+        refreshCart()
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
     fun getQuantity(productId: Uuid): Int =
         cart.cartItems
             .find { it.product.productId == productId }

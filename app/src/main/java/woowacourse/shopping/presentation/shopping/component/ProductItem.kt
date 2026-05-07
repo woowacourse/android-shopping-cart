@@ -27,6 +27,7 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
@@ -35,7 +36,7 @@ fun ProductItem(
     quantity: Int,
     onClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Product) -> Unit,
+    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -51,7 +52,7 @@ fun ProductItem(
                 product = product,
                 quantity = quantity,
                 onQuantityIncrease = { onQuantityIncrease(product) },
-                onQuantityDecrease = { onQuantityDecrease(product) },
+                onQuantityDecrease = { onQuantityDecrease(product.productId) },
                 modifier = Modifier.fillMaxWidth(),
             )
 

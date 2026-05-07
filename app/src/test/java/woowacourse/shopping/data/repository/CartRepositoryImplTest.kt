@@ -55,7 +55,7 @@ class CartRepositoryImplTest {
         val product = createProduct()
 
         cartRepository.increaseQuantity(product)
-        cartRepository.deleteProduct(product.productId)
+        cartRepository.decreaseQuantity(product.productId)
 
         val cart = cartRepository.getPagingItems(page = 0, pageSize = 10)
         assertThat(cart.cartItems).isEmpty()

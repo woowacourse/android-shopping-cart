@@ -27,11 +27,27 @@ data class Cart(
         )
     }
 
-    fun deleteProductFromCart(productId: Uuid): Cart =
-        copy(
+    fun decreaseQuantity(productId: Uuid): Cart {
+        val cartItem = cartItems.find { it.product.productId == productId } ?: return this
+
+        if (cartItem.quantity == 1) {
+            return copy(
+                cartItems =
+                    cartItems.filterNot {
+                        it.product.productId == productId
+                    },
+            )
+        }
+
+        return copy(
             cartItems =
-                cartItems.filterNot {
-                    it.product.productId == productId
+                cartItems.map {
+                    if (it.product.productId == productId) {
+                        it.decreaseQuantity()
+                    } else {
+                        it
+                    }
                 },
         )
+    }
 }

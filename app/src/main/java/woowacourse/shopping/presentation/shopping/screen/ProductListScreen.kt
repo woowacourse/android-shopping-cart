@@ -21,7 +21,7 @@ fun ProductListScreen(
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Product) -> Unit,
+    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ProductListScaffold(

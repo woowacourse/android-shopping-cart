@@ -26,7 +26,7 @@ fun ProductListContent(
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Product) -> Unit,
+    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(

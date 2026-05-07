@@ -38,7 +38,7 @@ class ProductListActivity : ComponentActivity() {
                         startActivity(ProductDetailActivity.newIntent(this, product.toUiModel()))
                     },
                     onQuantityIncrease = viewModel::increaseQuantity,
-                    onQuantityDecrease = {},
+                    onQuantityDecrease = viewModel::decreaseQuantity,
                 )
             }
         }
