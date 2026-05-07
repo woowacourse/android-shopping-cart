@@ -34,8 +34,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val stateHolder = retainCartStateHolder()
                     CatalogScreen(
-                        catalog = currentProducts.value,
+                        catalog = stateHolder.catalog,
                         onItemClick = { id ->
                             productDetailIntent.putExtra("id", id.toString())
                             startActivity(productDetailIntent)
