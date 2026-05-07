@@ -10,8 +10,8 @@ class PurchaseProducts(
     val purchaseProducts: List<PurchaseProduct> = emptyList()
 ): Parcelable {
     fun add(purchaseProduct: PurchaseProduct) =
-        if(findById(purchaseProduct.uuid) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
-        else updateCountWithUuid(purchaseProduct.uuid, CountUpdateType.INCREASE)
+        if(findById(purchaseProduct.uuid()) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
+        else updateCountWithUuid(purchaseProduct.uuid(), CountUpdateType.INCREASE)
 
     fun updateCountWithUuid(uuid: UUID, updateType: CountUpdateType) = PurchaseProducts (
         purchaseProducts.map {
@@ -36,7 +36,7 @@ class PurchaseProducts(
 
     fun totalCount() = purchaseProducts.sumOf { it.count }
 
-    fun isContain(id: UUID): Boolean = purchaseProducts.any { it.uuid == id }
+    fun isContain(id: UUID): Boolean = purchaseProducts.any { it.uuid() == id }
 
     fun findById(uuid: UUID) = purchaseProducts.find { it.isSameUUID(uuid) }
 }
