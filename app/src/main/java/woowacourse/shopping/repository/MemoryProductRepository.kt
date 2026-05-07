@@ -7,7 +7,7 @@ class MemoryProductRepository(
 ) : ProductRepository {
     private val products: List<Product> = products.toList()
 
-    override fun getProduct(productId: Long): Product? = products.find { it.id == productId }
+    override fun getProduct(productId: String): Product? = products.find { it.id == productId }
 
     override fun getProducts(): List<Product> = products.toList()
 }

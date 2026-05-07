@@ -129,16 +129,16 @@ private fun ShoppingCartScreenPreview() {
             shoppingCartItems =
                 listOf(
                     ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                        id = "1",
+                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                     ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                        id = "2",
+                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                     ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                        id = "3",
+                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                 ),
             onBackClick = { },

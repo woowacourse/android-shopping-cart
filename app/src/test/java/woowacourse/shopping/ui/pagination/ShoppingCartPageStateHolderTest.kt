@@ -8,7 +8,7 @@ import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartPageStateHolderTest {
-    private val product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), "")
+    private val product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), "")
 
     @Test
     fun `상품이 6개있다면 다음 페이지로 이동 가능하다`() {
@@ -16,7 +16,7 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem(index.toLong(), product)
+                    ShoppingCartItem("$index", product)
                 },
                 pageSize = 5,
             )
@@ -38,7 +38,7 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem(index.toLong(), product)
+                    ShoppingCartItem("$index", product)
                 },
                 pageSize = 5,
             )

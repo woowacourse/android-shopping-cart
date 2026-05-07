@@ -19,7 +19,7 @@ class ProductPageStateHolderTest {
                 products =
                     List(itemSize) {
                         Product(
-                            id = 1L,
+                            id = "1",
                             price = Price(10_000),
                             title = ProductTitle("호날두"),
                             imageUrl = "",
@@ -42,7 +42,7 @@ class ProductPageStateHolderTest {
                 products =
                     List(itemSize) {
                         Product(
-                            id = 1L,
+                            id = "1",
                             price = Price(10_000),
                             title = ProductTitle("호날두"),
                             imageUrl = "",

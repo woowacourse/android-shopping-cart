@@ -22,7 +22,12 @@ class DetailProductActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
+                val productId = intent.getStringExtra(ProductListActivity.EXTRA_PRODUCT_ID)
+                if (productId == null) {
+                    Text(stringResource(R.string.product_not_found_message))
+                    return@AndroidShoppingTheme
+                }
+
                 val product = productRepository.getProduct(productId)
                 if (product == null) {
                     Text(stringResource(R.string.product_not_found_message))
@@ -33,17 +38,12 @@ class DetailProductActivity : ComponentActivity() {
                     productImageUrl = product.imageUrl,
                     productPrice = WonMoney(product.getPrice()),
                     onAddToCartClick = {
-                        ShoppingApplication.shoppingCartRepository =
-                            ShoppingApplication.shoppingCartRepository.add(product)
+                        ShoppingApplication.shoppingCartRepository.add(product)
                         this.finish()
                     },
                     onBackClick = this::finish,
                 )
             }
         }
-    }
-
-    companion object {
-        private const val INVALID_PRODUCT_ID = -1L
     }
 }

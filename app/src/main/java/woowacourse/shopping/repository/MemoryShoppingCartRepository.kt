@@ -2,33 +2,33 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-data class MemoryShoppingCartRepository(
-    private val items: List<ShoppingCartItem>,
-    private val nextShoppingCartItemId: Long = 0L,
+@OptIn(ExperimentalUuidApi::class)
+class MemoryShoppingCartRepository(
+    initinalProducts: List<Product>,
 ) : ShoppingCartRepository {
-    constructor(initialProducts: List<Product>) : this(
-        items =
-            initialProducts.mapIndexed { index, product ->
-                ShoppingCartItem(id = index.toLong(), product = product)
-            },
-        nextShoppingCartItemId = initialProducts.size.toLong(),
-    )
+    private val items: MutableList<ShoppingCartItem> =
+        initinalProducts
+            .map { product ->
+                ShoppingCartItem(id = Uuid.random().toString(), product = product)
+            }.toMutableList()
 
-    override fun add(product: Product): ShoppingCartRepository {
-        val newItem =
+    private fun getShoppingCartItemId(): String = Uuid.random().toString()
+
+    override fun add(product: Product) {
+        items.add(
             ShoppingCartItem(
-                id = nextShoppingCartItemId,
+                id = getShoppingCartItemId(),
                 product = product,
-            )
-        return copy(
-            items = items + newItem,
-            nextShoppingCartItemId = nextShoppingCartItemId + 1,
+            ),
         )
     }
 
-    override fun remove(shoppingCartItem: ShoppingCartItem): ShoppingCartRepository =
-        copy(items = items.filter { it.id != shoppingCartItem.id })
+    override fun remove(shoppingCartItem: ShoppingCartItem) {
+        items.remove(shoppingCartItem)
+    }
 
-    override fun getShoppingItems(): List<ShoppingCartItem> = items
+    override fun getShoppingItems(): List<ShoppingCartItem> = items.toList()
 }

@@ -38,7 +38,7 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 fun ProductListScreen(
     products: List<Product>,
     onNavigateToCartClick: () -> Unit,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (String) -> Unit,
     onMoreClick: () -> Unit,
     showMoreButton: Boolean,
     modifier: Modifier = Modifier,
@@ -128,13 +128,13 @@ private fun ProductListScreenPreview() {
             products =
                 listOf(
                     Product(
-                        id = 1,
+                        id = "1",
                         title = ProductTitle("동원 스위트콘"),
                         price = Price(99_800),
                         imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                     ),
                     Product(
-                        id = 2,
+                        id = "2",
                         title = ProductTitle("동원 스위트콘2"),
                         price = Price(99_800),
                         imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
