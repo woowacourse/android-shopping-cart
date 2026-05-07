@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.app.AppContainer.cartRepository
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
@@ -19,6 +18,7 @@ class ProductListViewModel(
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : ViewModel() {
     var currentPageIndex by mutableStateOf(0)
+        private set
 
     var products by mutableStateOf(Products())
         private set
@@ -32,6 +32,9 @@ class ProductListViewModel(
                 currentPage = currentPageIndex,
                 pageSize = pageSize,
             )
+
+    val totalQuantity: Int
+        get() = cart.cartItems.sumOf { it.quantity }
 
     init {
         loadPages(currentPageIndex)
@@ -92,6 +95,7 @@ class ProductListViewModel(
 
 class ProductListViewModelFactory(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {

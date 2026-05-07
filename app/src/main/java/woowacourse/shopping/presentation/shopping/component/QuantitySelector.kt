@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.presentation.theme.topAppBarColor
 
 @Composable
 fun QuantitySelector(
@@ -56,6 +57,7 @@ fun QuantitySelector(
             text = quantity.toString(),
             fontSize = 22.sp,
             fontWeight = FontWeight.W500,
+            color = topAppBarColor,
             modifier = Modifier.align(Alignment.CenterVertically),
         )
 

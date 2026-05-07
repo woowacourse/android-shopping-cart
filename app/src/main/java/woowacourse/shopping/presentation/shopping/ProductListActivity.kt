@@ -17,6 +17,7 @@ class ProductListActivity : ComponentActivity() {
     private val viewModel: ProductListViewModel by viewModels {
         ProductListViewModelFactory(
             productRepository = AppContainer.productRepository,
+            cartRepository = AppContainer.cartRepository,
         )
     }
 
@@ -29,6 +30,7 @@ class ProductListActivity : ComponentActivity() {
                 ProductListScreen(
                     products = viewModel.products,
                     hasNextPage = viewModel.hasNextPage,
+                    totalQuantity = viewModel.totalQuantity,
                     productQuantity = viewModel::getQuantity,
                     onLoadMore = viewModel::loadMore,
                     onCartIconClick = {

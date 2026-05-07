@@ -16,6 +16,7 @@ import kotlin.uuid.Uuid
 fun ProductListScreen(
     products: Products,
     hasNextPage: Boolean,
+    totalQuantity: Int,
     productQuantity: (Uuid) -> Int,
     onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
@@ -25,6 +26,7 @@ fun ProductListScreen(
     modifier: Modifier = Modifier,
 ) {
     ProductListScaffold(
+        totalQuantity = totalQuantity,
         onClick = onCartIconClick,
         modifier = modifier,
     ) {
@@ -47,6 +49,7 @@ private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(emptyList()),
         hasNextPage = true,
+        totalQuantity = 0,
         productQuantity = { 0 },
         onLoadMore = {},
         onCartIconClick = {},
