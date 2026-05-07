@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartRepositoryTest {
@@ -33,7 +34,7 @@ class ShoppingCartRepositoryTest {
     fun `장바구니에 없는 상품을 삭제해도 에러가 발생하지 않으며 상태가 유지된다`() {
         val shoppingCartRepository: ShoppingCartRepository = MemoryShoppingCartRepository(emptyList())
         val initialItems = shoppingCartRepository.getShoppingItems()
-        shoppingCartRepository.remove(ShoppingCartItem("1", product))
+        shoppingCartRepository.remove(ShoppingCartItem("1", Quantity(0), product))
 
         shoppingCartRepository.getShoppingItems() shouldBe initialItems
     }

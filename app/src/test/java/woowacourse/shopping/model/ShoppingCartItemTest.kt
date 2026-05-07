@@ -9,15 +9,15 @@ class ShoppingCartItemTest {
 
     @Test
     fun `id와 상품이 다르면 별개로 취급한다`() {
-        val shoppingCartItem = ShoppingCartItem("1", product)
-        val differentIdShoppingCartItem = ShoppingCartItem("2", product)
+        val shoppingCartItem = ShoppingCartItem("1", Quantity(0), product)
+        val differentIdShoppingCartItem = ShoppingCartItem("2", Quantity(0), product)
 
         shoppingCartItem shouldNotBe differentIdShoppingCartItem
     }
 
     @Test
     fun `id와 상품이 같으면 같은 쇼핑 카트 아이템으로 취급한다`() {
-        val shoppingCartItem = ShoppingCartItem("1", product)
+        val shoppingCartItem = ShoppingCartItem("1", Quantity(0), product)
         shoppingCartItem shouldBe shoppingCartItem
     }
 }

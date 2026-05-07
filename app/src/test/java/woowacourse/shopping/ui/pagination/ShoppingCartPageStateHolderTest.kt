@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 
 class ShoppingCartPageStateHolderTest {
@@ -16,7 +17,7 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem("$index", product)
+                    ShoppingCartItem("$index", Quantity(0), product)
                 },
                 pageSize = 5,
             )
@@ -38,7 +39,7 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem("$index", product)
+                    ShoppingCartItem("$index", Quantity(0), product)
                 },
                 pageSize = 5,
             )

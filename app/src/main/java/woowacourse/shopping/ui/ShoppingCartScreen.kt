@@ -27,6 +27,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
@@ -130,14 +131,17 @@ private fun ShoppingCartScreenPreview() {
                 listOf(
                     ShoppingCartItem(
                         id = "1",
+                        quantity = Quantity(0),
                         product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                     ShoppingCartItem(
                         id = "2",
+                        quantity = Quantity(1),
                         product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                     ShoppingCartItem(
                         id = "3",
+                        quantity = Quantity(2),
                         product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
                     ),
                 ),

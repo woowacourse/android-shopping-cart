@@ -1,6 +1,7 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -12,7 +13,7 @@ class MemoryShoppingCartRepository(
     private val items: MutableList<ShoppingCartItem> =
         initinalProducts
             .map { product ->
-                ShoppingCartItem(id = Uuid.random().toString(), product = product)
+                ShoppingCartItem(id = Uuid.random().toString(), Quantity(0), product = product)
             }.toMutableList()
 
     private fun getShoppingCartItemId(): String = Uuid.random().toString()
@@ -21,6 +22,7 @@ class MemoryShoppingCartRepository(
         items.add(
             ShoppingCartItem(
                 id = getShoppingCartItemId(),
+                quantity = Quantity(0),
                 product = product,
             ),
         )
