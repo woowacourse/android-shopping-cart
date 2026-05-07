@@ -39,6 +39,7 @@ class ProductDetailActivity : ComponentActivity() {
                     quantity = 1,
                     onIncrement = {},
                     onDecrement = {},
+                    recentProductTitle = "최근 본 상품",
                 )
             }
         }
