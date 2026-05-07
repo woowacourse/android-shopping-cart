@@ -6,7 +6,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class ProductAndCountTest {
+class ProductWithQuantityTest {
     val product =
         Product(
             productId = Uuid.random(),
@@ -17,19 +17,23 @@ class ProductAndCountTest {
 
     @Test
     fun `선택한 상품의 수량을 늘릴 수 있다`() {
-        val productAndCount = ProductAndCount(product, 1)
+        val productWithQuantity = ProductWithQuantity(product, 1)
 
-        val newProductAndCount = productAndCount.increaseQuantity()
+        val newProductWithQuantity = productWithQuantity.increaseQuantity(
+            quantityToAdd = 1
+        )
 
-        assertThat(newProductAndCount.count()).isEqualTo(2)
+        assertThat(newProductWithQuantity.quantity).isEqualTo(2)
     }
 
     @Test
     fun `선택한 상품의 수량을 줄일 수 있다`() {
-        val productAndCount = ProductAndCount(product, 1)
+        val productWithQuantity = ProductWithQuantity(product, 1)
 
-        val newProductAndCount = productAndCount.decreaseQuantity()
+        val newProductWithQuantity = productWithQuantity.decreaseQuantity(
+            quantityToRemove = 1
+        )
 
-        assertThat(newProductAndCount.count()).isEqualTo(0)
+        assertThat(newProductWithQuantity.quantity).isEqualTo(0)
     }
 }
