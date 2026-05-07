@@ -13,5 +13,9 @@ interface CartRepository {
         limit: Int,
     ): List<CartItem>
 
+    suspend fun getCartItemsByProductIds(
+        productIds: Set<ProductId>
+    ): List<CartItem>
+
     suspend fun count(): Int
 }

@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.shopping.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -23,15 +25,21 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.common.component.AddToCartButton
+import woowacourse.shopping.ui.common.component.QuantityStepper
+import woowacourse.shopping.ui.shopping.ShoppingProductUiState
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun ProductUnit(
-    product: Product,
+    product: ShoppingProductUiState,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    onAddToCart: () -> Unit,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
-    val price = product.price.value
+    val price = product.product.price.value
     val formatted = String.format("%,d", price)
     Column(
         modifier =
@@ -40,15 +48,37 @@ fun ProductUnit(
                 .height(206.dp)
                 .clickable(onClick = onClick),
     ) {
-        AsyncImage(
-            model = product.imageUrl,
-            contentDescription = stringResource(R.string.content_description_image),
+        Box(
             modifier = Modifier.size(154.dp),
-            contentScale = ContentScale.Crop,
-        )
+        ) {
+            AsyncImage(
+                model = product.product.imageUrl,
+                contentDescription = stringResource(R.string.content_description_image),
+                modifier = Modifier.matchParentSize(),
+                contentScale = ContentScale.Crop,
+            )
+            if (product.isInCart) {
+                QuantityStepper(
+                    quantity = product.quantity,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp),
+                    onIncreaseQuantity = onIncreaseQuantity,
+                    onDecreaseQuantity = onDecreaseQuantity,
+                )
+            } else {
+                AddToCartButton(
+                    isEnabled = true,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp),
+                    onAddToCart = onAddToCart,
+                )
+            }
+        }
         Spacer(Modifier.size(6.dp))
         Text(
-            text = product.name,
+            text = product.product.name,
             color = Color.Black,
             style = ShoppingTypography.productName,
             maxLines = 1,
@@ -65,21 +95,46 @@ fun ProductUnit(
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun ProductUnitPreview() {
-    ProductUnit(product = InMemoryProductRepository.APPLE, onClick = {})
+@Preview(showBackground = true, name = "장바구니 담기 버튼")
+private fun ProductUnitAddToCartPreview() {
+    ProductUnit(
+        product = ShoppingProductUiState(product = InMemoryProductRepository.APPLE, quantity = 0),
+        onClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+    )
 }
 
 @Composable
-@Preview(showBackground = true, name = "긴 이름을 가진 상품")
-private fun ProductUnitPreview2() {
+@Preview(showBackground = true, name = "수량 스테퍼")
+private fun ProductUnitQuantityPreview() {
+    ProductUnit(
+        product = ShoppingProductUiState(product = InMemoryProductRepository.APPLE, quantity = 2),
+        onClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+    )
+}
+
+@Composable
+@Preview(showBackground = true, name = "긴 이름 상품")
+private fun ProductUnitLongNamePreview() {
     ProductUnit(
         product =
-            Product(
-                name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
-                price = Money(1000),
-                imageUrl = "",
+            ShoppingProductUiState(
+                product =
+                    Product(
+                        name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
+                        price = Money(1000),
+                        imageUrl = "",
+                    ),
+                quantity = 1,
             ),
         onClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }

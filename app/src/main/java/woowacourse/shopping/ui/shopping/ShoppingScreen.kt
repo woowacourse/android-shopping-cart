@@ -8,20 +8,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Products
+import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.shopping.component.ShoppingBody
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
 @Composable
 fun ShoppingScreen(
-    products: Products,
+    products: List<ShoppingProductUiState>,
     hasNext: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
+    onAddToCart: (ProductId) -> Unit,
+    onIncreaseQuantity: (ProductId) -> Unit,
+    onDecreaseQuantity: (ProductId) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -39,6 +42,9 @@ fun ShoppingScreen(
                     .weight(1f),
             onProductClick = onProductClick,
             onMoreClick = onMoreClick,
+            onAddToCart = onAddToCart,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity
         )
     }
 }
@@ -47,11 +53,20 @@ fun ShoppingScreen(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
-        products = InMemoryProductRepository.products,
+        products =
+            InMemoryProductRepository.products.toList().take(6).mapIndexed { index, product ->
+                ShoppingProductUiState(
+                    product = product,
+                    quantity = if (index < 2) 0 else 1,
+                )
+            },
         hasNext = true,
-        isLoading = true,
+        isLoading = false,
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }

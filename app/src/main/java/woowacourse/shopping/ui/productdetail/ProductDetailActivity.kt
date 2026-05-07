@@ -59,10 +59,6 @@ class ProductDetailActivity : ComponentActivity() {
                 viewModel.setProduct(receivedProduct)
             }
 
-            LaunchedEffect(uiState.isAdded) {
-                if (uiState.isAdded) finish()
-            }
-
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val product = uiState.product ?: return@Scaffold

@@ -14,17 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Products
+import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.shopping.ShoppingProductUiState
 
 @Composable
 fun ShoppingBody(
-    products: Products,
+    products: List<ShoppingProductUiState>,
     showMoreButton: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
+    onAddToCart: (ProductId) -> Unit,
+    onIncreaseQuantity: (ProductId) -> Unit,
+    onDecreaseQuantity: (ProductId) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 154.dp),
@@ -32,11 +36,17 @@ fun ShoppingBody(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(items = products.toList(), key = { it.id }) { product ->
-            ProductUnit(product, onClick = { onProductClick(product) })
+        items(items = products, key = { it.product.id }) { product ->
+            ProductUnit(
+                product = product,
+                onClick = { onProductClick(product.product) },
+                onAddToCart = { onAddToCart(product.product.id) },
+                onIncreaseQuantity = { onIncreaseQuantity(product.product.id) },
+                onDecreaseQuantity = { onDecreaseQuantity(product.product.id) },
+            )
         }
 
-        if (isLoading && products.toList().isEmpty()) {
+        if (isLoading && products.isEmpty()) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -61,10 +71,19 @@ fun ShoppingBody(
 @Preview(showBackground = true)
 private fun ShoppingBodyPreview() {
     ShoppingBody(
-        products = InMemoryProductRepository.products,
+        products =
+            InMemoryProductRepository.products.toList().take(4).mapIndexed { index, product ->
+                ShoppingProductUiState(
+                    product = product,
+                    quantity = if (index % 2 == 0) 0 else 2,
+                )
+            },
         showMoreButton = true,
-        isLoading = true,
+        isLoading = false,
         onProductClick = {},
         onMoreClick = {},
+        onAddToCart = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }
