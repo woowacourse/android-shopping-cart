@@ -38,17 +38,17 @@
 
 ### CartCountLabel
 
-- [ ] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합을 표시한다
-- [ ] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합 변경이 반영된다
+- [x] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합을 표시한다
+- [x] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합 변경이 반영된다
 
 ### CirclePlusBtn
 
-- [ ] 버튼을 클릭하면 `Cart`에 `PurchaseProduct`가 추가된다 
-- [ ] 버튼을 클릭하면 `QuantitySelector` 컴포저블을 표시한다
+- [x] 버튼을 클릭하면 `Cart`에 `PurchaseProduct`가 추가된다 
+- [x] 버튼을 클릭하면 `QuantitySelector` 컴포저블을 표시한다
 
 ### QuantitySelector
 
-- [ ] `PurchaseProduct`의 `count`를 표시한다.
-- [ ] `+`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 증가한다
-- [ ] `-`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 감소한다
-- [ ] 해당하는 `PurchaseProduct`의 `count`가 `1`인 상태에서 `-`를 누르면 해당 `PurchaseProduct`를 카트에서 제거한다
+- [x] `PurchaseProduct`의 `count`를 표시한다.
+- [x] `+`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 증가한다
+- [x] `-`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 감소한다
+- [x] 해당하는 `PurchaseProduct`의 `count`가 `1`인 상태에서 `-`를 누르면 해당 `PurchaseProduct`를 카트에서 제거한다

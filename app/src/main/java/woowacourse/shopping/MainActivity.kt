@@ -17,15 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import woowacourse.shopping.data.database.MockCatalog
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import kotlin.jvm.java
-import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     if (result.resultCode == RESULT_OK) {
                         val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
                         if (product != null) {
-                            cart = cart.addProduct(product)
+//                            cart = cart.addProduct(product)
                         }
                     }
                 }
@@ -87,6 +85,17 @@ class MainActivity : ComponentActivity() {
                             currentIndex++
                         },
                         modifier = Modifier.padding(innerPadding),
+                        onAdd = { id, countUpdateType ->
+                            cart = cart.updateCountWithId(id, countUpdateType)
+                        },
+                        onMinus = { id, countUpdateType ->
+                            cart = cart.updateCountWithId(id, countUpdateType)
+                        },
+                        onDelete = { cart = cart.removeWithId(it) },
+                        onAddInCart = { cart = cart.add(it) },
+                        isContainedInCart = { cart.isContain(it) },
+                        specificProductCount = { cart.totalCountOfSpecificPurchaseProduct(it) },
+                        totalCount = { cart.totalCountOfPurchaseProducts() },
                     )
                 }
             }
@@ -97,7 +106,6 @@ class MainActivity : ComponentActivity() {
         currentIndex: Int,
         size: Int,
     ): Products {
-        delay(2.seconds)
         return MockCatalog.loadMoreProducts(currentIndex, size)
     }
 
