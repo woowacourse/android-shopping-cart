@@ -9,4 +9,6 @@ value class Quantity(val count: Int) {
     operator fun plus(other: Quantity): Quantity = Quantity(this.count + other.count)
 
     operator fun minus(other: Quantity): Quantity = Quantity(this.count - other.count)
+
+    fun isLessThan(other: Quantity): Boolean = count < other.count
 }
