@@ -36,6 +36,9 @@ class ProductDetailActivity : ComponentActivity() {
                         setResult(RESULT_OK, addedIdResult(id))
                         finish()
                     },
+                    quantity = 1,
+                    onIncrement = {},
+                    onDecrement = {},
                 )
             }
         }

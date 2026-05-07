@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -24,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.common.QuantityCounter
 import woowacourse.shopping.ui.productlist.PreviewableAsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +35,9 @@ fun ProductDetailScreen(
     imageUrl: String,
     title: String,
     price: String,
+    quantity: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -72,14 +78,17 @@ fun ProductDetailScreen(
                         .padding(vertical = 16.dp, horizontal = 18.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.product_detail_price),
-                        fontWeight = FontWeight.W400,
-                        fontSize = 20.sp,
-                    )
-                    Text(
                         text = price,
                         fontWeight = FontWeight.W400,
                         fontSize = 20.sp,
+                    )
+                    QuantityCounter(
+                        quantity = quantity,
+                        onIncrement = onIncrement,
+                        onDecrement = onDecrement,
+                        modifier = Modifier
+                            .width(126.dp)
+                            .height(42.dp),
                     )
                 }
             }
@@ -122,5 +131,8 @@ private fun ProductScreenPreview() {
         price = "1,000원",
         onCloseClick = {},
         onAddToCartClick = {},
+        quantity = 1,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
