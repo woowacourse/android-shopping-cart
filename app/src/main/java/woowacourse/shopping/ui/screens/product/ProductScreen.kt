@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.component.topbar.MainTapBar
+import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
 fun ProductScreen(
@@ -48,7 +48,7 @@ fun ProductScreen(
 
     Scaffold(
         topBar = {
-            MainTapBar(
+            MainTopBar(
                 title = "Shopping",
                 onIconClick = onIconClick,
                 count = 0, // TODO

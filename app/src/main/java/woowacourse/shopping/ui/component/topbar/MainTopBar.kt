@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 
 @Composable
-fun MainTapBar(
+fun MainTopBar(
     title: String,
     onIconClick: () -> Unit,
     count: Int,
@@ -83,8 +83,8 @@ private fun CountBadge(count: Int) {
 
 @Preview(showBackground = true)
 @Composable
-private fun MainTapBarPreview() {
-    MainTapBar(
+private fun MainTopBarPreview() {
+    MainTopBar(
         title = "안녕하세요 볼트입니다",
         onIconClick = { },
         count = 1,
