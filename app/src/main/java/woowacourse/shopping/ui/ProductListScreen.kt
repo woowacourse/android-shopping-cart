@@ -26,21 +26,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Price
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.ui.component.MoreButton
 import woowacourse.shopping.ui.component.ProductItem
+import woowacourse.shopping.ui.pagination.ProductListViewModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ProductListScreen(
-    products: List<Product>,
+    productListViewModel: ProductListViewModel = viewModel(factory = ProductListViewModel.Factory),
     onNavigateToCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
-    onMoreClick: () -> Unit,
-    showMoreButton: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -58,7 +55,7 @@ fun ProductListScreen(
             modifier = Modifier.padding(10.dp),
         ) {
             items(
-                items = products,
+                items = productListViewModel.products,
                 key = { it.id },
             ) { product ->
                 ProductItem(
@@ -73,11 +70,11 @@ fun ProductListScreen(
                 )
             }
 
-            if (showMoreButton) {
+            if (productListViewModel.showMoreButton) {
                 item(
                     span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    MoreButton(onClick = onMoreClick)
+                    MoreButton(onClick = productListViewModel::loadMoreProducts)
                 }
             }
         }
@@ -125,25 +122,8 @@ private fun ProductItemPreview() {
 private fun ProductListScreenPreview() {
     AndroidShoppingTheme {
         ProductListScreen(
-            products =
-                listOf(
-                    Product(
-                        id = "1",
-                        title = ProductTitle("동원 스위트콘"),
-                        price = Price(99_800),
-                        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-                    ),
-                    Product(
-                        id = "2",
-                        title = ProductTitle("동원 스위트콘2"),
-                        price = Price(99_800),
-                        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-                    ),
-                ),
             onProductClick = {},
             onNavigateToCartClick = {},
-            onMoreClick = {},
-            showMoreButton = true,
         )
     }
 }

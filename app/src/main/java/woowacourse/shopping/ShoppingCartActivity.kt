@@ -41,7 +41,7 @@ class ShoppingCartActivity : ComponentActivity() {
                     onBackClick = this::finish,
                     onRemoveShoppingItemClick = { shoppingCartItem ->
                         ShoppingApplication.shoppingCartRepository.remove(shoppingCartItem)
-                        ShoppingApplication.shoppingCartRepository.getShoppingItems()
+                        shoppingCartItems = ShoppingApplication.shoppingCartRepository.getShoppingItems()
                     },
                     currentPage = shoppingCartPageStateHolder.currentPage,
                     canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),

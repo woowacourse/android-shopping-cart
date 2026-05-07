@@ -6,6 +6,8 @@ import org.junit.jupiter.params.provider.CsvSource
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
+import woowacourse.shopping.repository.MemoryProductRepository
+import woowacourse.shopping.repository.ProductRepository
 
 class ProductPageStateHolderTest {
     @ParameterizedTest
@@ -14,8 +16,8 @@ class ProductPageStateHolderTest {
         itemSize: Int,
         expectedItemSize: Int,
     ) {
-        val productDataLoadStateHolder =
-            ProductPageStateHolder(
+        val repository: ProductRepository =
+            MemoryProductRepository(
                 products =
                     List(itemSize) {
                         Product(
@@ -25,9 +27,10 @@ class ProductPageStateHolderTest {
                             imageUrl = "",
                         )
                     },
-                pageSize = 20,
             )
-        productDataLoadStateHolder.getItems().size shouldBe expectedItemSize
+        val productListViewModel =
+            ProductListViewModel(repository)
+        productListViewModel.products.size shouldBe expectedItemSize
     }
 
     @ParameterizedTest
@@ -37,9 +40,9 @@ class ProductPageStateHolderTest {
         pageMoveCount: Int,
         expectedItemSize: Int,
     ) {
-        val productDataLoadStateHolder =
-            ProductPageStateHolder(
-                products =
+        val productListViewModel =
+            ProductListViewModel(
+                MemoryProductRepository(
                     List(itemSize) {
                         Product(
                             id = "1",
@@ -48,13 +51,13 @@ class ProductPageStateHolderTest {
                             imageUrl = "",
                         )
                     },
-                pageSize = 20,
+                ),
             )
 
         repeat(pageMoveCount - 1) {
-            productDataLoadStateHolder.nextPage()
+            productListViewModel.loadMoreProducts()
         }
 
-        productDataLoadStateHolder.getItems().size shouldBe expectedItemSize
+        productListViewModel.products.size shouldBe expectedItemSize
     }
 }

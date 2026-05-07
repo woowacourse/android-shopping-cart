@@ -12,7 +12,7 @@ class ProductRepositoryTest {
 
     @Test
     fun `A 상품이 저장되어 있는 레파지토리에서 모든 상품을 꺼내오면 A 상품이 조회된다`() {
-        productRepository.getProducts().single() shouldBe product
+        productRepository.getProducts(0, 20).single() shouldBe product
     }
 
     @Test
@@ -23,5 +23,10 @@ class ProductRepositoryTest {
     @Test
     fun `A 상품이 저장된 레파지토리에서 동일 상품의 id로 조회하면 A 상품이 조회된다`() {
         productRepository.getProduct("1") shouldBe product
+    }
+
+    @Test
+    fun `1개의 상품이 저장된 레파지토리의 전체 크기는 1이다`() {
+        productRepository.totalSize shouldBe 1
     }
 }
