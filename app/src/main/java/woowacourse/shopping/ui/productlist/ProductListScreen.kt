@@ -28,7 +28,10 @@ fun ProductListScreen(
         containerColor = Color.White,
         modifier = modifier.fillMaxSize(),
         topBar = {
-            ProductListAppBar(onCartIconClick = onCartIconClick)
+            ProductListAppBar(
+                onCartIconClick = onCartIconClick,
+                count = productUiModels.size,
+            )
         },
     ) { innerPadding ->
         Column(
