@@ -19,8 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.data.database.MockCatalog
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import kotlin.jvm.java
@@ -44,9 +44,9 @@ class MainActivity : ComponentActivity() {
                     contract = ActivityResultContracts.StartActivityForResult(),
                 ) { result ->
                     if (result.resultCode == RESULT_OK) {
-                        val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
-                        if (product != null) {
-//                            cart = cart.addProduct(product)
+                        val purchaseProduct = result.data?.getParcelableExtra<PurchaseProduct>(IntentKeys.STORED_PRODUCT_KEY)
+                        if (purchaseProduct != null) {
+                            cart = cart.add(purchaseProduct)
                         }
                     }
                 }
