@@ -32,8 +32,6 @@ class CartRepositoryImpl(
 
     override fun getTotalQuantity(): Int = cart.getTotalQuantity()
 
-    override fun getTotalPrice(): Int = cart.getTotalPrice()
-
     override fun increaseQuantity(
         product: Product,
         amount: Int,

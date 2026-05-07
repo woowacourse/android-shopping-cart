@@ -2,18 +2,18 @@ package woowacourse.shopping.presentation.cart
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.app.AppContainer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.model.cart.Cart
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class CartStateHolder(
+class CartViewModel(
     private val cartRepository: CartRepository,
-    private val pageSize: Int = DEFAULT_PAGE_SIZE,
-) {
+) : ViewModel() {
     var cart by mutableStateOf(Cart())
         private set
 
@@ -27,7 +27,7 @@ class CartStateHolder(
         get() = cartRepository.getTotalItemCount()
 
     val lastPageIndex: Int
-        get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / pageSize
+        get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / DEFAULT_PAGE_SIZE
 
     val hasPreviousPage: Boolean
         get() = currentPageIndex > 0
@@ -36,7 +36,7 @@ class CartStateHolder(
         get() = currentPageIndex < lastPageIndex
 
     val hasMoreItems: Boolean
-        get() = totalItemCount > pageSize
+        get() = totalItemCount > DEFAULT_PAGE_SIZE
 
     init {
         refresh()
@@ -45,7 +45,17 @@ class CartStateHolder(
     @OptIn(ExperimentalUuidApi::class)
     fun deleteProduct(productId: Uuid) {
         cartRepository.deleteProduct(productId)
+        refresh()
+    }
 
+    fun increaseQuantity(product: Product) {
+        cartRepository.increaseQuantity(product, 1)
+        refresh()
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun decreaseQuantity(productId: Uuid) {
+        cartRepository.decreaseQuantity(productId)
         refresh()
     }
 
@@ -72,7 +82,7 @@ class CartStateHolder(
         cart =
             cartRepository.getPagingItems(
                 page = currentPageIndex,
-                pageSize = pageSize,
+                pageSize = DEFAULT_PAGE_SIZE,
             )
     }
 
@@ -84,11 +94,20 @@ class CartStateHolder(
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 5
+    }
+}
 
-        val Saver: Saver<CartStateHolder, Int> =
-            Saver(
-                save = { it.currentPageIndex },
-                restore = { CartStateHolder(AppContainer.cartRepository, it) },
-            )
+class CartViewModelFactory(
+    private val cartRepository: CartRepository,
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return CartViewModel(
+                cartRepository = cartRepository,
+            ) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }

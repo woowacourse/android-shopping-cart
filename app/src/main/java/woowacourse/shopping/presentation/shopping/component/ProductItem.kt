@@ -27,7 +27,6 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable

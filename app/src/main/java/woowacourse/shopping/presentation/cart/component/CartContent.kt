@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.cart.Cart
+import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -22,6 +23,8 @@ fun CartContent(
     hasPreviousPage: Boolean,
     hasNextPage: Boolean,
     onDelete: (Uuid) -> Unit,
+    onQuantityIncrease: (Product) -> Unit,
+    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -36,7 +39,9 @@ fun CartContent(
             ) { cartItem ->
                 CartProductItem(
                     cartItem = cartItem,
-                    onDelete = onDelete,
+                    onDelete = { onDelete(cartItem.product.productId) },
+                    onQuantityIncrease = { onQuantityIncrease(cartItem.product) },
+                    onQuantityDecrease = { onQuantityDecrease(cartItem.product.productId) },
                 )
             }
         }
@@ -65,5 +70,7 @@ fun CartContentPreview() {
         hasPreviousPage = true,
         hasNextPage = true,
         onDelete = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

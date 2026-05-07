@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
+import woowacourse.shopping.presentation.shopping.component.QuantitySelector
 import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
@@ -41,6 +43,8 @@ import kotlin.uuid.Uuid
 fun CartProductItem(
     cartItem: CartItem,
     onDelete: (Uuid) -> Unit,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -62,50 +66,108 @@ fun CartProductItem(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 18.dp),
         ) {
-            Row(
+            CartProductHeader(
+                product = cartItem.product,
+                onDelete = onDelete,
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = cartItem.product.productName,
-                    fontWeight = FontWeight.W700,
-                    fontSize = 18.sp,
-                    color = topAppBarColor,
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.x_icon),
-                    contentDescription = "xButton",
-                    modifier =
-                        Modifier
-                            .size(16.dp)
-                            .clickable {
-                                onDelete(cartItem.product.productId)
-                            },
-                    colorFilter = ColorFilter.tint(topAppBarColor),
-                )
-            }
+            )
             Spacer(modifier = Modifier.height(20.dp))
-            Row(
+            CartProductInfo(
+                product = cartItem.product,
+                quantity = cartItem.quantity,
+                onIncrease = onQuantityIncrease,
+                onDecrease = onQuantityDecrease,
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                AsyncImage(
-                    model = cartItem.product.imageUrl,
-                    contentDescription = cartItem.product.productName,
-                    modifier = Modifier.size(136.dp, 72.dp),
-                )
-                Box {
-                    Text(
-                        modifier = Modifier.align(Alignment.BottomEnd),
-                        text = "${intFormatter(cartItem.product.price.value)}원",
-                        fontWeight = FontWeight.W400,
-                        fontSize = 16.sp,
-                        color = topAppBarColor,
-                    )
-                }
-            }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Composable
+private fun CartProductHeader(
+    product: Product,
+    onDelete: (Uuid) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = product.productName,
+            fontWeight = FontWeight.W700,
+            fontSize = 18.sp,
+            color = topAppBarColor,
+        )
+        Image(
+            painter = painterResource(id = R.drawable.x_icon),
+            contentDescription = "xButton",
+            modifier =
+                Modifier
+                    .size(16.dp)
+                    .clickable {
+                        onDelete(product.productId)
+                    },
+            colorFilter = ColorFilter.tint(topAppBarColor),
+        )
+    }
+}
+
+@Composable
+private fun CartProductInfo(
+    product: Product,
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.height(72.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        AsyncImage(
+            model = product.imageUrl,
+            contentDescription = product.productName,
+            modifier = Modifier.size(136.dp, 72.dp),
+        )
+        CartProductPriceAndQuantity(
+            product = product,
+            quantity = quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Composable
+private fun CartProductPriceAndQuantity(
+    product: Product,
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.End,
+    ) {
+        QuantitySelector(
+            quantity = quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+        )
+        Box {
+            Text(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                text = "${intFormatter(product.price.value * quantity)}원",
+                fontWeight = FontWeight.W400,
+                fontSize = 16.sp,
+                color = topAppBarColor,
+            )
         }
     }
 }
@@ -125,5 +187,7 @@ private fun CartProductItemPreview() {
                 quantity = 1,
             ),
         onDelete = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

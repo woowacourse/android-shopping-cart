@@ -17,8 +17,6 @@ interface CartRepository {
 
     fun getTotalQuantity(): Int
 
-    fun getTotalPrice(): Int
-
     fun increaseQuantity(
         product: Product,
         amount: Int,
