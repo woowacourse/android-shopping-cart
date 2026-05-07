@@ -53,6 +53,7 @@ fun ShoppingScreen(
         rememberSaveable(saver = ShoppingStateHolder.Saver()) {
             ShoppingStateHolder()
         }
+    val activity = LocalActivity.current
 
     LaunchedEffect(Unit) {
         state.initialize()
@@ -100,6 +101,9 @@ fun ShoppingScreen(
                     }
                 },
                 isCanLoadMore = state.canLoadMore,
+                onProductCardClick = {
+                    activity?.startActivity(DetailActivity.newIntent(activity, it))
+                },
             )
         }
     }
@@ -109,10 +113,10 @@ fun ShoppingScreen(
 private fun ShoppingContents(
     products: ImmutableList<ProductUiModel>,
     onLoad: () -> Unit,
+    onProductCardClick: (String) -> Unit,
     isCanLoadMore: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
     Column(
         modifier =
             modifier
@@ -132,7 +136,7 @@ private fun ShoppingContents(
             ) { product ->
                 ProductCard(
                     onClick = {
-                        activity?.startActivity(DetailActivity.newIntent(activity, product.id))
+                        onProductCardClick(product.id)
                     },
                     imageUrl = product.imageUrl,
                     productName = product.name,
