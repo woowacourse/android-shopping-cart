@@ -14,7 +14,7 @@ object CartDataSourceImpl : CartDataSource {
             return
         }
 
-        _items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
+        _items[idx] = items[idx].addQuantity(amount = cartItem.amount)
     }
 
     override fun deleteItem(id: String) {

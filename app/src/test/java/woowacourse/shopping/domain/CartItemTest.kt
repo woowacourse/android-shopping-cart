@@ -12,7 +12,7 @@ class CartItemTest {
         assertDoesNotThrow {
             CartItem(
                 product = ShoppingFixture.getProduct(),
-                quantity = 2,
+                amount = 2,
             )
         }
     }
@@ -22,7 +22,7 @@ class CartItemTest {
         val cartItem =
             CartItem(
                 product = ShoppingFixture.getProduct(),
-                quantity = 2,
+                amount = 2,
             )
 
         cartItem.totalPrice shouldEqual 20_000
@@ -33,7 +33,7 @@ class CartItemTest {
         assertThrows<IllegalArgumentException> {
             CartItem(
                 product = ShoppingFixture.getProduct(),
-                quantity = 0,
+                amount = 0,
             )
         }
     }

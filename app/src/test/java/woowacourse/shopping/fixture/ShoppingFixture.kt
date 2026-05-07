@@ -14,5 +14,5 @@ object ShoppingFixture {
     fun getCartItem(
         product: Product = getProduct(),
         quantity: Int = 2,
-    ): CartItem = CartItem(product = product, quantity = quantity)
+    ): CartItem = CartItem(product = product, amount = quantity)
 }

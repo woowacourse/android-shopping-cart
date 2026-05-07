@@ -64,7 +64,7 @@ class CartRepositoryImplTest {
             cartRepository
                 .getCartItemByPage(1)
                 .first { it.product.id == "1" }
-                .quantity shouldEqual 2
+                .amount shouldEqual 2
         }
 
     @Test
@@ -88,7 +88,7 @@ class FakeCartDataSource : CartDataSource {
         if (idx == -1) {
             _items.add(cartItem)
         } else {
-            _items[idx] = _items[idx].addQuantity(cartItem.quantity)
+            _items[idx] = _items[idx].addQuantity(cartItem.amount)
         }
     }
 
