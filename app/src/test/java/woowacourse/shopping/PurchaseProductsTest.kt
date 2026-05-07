@@ -154,4 +154,42 @@ class PurchaseProductsTest {
 
         assert(updatedPurchaseProducts.findById(productId)?.count == 2)
     }
+
+    @Test
+    fun `특정 ID를 갖는 PurchaseProduct가 담겨있는지 알 수 있다`() {
+        val newPurchaseProduct = PurchaseProduct(
+            product = Product(
+                imageUri = "uri",
+                name = "테스트 상품",
+                price = 1000
+            ),
+        )
+
+        val productId = newPurchaseProduct.uuid
+
+        val purchaseProducts = PurchaseProducts(
+            purchaseProducts = listOf(newPurchaseProduct)
+        )
+
+        assert(purchaseProducts.isContain(productId))
+    }
+
+    @Test
+    fun `특정 ID를 갖는 PurchaseProduct의 count를 알 수 있다`() {
+        val newPurchaseProduct = PurchaseProduct(
+            product = Product(
+                imageUri = "uri",
+                name = "테스트 상품",
+                price = 1000
+            ),
+        )
+
+        val productId = newPurchaseProduct.uuid
+
+        val purchaseProducts = PurchaseProducts(
+            purchaseProducts = listOf(newPurchaseProduct)
+        )
+
+        assert(purchaseProducts.totalCountOfSpecificPurchaseProduct(productId) == 1)
+    }
 }

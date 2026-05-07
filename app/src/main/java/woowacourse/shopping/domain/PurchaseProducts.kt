@@ -29,7 +29,14 @@ class PurchaseProducts(
         return targetProduct.totalPrice()
     }
 
+    fun totalCountOfSpecificPurchaseProduct(uuid: UUID): Int {
+        val targetProduct = findById(uuid) ?: return 0
+        return targetProduct.count
+    }
+
     fun totalCount() = purchaseProducts.sumOf { it.count }
+
+    fun isContain(id: UUID): Boolean = purchaseProducts.any { it.uuid == id }
 
     fun findById(uuid: UUID) = purchaseProducts.find { it.isSameUUID(uuid) }
 }
