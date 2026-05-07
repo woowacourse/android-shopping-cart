@@ -15,29 +15,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
-fun CartScreen(onNavigateUp: () -> Unit) {
-    val cartStateHolder = rememberSaveable(saver = CartStateHolder.Saver) {
-        CartStateHolder()
-    }
-    val cartItems = cartStateHolder.cartItems
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        cartStateHolder.initCartItems()
-    }
+fun CartScreen(
+    onNavigateUp: () -> Unit,
+    viewModel: CartViewModel = viewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -56,7 +50,7 @@ fun CartScreen(onNavigateUp: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             items(
-                items = cartItems,
+                items = uiState.cartItems,
                 key = { it.product.id },
             ) {
                 CartItemCard(
@@ -64,27 +58,21 @@ fun CartScreen(onNavigateUp: () -> Unit) {
                     name = it.product.name,
                     price = it.product.price,
                     onDelete = {
-                        scope.launch {
-                            cartStateHolder.deleteCartItem(it.product.id)
-                        }
+                        viewModel.deleteCartItem(it.product.id)
                     },
                 )
             }
 
-            if (cartStateHolder.curPage != 1 || !cartStateHolder.isLast) {
+            if (uiState.curPage != 1 || !uiState.isLast) {
                 item {
                     CartPagination(
-                        curPage = cartStateHolder.curPage,
-                        isLastPage = cartStateHolder.isLast,
+                        curPage = uiState.curPage,
+                        isLastPage = uiState.isLast,
                         onPrevClick = {
-                            scope.launch {
-                                cartStateHolder.getPrevPage()
-                            }
+                            viewModel.getPrevPage()
                         },
                         onNextClick = {
-                            scope.launch {
-                                cartStateHolder.getNextPage()
-                            }
+                            viewModel.getNextPage()
                         },
                         modifier = Modifier
                             .fillMaxWidth()
