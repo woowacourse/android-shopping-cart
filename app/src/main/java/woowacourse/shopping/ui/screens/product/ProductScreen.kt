@@ -50,8 +50,8 @@ fun ProductScreen(
         topBar = {
             MainTapBar(
                 title = "Shopping",
-                iconResources = R.drawable.ic_cart,
                 onIconClick = onIconClick,
+                count = 0, // TODO
                 modifier = Modifier.statusBarsPadding(),
             )
         },
@@ -74,8 +74,11 @@ fun ProductScreen(
                     imageUrl = it.imageUrl,
                     name = it.name,
                     price = it.price,
-                    onClick = { onItemClick(it.id) },
+                    onClickItem = { onItemClick(it.id) },
                     modifier = Modifier,
+                    amount = 1, // TODO
+                    onClickMinus = { /* TODO */ },
+                    onClickAdd = { /* TODO */ },
                 )
             }
 

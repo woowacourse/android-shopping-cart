@@ -2,12 +2,15 @@ package woowacourse.shopping.ui.screens.product
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -17,28 +20,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import woowacourse.shopping.ui.component.AddCircleButton
+import woowacourse.shopping.ui.component.AmountController
 
 @Composable
 fun ProductCard(
     imageUrl: String,
     name: String,
     price: Int,
-    onClick: () -> Unit,
+    amount: Int,
+    onClickItem: () -> Unit,
+    onClickMinus: () -> Unit,
+    onClickAdd: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier.clickable(onClick = onClickItem),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "$name 이미지 입니다용",
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-        )
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "$name 이미지 입니다용",
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
 
+            if (amount == 0) {
+                AddCircleButton(
+                    onClickAdd = onClickAdd,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.BottomEnd),
+                )
+            } else {
+                AmountController(
+                    amount = amount,
+                    onClickMinus = onClickMinus,
+                    onClickAdd = onClickAdd,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 14.dp, vertical = 4.dp)
+                        .fillMaxWidth(),
+                )
+            }
+        }
         ProductInfoText(
             name = name,
             price = price,
@@ -84,6 +115,10 @@ private fun ProductCardPreview() {
                 "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
         name = "고양이",
         price = 999999999,
-        onClick = { },
+        onClickItem = { },
+        onClickMinus = { },
+        onClickAdd = { },
+        modifier = Modifier.padding(5.dp),
+        amount = 0,
     )
 }
