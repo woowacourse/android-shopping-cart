@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.ProductAndCount
+import woowacourse.shopping.domain.ProductWithQuantity
+import woowacourse.shopping.ui.shopping.component.SelectItemCountBox
 import woowacourse.shopping.ui.theme.topAppBarColor
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -39,28 +40,25 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartItem(
-    productAndCount: ProductAndCount,
+    productWithQuantity: ProductWithQuantity,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     onDelete: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
-        colors =
-            CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RectangleShape,
         modifier = modifier.padding(18.dp),
-        border =
-            BorderStroke(
-                width = 1.dp,
-                color = topAppBarColor,
-            ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = topAppBarColor,
+        ),
     ) {
         Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 18.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 18.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -68,7 +66,7 @@ fun CartItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = productAndCount.productName,
+                    text = productWithQuantity.productName,
                     fontWeight = FontWeight.W700,
                     fontSize = 18.sp,
                     color = topAppBarColor,
@@ -76,11 +74,10 @@ fun CartItem(
                 Image(
                     painter = painterResource(id = R.drawable.x_icon),
                     contentDescription = stringResource(R.string.delete_item_button),
-                    modifier =
-                        Modifier
+                    modifier = Modifier
                             .size(16.dp)
                             .clickable {
-                                onDelete(productAndCount.productId)
+                                onDelete(productWithQuantity.productId)
                             },
                     colorFilter = ColorFilter.tint(topAppBarColor),
                 )
@@ -92,14 +89,30 @@ fun CartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 AsyncImage(
-                    model = productAndCount.imageUrl,
-                    contentDescription = productAndCount.productName,
+                    model = productWithQuantity.imageUrl,
+                    contentDescription = productWithQuantity.productName,
                     modifier = Modifier.size(136.dp, 72.dp),
                 )
-                Box {
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                    ) {
+                        SelectItemCountBox(
+                            count = productWithQuantity.quantity,
+                            onIncrease = { onIncrease() },
+                            onDecrease = { onDecrease() },
+                        )
+                    }
+
                     Text(
-                        modifier = Modifier.align(Alignment.BottomEnd),
-                        text = stringResource(R.string.cart_item_total_price, productAndCount.totalPrice()),
+                        modifier = Modifier,
+                        text = stringResource(
+                            R.string.cart_item_total_price,
+                            productWithQuantity.totalPrice()
+                        ),
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp,
                         color = topAppBarColor,
@@ -117,7 +130,12 @@ private fun CartItemPreview() {
     val packageName = LocalContext.current.packageName
 
     CartItem(
-        productAndCount = ProductAndCount(ProductFixture.productList(packageName).last(), 1),
+        productWithQuantity = ProductWithQuantity(
+            ProductFixture.productList(packageName).last(),
+            1
+        ),
+        onIncrease = {},
+        onDecrease = {},
         onDelete = {},
     )
 }

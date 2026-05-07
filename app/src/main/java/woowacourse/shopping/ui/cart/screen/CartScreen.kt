@@ -6,23 +6,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.domain.CART_PAGE_SIZE
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.InMemoryCartRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.CartTopAppBar
-import woowacourse.shopping.ui.cart.state.rememberCartState
+import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun CartScreen(
-    cartProducts: CartRepository,
-    onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: CartViewModel = viewModel(),
+    onClose: () -> Unit,
 ) {
-    val state = rememberCartState()
-    val cartItems = cartProducts.getCartProducts()
     Scaffold(
         topBar = {
             CartTopAppBar(
@@ -32,17 +28,13 @@ fun CartScreen(
         containerColor = Color.White,
     ) { innerPadding ->
         CartBody(
-            state = state,
+            viewModel = viewModel,
             innerPadding = innerPadding,
-            cartItems = cartItems,
             onDeleteProduct = { id ->
-                cartProducts.deleteProduct(id)
-                val updatedProducts = cartProducts.getCartProducts()
-                val updatedLastPageIndex =
-                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-                state.adjustCurrentPage(
-                    updatedLastPageIndex = updatedLastPageIndex,
-                )
+                viewModel.deleteProduct(id)
+//                val updatedProducts = viewModel.getCartProducts()
+//                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
+                //viewModel.adjustCurrentPage()
             },
             modifier = modifier,
         )
@@ -54,7 +46,6 @@ fun CartScreen(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartProducts = InMemoryCartRepository(),
         onClose = {},
     )
 }
