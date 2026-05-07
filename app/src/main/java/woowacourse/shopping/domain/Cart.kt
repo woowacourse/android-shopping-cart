@@ -8,27 +8,32 @@ val CART_PAGE_SIZE = 5
 
 @OptIn(ExperimentalUuidApi::class)
 data class Cart(
-    val productAndCounts: List<ProductAndCount> = emptyList(),
+    val productsWithQuantity: List<ProductWithQuantity> = emptyList(),
 ) {
-    fun addProductToCart(product: Product): Cart {
-        if (productAndCounts.any { it.hasSameProduct(product) }) {
+    fun addProductToCart(productWithQuantityToAdd: ProductWithQuantity): Cart {
+        if (productsWithQuantity.any { it.hasSameProduct(productWithQuantityToAdd) }) {
             return copy(
-                productAndCounts = productAndCounts.map { item ->
-                    if (item.hasSameProduct(product)) {
-                        item.increaseQuantity()
+                productsWithQuantity = productsWithQuantity.map { item ->
+                    if (item.hasSameProduct(productWithQuantityToAdd)) {
+                        item.increaseQuantity(productWithQuantityToAdd.quantity)
                     } else {
                         item
                     }
                 }
             )
         }
-        return copy(productAndCounts = productAndCounts + ProductAndCount(product, 1))
+        return copy(
+            productsWithQuantity = productsWithQuantity + ProductWithQuantity(
+                productWithQuantityToAdd.product,
+                productWithQuantityToAdd.quantity
+            )
+        )
     }
 
     fun deleteProductFromCart(productId: Uuid): Cart =
         copy(
-            productAndCounts =
-                productAndCounts.filterNot {
+            productsWithQuantity =
+                productsWithQuantity.filterNot {
                     it.productId == productId
                 },
         )
