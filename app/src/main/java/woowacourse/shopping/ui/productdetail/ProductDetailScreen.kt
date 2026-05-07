@@ -65,11 +65,12 @@ fun ProductDetailScreen(
 @Composable
 @Preview(showBackground = true)
 private fun ProductDetailScreenPreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
 
     ProductDetailScreen(
         product = product,

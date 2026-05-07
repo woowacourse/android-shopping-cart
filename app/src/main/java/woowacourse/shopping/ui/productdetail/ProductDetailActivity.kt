@@ -19,11 +19,11 @@ class ProductDetailActivity : ComponentActivity() {
     val cartRepo = AppContainer.cartRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
-        val receivedProductId: String = intent.getStringExtra(EXTRA_PRODUCT_ID)
-            ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
+        val receivedProductId: String =
+            intent.getStringExtra(EXTRA_PRODUCT_ID)
+                ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
 
         enableEdgeToEdge()
         setContent {

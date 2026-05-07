@@ -102,9 +102,10 @@ private fun ImageAndPrice(
         ShoppingImage(
             model = product.imageUrl,
             contentDescription = "상품 이미지",
-            modifier = Modifier
-                .width(136.dp)
-                .height(72.dp)
+            modifier =
+                Modifier
+                    .width(136.dp)
+                    .height(72.dp),
         )
         Text(
             text = "$formatted 원",
@@ -118,32 +119,35 @@ private fun ImageAndPrice(
 @Preview(showBackground = true, name = "카트 아이템 유닛")
 @Composable
 private fun CartItemUnitPreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
     CartItemUnit(product = product, onDeleteClick = {})
 }
 
 @Preview(showBackground = true, name = "이름과 닫기아이콘")
 @Composable
 private fun NameAndCloseIconPreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
     NameAndCloseIcon(product = product, onClick = {})
 }
 
 @Preview(showBackground = true, name = "사진과 금액")
 @Composable
 private fun ImageAndPricePreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
     ImageAndPrice(product)
 }

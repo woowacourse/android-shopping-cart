@@ -15,7 +15,6 @@ import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.CartHeader
 import woowacourse.shopping.ui.component.ShoppingLoading
 
-
 @Composable
 fun CartScreen(
     state: CartScreenState,
@@ -75,13 +74,14 @@ fun CartScreen(
 @Composable
 @Preview(showBackground = true, name = "상품 5개 넘을 때")
 private fun CartScreenPreview1() {
-    val products = listOf(
-        Product(name = "1번", price = Money(1000), imageUrl = ""),
-        Product(name = "2번", price = Money(1000), imageUrl = ""),
-        Product(name = "3번", price = Money(1000), imageUrl = ""),
-        Product(name = "4번", price = Money(1000), imageUrl = ""),
-        Product(name = "5번", price = Money(1000), imageUrl = ""),
-    )
+    val products =
+        listOf(
+            Product(name = "1번", price = Money(1000), imageUrl = ""),
+            Product(name = "2번", price = Money(1000), imageUrl = ""),
+            Product(name = "3번", price = Money(1000), imageUrl = ""),
+            Product(name = "4번", price = Money(1000), imageUrl = ""),
+            Product(name = "5번", price = Money(1000), imageUrl = ""),
+        )
     val cart = Cart(products.map { CartItem(it, 1) })
 
     CartScreen(

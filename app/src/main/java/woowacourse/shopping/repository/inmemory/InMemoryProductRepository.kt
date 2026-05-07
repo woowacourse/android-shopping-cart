@@ -7,7 +7,7 @@ import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
 class InMemoryProductRepository(
-    initialProducts: List<Product> = emptyList()
+    initialProducts: List<Product> = emptyList(),
 ) : ProductRepository {
     val DARAM =
         Product(
@@ -186,7 +186,6 @@ class InMemoryProductRepository(
         } else {
             Products(initialProducts)
         }
-
 
     private val size = products.count()
 

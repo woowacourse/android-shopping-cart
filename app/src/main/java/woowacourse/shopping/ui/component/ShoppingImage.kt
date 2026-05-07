@@ -21,6 +21,6 @@ fun ShoppingImage(
         placeholder = rememberVectorPainter(Icons.Default.Image),
         error = rememberVectorPainter(Icons.Default.WarningAmber),
         modifier = modifier,
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
     )
 }

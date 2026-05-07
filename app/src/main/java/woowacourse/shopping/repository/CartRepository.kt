@@ -10,7 +10,7 @@ interface CartRepository {
 
     suspend fun getPagedItems(
         fromIndex: Int,
-        count: Int
+        count: Int,
     ): List<CartItem>
 
     suspend fun getSize(): Int

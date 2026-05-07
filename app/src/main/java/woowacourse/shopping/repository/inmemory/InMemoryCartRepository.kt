@@ -6,7 +6,7 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 
 class InMemoryCartRepository(
-    initialItems: List<CartItem> = emptyList()
+    initialItems: List<CartItem> = emptyList(),
 ) : CartRepository {
     private val items = initialItems.toMutableList()
 
@@ -36,7 +36,7 @@ class InMemoryCartRepository(
 
     override suspend fun getPagedItems(
         fromIndex: Int,
-        count: Int
+        count: Int,
     ): List<CartItem> = Cart(items).getPagedItems(fromIndex, count)
 
     override suspend fun getSize(): Int = items.size

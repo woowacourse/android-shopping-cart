@@ -19,7 +19,7 @@ private const val PAGE_SIZE = 5
 class CartScreenState(
     private val cartRepo: CartRepository,
     private val coroutineScope: CoroutineScope,
-    initialPage: Int
+    initialPage: Int,
 ) {
     var isLoading: Boolean by mutableStateOf(false)
         private set
@@ -47,7 +47,6 @@ class CartScreenState(
             }
         }
     }
-
 
     fun delete(item: Product) {
         isLoading = true
@@ -95,10 +94,11 @@ class CartScreenState(
 
         if (currentPage > validMaxPage) currentPage = validMaxPage
 
-        pagedItems = cartRepo.getPagedItems(
-            fromIndex = (currentPage - 1) * PAGE_SIZE,
-            count = PAGE_SIZE
-        )
+        pagedItems =
+            cartRepo.getPagedItems(
+                fromIndex = (currentPage - 1) * PAGE_SIZE,
+                count = PAGE_SIZE,
+            )
         totalItemCount = newTotalCount
     }
 
@@ -115,9 +115,9 @@ class CartScreenState(
                     CartScreenState(
                         cartRepo = cartRepo,
                         coroutineScope = coroutineScope,
-                        initialPage = savedPage
+                        initialPage = savedPage,
                     )
-                }
+                },
             )
     }
 }

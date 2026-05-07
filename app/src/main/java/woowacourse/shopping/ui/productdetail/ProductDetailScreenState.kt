@@ -16,7 +16,7 @@ import java.util.UUID
 class ProductDetailScreenState(
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
 ) {
     var isLoading: Boolean by mutableStateOf(false)
         private set
@@ -50,13 +50,12 @@ class ProductDetailScreenState(
 fun rememberProductDetailScreenState(
     productRepo: ProductRepository,
     cartRepo: CartRepository,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-): ProductDetailScreenState {
-    return remember {
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+): ProductDetailScreenState =
+    remember {
         ProductDetailScreenState(
             productRepo = productRepo,
             cartRepo = cartRepo,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
-}

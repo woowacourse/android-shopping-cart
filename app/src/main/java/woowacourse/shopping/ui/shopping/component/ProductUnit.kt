@@ -39,7 +39,7 @@ fun ProductUnit(
         ShoppingImage(
             model = product.imageUrl,
             contentDescription = "상품 미리보기",
-            modifier = Modifier.size(154.dp)
+            modifier = Modifier.size(154.dp),
         )
         Spacer(Modifier.size(6.dp))
         Text(
@@ -62,11 +62,12 @@ fun ProductUnit(
 @Composable
 @Preview(showBackground = true)
 private fun ProductUnitPreview() {
-    val product = Product(
-        name = "연금복권",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "연금복권",
+            price = Money(1000),
+            imageUrl = "",
+        )
     ProductUnit(product = product, onClick = {})
 }
 

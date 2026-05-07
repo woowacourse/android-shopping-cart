@@ -54,21 +54,24 @@ fun ShoppingBody(
 @Composable
 @Preview(showBackground = true)
 private fun ShoppingBodyPreview() {
-    val product1 = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
-    val product2 = Product(
-        name = "연금복권",
-        price = Money(1000),
-        imageUrl = ""
-    )
-    val product3 = Product(
-        name = "로또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product1 =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
+    val product2 =
+        Product(
+            name = "연금복권",
+            price = Money(1000),
+            imageUrl = "",
+        )
+    val product3 =
+        Product(
+            name = "로또",
+            price = Money(1000),
+            imageUrl = "",
+        )
 
     ShoppingBody(
         products = Products(listOf(product1, product2, product3)),

@@ -52,10 +52,11 @@ class ShoppingScreenState(
         isLoading = true
         coroutineScope.launch {
             try {
-                val newProducts = productRepo.getProducts(
-                    fromIndex = visibleProducts.size,
-                    count = LOAD_SIZE
-                )
+                val newProducts =
+                    productRepo.getProducts(
+                        fromIndex = visibleProducts.size,
+                        count = LOAD_SIZE,
+                    )
                 visibleProducts = visibleProducts + newProducts
 
                 hasNext = productRepo.hasNext(visibleProducts.lastIndex)
@@ -69,9 +70,9 @@ class ShoppingScreenState(
     companion object {
         fun Saver(
             productRepo: ProductRepository,
-            coroutineScope: CoroutineScope
-        ): Saver<ShoppingScreenState, Int> {
-            return Saver(
+            coroutineScope: CoroutineScope,
+        ): Saver<ShoppingScreenState, Int> =
+            Saver(
                 save = { state ->
                     state.visibleCount
                 },
@@ -79,11 +80,10 @@ class ShoppingScreenState(
                     ShoppingScreenState(
                         productRepo = productRepo,
                         coroutineScope = coroutineScope,
-                        initialVisibleCount = savedCount
+                        initialVisibleCount = savedCount,
                     )
-                }
+                },
             )
-        }
     }
 }
 

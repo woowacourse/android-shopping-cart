@@ -73,21 +73,24 @@ fun ShoppingScreen(
 @Preview(showBackground = true, name = "상품 여러개")
 @Composable
 private fun ShoppingScreenPreview1() {
-    val product1 = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
-    val product2 = Product(
-        name = "연금복권",
-        price = Money(1000),
-        imageUrl = ""
-    )
-    val product3 = Product(
-        name = "로또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product1 =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
+    val product2 =
+        Product(
+            name = "연금복권",
+            price = Money(1000),
+            imageUrl = "",
+        )
+    val product3 =
+        Product(
+            name = "로또",
+            price = Money(1000),
+            imageUrl = "",
+        )
 
     ShoppingScreen(
         products = Products(listOf(product1, product2, product3)),

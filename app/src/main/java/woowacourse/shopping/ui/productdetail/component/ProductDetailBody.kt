@@ -34,7 +34,7 @@ fun ProductDetailBody(
         ShoppingImage(
             model = product.imageUrl,
             contentDescription = "상품 상세 이미지",
-            modifier = Modifier.height(360.dp)
+            modifier = Modifier.height(360.dp),
         )
         ProductLabel(product)
     }
@@ -86,21 +86,23 @@ private fun ProductLabel(
 @Composable
 @Preview(showBackground = true, name = "상품 유닛")
 private fun ProductUnitPreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
     ProductDetailBody(product)
 }
 
 @Composable
 @Preview(showBackground = true, name = "상품 이름만")
 private fun ProductLabelPreview() {
-    val product = Product(
-        name = "스피또",
-        price = Money(1000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "스피또",
+            price = Money(1000),
+            imageUrl = "",
+        )
     ProductLabel(product = product)
 }
