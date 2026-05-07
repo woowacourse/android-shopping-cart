@@ -33,12 +33,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.cart.CartItemUiModel
+import woowacourse.shopping.ui.common.component.QuantityStepper
 
 @Composable
 fun CartItemUnit(
     item: CartItemUiModel,
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
     Column(
         modifier =
@@ -53,7 +56,11 @@ fun CartItemUnit(
 
         Spacer(Modifier.size(20.dp))
 
-        ImageAndPrice(item)
+        ImageAndPrice(
+            item = item,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity,
+        )
     }
 }
 
@@ -91,15 +98,17 @@ private fun NameAndCloseIcon(
 private fun ImageAndPrice(
     item: CartItemUiModel,
     modifier: Modifier = Modifier,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
-    val formatted = String.format("%,d", item.price)
+    val formatted = String.format("%,d", item.price * item.quantity)
 
     Row(
         modifier =
             modifier
                 .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.Top,
     ) {
         AsyncImage(
             model = item.imageUrl,
@@ -110,12 +119,25 @@ private fun ImageAndPrice(
                     .height(72.dp),
             contentScale = ContentScale.Crop,
         )
-        Text(
-            text = stringResource(R.string.price_format, formatted),
-            color = Color.DarkGray,
-            style = ShoppingTypography.productPrice,
-            modifier = Modifier.padding(start = 6.dp),
-        )
+        Column(
+            modifier =
+                Modifier
+                    .height(72.dp)
+                    .padding(end = 6.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.End,
+        ) {
+            QuantityStepper(
+                quantity = item.quantity,
+                onIncreaseQuantity = onIncreaseQuantity,
+                onDecreaseQuantity = onDecreaseQuantity,
+            )
+            Text(
+                text = stringResource(R.string.price_format, formatted),
+                color = Color.DarkGray,
+                style = ShoppingTypography.productPrice,
+            )
+        }
     }
 }
 
@@ -132,6 +154,8 @@ private fun CartItemUnitPreview() {
                 quantity = 2,
             ),
         onDeleteClick = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }
 
@@ -155,12 +179,15 @@ private fun NameAndCloseIconPreview() {
 @Composable
 private fun ImageAndPricePreview() {
     ImageAndPrice(
-        CartItemUiModel(
+        item =
+            CartItemUiModel(
             productId = InMemoryProductRepository.APPLE.id,
             name = InMemoryProductRepository.APPLE.name,
             imageUrl = InMemoryProductRepository.APPLE.imageUrl,
             price = InMemoryProductRepository.APPLE.price.value,
             quantity = 2,
         ),
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }

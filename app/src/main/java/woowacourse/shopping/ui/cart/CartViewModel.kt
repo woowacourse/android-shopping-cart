@@ -53,6 +53,26 @@ class CartViewModel(
         }
     }
 
+    fun increaseQuantity(productId: ProductId) {
+        if (_uiState.value.isLoading) return
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            cartRepository.add(productId)
+            updateCurrentPage()
+        }
+    }
+
+    fun decreaseQuantity(productId: ProductId) {
+        if (_uiState.value.isLoading) return
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            cartRepository.delete(productId)
+            updateCurrentPage()
+        }
+    }
+
     private fun loadPage(page: Int) {
         if (_uiState.value.isLoading && _uiState.value.items.isNotEmpty()) return
         viewModelScope.launch {
@@ -101,5 +121,13 @@ class CartViewModel(
     private fun calculateTotalPages(totalCount: Int): Int {
         if (totalCount == 0) return 0
         return (totalCount - 1) / PAGE_SIZE + 1
+    }
+
+    private suspend fun updateCurrentPage() {
+        val remainingCount = cartRepository.count()
+        val totalPages = calculateTotalPages(remainingCount)
+        val nextPage = _uiState.value.currentPage.coerceAtMost(maxOf(totalPages, 1))
+
+        updatePage(nextPage, remainingCount)
     }
 }

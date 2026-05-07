@@ -34,6 +34,8 @@ class CartActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         onBackClick = ::finish,
                         onDeleteClick = viewModel::delete,
+                        onIncreaseQuantity = viewModel::increaseQuantity,
+                        onDecreaseQuantity = viewModel::decreaseQuantity,
                         onPreviousClick = viewModel::loadPreviousPage,
                         onNextClick = viewModel::loadNextPage,
                     )

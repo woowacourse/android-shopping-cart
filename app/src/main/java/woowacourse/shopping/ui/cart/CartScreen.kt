@@ -23,6 +23,8 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onDeleteClick: (ProductId) -> Unit,
+    onIncreaseQuantity: (ProductId) -> Unit,
+    onDecreaseQuantity: (ProductId) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -46,6 +48,8 @@ fun CartScreen(
                     .padding(top = 8.dp, start = 18.dp, end = 18.dp)
                     .weight(1f),
             onDeleteClick = onDeleteClick,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity,
             onPreviousClick = onPreviousClick,
             onNextClick = onNextClick,
         )
@@ -80,6 +84,8 @@ private fun CartScreenPreview() {
         isLoading = false,
         onBackClick = {},
         onDeleteClick = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
         onPreviousClick = {},
         onNextClick = {},
     )
