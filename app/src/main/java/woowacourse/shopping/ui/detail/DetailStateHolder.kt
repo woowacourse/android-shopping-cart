@@ -9,7 +9,7 @@ import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.MockProductRepository
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.ui.model.ProductUiModel
-import woowacourse.shopping.ui.model.toUiModel
+import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class DetailStateHolder(
     private val scope: CoroutineScope,

@@ -14,4 +14,8 @@ class Product(
     }
 
     override fun hashCode(): Int = id.hashCode()
+
+    fun getName() : String = name.name
+
+    fun getPrice() : Int = price.amount
 }

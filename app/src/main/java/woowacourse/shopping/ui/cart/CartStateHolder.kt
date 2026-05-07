@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.ui.model.CartItemUiModel
-import woowacourse.shopping.ui.model.toUiModel
+import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class CartStateHolder(
     initialPage: Int = 0,
