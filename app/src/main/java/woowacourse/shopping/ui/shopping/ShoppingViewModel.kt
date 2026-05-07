@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
@@ -46,10 +45,11 @@ class ShoppingViewModel(
 
         val visibleProducts = productRepository.getProducts(0, visibleCount).toList()
         val hasNext = productRepository.hasNext(visibleProducts.count() - 1)
+        val cartItems = cartRepository.getCartItems(0, cartRepository.count())
+        val cartQuantity = cartItems.sumOf { it.quantity }
 
-        val cartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
-        val quantityByProductId = cartItems.associate { it.productId to it.quantity }
-
+        val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
+        val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
 
         val products = visibleProducts.map { product ->
             ShoppingProductUiState(
@@ -61,6 +61,7 @@ class ShoppingViewModel(
         _uiState.value =
             ShoppingUiState(
                 products = products,
+                cartQuantity = cartQuantity,
                 hasNext = hasNext,
                 isLoading = false,
             )

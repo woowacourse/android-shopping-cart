@@ -16,6 +16,7 @@ import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 @Composable
 fun ShoppingScreen(
     products: List<ShoppingProductUiState>,
+    cartQuantity: Int,
     hasNext: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
@@ -30,7 +31,10 @@ fun ShoppingScreen(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ShoppingHeader(onCartClick = onCartClick)
+        ShoppingHeader(
+            cartQuantity = cartQuantity,
+            onCartClick = onCartClick,
+        )
 
         ShoppingBody(
             products = products,
@@ -60,6 +64,7 @@ private fun ShoppingScreenPreview() {
                     quantity = if (index < 2) 0 else 1,
                 )
             },
+        cartQuantity = 4,
         hasNext = true,
         isLoading = false,
         onCartClick = {},

@@ -24,6 +24,7 @@ import woowacourse.shopping.ui.ShoppingTypography
 @Composable
 fun ShoppingHeader(
     modifier: Modifier = Modifier,
+    cartQuantity: Int,
     onCartClick: () -> Unit,
 ) {
     Row(
@@ -41,18 +42,29 @@ fun ShoppingHeader(
             color = Color.White,
             style = ShoppingTypography.titleMedium,
         )
-
-        Icon(
-            imageVector = Icons.Default.ShoppingCart,
-            contentDescription = stringResource(R.string.content_description_cart),
+        Row(
             modifier = Modifier.clickable(onClick = onCartClick),
-            tint = Color.White,
-        )
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = stringResource(R.string.content_description_cart),
+                tint = Color.White,
+            )
+            if (cartQuantity > 0) {
+                CartCountBadge(
+                    quantity = cartQuantity,
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingHeaderPreview() {
-    ShoppingHeader(onCartClick = {})
+    ShoppingHeader(
+        cartQuantity = 3,
+        onCartClick = {},
+    )
 }
