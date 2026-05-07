@@ -16,9 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.PurchaseProducts
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
+import kotlin.math.min
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ class CartActivity : ComponentActivity() {
                     intent.getParcelableExtra<Cart>(IntentKeys.CART_KEY)!!,
                 )
             }
-            var displayedProducts by remember { mutableStateOf(Products()) }
+            var displayedProducts by remember { mutableStateOf(PurchaseProducts()) }
 
             LaunchedEffect(cart, stateHolder.currentPage) {
                 displayedProducts = cart.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
@@ -52,20 +53,26 @@ class CartActivity : ComponentActivity() {
                         setResult(RESULT_OK, intent)
                         finish()
                     },
+                    onAdd = { id, updateType ->
+                        cart = cart.updateCountWithId(id, updateType)
+                    },
+                    onMinus = { id, updateType ->
+                        cart = cart.updateCountWithId(id, updateType)
+                    },
                     onDelete = { id ->
-                        cart = cart.removeProduct(id)
-                        if (stateHolder.isEmptyPage(cart.size(), PAGE_SIZE)) stateHolder.onPrevious()
+                        cart = cart.removeWithId(id)
+                        if (stateHolder.isEmptyPage(cart.productCount(), PAGE_SIZE)) stateHolder.onPrevious()
                     },
                     currentPage = stateHolder.currentPage,
                     onPrevious = {
                         stateHolder.onPrevious()
                     },
                     onNext = {
-                        stateHolder.onNext(cart.size())
+                        stateHolder.onNext(cart.productCount())
                     },
                     previousEnable = stateHolder.checkPreviousAvailable(),
-                    nextEnable = stateHolder.checkNextAvailable(cart.size()),
-                    isPageable = cart.size() > PAGE_SIZE,
+                    nextEnable = stateHolder.checkNextAvailable(cart.productCount()),
+                    isPageable = cart.productCount() > PAGE_SIZE,
                     modifier =
                         Modifier
                             .fillMaxSize()
@@ -83,4 +90,14 @@ class CartActivity : ComponentActivity() {
 private suspend fun Cart.getPartedItem(
     page: Int,
     pageSize: Int,
-): Products = products.getPartedItem(page, pageSize)
+): PurchaseProducts {
+    val fromIndex = min(page * pageSize, productCount())
+    val toIndex = min(fromIndex + pageSize, productCount())
+    return PurchaseProducts(totalProducts().subList(fromIndex, toIndex))
+}
+
+private fun Cart.productCount() = purchaseProducts.productCount()
+
+private fun Cart.totalProducts() = purchaseProducts.purchaseProducts
+
+private fun PurchaseProducts.productCount() = purchaseProducts.size
