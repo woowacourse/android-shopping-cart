@@ -24,11 +24,14 @@ class CartActivity : ComponentActivity() {
                     cartItems = stateHolder.pageCartItems,
                     totalPages = stateHolder.totalPages,
                     currentPage = stateHolder.currentPage,
+                    isMinusEnabled = { stateHolder.isMinusEnabled(it) },
                     hasPrevious = !stateHolder.isFirstPage(),
                     hasNext = !stateHolder.isLastPage(),
                     goToPreviousPage = { stateHolder.goToPreviousPage() },
                     goToNextPage = { stateHolder.goToNextPage() },
                     removeCartItem = { stateHolder.removeCartItem(it) },
+                    increaseCartItem = { stateHolder.increaseCartItem(it) },
+                    decreaseCartItem = { stateHolder.decreaseCartItem(it) },
                 )
             }
         }

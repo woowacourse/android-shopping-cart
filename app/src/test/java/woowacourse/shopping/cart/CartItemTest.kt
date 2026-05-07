@@ -62,7 +62,7 @@ class CartItemTest {
     @Test
     fun `해당 장바구니 상품의 총 금액을 계산할 수 있다`() {
         val cartItem = cartItem1
-        val totalPrice = cartItem.getTotalPrice()
+        val totalPrice = cartItem.getCartItemTotalPrice()
 
         totalPrice shouldBe 9000
     }
