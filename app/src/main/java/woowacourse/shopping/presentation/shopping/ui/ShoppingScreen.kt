@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -42,21 +43,20 @@ import woowacourse.shopping.data.ProductData.products
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 
 @Composable
 fun ShoppingScreen(
     onNavigateToCart: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ShoppingViewModel = viewModel(),
 ) {
     val scope = rememberCoroutineScope()
-    val state =
-        rememberSaveable(saver = ShoppingStateHolder.Saver()) {
-            ShoppingStateHolder()
-        }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
 
     LaunchedEffect(Unit) {
-        state.initialize()
+        viewModel.initialize()
     }
     Scaffold(
         topBar = {
@@ -97,7 +97,7 @@ fun ShoppingScreen(
                 products = state.products.toImmutableList(),
                 onLoad = {
                     scope.launch {
-                        state.loadMore()
+                        viewModel.loadMore()
                     }
                 },
                 isCanLoadMore = state.canLoadMore,

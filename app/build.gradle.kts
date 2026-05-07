@@ -57,6 +57,8 @@ dependencies {
     testImplementation(libs.kotest.runner.junit5)
     testImplementation("org.assertj:assertj-core:3.22.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

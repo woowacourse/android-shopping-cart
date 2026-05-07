@@ -23,7 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +34,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.common.ShoppingAppBar
+import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
 import woowacourse.shopping.util.formattedPrice
@@ -48,17 +51,15 @@ fun DetailScreen(
     id: String,
     onNavigateToCart: (AddItemResult) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: DetailViewModel = viewModel(),
 ) {
     val scope = rememberCoroutineScope()
-    val state =
-        remember {
-            DetailStateHolder(id = id)
-        }
-    val product = state.product
     val activity = LocalActivity.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val product = uiState.product
 
     LaunchedEffect(Unit) {
-        state.loadProduct()
+        viewModel.loadProduct(id)
     }
 
     Scaffold(
@@ -90,7 +91,7 @@ fun DetailScreen(
                         .background(Green40)
                         .clickable {
                             scope.launch {
-                                val result = state.addToCart()
+                                val result = viewModel.addToCart(id)
                                 onNavigateToCart(result)
                             }
                         },

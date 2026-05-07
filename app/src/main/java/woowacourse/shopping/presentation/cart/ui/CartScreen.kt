@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,27 +31,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.presentation.cart.model.CartItemUiModel
+import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 
 @Composable
-fun CartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CartViewModel = viewModel(),
+) {
     val activity = LocalActivity.current
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val state =
-        rememberSaveable(saver = CartStateHolder.Saver()) {
-            CartStateHolder()
-        }
+    val scope = rememberCoroutineScope()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        state.loadCartItems()
+        viewModel.loadCartItems()
     }
 
     Scaffold(
@@ -82,12 +84,12 @@ fun CartScreen(modifier: Modifier = Modifier) {
             )
         },
         bottomBar = {
-            if (state.totalCartSize > 5) {
+            if (uiState.isShowPageSection) {
                 CartPageSection(
-                    page = state.page + 1,
-                    onNext = { scope.launch { state.nextPage() } },
-                    onPrevious = { scope.launch { state.previousPage() } },
-                    isCanMoveNext = state.isCanMoveNext,
+                    page = uiState.page + 1,
+                    onNext = { scope.launch { viewModel.nextPage() } },
+                    onPrevious = { scope.launch { viewModel.previousPage() } },
+                    isCanMoveNext = uiState.isCanMoveNext,
                 )
             }
         },
@@ -99,11 +101,11 @@ fun CartScreen(modifier: Modifier = Modifier) {
                     .fillMaxSize()
                     .padding(innerPadding),
         ) {
-            if (state.isLoading) CircularProgressIndicator()
+            if (uiState.isLoading) CircularProgressIndicator()
             CartContent(
                 onDeleteItem = {
                     scope.launch {
-                        val result = state.deleteItem(it)
+                        val result = viewModel.deleteItem(it)
                         when (result) {
                             is RemoveItemResult.Success -> {
                                 Toast
@@ -122,7 +124,7 @@ fun CartScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 },
-                cartItems = state.currentCartItems.toImmutableList(),
+                cartItems = uiState.currentCartItems.toImmutableList(),
                 modifier = Modifier.fillMaxSize(),
             )
         }
