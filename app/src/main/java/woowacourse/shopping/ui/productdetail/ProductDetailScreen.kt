@@ -4,38 +4,44 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.ui.component.ShoppingLoading
 import woowacourse.shopping.ui.productdetail.component.CartAddButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetailBody
 import woowacourse.shopping.ui.productdetail.component.ProductDetailHeader
+import java.util.UUID
 
 @Composable
 fun ProductDetailScreen(
-    productToShow: Product,
-    cartRepo: CartRepository,
+    productId: UUID,
+    state: ProductDetailScreenState,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(productId) {
+        state.findProduct(productId)
+    }
 
-    ProductDetailScreen(
-        product = productToShow,
-        modifier = modifier,
-        onCloseClick = onCloseClick,
-        onAddToCartClick = {
-            coroutineScope.launch {
-                cartRepo.add(productToShow)
-                onAddToCartClick()
-            }
-        },
-    )
+    if (state.isLoading) {
+        ShoppingLoading()
+    } else {
+        state.productToShow?.let { product ->
+            ProductDetailScreen(
+                product = product,
+                modifier = modifier,
+                onCloseClick = onCloseClick,
+                onAddToCartClick = {
+                    state.addToCart(product)
+                    onAddToCartClick()
+                },
+            )
+        }
+    }
 }
 
 @Composable

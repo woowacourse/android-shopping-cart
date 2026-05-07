@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
+import woowacourse.shopping.ui.component.ShoppingLoading
 import woowacourse.shopping.ui.shopping.component.ShoppingBody
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
-
 
 @Composable
 fun ShoppingScreen(
@@ -25,7 +25,9 @@ fun ShoppingScreen(
 ) {
     val lazyGridState = rememberLazyGridState()
 
-    if (!state.isLoading) {
+    if (state.isLoading) {
+        ShoppingLoading()
+    } else {
         ShoppingScreen(
             products = Products(state.visibleProducts),
             hasNext = state.hasNext,

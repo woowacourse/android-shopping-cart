@@ -13,6 +13,7 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.CartHeader
+import woowacourse.shopping.ui.component.ShoppingLoading
 
 
 @Composable
@@ -21,7 +22,9 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    if (!state.isLoading) {
+    if (state.isLoading) {
+        ShoppingLoading()
+    } else {
         CartScreen(
             cart = Cart(state.pagedItems),
             currentPage = state.currentPage,

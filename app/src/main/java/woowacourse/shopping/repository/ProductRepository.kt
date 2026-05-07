@@ -1,6 +1,7 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.Product
+import java.util.UUID
 
 interface ProductRepository {
     suspend fun getSize(): Int
@@ -11,4 +12,6 @@ interface ProductRepository {
     ): List<Product>
 
     suspend fun hasNext(current: Int): Boolean
+
+    suspend fun findProduct(id: UUID): Product
 }

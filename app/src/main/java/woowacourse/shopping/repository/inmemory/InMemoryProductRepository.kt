@@ -4,6 +4,7 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
+import java.util.UUID
 
 class InMemoryProductRepository(
     initialProducts: List<Product> = emptyList()
@@ -197,4 +198,10 @@ class InMemoryProductRepository(
     ): List<Product> = products.getPagedProducts(fromIndex, count)
 
     override suspend fun hasNext(current: Int): Boolean = current < size - 1
+
+    override suspend fun findProduct(id: UUID): Product {
+        val product = products.firstOrNull { it.id == id }
+        require(product != null) { "찾는 상품이 데이터베이스에 없습니다." }
+        return product
+    }
 }
