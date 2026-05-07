@@ -23,26 +23,22 @@ class DetailProductActivity : ComponentActivity() {
         setContent {
             AndroidShoppingTheme {
                 val productId = intent.getLongExtra(ProductListActivity.EXTRA_PRODUCT_ID, INVALID_PRODUCT_ID)
-                if (productId != INVALID_PRODUCT_ID) {
-                    val product = productRepository.getProduct(productId)
-                    if (product != null) {
-                        DetailProductScreen(
-                            productTitle = product.getTitle(),
-                            productImageUrl = product.imageUrl,
-                            productPrice = WonMoney(product.getPrice()),
-                            onAddToCartClick = {
-                                ShoppingApplication.shoppingCartRepository =
-                                    ShoppingApplication.shoppingCartRepository.add(product)
-                                this.finish()
-                            },
-                            onBackClick = this::finish,
-                        )
-                    } else {
-                        Text(stringResource(R.string.product_not_found_message))
-                    }
-                } else {
+                val product = productRepository.getProduct(productId)
+                if (product == null) {
                     Text(stringResource(R.string.product_not_found_message))
+                    return@AndroidShoppingTheme
                 }
+                DetailProductScreen(
+                    productTitle = product.getTitle(),
+                    productImageUrl = product.imageUrl,
+                    productPrice = WonMoney(product.getPrice()),
+                    onAddToCartClick = {
+                        ShoppingApplication.shoppingCartRepository =
+                            ShoppingApplication.shoppingCartRepository.add(product)
+                        this.finish()
+                    },
+                    onBackClick = this::finish,
+                )
             }
         }
     }
