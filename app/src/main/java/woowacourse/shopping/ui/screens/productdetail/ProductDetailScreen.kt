@@ -16,7 +16,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -24,21 +25,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.AmountController
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
 fun ProductDetailScreen(
     productId: String,
-    productDetailStateHolder: ProductDetailStateHolder = remember(productId) {
-        ProductDetailStateHolder(
-            targetProductId = productId,
-        )
-    },
     onDismiss: () -> Unit,
+    viewModel: ProductDetailViewModel = viewModel(),
 ) {
-    val product = productDetailStateHolder.product
+    val uiState: ProductDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(productId) {
+        viewModel.loadProduct(productId)
+    }
+
+    LaunchedEffect(uiState.isError) {
+        if (uiState.isError) onDismiss()
+    }
 
     Scaffold(
         topBar = {
@@ -49,39 +57,58 @@ fun ProductDetailScreen(
         modifier = Modifier
             .systemBarsPadding(),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-        ) {
-            AsyncImage(
-                model = product.imageUrl,
-                contentDescription = "${product.name} 이미지",
+        uiState.product?.let {
+            ProductDetail(
+                product = it,
+                amount = uiState.amount,
+                onClickMinus = { viewModel.minusAmount() },
+                onClickPlus = { viewModel.plusAmount() },
+                onClickAdd = { viewModel.addToCart() },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ProductInfoText(
-                name = product.name,
-                price = product.price,
-                amount = 1, // TODO
-                onClickMinus = { /* TODO */ },
-                onClickAdd = { /* TODO */ },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            AddCartButton(
-                onClick = {
-                    productDetailStateHolder.addToCart()
-                },
-                modifier = Modifier.fillMaxWidth(),
+                    .padding(innerPadding)
+                    .fillMaxWidth(),
             )
         }
+    }
+}
+
+@Composable
+private fun ProductDetail(
+    product: Product,
+    amount: Int,
+    onClickMinus: () -> Unit,
+    onClickPlus: () -> Unit,
+    onClickAdd: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        AsyncImage(
+            model = product.imageUrl,
+            contentDescription = "${product.name} 이미지",
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ProductInfoText(
+            name = product.name,
+            price = product.price,
+            amount = amount,
+            onClickMinus = { onClickMinus() },
+            onClickAdd = { onClickPlus() },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        AddCartButton(
+            onClick = { onClickAdd() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
