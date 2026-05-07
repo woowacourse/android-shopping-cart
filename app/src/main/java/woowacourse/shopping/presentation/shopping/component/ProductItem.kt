@@ -34,9 +34,9 @@ import kotlin.uuid.Uuid
 fun ProductItem(
     product: Product,
     quantity: Int,
-    onClick: (Product) -> Unit,
-    onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
+    onClick: () -> Unit,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -45,14 +45,14 @@ fun ProductItem(
                 containerColor = Color.White,
             ),
         shape = RectangleShape,
-        modifier = modifier.clickable { onClick(product) },
+        modifier = modifier.clickable { onClick() },
     ) {
         Column {
             ProductItemImage(
                 product = product,
                 quantity = quantity,
-                onQuantityIncrease = { onQuantityIncrease(product) },
-                onQuantityDecrease = { onQuantityDecrease(product.productId) },
+                onQuantityIncrease = onQuantityIncrease,
+                onQuantityDecrease = onQuantityDecrease,
                 modifier = Modifier.fillMaxWidth(),
             )
 

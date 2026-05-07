@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.remember
+import androidx.activity.viewModels
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
@@ -17,27 +17,29 @@ import woowacourse.shopping.presentation.theme.androidshoppingTheme
 import kotlin.uuid.ExperimentalUuidApi
 
 class ProductDetailActivity : ComponentActivity() {
+    val viewModel: ProductDetailViewModel by viewModels {
+        ProductDetailViewModelFactory(
+            productRepository = AppContainer.productRepository,
+            cartRepository = AppContainer.cartRepository,
+        )
+    }
+
     @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         val product = intent.getProduct()
 
         setContent {
             androidshoppingTheme {
-                val stateHolder =
-                    remember {
-                        ProductDetailStateHolder(
-                            productRepository = AppContainer.productRepository,
-                            cartRepository = AppContainer.cartRepository,
-                        )
-                    }
                 if (product != null) {
                     ProductDetailScreen(
                         product = product,
+                        quantity = viewModel.amount,
                         onClose = { finish() },
-                        onAddToCart = { productId -> stateHolder.addToCart(productId) },
+                        onQuantityIncrease = viewModel::increaseQuantity,
+                        onQuantityDecrease = viewModel::decreaseQuantity,
+                        onAddToCart = viewModel::addToCart,
                     )
                 } else {
                     ProductDetailErrorScreen(onClose = { finish() })

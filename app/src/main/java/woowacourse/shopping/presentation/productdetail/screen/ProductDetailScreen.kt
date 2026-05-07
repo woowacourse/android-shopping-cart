@@ -28,7 +28,10 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProductDetailScreen(
     product: ProductUiModel,
+    quantity: Int,
     onClose: () -> Unit,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     onAddToCart: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,7 +48,12 @@ fun ProductDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            ProductDetail(product)
+            ProductDetail(
+                product = product,
+                quantity = quantity,
+                onQuantityIncrease = onQuantityIncrease,
+                onQuantityDecrease = onQuantityDecrease,
+            )
             ActionButton(
                 onClick = {
                     onAddToCart(product.productId)
@@ -75,7 +83,10 @@ private fun ProductDetailScreenPreview() {
                 productName = "[든든] 동원 스위트콘",
                 price = 99800,
             ),
+        quantity = 1,
         onClose = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
         onAddToCart = {},
     )
 }

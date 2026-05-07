@@ -34,7 +34,7 @@ class ProductListViewModel(
             )
 
     val totalQuantity: Int
-        get() = cart.cartItems.sumOf { it.quantity }
+        get() = cart.getTotalQuantity()
 
     init {
         loadPages(currentPageIndex)
@@ -56,7 +56,7 @@ class ProductListViewModel(
     }
 
     fun increaseQuantity(product: Product) {
-        cartRepository.increaseQuantity(product)
+        cartRepository.increaseQuantity(product, 1)
         refreshCart()
     }
 
@@ -84,7 +84,7 @@ class ProductListViewModel(
         }
     }
 
-    private fun refreshCart() {
+    fun refreshCart() {
         cart = cartRepository.getItems()
     }
 
@@ -95,7 +95,7 @@ class ProductListViewModel(
 
 class ProductListViewModelFactory(
     private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {

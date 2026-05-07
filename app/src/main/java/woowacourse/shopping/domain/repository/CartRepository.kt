@@ -15,8 +15,18 @@ interface CartRepository {
 
     fun getTotalItemCount(): Int
 
-    fun increaseQuantity(product: Product)
+    fun getTotalQuantity(): Int
+
+    fun getTotalPrice(): Int
+
+    fun increaseQuantity(
+        product: Product,
+        amount: Int,
+    )
 
     @OptIn(ExperimentalUuidApi::class)
     fun decreaseQuantity(productId: Uuid)
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun deleteProduct(productId: Uuid)
 }

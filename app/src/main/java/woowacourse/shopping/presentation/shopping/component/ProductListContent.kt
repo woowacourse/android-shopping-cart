@@ -43,9 +43,9 @@ fun ProductListContent(
             ProductItem(
                 product = product,
                 quantity = productQuantity(product.productId),
-                onClick = onItemClick,
-                onQuantityIncrease = onQuantityIncrease,
-                onQuantityDecrease = onQuantityDecrease,
+                onClick = { onItemClick(product) },
+                onQuantityIncrease = { onQuantityIncrease(product) },
+                onQuantityDecrease = { onQuantityDecrease(product.productId) },
             )
         }
         if (hasNextPage) {

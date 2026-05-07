@@ -45,4 +45,9 @@ class ProductListActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshCart()
+    }
 }

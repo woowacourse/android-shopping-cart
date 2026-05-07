@@ -44,7 +44,7 @@ class CartRepositoryImplTest {
     @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품을 추가하면 장바구니에 저장된다`() {
-        cartRepository.increaseQuantity(createProduct())
+        cartRepository.increaseQuantity(createProduct(), 1)
         val cart = cartRepository.getPagingItems(page = 0, pageSize = 10)
         assertThat(cart.cartItems).hasSize(1)
     }
@@ -54,7 +54,7 @@ class CartRepositoryImplTest {
     fun `상품을 삭제하면 장바구니에서 삭제된다`() {
         val product = createProduct()
 
-        cartRepository.increaseQuantity(product)
+        cartRepository.increaseQuantity(product, 1)
         cartRepository.decreaseQuantity(product.productId)
 
         val cart = cartRepository.getPagingItems(page = 0, pageSize = 10)

@@ -14,7 +14,7 @@ class CartItemTest {
     fun `선택한 상품의 수량을 늘릴 수 있다`() {
         val cartItem = CartItem(createProduct(), 1)
 
-        val newCartItem = cartItem.increaseQuantity()
+        val newCartItem = cartItem.increaseQuantity(1)
 
         assertThat(newCartItem.quantity).isEqualTo(2)
     }

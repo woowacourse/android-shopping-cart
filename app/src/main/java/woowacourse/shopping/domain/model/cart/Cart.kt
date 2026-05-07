@@ -8,7 +8,14 @@ import kotlin.uuid.Uuid
 data class Cart(
     val cartItems: List<CartItem> = emptyList(),
 ) {
-    fun increaseQuantity(product: Product): Cart {
+    fun getTotalQuantity(): Int = cartItems.sumOf { it.quantity }
+
+    fun getTotalPrice(): Int = cartItems.sumOf { it.product.price.value * it.quantity }
+
+    fun increaseQuantity(
+        product: Product,
+        amount: Int,
+    ): Cart {
         val exists = cartItems.any { product.productId == it.product.productId }
 
         if (!exists) {
@@ -19,7 +26,7 @@ data class Cart(
             cartItems =
                 cartItems.map {
                     if (product.productId == it.product.productId) {
-                        it.increaseQuantity()
+                        it.increaseQuantity(amount)
                     } else {
                         it
                     }
@@ -50,4 +57,12 @@ data class Cart(
                 },
         )
     }
+
+    fun deleteProduct(productId: Uuid): Cart =
+        copy(
+            cartItems =
+                cartItems.filterNot {
+                    it.product.productId == productId
+                },
+        )
 }

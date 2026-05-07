@@ -23,6 +23,9 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProductDetail(
     product: ProductUiModel,
+    quantity: Int,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -43,8 +46,11 @@ fun ProductDetail(
         }
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
-        ProductPrice(
+        ProductPriceAndQuantity(
             price = product.price,
+            quantity = quantity,
+            onIncrease = onQuantityIncrease,
+            onDecrease = onQuantityDecrease,
         )
     }
 }
@@ -61,5 +67,8 @@ private fun ProductDetailPreview() {
                 productName = "[든든] 동원 스위트콘",
                 price = 99800,
             ),
+        quantity = 1,
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

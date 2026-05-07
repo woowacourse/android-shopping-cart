@@ -30,12 +30,24 @@ class CartRepositoryImpl(
 
     override fun getTotalItemCount(): Int = cart.cartItems.size
 
-    override fun increaseQuantity(product: Product) {
-        cart = cart.increaseQuantity(product)
+    override fun getTotalQuantity(): Int = cart.getTotalQuantity()
+
+    override fun getTotalPrice(): Int = cart.getTotalPrice()
+
+    override fun increaseQuantity(
+        product: Product,
+        amount: Int,
+    ) {
+        cart = cart.increaseQuantity(product, amount)
     }
 
     @OptIn(ExperimentalUuidApi::class)
     override fun decreaseQuantity(productId: Uuid) {
         cart = cart.decreaseQuantity(productId)
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    override fun deleteProduct(productId: Uuid) {
+        cart = cart.deleteProduct(productId)
     }
 }
