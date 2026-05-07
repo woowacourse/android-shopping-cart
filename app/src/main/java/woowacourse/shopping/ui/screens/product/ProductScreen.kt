@@ -16,35 +16,27 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
+import woowacourse.shopping.data.source.ProductDataSourceImpl.products
 import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
 fun ProductScreen(
     onIconClick: () -> Unit,
     onItemClick: (String) -> Unit,
+    viewModel: ProductViewModel = viewModel(),
 ) {
-    val productStateHolder = rememberSaveable(saver = ProductStateHolder.Saver) {
-        ProductStateHolder()
-    }
+    val uiState: ProductUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
-
-    LaunchedEffect(Unit) {
-        productStateHolder.initProducts()
-    }
-
-    val products = productStateHolder.products
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -67,7 +59,7 @@ fun ProductScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(
-                items = products,
+                items = uiState.products,
                 key = { it.id },
             ) {
                 ProductCard(
@@ -82,15 +74,13 @@ fun ProductScreen(
                 )
             }
 
-            if (productStateHolder.hasNext) {
+            if (uiState.hasNext) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                scope.launch {
-                                    productStateHolder.getProducts()
-                                }
+                                viewModel.getMoreProducts()
                             },
                     ) {
                         Icon(
