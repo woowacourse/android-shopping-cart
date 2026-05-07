@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,9 +36,12 @@ import woowacourse.shopping.ui.util.formattedPrice
 @Composable
 fun CartCard(
     onDeleteItem: () -> Unit,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
     productName: String,
     imageUrl: String,
     price: Int,
+    quantity: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -91,13 +97,61 @@ fun CartCard(
                     Modifier
                         .width(136.dp),
             )
-            Text(
-                text = formattedPrice(price),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 26.sp,
-                color = Gray50,
-            )
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Row(
+                    modifier = Modifier.width(126.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "-",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 18.sp,
+                        color = if(quantity > 1) Color.Black else Gray50,
+                        modifier =
+                            Modifier
+                                .size(42.dp)
+                                .clickable(enabled = quantity > 1) {
+                                    onDecreaseQuantity()
+                                }
+                    )
+                    Text(
+                        text = "$quantity",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 18.sp,
+                        color = Color.Black,
+                        modifier = Modifier.size(42.dp)
+                    )
+                    Text(
+                        text = "+",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 18.sp,
+                        color = Color.Black,
+                        modifier =
+                            Modifier
+                                .size(42.dp)
+                                .clickable {
+                                    onIncreaseQuantity()
+                                }
+                    )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = formattedPrice(price),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 26.sp,
+                    color = Gray50,
+                )
+            }
+
         }
     }
 }

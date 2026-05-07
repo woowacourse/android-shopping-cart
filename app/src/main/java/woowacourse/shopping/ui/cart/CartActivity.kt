@@ -25,8 +25,10 @@ class CartActivity : ComponentActivity() {
                     uiState = viewModel.uiState,
                     onBackClick = { finish() },
                     onDeleteItem = { viewModel.deleteItem(it) },
-                    onNextPage = { viewModel.nextPage() },
-                    onPreviousPage = { viewModel.previousPage() },
+                    onNextPage = viewModel::nextPage,
+                    onPreviousPage = viewModel::previousPage,
+                    onIncreaseQuantity = { viewModel.increaseQuantity(it) },
+                    onDecreaseQuantity = { viewModel.decreaseQuantity(it) },
                 )
             }
         }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import android.R.attr.onClick
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +36,8 @@ fun CartScreen(
     onDeleteItem: (String) -> Unit,
     onNextPage: () -> Unit,
     onPreviousPage: () -> Unit,
+    onIncreaseQuantity: (String) -> Unit,
+    onDecreaseQuantity: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -77,6 +78,12 @@ fun CartScreen(
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         CartContent(
+            onIncreaseQuantity = {
+                onIncreaseQuantity(it)
+            },
+            onDecreaseQuantity = {
+                onDecreaseQuantity(it)
+            },
             onDeleteItem = {
                 onDeleteItem(it)
             },
@@ -91,6 +98,8 @@ fun CartScreen(
 
 @Composable
 private fun CartContent(
+    onIncreaseQuantity: (String) -> Unit,
+    onDecreaseQuantity: (String) -> Unit,
     onDeleteItem: (String) -> Unit,
     cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
@@ -108,6 +117,13 @@ private fun CartContent(
                 productName = product.name,
                 price = product.price,
                 imageUrl = product.imageUrl,
+                quantity = item.quantity,
+                onIncreaseQuantity = {
+                    onIncreaseQuantity(product.id)
+                },
+                onDecreaseQuantity = {
+                    onDecreaseQuantity(product.id)
+                },
                 onDeleteItem = {
                     onDeleteItem(product.id)
                 },
@@ -125,6 +141,8 @@ private fun CartScreenPreview() {
         onDeleteItem = {},
         onNextPage = {},
         onPreviousPage = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }
 
@@ -133,6 +151,8 @@ private fun CartScreenPreview() {
 private fun CartContentPreview() {
     CartContent(
         onDeleteItem = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
         cartItems =
             listOf(
                 CartItemUiModel(

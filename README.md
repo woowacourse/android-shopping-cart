@@ -13,9 +13,9 @@
 - [x] CartViewModel 추가
 - [x] CartActivity에서 CartViewModel 연결
 - [x] CartStateHolder 제거 및 CartScreen을 UiState 기반으로 수정
-- [ ] 장바구니 수량 증가 기능 연결
-- [ ] 장바구니 수량 감소 기능 연결
-- [ ] 장바구니 삭제 기능 연결
+- [x] 장바구니 수량 증가 기능 연결
+- [x] 장바구니 수량 감소 기능 연결
+- [x] 장바구니 삭제 기능 연결
 
 ### Shopping
 - [ ] ShoppingViewModel 추가
