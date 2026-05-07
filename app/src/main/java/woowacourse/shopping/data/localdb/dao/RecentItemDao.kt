@@ -1,11 +1,16 @@
 package woowacourse.shopping.data.localdb.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.localdb.entity.RecentItemEntity
 
 @Dao
 interface RecentItemDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: RecentItemEntity)
+
     @Query("SELECT * FROM recent_items ORDER BY timestamp DESC LIMIT 10")
     suspend fun getRecentItems(): List<RecentItemEntity>
 
@@ -18,5 +23,15 @@ interface RecentItemDao {
         WHERE id NOT IN (SELECT id FROM recent_items ORDER BY timestamp DESC LIMIT 10)
     """
     )
-    suspend fun deleteOldItem(id: String)
+    suspend fun deleteOldItem()
+
+    @Query(
+        """
+            SELECT * FROM recent_items
+            WHERE id != :currentId
+            ORDER BY timestamp DESC
+            LIMIT 1
+        """
+    )
+    suspend fun getLastViewedItem(currentId : String) : RecentItemEntity?
 }
