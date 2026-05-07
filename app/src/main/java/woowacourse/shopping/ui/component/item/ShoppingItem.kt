@@ -21,12 +21,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.PurchaseProduct
 
 @Composable
 fun ShoppingItem(
-    count: Int = 0,
+    count: () -> Int,
     product: Product,
-    isContainedInCart: Boolean = false,
+    isContainedInCart: () -> Boolean,
+    onAddInCart: (PurchaseProduct) -> Unit,
+    onAdd: () -> Unit,
+    onMinus: () -> Unit,
+    onDelete: () -> Unit,
     onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,18 +50,20 @@ fun ShoppingItem(
         Box{
             ProductImage(product.imageUri, Modifier.size(154.dp))
             CirclePlusBtn(
+                onClick = { onAddInCart(PurchaseProduct(product = product)) },
                 modifier = Modifier
+                    .padding(end = 15.dp)
                     .align(Alignment.BottomEnd)
-                    .visible(!isContainedInCart)
+                    .visible(!isContainedInCart())
             )
             QuantitySelector(
-                count = count,
-                onAdd = {  },
-                onMinus = {  },
-                onDelete = {  },
+                count = count(),
+                onAdd = onAdd,
+                onMinus = onMinus,
+                onDelete = onDelete,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .visible(isContainedInCart)
+                    .visible(isContainedInCart())
             )
         }
 
@@ -99,32 +106,40 @@ fun Int.toPriceString(): String {
     return "${formatter.format(this)}원"
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ShoppingItemPreview1() {
     ShoppingItem(
-        0,
+        { 0 },
         Product(
             imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
             name = "매우매우긴상품명입니다",
             price = 1000000000,
         ),
         onClick = {},
-        isContainedInCart = false
+        onAdd = {},
+        onMinus = {},
+        onDelete = {},
+        onAddInCart = {},
+        isContainedInCart = { false }
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ShoppingItemPreview2() {
     ShoppingItem(
-        1,
+        { 1 },
         Product(
             imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
             name = "매우매우긴상품명입니다",
             price = 1000000000,
         ),
         onClick = {},
-        isContainedInCart = true
+        onAdd = {},
+        onMinus = {},
+        onDelete = {},
+        onAddInCart = {},
+        isContainedInCart = { true }
     )
 }
