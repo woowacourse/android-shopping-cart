@@ -34,7 +34,7 @@ fun CartScreen(
                 viewModel.deleteProduct(id)
 //                val updatedProducts = viewModel.getCartProducts()
 //                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-                //viewModel.adjustCurrentPage()
+                // viewModel.adjustCurrentPage()
             },
             modifier = modifier,
         )

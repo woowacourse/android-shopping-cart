@@ -13,15 +13,17 @@ import kotlin.uuid.Uuid
 class InMemoryCartRepository : CartRepository {
     private var cart by mutableStateOf(Cart())
 
-    override fun getTotalProductQuantity(): Int =
-        cart.productsWithQuantity.sumOf { it.quantity }
+    override fun getTotalProductQuantity(): Int = cart.productsWithQuantity.sumOf { it.quantity }
 
     override fun getProductQuantity(productId: Uuid): Int =
         cart.productsWithQuantity.firstOrNull { it.productId == productId }?.quantity ?: 0
 
     override fun getCartProducts(): List<ProductWithQuantity> = cart.productsWithQuantity
 
-    override fun addProduct(product: Product, quantityToAdd: Int) {
+    override fun addProduct(
+        product: Product,
+        quantityToAdd: Int,
+    ) {
         cart = cart.addProductToCart(ProductWithQuantity(product, quantityToAdd))
     }
 
@@ -29,7 +31,10 @@ class InMemoryCartRepository : CartRepository {
         cart = cart.deleteProductFromCart(productId = productId)
     }
 
-    override fun decreaseProduct(productId: Uuid, quantityToRemove: Int) {
+    override fun decreaseProduct(
+        productId: Uuid,
+        quantityToRemove: Int,
+    ) {
         cart = cart.decreaseProductQuantity(productId = productId, quantity = quantityToRemove)
     }
 }

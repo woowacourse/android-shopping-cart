@@ -24,41 +24,44 @@ import woowacourse.shopping.R
 fun SelectItemCountBox(
     count: Int,
     onIncrease: () -> Unit,
-    onDecrease: () -> Unit
+    onDecrease: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color.White)
-            .size(126.dp, 42.dp)
-            .padding(horizontal = 15.dp, vertical = 11.dp),
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White)
+                .size(126.dp, 42.dp)
+                .padding(horizontal = 15.dp, vertical = 11.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(13.dp, 19.dp)
-                .clickable { onDecrease() },
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(13.dp, 19.dp)
+                    .clickable { onDecrease() },
+            contentAlignment = Alignment.Center,
         ) {
             Image(
                 painter = painterResource(R.drawable.minus_icon),
-                contentDescription = "감소 버튼"
+                contentDescription = "감소 버튼",
             )
         }
         Text(
             text = count.toString(),
-            color = Color.Black
+            color = Color.Black,
         )
         Box(
-            modifier = Modifier
-                .size(13.dp, 19.dp)
-                .clickable { onIncrease() },
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(13.dp, 19.dp)
+                    .clickable { onIncrease() },
+            contentAlignment = Alignment.Center,
         ) {
             Image(
                 painter = painterResource(R.drawable.plus_icon),
-                contentDescription = "증가 버튼"
+                contentDescription = "증가 버튼",
             )
         }
     }
@@ -70,6 +73,6 @@ private fun SelectItemCountBoxPreview() {
     SelectItemCountBox(
         count = 0,
         onIncrease = {},
-        onDecrease = {}
+        onDecrease = {},
     )
 }

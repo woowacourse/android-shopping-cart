@@ -66,6 +66,6 @@ private fun ProductDetailPreview() {
         product = ProductFixture.productList(packageName).last(),
         quantity = 1,
         increaseQuantity = {},
-        decreaseQuantity = {}
+        decreaseQuantity = {},
     )
 }

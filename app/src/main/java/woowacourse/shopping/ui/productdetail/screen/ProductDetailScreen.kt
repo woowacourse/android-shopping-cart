@@ -60,20 +60,21 @@ fun ProductDetailScreen(
                     increaseQuantity = { quantity++ },
                     decreaseQuantity = { quantity-- },
                 )
-                    MintButton(
+                MintButton(
                     onClick = {
                         cartRepository.addProduct(
                             product = product,
-                            quantityToAdd = quantity
+                            quantityToAdd = quantity,
                         )
                         scope.launch {
                             snackbarHostState.showSnackbar(addToCartSnackbarText)
                         }
                     },
                     text = addToCartText,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
                 )
             }
         }

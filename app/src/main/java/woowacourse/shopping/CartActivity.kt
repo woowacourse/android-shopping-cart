@@ -14,9 +14,10 @@ class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val viewModel = CartViewModel(
-            AppContainer.cartRepository
-        )
+        val viewModel =
+            CartViewModel(
+                AppContainer.cartRepository,
+            )
         @OptIn(ExperimentalUuidApi::class)
         setContent {
             AndroidShoppingTheme {

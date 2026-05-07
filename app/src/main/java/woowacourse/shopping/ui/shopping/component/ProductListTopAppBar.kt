@@ -23,17 +23,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.AppContainer
 import woowacourse.shopping.R
-import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.ui.theme.buttonColor
 import woowacourse.shopping.ui.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListTopAppBar(
-    totalProductQuantity:Int,
-    onClick: () -> Unit
+    totalProductQuantity: Int,
+    onClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -50,16 +48,18 @@ fun ProductListTopAppBar(
                 Image(
                     painter = painterResource(id = R.drawable.shopping_cart_icon),
                     contentDescription = stringResource(R.string.shopping_cart),
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onClick() }
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .clickable { onClick() },
                 )
                 if (totalProductQuantity > 0) {
                     Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(20.dp)
-                            .background(buttonColor)
+                        modifier =
+                            Modifier
+                                .clip(CircleShape)
+                                .size(20.dp)
+                                .background(buttonColor),
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
@@ -76,8 +76,7 @@ fun ProductListTopAppBar(
                 containerColor = topAppBarColor,
                 titleContentColor = Color.White,
             ),
-
-        )
+    )
 }
 
 @Preview

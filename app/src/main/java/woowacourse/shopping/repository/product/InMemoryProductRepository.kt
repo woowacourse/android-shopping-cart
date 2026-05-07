@@ -6,7 +6,10 @@ import androidx.compose.runtime.setValue
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.domain.Products
 
-class InMemoryProductRepository(packageName:String) : ProductRepository{
+class InMemoryProductRepository(
+    packageName: String,
+) : ProductRepository {
     private var products by mutableStateOf(Products(ProductFixture.productList(packageName)))
+
     override fun getAllProducts(): Products = products
 }

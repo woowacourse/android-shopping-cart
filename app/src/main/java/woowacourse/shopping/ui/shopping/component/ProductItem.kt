@@ -57,28 +57,31 @@ fun ProductItem(
                 )
                 if (productWithQuantity.quantity == 0) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(8.dp)
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color.White)
-                            .clickable { onIncrease() }
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(8.dp)
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(Color.White)
+                                .clickable { onIncrease() },
                     ) {
                         Image(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .align(Alignment.Center),
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .align(Alignment.Center),
                             painter = painterResource(R.drawable.plus_icon),
-                            contentDescription = "아이템 추가 버튼"
+                            contentDescription = "아이템 추가 버튼",
                         )
                     }
                 }
                 if (productWithQuantity.quantity > 0) {
                     Box(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .align(Alignment.BottomCenter)
+                        modifier =
+                            Modifier
+                                .padding(vertical = 8.dp)
+                                .align(Alignment.BottomCenter),
                     ) {
                         SelectItemCountBox(
                             count = productWithQuantity.quantity,

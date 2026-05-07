@@ -18,10 +18,11 @@ class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val viewModel = ProductListViewModel(
-            AppContainer.createProductRepository(packageName),
-            AppContainer.cartRepository
-        )
+        val viewModel =
+            ProductListViewModel(
+                AppContainer.createProductRepository(packageName),
+                AppContainer.cartRepository,
+            )
 
         setContent {
             AndroidShoppingTheme {
@@ -32,7 +33,7 @@ class ProductListActivity : ComponentActivity() {
                     onProductClick = { productId ->
                         ProductDetailActivity.start(this, productId)
                     },
-                    modifier = Modifier.testTag("product_list")
+                    modifier = Modifier.testTag("product_list"),
                 )
             }
         }

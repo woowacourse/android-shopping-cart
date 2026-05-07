@@ -6,6 +6,7 @@ import woowacourse.shopping.repository.product.InMemoryProductRepository
 import woowacourse.shopping.repository.product.ProductRepository
 
 object AppContainer {
-    fun createProductRepository(packageName:String) : ProductRepository = InMemoryProductRepository(packageName)
+    fun createProductRepository(packageName: String): ProductRepository = InMemoryProductRepository(packageName)
+
     val cartRepository: CartRepository = InMemoryCartRepository()
 }

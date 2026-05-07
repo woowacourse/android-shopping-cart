@@ -15,15 +15,20 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class CartViewModel(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     var currentPageIndex by mutableStateOf(0)
         private set
 
     fun lastPageIndex(): Int =
-        if (cartRepository.getCartProducts()
+        if (cartRepository
+                .getCartProducts()
                 .isEmpty()
-        ) 0 else (cartRepository.getCartProducts().size - 1) / CART_PAGE_SIZE
+        ) {
+            0
+        } else {
+            (cartRepository.getCartProducts().size - 1) / CART_PAGE_SIZE
+        }
 
     fun getCartProducts(): List<ProductWithQuantity> = cartRepository.getCartProducts()
 
@@ -33,8 +38,7 @@ class CartViewModel(
             .toPage(PageRequest(index = currentPageIndex, size = CART_PAGE_SIZE))
             .items
 
-    fun canNavigateToRight(): Boolean =
-        currentPageIndex < lastPageIndex()
+    fun canNavigateToRight(): Boolean = currentPageIndex < lastPageIndex()
 
     fun moveToNextPage() {
         if (canNavigateToRight()) currentPageIndex++
@@ -42,9 +46,10 @@ class CartViewModel(
 
     fun canNavigateToLeft(): Boolean = currentPageIndex > 0
 
-    fun moveToPreviousPage(){
-        if(canNavigateToLeft()) currentPageIndex--
+    fun moveToPreviousPage() {
+        if (canNavigateToLeft()) currentPageIndex--
     }
+
     fun adjustCurrentPage() {
         val lastIndex = lastPageIndex()
         if (currentPageIndex > lastIndex) {
@@ -57,10 +62,11 @@ class CartViewModel(
         adjustCurrentPage()
     }
 
-    fun decraseProduct(productId:Uuid){
-        cartRepository.decreaseProduct(productId=productId, quantityToRemove = 1)
+    fun decraseProduct(productId: Uuid) {
+        cartRepository.decreaseProduct(productId = productId, quantityToRemove = 1)
         adjustCurrentPage()
     }
+
     fun deleteProduct(productId: Uuid) {
         cartRepository.deleteProduct(productId)
         adjustCurrentPage()

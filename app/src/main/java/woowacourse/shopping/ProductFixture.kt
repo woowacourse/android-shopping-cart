@@ -6,9 +6,9 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 object ProductFixture {
-
     @OptIn(ExperimentalUuidApi::class)
     private val productIds = List(24) { Uuid.random() }
+
     private fun imageResourceUri(
         packageName: String,
         drawableResId: Int,

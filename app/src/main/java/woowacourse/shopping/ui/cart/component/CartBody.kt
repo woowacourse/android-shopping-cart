@@ -41,7 +41,7 @@ fun CartBody(
                     pageMoveToLeftButtonEnabled = viewModel.canNavigateToLeft(),
                     currentPageIndex = viewModel.currentPageIndex,
                     pageMoveToRight = { viewModel.moveToNextPage() },
-                    pageMoveToRightButtonEnabled = viewModel.canNavigateToRight()
+                    pageMoveToRightButtonEnabled = viewModel.canNavigateToRight(),
                 )
             }
         }
