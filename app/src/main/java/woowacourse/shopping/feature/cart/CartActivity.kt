@@ -29,6 +29,7 @@ class CartActivity : ComponentActivity() {
                         isFirstPage = stateHolder.uiState.isFirstPage,
                         pageCount = stateHolder.uiState.displayPageNumber,
                         isShowControls = stateHolder.uiState.showControls,
+                        isLoading = stateHolder.uiState.isLoading,
                         onNextClick = stateHolder::nextPage,
                         onPreviousClick = stateHolder::prevPage,
                     )

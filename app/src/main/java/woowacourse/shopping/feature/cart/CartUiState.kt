@@ -10,4 +10,5 @@ data class CartUiState(
     val showControls: Boolean = false,
     val isFirstPage: Boolean = true,
     val isLastPage: Boolean = false,
+    val isLoading: Boolean = false,
 )

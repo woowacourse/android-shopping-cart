@@ -5,6 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.feature.cart.model.toUiModel
@@ -12,6 +17,7 @@ import woowacourse.shopping.feature.cart.model.toUiModel
 class CartStateHolder(
     private val cartRepository: CartRepository,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val pageSize = 5
     private var currentPage = 0
     private var totalSize = cartRepository.getCartItemCount()
@@ -26,11 +32,11 @@ class CartStateHolder(
     }
 
     fun nextPage() {
-        if (!uiState.isLastPage) loadPage(currentPage + 1)
+        if (!uiState.isLastPage && !uiState.isLoading) loadPage(currentPage + 1)
     }
 
     fun prevPage() {
-        if (!uiState.isFirstPage) loadPage(currentPage - 1)
+        if (!uiState.isFirstPage && !uiState.isLoading) loadPage(currentPage - 1)
     }
 
     fun removeFromCart(productId: String) {
@@ -41,14 +47,19 @@ class CartStateHolder(
 
     private fun loadPage(page: Int) {
         currentPage = page
-        uiState =
-            CartUiState(
-                cartItems = cartRepository.getPagingCartItems(page, pageSize).toUiModel(),
-                displayPageNumber = page + 1,
-                showControls = totalPages > 1,
-                isFirstPage = page == 0,
-                isLastPage = totalPages == 0 || page == totalPages - 1,
-            )
+        scope.launch {
+            uiState = uiState.copy(isLoading = true)
+            delay(1000)
+            uiState =
+                CartUiState(
+                    cartItems = cartRepository.getPagingCartItems(page, pageSize).toUiModel(),
+                    displayPageNumber = page + 1,
+                    showControls = totalPages > 1,
+                    isFirstPage = page == 0,
+                    isLastPage = totalPages == 0 || page == totalPages - 1,
+                    isLoading = false,
+                )
+        }
     }
 }
 

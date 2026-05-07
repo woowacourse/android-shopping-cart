@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.cart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,50 +31,60 @@ fun CartScreen(
     isFirstPage: Boolean,
     pageCount: Int,
     isShowControls: Boolean,
+    isLoading: Boolean,
     onBackClick: () -> Unit,
     onCartDeleteClick: (id: String) -> Unit,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
-        CartTopAppBar(onClick = onBackClick)
-
         Column(
-            modifier =
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CartTopAppBar(onClick = onBackClick)
+
+            Column(
+                modifier =
                 Modifier
                     .padding(vertical = 24.dp, horizontal = 18.dp)
                     .weight(1f)
                     .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-        ) {
-            cartItems.forEach { cartInfo ->
-                CartItem(
-                    productName = cartInfo.productName,
-                    productUrl = cartInfo.productImageUrl,
-                    formattedPrice = cartInfo.formattedPrice,
-                    onClick = { onCartDeleteClick(cartInfo.id) },
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
+                cartItems.forEach { cartInfo ->
+                    CartItem(
+                        productName = cartInfo.productName,
+                        productUrl = cartInfo.productImageUrl,
+                        formattedPrice = cartInfo.formattedPrice,
+                        onClick = { onCartDeleteClick(cartInfo.id) },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(36.dp))
+
+            if (isShowControls) {
+                CartPageButton(
+                    onNextClick = onNextClick,
+                    onPreviousClick = onPreviousClick,
+                    pageText = pageCount.toString(),
+                    isPreviousEnabled = !isFirstPage,
+                    isNextEnabled = !isLastPage,
                 )
+                Spacer(Modifier.height(36.dp))
             }
         }
 
-        Spacer(Modifier.height(36.dp))
-
-        if (isShowControls) {
-            CartPageButton(
-                onNextClick = onNextClick,
-                onPreviousClick = onPreviousClick,
-                pageText = pageCount.toString(),
-                isPreviousEnabled = !isFirstPage,
-                isNextEnabled = !isLastPage,
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-            Spacer(Modifier.height(36.dp))
         }
     }
 }
@@ -88,6 +100,7 @@ private fun CartScreenPreview() {
         isFirstPage = true,
         pageCount = 1,
         isShowControls = true,
+        isLoading = false,
         onNextClick = {},
         onPreviousClick = {},
     )
