@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
 import woowacourse.shopping.ui.stateholder.CartStateHolder
@@ -40,7 +41,14 @@ import java.util.UUID
 
 @Composable
 fun CartScreen(
-    stateHolder: CartStateHolder,
+    onDelete: (UUID) -> Unit,
+    onNext: () -> Unit,
+    onPrevious: () -> Unit,
+    previousEnable: Boolean,
+    nextEnable: Boolean,
+    currentPage: Int,
+    getPartedItem: (Int) -> List<Product>,
+    isPageable: () -> Boolean,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,15 +56,14 @@ fun CartScreen(
         headerContent = { CartHeader(onClose) },
         bodyContent = {
             CartBody(
-                stateHolder = stateHolder,
-                onDelete = {
-                    stateHolder.onDeleteProduct(it)
-                },
-                onNext = { stateHolder.onNext() },
-                currentPage = stateHolder.currentPage,
-                onPrevious = { stateHolder.onPrevious() },
-                previousEnable = stateHolder.checkPreviousAvailable(),
-                nextEnable = stateHolder.checkNextAvailable(),
+                onDelete = { onDelete(it) },
+                onNext = { onNext() },
+                currentPage = currentPage,
+                onPrevious = { onPrevious() },
+                previousEnable = previousEnable,
+                nextEnable = nextEnable,
+                getPartedItem = { getPartedItem(it) },
+                isPageable = isPageable,
             )
         },
         modifier = modifier,
@@ -95,12 +102,13 @@ private fun CartHeader(
 
 @Composable
 private fun CartBody(
-    stateHolder: CartStateHolder,
     currentPage: Int,
     onDelete: (UUID) -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     previousEnable: Boolean,
+    getPartedItem: (Int) -> List<Product>,
+    isPageable: () -> Boolean,
     nextEnable: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -113,7 +121,7 @@ private fun CartBody(
                 ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        runCatching { stateHolder.getPartedItem(currentPage) }
+        runCatching { getPartedItem(currentPage) }
             .onSuccess {
                 it.forEach { product ->
                     CartItem(
@@ -123,7 +131,7 @@ private fun CartBody(
                     )
                 }
             }
-        if (stateHolder.isPageable()) {
+        if (isPageable()) {
             PagingBtn(
                 currentPage = currentPage,
                 onPrevious = onPrevious,
@@ -210,12 +218,15 @@ private fun btnAvailable(btnFlag: Boolean): Color =
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        stateHolder = CartStateHolder(
-            initialCart = Cart(
-                cartProducts = CartProducts(emptyList())
-            ),
-            initialPage = 1
-        ),
-        onClose = {},
+        onDelete = {},
+        onNext = {  },
+        onPrevious = {  },
+        previousEnable = true,
+        nextEnable = true,
+        currentPage = 1,
+        getPartedItem = { emptyList() },
+        isPageable = { true },
+        onClose = { },
+        modifier = Modifier
     )
 }
