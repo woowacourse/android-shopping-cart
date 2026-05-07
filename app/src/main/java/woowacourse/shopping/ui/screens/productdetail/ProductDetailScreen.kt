@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import woowacourse.shopping.ui.component.AmountController
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 
 @Composable
@@ -65,6 +67,10 @@ fun ProductDetailScreen(
             ProductInfoText(
                 name = product.name,
                 price = product.price,
+                amount = 1, // TODO
+                onClickMinus = { /* TODO */ },
+                onClickAdd = { /* TODO */ },
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -83,6 +89,9 @@ fun ProductDetailScreen(
 private fun ProductInfoText(
     name: String,
     price: Int,
+    amount: Int,
+    onClickMinus: () -> Unit,
+    onClickAdd: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -109,15 +118,16 @@ private fun ProductInfoText(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
+                text = "${"%,d".format(price)}원",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W400,
             )
 
-            Text(
-                text = "${"%,d".format(price)}원",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.W400,
+            AmountController(
+                amount = amount,
+                onClickMinus = onClickMinus,
+                onClickAdd = onClickAdd,
+                modifier = Modifier.width(126.dp),
             )
         }
     }
