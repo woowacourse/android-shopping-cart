@@ -33,6 +33,9 @@ import woowacourse.shopping.ui.component.item.toPriceString
 
 @Composable
 fun ProductDetailScreen(
+    count: Int,
+    onAdd: () -> Unit,
+    onMinus: () -> Unit,
     onAddRequest: () -> Unit,
     onClose: () -> Unit,
     product: Product,
@@ -40,7 +43,15 @@ fun ProductDetailScreen(
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
-        bodyContent = { ProductDetailBody(onAddRequest, product) },
+        bodyContent = {
+            ProductDetailBody(
+                count = count,
+                onAdd = onAdd,
+                onMinus = onMinus,
+                onAddRequest = onAddRequest,
+                product = product,
+            )
+        },
         modifier = modifier,
     )
 }
@@ -52,7 +63,7 @@ private fun ProductDetailHeader(
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
@@ -71,6 +82,9 @@ private fun ProductDetailHeader(
 
 @Composable
 private fun ProductDetailBody(
+    count: Int,
+    onAdd: () -> Unit,
+    onMinus: () -> Unit,
     onAddRequest: () -> Unit,
     product: Product,
     modifier: Modifier = Modifier,
@@ -81,7 +95,12 @@ private fun ProductDetailBody(
                 .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        ProductDetailInfo(product)
+        ProductDetailInfo(
+            product,
+            count = count,
+            onAdd = onAdd,
+            onMinus = onMinus,
+        )
 
         TextButton(
             onClick = onAddRequest,
@@ -104,6 +123,9 @@ private fun ProductDetailBody(
 @Composable
 private fun ProductDetailInfo(
     product: Product,
+    count: Int,
+    onAdd: () -> Unit,
+    onMinus: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -139,10 +161,9 @@ private fun ProductDetailInfo(
             )
 
             QuantitySelector(
-                count = 0,
-                onAdd = {  },
-                onMinus = {  },
-                onDelete = {  }
+                count = count,
+                onAdd = onAdd,
+                onMinus = onMinus,
             )
         }
     }
@@ -160,5 +181,8 @@ private fun ProductDetailScreenPreview() {
                 name = "우유",
                 price = 100,
             ),
+        count = 0,
+        onAdd = {  },
+        onMinus = {  },
     )
 }
