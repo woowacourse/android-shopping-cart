@@ -37,6 +37,8 @@ class CartActivity : ComponentActivity() {
                         stateHolder.onRightClick()
                     },
                     page = stateHolder.page,
+                    onIncrement = {},
+                    onDecrement = {},
                 )
             }
         }

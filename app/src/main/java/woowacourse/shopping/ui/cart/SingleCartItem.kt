@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.common.QuantityCounter
 import woowacourse.shopping.ui.productlist.PreviewableAsyncImage
 
 @Composable
@@ -30,6 +33,9 @@ fun SingleCartItem(
     imageUrl: String,
     title: String,
     price: String,
+    quantity: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -78,12 +84,25 @@ fun SingleCartItem(
                 modifier = Modifier
                     .size(width = 136.dp, height = 72.dp),
             )
-            Text(
-                text = price,
-                fontWeight = FontWeight.W400,
-                fontSize = 16.sp,
-                color = Color(0xff555555),
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                QuantityCounter(
+                    quantity = quantity,
+                    onIncrement = onIncrement,
+                    onDecrement = onDecrement,
+                    modifier = Modifier
+                        .width(126.dp)
+                        .height(42.dp),
+                )
+                Text(
+                    text = price,
+                    fontWeight = FontWeight.W400,
+                    fontSize = 16.sp,
+                    color = Color(0xff555555),
+                )
+            }
         }
     }
 }
@@ -96,5 +115,8 @@ private fun CartItemPreview() {
         title = "프리뷰",
         price = "1,000원",
         onDelete = {},
+        quantity = 1,
+        onIncrement = {},
+        onDecrement = {},
     )
 }

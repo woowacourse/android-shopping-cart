@@ -33,6 +33,8 @@ import woowacourse.shopping.ui.state.ProductUiModel
 @Composable
 fun CartScreen(
     cartItems: List<ProductUiModel>,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onCloseClick: () -> Unit,
     onDelete: (String) -> Unit,
     page: Int,
@@ -76,6 +78,8 @@ fun CartScreen(
                     onRightClick = onRightClick,
                     isLeftEnable = isLeftEnable,
                     isRightEnable = isRightEnable,
+                    onIncrement = onIncrement,
+                    onDecrement = onDecrement,
                     modifier = Modifier.padding(innerPadding),
                 )
             }
@@ -87,6 +91,8 @@ fun CartScreen(
 private fun CartListContent(
     cartItems: List<ProductUiModel>,
     page: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onDelete: (String) -> Unit,
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
@@ -103,6 +109,8 @@ private fun CartListContent(
             cartItems = cartItems,
             modifier = Modifier.weight(1f),
             onDelete = onDelete,
+            onIncrement = onIncrement,
+            onDecrement = onDecrement,
         )
         Spacer(modifier = Modifier.height(40.dp))
         PageNavigator(
@@ -181,6 +189,8 @@ private fun PageButton(
 @Composable
 private fun CartItemList(
     cartItems: List<ProductUiModel>,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -201,6 +211,9 @@ private fun CartItemList(
                 onDelete = {
                     onDelete(it.id)
                 },
+                quantity = 1,
+                onIncrement = onIncrement,
+                onDecrement = onDecrement,
             )
         }
     }
@@ -235,6 +248,8 @@ private fun EmptyCartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = true,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
 
@@ -257,6 +272,8 @@ private fun CartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = false,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
 
@@ -279,5 +296,7 @@ private fun InvalidPageCartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = false,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
