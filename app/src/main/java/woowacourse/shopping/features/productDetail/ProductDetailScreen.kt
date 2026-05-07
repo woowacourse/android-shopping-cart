@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +39,7 @@ import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
+import woowacourse.shopping.features.generalComponent.QuantityControlRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +47,11 @@ fun ProductDetailScreen(
     productName: String,
     productPrice: Int,
     productImageUrl: String,
+    productQuantity: Int,
+    minusEnabled: Boolean,
     onAddToCartClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current
@@ -70,6 +77,10 @@ fun ProductDetailScreen(
             imageUrl = productImageUrl,
             productName = productName,
             price = productPrice,
+            minusEnabled = minusEnabled,
+            productQuantity = productQuantity,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
         )
 
         CardAddButton(
@@ -119,6 +130,10 @@ private fun ProductDetailContent(
     imageUrl: String,
     productName: String,
     price: Int,
+    productQuantity: Int,
+    minusEnabled: Boolean,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -142,7 +157,16 @@ private fun ProductDetailContent(
             color = Color.Black,
             thickness = 1.dp,
         )
-        ProductPriceSection(price = price, modifier = Modifier)
+        ProductPriceSection(
+            price = price,
+            minusEnabled = minusEnabled,
+            productQuantity = productQuantity,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 14.dp)
+                .fillMaxWidth()
+        )
     }
 }
 
@@ -173,7 +197,7 @@ private fun ProductNameSection(
     Text(
         text = productName,
         modifier = modifier,
-        fontSize = 20.sp,
+        fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         color = Color.Black,
     )
@@ -182,26 +206,28 @@ private fun ProductNameSection(
 @Composable
 private fun ProductPriceSection(
     price: Int,
+    productQuantity: Int,
+    minusEnabled: Boolean,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier =
-            modifier
-                .padding(horizontal = 16.dp, vertical = 14.dp)
-                .fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = "가격",
-            fontSize = 18.sp,
-            color = Color.Black,
-        )
         Text(
             text = formatPrice(price),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = Color.Black,
+        )
+        QuantityControlRow(
+            quantity = productQuantity,
+            minusEnabled = minusEnabled,
+            onIncrementClick = onIncreaseClick,
+            onDecrementClick = onDecreaseClick,
         )
     }
 }
@@ -253,5 +279,9 @@ fun ProductDetailScreenPreview() {
             http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
             """.trimIndent(),
         onAddToCartClick = {},
+        productQuantity = 1,
+        minusEnabled = false,
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }

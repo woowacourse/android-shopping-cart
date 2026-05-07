@@ -17,9 +17,10 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val product = intent.getParcelableExtra<ParcelProduct>("PRODUCT")!!
+        val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")!!
         val stateHolder =
             ProductDetailStateHolder(
+                parcelProduct = parcelProduct,
                 cartRepository = DataProvider.cartRepository,
             )
 
@@ -27,13 +28,21 @@ class ProductDetailActivity : ComponentActivity() {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
-                    productName = product.name,
-                    productPrice = product.price,
-                    productImageUrl = product.imageUrl,
+                    productName = parcelProduct.name,
+                    productPrice = stateHolder.productPrice,
+                    productImageUrl = parcelProduct.imageUrl,
+                    productQuantity = stateHolder.quantity,
+                    minusEnabled = stateHolder.minusEnabled,
                     onAddToCartClick = {
                         val cartIntent = Intent(this, CartActivity::class.java)
-                        stateHolder.addToCart(product)
+                        stateHolder.addToCart()
                         startActivity(cartIntent)
+                    },
+                    onIncreaseClick = {
+                        stateHolder.increaseCartItem()
+                    },
+                    onDecreaseClick = {
+                        stateHolder.decreaseCartItem()
                     },
                 )
             }
