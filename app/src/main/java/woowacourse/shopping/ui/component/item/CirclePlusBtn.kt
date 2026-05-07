@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.component.item
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -16,12 +17,16 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 
 @Composable
-fun CirclePlusBtn(modifier: Modifier = Modifier) {
+fun CirclePlusBtn(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .size(42.dp)
             .clip(CircleShape)
-            .background(color = Color.White),
+            .background(color = Color.White)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
@@ -37,5 +42,5 @@ fun CirclePlusBtn(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun CirclePlusBtnPreview() {
-    CirclePlusBtn()
+    CirclePlusBtn({})
 }
