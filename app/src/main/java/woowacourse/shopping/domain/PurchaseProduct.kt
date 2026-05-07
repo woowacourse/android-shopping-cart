@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 @Parcelize
 data class PurchaseProduct(
-    private val product: Product,
+    val product: Product,
     val count: Int = 1
 ): Parcelable {
     init {
@@ -21,7 +21,13 @@ data class PurchaseProduct(
         return copy(count = newCount)
     }
 
-    val uuid = product.uuid
+    fun name() = product.name
+
+    fun price() = product.price
+
+    fun imageUri() = product.imageUri
+
+    fun uuid() = product.uuid
 
     fun totalPrice() = product.price * count
 
