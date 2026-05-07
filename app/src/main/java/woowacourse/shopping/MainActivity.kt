@@ -2,34 +2,21 @@ package woowacourse.shopping
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.ui.component.screen.CatalogScreen
+import woowacourse.shopping.ui.stateholder.retainCartStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
-    private var currentIndex: Int = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val productDetailIntent = Intent(this, ProductDetailActivity::class.java)
-        val cartIntent = Intent(this, CartActivity::class.java)
-
-        var restoredIndex = savedInstanceState?.getInt("CURRENT_INDEX") ?: 0
-        currentIndex = restoredIndex
-
-        val currentProducts = runBlocking { getCurrentProducts(restoredIndex, MAX_PRODUCT) }
 
         setContent {
             AndroidshoppingTheme {
@@ -38,40 +25,20 @@ class MainActivity : ComponentActivity() {
                     CatalogScreen(
                         catalog = stateHolder.catalog,
                         onItemClick = { id ->
+                            val productDetailIntent =
+                                Intent(this, ProductDetailActivity::class.java)
                             productDetailIntent.putExtra("id", id.toString())
                             startActivity(productDetailIntent)
                         },
                         onCartClick = {
+                            val cartIntent = Intent(this, CartActivity::class.java)
                             startActivity(cartIntent)
                         },
-                        onLoadClick = {
-                            currentIndex++
-                            restoredIndex++
-                            currentProducts.value = runBlocking {
-                                getCurrentProducts(
-                                    restoredIndex,
-                                    MAX_PRODUCT
-                                )
-                            }.value
-                        },
+                        onLoadClick = { stateHolder.onLoadClick() },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("CURRENT_INDEX", currentIndex)
-    }
-
-    suspend fun getCurrentProducts(
-        currentIndex: Int,
-        size: Int,
-    ) = mutableStateOf(MockCatalog.loadMoreProducts(currentIndex, size).await())
-
-    companion object {
-        const val MAX_PRODUCT = 20
     }
 }
