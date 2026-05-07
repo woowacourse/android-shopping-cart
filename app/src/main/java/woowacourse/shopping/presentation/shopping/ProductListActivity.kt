@@ -35,6 +35,7 @@ class ProductListActivity : ComponentActivity() {
                     onItemClick = { product ->
                         startActivity(ProductDetailActivity.newIntent(this, product.toUiModel()))
                     },
+                    onAddButtonClick = viewModel::addProductToCart,
                 )
             }
         }

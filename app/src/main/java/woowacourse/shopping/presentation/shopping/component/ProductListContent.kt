@@ -23,6 +23,7 @@ fun ProductListContent(
     hasNextPage: Boolean,
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
+    onAddButtonClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -39,6 +40,7 @@ fun ProductListContent(
             ProductItem(
                 product = product,
                 onClick = onItemClick,
+                onAddButtonClick = onAddButtonClick,
             )
         }
         if (hasNextPage) {
@@ -61,5 +63,6 @@ fun ProductListContentPreview() {
         hasNextPage = true,
         onLoadMore = {},
         onItemClick = {},
+        onAddButtonClick = {},
     )
 }

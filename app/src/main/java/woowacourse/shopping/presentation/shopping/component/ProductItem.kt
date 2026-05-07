@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.shopping.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -31,6 +33,7 @@ import kotlin.uuid.ExperimentalUuidApi
 fun ProductItem(
     product: Product,
     onClick: (Product) -> Unit,
+    onAddButtonClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -42,32 +45,79 @@ fun ProductItem(
         modifier = modifier.clickable { onClick(product) },
     ) {
         Column {
-            AsyncImage(
-                model = product.imageUrl,
-                contentDescription = product.productName,
+            ProductItemImage(
+                product = product,
+                onAddButtonClick = { onAddButtonClick(product) },
                 modifier = Modifier.fillMaxWidth(),
             )
+
             Spacer(Modifier.height(8.dp))
             Column(
                 modifier = Modifier.padding(6.dp),
             ) {
-                Text(
-                    text = product.productName,
-                    color = Color.Black,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                ProductItemTitle(
+                    productName = product.productName,
                 )
-                Text(
-                    text = "${intFormatter(product.price.value)}원",
-                    color = topAppBarColor,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W400,
+                ProductItemPrice(
+                    productPrice = product.price.value,
                 )
             }
         }
     }
+}
+
+@Composable
+private fun ProductItemImage(
+    product: Product,
+    onAddButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        AsyncImage(
+            model = product.imageUrl,
+            contentDescription = product.productName,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        AddButton(
+            onClick = onAddButtonClick,
+            modifier =
+                Modifier
+                    .padding(8.dp)
+                    .align(Alignment.BottomEnd),
+        )
+    }
+}
+
+@Composable
+private fun ProductItemTitle(
+    productName: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = productName,
+        color = Color.Black,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun ProductItemPrice(
+    productPrice: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = "${intFormatter(productPrice)}원",
+        color = topAppBarColor,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.W400,
+        modifier = modifier,
+    )
 }
 
 @OptIn(ExperimentalUuidApi::class)
@@ -82,6 +132,7 @@ private fun ProductItemPreview() {
                 price = Price(10000),
             ),
         onClick = {},
+        onAddButtonClick = {},
         modifier = Modifier.fillMaxWidth(),
     )
 }

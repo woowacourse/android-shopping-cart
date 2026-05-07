@@ -5,11 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.app.AppContainer.cartRepository
+import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : ViewModel() {
     var currentPageIndex by mutableStateOf(0)
@@ -42,6 +46,10 @@ class ProductListViewModel(
         products += nextProducts
     }
 
+    fun addProductToCart(product: Product) {
+        cartRepository.addProduct(product)
+    }
+
     private fun loadPages(currentPageIndex: Int) {
         products = Products()
 
@@ -67,6 +75,7 @@ class ProductListViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return ProductListViewModel(
                 productRepository = productRepository,
+                cartRepository = cartRepository,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

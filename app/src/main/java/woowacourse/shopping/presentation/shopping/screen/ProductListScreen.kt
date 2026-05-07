@@ -17,6 +17,7 @@ fun ProductListScreen(
     onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
+    onAddButtonClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ProductListScaffold(
@@ -28,6 +29,7 @@ fun ProductListScreen(
             hasNextPage = hasNextPage,
             onLoadMore = onLoadMore,
             onItemClick = { product -> onItemClick(product) },
+            onAddButtonClick = onAddButtonClick,
         )
     }
 }
@@ -41,5 +43,6 @@ private fun ProductListScreenPreview() {
         onLoadMore = {},
         onCartIconClick = {},
         onItemClick = {},
+        onAddButtonClick = {},
     )
 }
