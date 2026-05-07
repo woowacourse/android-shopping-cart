@@ -64,6 +64,7 @@ fun DetailScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             ShoppingAppBar(
                 contents = {

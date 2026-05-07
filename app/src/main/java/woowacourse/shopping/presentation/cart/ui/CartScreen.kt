@@ -58,6 +58,7 @@ fun CartScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             ShoppingAppBar(
                 contents = {

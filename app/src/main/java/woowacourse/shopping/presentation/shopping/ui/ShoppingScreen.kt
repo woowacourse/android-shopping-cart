@@ -59,6 +59,7 @@ fun ShoppingScreen(
         viewModel.initialize()
     }
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             ShoppingAppBar(
                 contents = {
