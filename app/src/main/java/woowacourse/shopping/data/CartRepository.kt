@@ -1,33 +1,55 @@
 package woowacourse.shopping.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import woowacourse.shopping.data.localdb.dao.CartItemDao
+import woowacourse.shopping.data.localdb.mapper.toDomain
+import woowacourse.shopping.data.localdb.mapper.toEntity
 import woowacourse.shopping.model.Cart
-import woowacourse.shopping.model.CartPage
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
-object CartRepository {
-    private var cart: Cart = Cart()
+class CartRepository(
+    private val cartItemDao: CartItemDao,
+) {
+    fun observeCart(): Flow<Cart> =
+        cartItemDao.getAll()
+            .map { entities ->
+                Cart(items = entities.map { it.toDomain() })
+            }
 
-    fun addItem(product: Product): Boolean {
-        try {
-            cart = cart.addItem(product)
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
+    suspend fun addItem(product: Product) {
+        val item = cartItemDao.findById(product.id)?.toDomain()
+        val cartItem =
+            item?.increaseQuantity()
+                ?: CartItem(
+                    product = product,
+                    quantity = 1,
+                )
+        cartItemDao.insert(cartItem.toEntity(System.currentTimeMillis()))
+    }
+
+    suspend fun increaseQuantity(id: String) {
+        val item = cartItemDao.findById(id)?.toDomain() ?: return
+        cartItemDao.insert(item.increaseQuantity().toEntity(System.currentTimeMillis()))
+    }
+
+    suspend fun decreaseQuantity(id: String) {
+        val item = cartItemDao.findById(id)?.toDomain() ?: return
+
+        if (item.quantity <= 1) {
+            cartItemDao.deleteById(id)
+            return
         }
+
+        cartItemDao.insert(item.decreaseQuantity().toEntity(System.currentTimeMillis()))
     }
 
-    fun deleteItem(id: String) {
-        cart = cart.deleteItem(id)
+    suspend fun deleteItem(id: String) {
+        cartItemDao.deleteById(id)
     }
 
-    fun getCartPage(
-        page: Int,
-        pageSize: Int,
-    ): CartPage =
-        cart.getPage(
-            page = page,
-            pageSize = pageSize,
-        )
+    suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
 
-    fun getCartSize(): Int = cart.getTotalSize()
+    suspend fun getCartTotalPrice(): Int = cartItemDao.getTotalPrice()
 }
