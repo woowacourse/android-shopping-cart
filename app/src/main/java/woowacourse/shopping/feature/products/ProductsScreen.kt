@@ -51,7 +51,7 @@ fun ProductsScreen(
                 ProductItem(
                     productImageUrl = it.productImageUrl,
                     productName = it.productName,
-                    price = it.price,
+                    formattedPrice = it.formattedPrice,
                     onClick = { onProductClick(it.id) },
                 )
             }
@@ -72,7 +72,7 @@ private fun ProductsScreenPreview() {
                 id = it.toString(),
                 productImageUrl = "",
                 productName = "$it 번 상품",
-                price = "$it 원",
+                formattedPrice = "$it 원",
             )
         }.toImmutableList()
 

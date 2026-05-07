@@ -30,7 +30,7 @@ import woowacourse.shopping.core.designsystem.component.AppImage
 fun CartItem(
     productName: String,
     productUrl: String,
-    price: String,
+    formattedPrice: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -81,7 +81,7 @@ fun CartItem(
             )
 
             Text(
-                text = price,
+                text = formattedPrice,
                 color = Color.Black,
                 fontSize = 16.sp,
             )
@@ -95,7 +95,7 @@ private fun CartItemPreview() {
     CartItem(
         productName = "리자몽",
         productUrl = "",
-        price = "10,000원",
+        formattedPrice = "10,000원",
         onClick = {},
     )
 }

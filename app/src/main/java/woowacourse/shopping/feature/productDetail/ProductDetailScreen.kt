@@ -89,7 +89,7 @@ fun ProductDetailScreen(
             )
 
             Text(
-                text = productInfo?.price ?: "",
+                text = productInfo?.formattedPrice ?: "",
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W400,

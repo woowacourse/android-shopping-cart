@@ -7,14 +7,14 @@ import woowacourse.shopping.domain.model.product.Product
 data class ProductInfo(
     val productImageUrl: String,
     val productName: String,
-    val price: String,
+    val formattedPrice: String,
 ) {
     companion object {
         val PREVIEW =
             ProductInfo(
                 productImageUrl = "",
                 productName = "리자몽",
-                price = "10,000원",
+                formattedPrice = "10,000원",
             )
     }
 }
@@ -23,5 +23,5 @@ fun Product.toUiModel(): ProductInfo =
     ProductInfo(
         productImageUrl = imageUrl,
         productName = productTitle.value,
-        price = "%,d원".format(price.value),
+        formattedPrice = "%,d원".format(price.value),
     )

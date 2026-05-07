@@ -10,7 +10,7 @@ data class CartInfo(
     val id: String,
     val productImageUrl: String,
     val productName: String,
-    val price: String,
+    val formattedPrice: String,
 ) {
     companion object {
         val PREVIEW =
@@ -18,7 +18,7 @@ data class CartInfo(
                 id = "",
                 productImageUrl = "",
                 productName = "리자몽",
-                price = "10,000원",
+                formattedPrice = "10,000원",
             )
     }
 }
@@ -30,6 +30,6 @@ fun CartItems.toUiModel(): ImmutableList<CartInfo> =
                 id = cartItem.product.id,
                 productImageUrl = cartItem.product.imageUrl,
                 productName = cartItem.product.productTitle.value,
-                price = "%,d원".format(cartItem.product.price.value),
+                formattedPrice = "%,d원".format(cartItem.product.price.value),
             )
         }.toImmutableList()

@@ -56,7 +56,7 @@ fun CartScreen(
                 CartItem(
                     productName = cartInfo.productName,
                     productUrl = cartInfo.productImageUrl,
-                    price = cartInfo.price,
+                    formattedPrice = cartInfo.formattedPrice,
                     onClick = { onCartDeleteClick(cartInfo.id) },
                 )
             }

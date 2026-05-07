@@ -23,7 +23,7 @@ import woowacourse.shopping.core.designsystem.component.AppImage
 fun ProductItem(
     productImageUrl: String,
     productName: String,
-    price: String,
+    formattedPrice: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -54,7 +54,7 @@ fun ProductItem(
                     .padding(horizontal = 6.dp),
         )
         Text(
-            text = price,
+            text = formattedPrice,
             color = Color.Black,
             fontSize = 16.sp,
             maxLines = 1,
@@ -72,7 +72,7 @@ fun ProductItemPreview() {
     ProductItem(
         productImageUrl = "",
         productName = "리자몽은 강력한 불꽃과 비행 능력을 지닌 포켓몬으로, 전투에서 뛰어난 공격력과 카리스마를 발휘하며 많은 트레이너들에게 사랑받는 존재이다.",
-        price = "10,000원",
+        formattedPrice = "10,000원",
         onClick = {},
     )
 }
