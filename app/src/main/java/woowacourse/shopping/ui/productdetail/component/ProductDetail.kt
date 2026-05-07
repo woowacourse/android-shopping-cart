@@ -20,9 +20,13 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductDetail(
     product: Product,
+    quantity: Int,
+    increaseQuantity: () -> Unit,
+    decreaseQuantity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -45,6 +49,9 @@ fun ProductDetail(
 
         ProductPrice(
             price = product.price.value,
+            quantity = quantity,
+            increaseQuantity = { increaseQuantity() },
+            decreaseQuantity = { decreaseQuantity() },
         )
     }
 }
@@ -57,5 +64,8 @@ private fun ProductDetailPreview() {
 
     ProductDetail(
         product = ProductFixture.productList(packageName).last(),
+        quantity = 1,
+        increaseQuantity = {},
+        decreaseQuantity = {}
     )
 }
