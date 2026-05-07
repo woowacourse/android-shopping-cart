@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productdetail
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.ui.theme.ShoppingTheme
+import java.util.UUID
 
 class ProductDetailActivity : ComponentActivity() {
     private val viewModel: ProductDetailViewModel by viewModels()
@@ -29,7 +29,7 @@ class ProductDetailActivity : ComponentActivity() {
             productId: ProductId,
         ) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId)
+                putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId.value.toString())
             }
             context.startActivity(intent)
         }
@@ -39,12 +39,9 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val receivedProductId =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT_ID, ProductId::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                intent.getParcelableExtra(PUT_EXTRA_KEY_PRODUCT_ID)
-            }
+            intent
+                .getStringExtra(PUT_EXTRA_KEY_PRODUCT_ID)
+                ?.let { ProductId(UUID.fromString(it)) }
 
         if (receivedProductId == null) {
             finish()
