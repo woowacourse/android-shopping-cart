@@ -27,6 +27,14 @@ class CartViewModel(
             refreshPage(_uiState.value.curPage)
         }
 
+    fun plusAmount(id: String) {
+        // TODO
+    }
+
+    fun minusAmount(id: String) {
+        // TODO
+    }
+
     fun deleteCartItem(id: String) =
         launchWithLoading {
             cartRepository.deleteItem(id)

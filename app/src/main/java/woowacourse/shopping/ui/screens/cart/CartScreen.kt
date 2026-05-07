@@ -57,6 +57,13 @@ fun CartScreen(
                     imageUrl = it.product.imageUrl,
                     name = it.product.name,
                     price = it.product.price,
+                    amount = it.amount,
+                    onClickMinus = {
+                        viewModel.minusAmount(it.product.id)
+                    },
+                    onClickPlus = {
+                        viewModel.plusAmount(it.product.id)
+                    },
                     onDelete = {
                         viewModel.deleteCartItem(it.product.id)
                     },

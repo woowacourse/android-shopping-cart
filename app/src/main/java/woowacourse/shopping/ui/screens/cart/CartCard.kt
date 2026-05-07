@@ -26,12 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.component.AmountController
 
 @Composable
 fun CartItemCard(
     imageUrl: String,
     name: String,
     price: Int,
+    amount: Int,
+    onClickMinus: () -> Unit,
+    onClickPlus: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -77,12 +81,23 @@ fun CartItemCard(
                     .height(72.dp),
                 contentScale = ContentScale.Crop,
             )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                AmountController(
+                    amount = amount,
+                    onClickMinus = { onClickMinus() },
+                    onClickAdd = { onClickPlus() },
+                    modifier = Modifier.width(126.dp),
+                )
 
-            Text(
-                text = "${"%,d".format(price)}원",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W400,
-            )
+                Text(
+                    text = "${"%,d".format(price)}원",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                )
+            }
         }
     }
 }
@@ -96,5 +111,8 @@ private fun CartItemCardPreview() {
         price = 10_000_000,
         onDelete = { },
         modifier = Modifier.padding(5.dp),
+        amount = 1,
+        onClickMinus = { },
+        onClickPlus = { },
     )
 }
