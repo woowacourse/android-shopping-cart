@@ -35,7 +35,7 @@ class DetailActivity : ComponentActivity() {
                                 val intent = Intent(this, CartActivity::class.java)
                                 startActivity(intent)
                             }
-                            is AddItemResult.DuplicateItem ->
+                            is AddItemResult.Incremented ->
                                 Toast.makeText(this, R.string.already_product_in_cart, Toast.LENGTH_SHORT).show()
                         }
                     },

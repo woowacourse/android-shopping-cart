@@ -10,7 +10,7 @@ import androidx.room.Update
 @Dao
 interface CartDao {
     @Query("SELECT * FROM cart")
-    fun observeAll(): List<CartEntity>
+    suspend fun getAll(): List<CartEntity>
 
     @Query("SELECT * FROM cart WHERE productId = :id")
     suspend fun findById(id: String): CartEntity?

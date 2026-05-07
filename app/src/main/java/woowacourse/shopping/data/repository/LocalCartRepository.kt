@@ -14,7 +14,7 @@ class LocalCartRepository(
     private val productRepository: ProductRepository,
 ) : CartRepository {
     override suspend fun getCart(): Cart {
-        val rows = cartDao.observeAll()
+        val rows = cartDao.getAll()
         val items =
             rows.mapNotNull { row ->
                 runCatching { productRepository.getProductById(row.productId) }
@@ -27,8 +27,14 @@ class LocalCartRepository(
     override suspend fun getTotalCartSize(): Int = cartDao.getTotalCartSize()
 
     override suspend fun addItem(product: Product): AddItemResult {
+        val before = cartDao.findById(product.id)
         cartDao.addOrIncrement(product.id)
-        return AddItemResult.NewAdded(getCart())
+        val cart = getCart()
+        return if (before == null) {
+            AddItemResult.NewAdded(cart)
+        } else {
+            AddItemResult.Incremented(cart)
+        }
     }
 
     override suspend fun deleteItem(id: String): RemoveItemResult {
