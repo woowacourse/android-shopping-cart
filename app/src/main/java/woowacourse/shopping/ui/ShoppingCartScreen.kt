@@ -73,8 +73,10 @@ fun ShoppingCartScreen(
                     key = { it.id },
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
-                        shoppingCartItem = shoppingCartItem,
-                        onRemoveShoppingItemClick = onRemoveShoppingItemClick,
+                        title = shoppingCartItem.product.getTitle(),
+                        imageUrl = shoppingCartItem.product.imageUrl,
+                        displayableMoney = WonMoney(shoppingCartItem.product.getPrice()),
+                        onRemoveShoppingItemClick = { onRemoveShoppingItemClick(shoppingCartItem) },
                     )
                 }
             }
@@ -154,11 +156,9 @@ private fun ShoppingCartScreenPreview() {
 @Preview(showBackground = true)
 private fun ShoppingCartItemsPreview() {
     ShoppingCartItems(
-        shoppingCartItem =
-            ShoppingCartItem(
-                id = 1,
-                product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
-            ),
+        title = "동원 스위트콘",
+        imageUrl = "",
+        displayableMoney = WonMoney(99_800),
         onRemoveShoppingItemClick = {},
     )
 }

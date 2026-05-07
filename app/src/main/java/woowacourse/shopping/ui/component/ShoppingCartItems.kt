@@ -28,13 +28,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.ShoppingCartItem
-import java.text.DecimalFormat
+import woowacourse.shopping.ui.DisplayableMoney
 
 @Composable
 fun ShoppingCartItems(
-    shoppingCartItem: ShoppingCartItem,
-    onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
+    title: String,
+    imageUrl: String,
+    displayableMoney: DisplayableMoney,
+    onRemoveShoppingItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -55,7 +56,7 @@ fun ShoppingCartItems(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                shoppingCartItem.product.getTitle(),
+                title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -66,7 +67,7 @@ fun ShoppingCartItems(
                 modifier =
                     Modifier
                         .size(16.dp)
-                        .clickable { onRemoveShoppingItemClick(shoppingCartItem) },
+                        .clickable { onRemoveShoppingItemClick() },
             )
         }
         Row(
@@ -78,7 +79,7 @@ fun ShoppingCartItems(
             verticalAlignment = Alignment.Bottom,
         ) {
             AsyncImage(
-                model = shoppingCartItem.product.imageUrl,
+                model = imageUrl,
                 contentDescription = stringResource(R.string.product_image_description),
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -89,7 +90,7 @@ fun ShoppingCartItems(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(shoppingCartItem.product.getPrice()),
+                text = displayableMoney.display(),
             )
         }
     }

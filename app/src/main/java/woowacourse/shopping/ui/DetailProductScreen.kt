@@ -39,7 +39,9 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun DetailProductScreen(
-    product: ProductDto,
+    productTitle: String,
+    productImageUrl: String,
+    productPrice: DisplayableMoney,
     onAddToCartClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,8 +62,8 @@ fun DetailProductScreen(
                     .verticalScroll(rememberScrollState()),
         ) {
             AsyncImage(
-                model = product.imageUrl,
-                contentDescription = stringResource(R.string.product_image_content_description, product.title),
+                model = productImageUrl,
+                contentDescription = stringResource(R.string.product_image_content_description, productTitle),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -70,7 +72,7 @@ fun DetailProductScreen(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = product.title,
+                text = productTitle,
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -90,7 +92,7 @@ fun DetailProductScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = product.price,
+                    text = productPrice.display(),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -140,13 +142,9 @@ private fun DetailProductTopBar(
 private fun DetailProductScreenPreview() {
     AndroidShoppingTheme {
         DetailProductScreen(
-            product =
-                ProductDto(
-                    id = 1,
-                    title = "동원 스위트콘",
-                    price = "9,980원",
-                    imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-                ),
+            productTitle = "동원 스위트콘",
+            productImageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+            productPrice = WonMoney(9_980),
             onAddToCartClick = {},
             onBackClick = {},
         )

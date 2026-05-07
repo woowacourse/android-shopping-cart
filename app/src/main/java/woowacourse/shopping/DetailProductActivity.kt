@@ -2,7 +2,6 @@
 
 package woowacourse.shopping
 
-import android.icu.text.DecimalFormat
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,9 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
-import woowacourse.shopping.R
 import woowacourse.shopping.ui.DetailProductScreen
-import woowacourse.shopping.ui.ProductDto
+import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,13 +27,9 @@ class DetailProductActivity : ComponentActivity() {
                     val product = productRepository.getProduct(productId)
                     if (product != null) {
                         DetailProductScreen(
-                            product =
-                                ProductDto(
-                                    id = product.id,
-                                    title = product.getTitle(),
-                                    price = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.getPrice()),
-                                    imageUrl = product.imageUrl,
-                                ),
+                            productTitle = product.getTitle(),
+                            productImageUrl = product.imageUrl,
+                            productPrice = WonMoney(product.getPrice()),
                             onAddToCartClick = {
                                 ShoppingApplication.shoppingCartRepository =
                                     ShoppingApplication.shoppingCartRepository.add(product)

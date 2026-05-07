@@ -27,13 +27,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
+import woowacourse.shopping.model.Price
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.ui.component.MoreButton
 import woowacourse.shopping.ui.component.ProductItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ProductListScreen(
-    products: List<ProductDto>,
+    products: List<Product>,
     onNavigateToCartClick: () -> Unit,
     onProductClick: (Long) -> Unit,
     onMoreClick: () -> Unit,
@@ -59,7 +62,9 @@ fun ProductListScreen(
                 key = { it.id },
             ) { product ->
                 ProductItem(
-                    product = product,
+                    title = product.getTitle(),
+                    price = WonMoney(product.getPrice()),
+                    imageUrl = product.imageUrl,
                     modifier =
                         Modifier
                             .fillMaxWidth()
@@ -109,13 +114,9 @@ private fun ProductListTopBar(
 @Preview(showBackground = true)
 private fun ProductItemPreview() {
     ProductItem(
-        product =
-            ProductDto(
-                id = 1,
-                title = "동원 스위트콘",
-                price = "99,800원",
-                imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-            ),
+        title = "동원 스위트콘",
+        price = WonMoney(99_800),
+        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
     )
 }
 
@@ -126,16 +127,16 @@ private fun ProductListScreenPreview() {
         ProductListScreen(
             products =
                 listOf(
-                    ProductDto(
+                    Product(
                         id = 1,
-                        title = "동원 스위트콘",
-                        price = "99,800원",
+                        title = ProductTitle("동원 스위트콘"),
+                        price = Price(99_800),
                         imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                     ),
-                    ProductDto(
+                    Product(
                         id = 2,
-                        title = "동원 스위트콘2",
-                        price = "99,800원",
+                        title = ProductTitle("동원 스위트콘2"),
+                        price = Price(99_800),
                         imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
                     ),
                 ),

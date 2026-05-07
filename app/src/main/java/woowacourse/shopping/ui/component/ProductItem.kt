@@ -17,19 +17,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.ProductDto
+import woowacourse.shopping.ui.DisplayableMoney
 
 @Composable
 fun ProductItem(
-    product: ProductDto,
+    title: String,
+    price: DisplayableMoney,
+    imageUrl: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
     ) {
         AsyncImage(
-            model = product.imageUrl,
-            contentDescription = stringResource(R.string.product_image_content_description, product.title),
+            model = imageUrl,
+            contentDescription = stringResource(R.string.product_image_content_description, title),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -39,7 +41,7 @@ fun ProductItem(
                     .background(MaterialTheme.colorScheme.surfaceContainer),
         )
         Text(
-            text = product.title,
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -50,7 +52,7 @@ fun ProductItem(
                 ),
         )
         Text(
-            text = product.price,
+            text = price.display(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier =
                 Modifier.padding(
