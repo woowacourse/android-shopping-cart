@@ -24,26 +24,50 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.PurchaseProduct
+import woowacourse.shopping.domain.util.CountUpdateType
 import woowacourse.shopping.ui.component.frame.CommonFrame
+import woowacourse.shopping.ui.component.item.CartCountLabel
 import woowacourse.shopping.ui.component.item.ShoppingItem
+import java.util.UUID
 
 @Composable
 fun CatalogScreen(
     catalog: Products,
+    totalCount: () -> Int,
+    specificProductCount: (UUID) -> Int,
     onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onLoadClick: () -> Unit,
+    onAdd: (UUID, CountUpdateType) -> Unit,
+    onMinus: (UUID, CountUpdateType) -> Unit,
+    onDelete: (UUID) -> Unit,
+    onAddInCart: (PurchaseProduct) -> Unit,
+    isContainedInCart: (UUID) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
-        headerContent = { CatalogHeader(onCartClick) },
+        headerContent = { CatalogHeader(totalCount, onCartClick) },
         bodyContent = {
             CatalogBody(
                 catalog = catalog,
                 onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
+                onAdd = { uuid, countUpdateType ->
+                    onAdd(uuid, countUpdateType)
+                },
+                onMinus = { uuid, countUpdateType ->
+                    onMinus(uuid, countUpdateType)
+                },
+                onDelete = { onDelete(it) },
+                onAddInCart = { onAddInCart(it) },
+                isContainedInCart = isContainedInCart,
+                specificProductCount = { 
+                    specificProductCount(it)
+                }
             )
         },
         modifier = modifier,
@@ -52,6 +76,7 @@ fun CatalogScreen(
 
 @Composable
 private fun CatalogHeader(
+    totalCount: () -> Int,
     onCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,23 +93,32 @@ private fun CatalogHeader(
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
         )
-        Icon(
-            painter = painterResource(R.drawable.ic_cart),
-            contentDescription = "장바구니 아이콘",
-            tint = Color.White,
-            modifier =
-                Modifier
-                    .size(24.dp)
-                    .clickable(onClick = onCartClick),
-        )
+        Row{
+            Icon(
+                painter = painterResource(R.drawable.ic_cart),
+                contentDescription = "장바구니 아이콘",
+                tint = Color.White,
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .clickable(onClick = onCartClick),
+            )
+            CartCountLabel(totalCount())
+        }
     }
 }
 
 @Composable
 private fun CatalogBody(
     catalog: Products,
+    specificProductCount: (UUID) -> Int,
     onItemClick: (Product) -> Unit,
+    onAddInCart: (PurchaseProduct) -> Unit,
+    onAdd: (UUID, CountUpdateType) -> Unit,
+    onMinus: (UUID, CountUpdateType) -> Unit,
+    onDelete: (UUID) -> Unit,
     onLoadClick: () -> Unit,
+    isContainedInCart: (UUID) ->  Boolean,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -95,7 +129,31 @@ private fun CatalogBody(
         items(catalog.size()) { item ->
             ShoppingItem(
                 product = catalog.getSingleItem(item),
-                onClick = { onItemClick(catalog.getSingleItem(item)) },
+                onClick = {
+                    onItemClick(catalog.getSingleItem(item))
+                },
+                count = {
+                    specificProductCount(catalog.getSingleItem(item).uuid)
+                },
+                isContainedInCart = {
+                    isContainedInCart(catalog.getSingleItem(item).uuid)
+                },
+                onAdd = {
+                    onAdd(
+                        catalog.getSingleItem(item).uuid,
+                        CountUpdateType.INCREASE
+                    )
+                },
+                onMinus = {
+                    onMinus(
+                        catalog.getSingleItem(item).uuid,
+                        CountUpdateType.DECREASE
+                    )
+                },
+                onDelete = {
+                    onDelete(catalog.getSingleItem(item).uuid)
+                },
+                onAddInCart = { onAddInCart(it) }
             )
         }
 
@@ -155,5 +213,17 @@ private fun CatalogScreenPreview() {
             ),
         )
 
-    CatalogScreen(catalog, {}, {}, {})
+    CatalogScreen(
+        catalog,
+        totalCount = { 10 },
+        specificProductCount = { it -> 0 },
+        onItemClick = {  },
+        onCartClick = {  },
+        onLoadClick = {  },
+        onAdd = { uuid, type -> },
+        onMinus = { uuid, type -> },
+        onDelete = {  },
+        onAddInCart = {  },
+        isContainedInCart = { it -> true },
+    )
 }
