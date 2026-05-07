@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.R.attr.onClick
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -17,11 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -36,22 +32,13 @@ import woowacourse.shopping.ui.model.ProductUiModel
 
 @Composable
 fun CartScreen(
-    onClick: () -> Unit,
+    uiState: CartUiState,
+    onBackClick: () -> Unit,
+    onDeleteItem: (String) -> Unit,
+    onNextPage: () -> Unit,
+    onPreviousPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var savedPage by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val state =
-        remember {
-            CartStateHolder(
-                initialPage = savedPage,
-                onPageChanged = { page ->
-                    savedPage = page
-                },
-            )
-        }
-
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -63,7 +50,7 @@ fun CartScreen(
                         modifier =
                             Modifier
                                 .size(16.dp)
-                                .clickable { onClick() },
+                                .clickable { onBackClick() },
                     )
                     Spacer(modifier = Modifier.width(21.dp))
                     Text(
@@ -77,12 +64,12 @@ fun CartScreen(
             )
         },
         bottomBar = {
-            if (state.getTotalCartSize() > 5) {
+            if (uiState.totalCartSize > 5) {
                 CartPageSection(
-                    page = state.page + 1,
-                    onNext = { state.nextPage() },
-                    onPrevious = { state.previousPage() },
-                    isCanMoveNext = state.isCanMoveNext,
+                    page = uiState.page + 1,
+                    onNext = { onNextPage() },
+                    onPrevious = { onPreviousPage() },
+                    isCanMoveNext = uiState.isCanMoveNext,
                     modifier = Modifier.navigationBarsPadding(),
                 )
             }
@@ -91,9 +78,9 @@ fun CartScreen(
     ) { innerPadding ->
         CartContent(
             onDeleteItem = {
-                state.removeFromCart(it)
+                onDeleteItem(it)
             },
-            cartItems = state.currentCartItems.toImmutableList(),
+            cartItems = uiState.items.toImmutableList(),
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -133,7 +120,11 @@ private fun CartContent(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        onClick = {},
+        uiState = CartUiState(),
+        onBackClick = {},
+        onDeleteItem = {},
+        onNextPage = {},
+        onPreviousPage = {},
     )
 }
 
