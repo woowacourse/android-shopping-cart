@@ -22,5 +22,9 @@ class Cart(
 
     fun totalCountOfPurchaseProducts() = purchaseProducts.totalCount()
 
+    fun totalCountOfSpecificPurchaseProduct(uuid: UUID) = purchaseProducts.totalCountOfSpecificPurchaseProduct(uuid)
+
+    fun isContain(id: UUID) = purchaseProducts.isContain(id)
+
     fun findById(uuid: UUID) = purchaseProducts.findById(uuid)
 }

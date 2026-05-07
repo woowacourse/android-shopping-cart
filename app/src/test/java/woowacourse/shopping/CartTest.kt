@@ -118,4 +118,46 @@ class CartTest {
 
         assert(updatedCart.findById(targetId)?.count == 2)
     }
+
+    @Test
+    fun `특정 ID를 갖는 PurchaseProduct가 담겨있는지 알 수 있다`() {
+        val purchaseProduct = PurchaseProduct(
+            product = Product(
+                imageUri = "uri",
+                name = "테스트 상품",
+                price = 1000
+            ),
+        )
+
+        val targetId = purchaseProduct.uuid
+
+        val cart = Cart(
+            purchaseProducts = PurchaseProducts(
+                purchaseProducts = listOf(purchaseProduct)
+            )
+        )
+
+        assert(cart.isContain(targetId))
+    }
+
+    @Test
+    fun `특정 ID를 갖는 PurchaseProduct의 count를 알 수 있다`() {
+        val purchaseProduct = PurchaseProduct(
+            product = Product(
+                imageUri = "uri",
+                name = "테스트 상품",
+                price = 1000
+            ),
+        )
+
+        val targetId = purchaseProduct.uuid
+
+        val cart = Cart(
+            purchaseProducts = PurchaseProducts(
+                purchaseProducts = listOf(purchaseProduct)
+            )
+        )
+
+        assert(cart.totalCountOfSpecificPurchaseProduct(targetId) == 1)
+    }
 }
