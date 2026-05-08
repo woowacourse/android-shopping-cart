@@ -8,8 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
@@ -34,15 +32,11 @@ class ProductDetailActivity : ComponentActivity() {
 
         setContent {
             androidshoppingTheme {
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 if (product != null) {
                     ProductDetailScreen(
+                        viewModel = viewModel,
                         product = product,
-                        quantity = uiState.quantity,
                         onClose = { finish() },
-                        onQuantityIncrease = viewModel::increaseQuantity,
-                        onQuantityDecrease = viewModel::decreaseQuantity,
-                        onAddToCart = viewModel::addToCart,
                     )
                 } else {
                     ProductDetailErrorScreen(onClose = { finish() })

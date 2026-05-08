@@ -1,13 +1,15 @@
 package woowacourse.shopping.presentation.productdetail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.uuid.ExperimentalUuidApi
@@ -19,6 +21,9 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
+
+    private val _uiEvent = Channel<ProductDetailUiEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     fun increaseQuantity() {
         _uiState.update {
@@ -38,11 +43,14 @@ class ProductDetailViewModel(
 
     @OptIn(ExperimentalUuidApi::class)
     fun addToCart(productId: Uuid) {
-        val product = productRepository.findProductById(productId) ?: return
-        cartRepository.increaseQuantity(
-            product = product,
-            quantity = _uiState.value.quantity,
-        )
+        viewModelScope.launch {
+            val product = productRepository.findProductById(productId) ?: return@launch
+            cartRepository.increaseQuantity(
+                product = product,
+                quantity = _uiState.value.quantity,
+            )
+            _uiEvent.send(ProductDetailUiEvent.ShowMessage("장바구니에 상품을 담았습니다"))
+        }
     }
 }
 

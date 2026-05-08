@@ -9,14 +9,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
+import woowacourse.shopping.app.AppContainer
+import woowacourse.shopping.presentation.productdetail.ProductDetailUiEvent
+import woowacourse.shopping.presentation.productdetail.ProductDetailViewModel
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import woowacourse.shopping.presentation.productdetail.component.ProductDetail
 import woowacourse.shopping.presentation.productdetail.component.ProductDetailTopAppBar
@@ -27,16 +33,26 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductDetailScreen(
+    viewModel: ProductDetailViewModel,
     product: ProductUiModel,
-    quantity: Int,
     onClose: () -> Unit,
-    onQuantityIncrease: () -> Unit,
-    onQuantityDecrease: () -> Unit,
-    onAddToCart: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is ProductDetailUiEvent.ShowMessage -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(event.message)
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = { ProductDetailTopAppBar(onClose) },
@@ -50,17 +66,12 @@ fun ProductDetailScreen(
         ) {
             ProductDetail(
                 product = product,
-                quantity = quantity,
-                onQuantityIncrease = onQuantityIncrease,
-                onQuantityDecrease = onQuantityDecrease,
+                quantity = uiState.quantity,
+                onQuantityIncrease = viewModel::increaseQuantity,
+                onQuantityDecrease = viewModel::decreaseQuantity,
             )
             ActionButton(
-                onClick = {
-                    onAddToCart(product.productId)
-                    scope.launch {
-                        snackbarHostState.showSnackbar("장바구니에 상품을 담았습니다")
-                    }
-                },
+                onClick = { viewModel.addToCart(product.productId) },
                 text = "장바구니 담기",
                 modifier =
                     Modifier
@@ -76,6 +87,11 @@ fun ProductDetailScreen(
 @Composable
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
+        viewModel =
+            ProductDetailViewModel(
+                productRepository = AppContainer.productRepository,
+                cartRepository = AppContainer.cartRepository,
+            ),
         product =
             ProductUiModel(
                 productId = Uuid.random(),
@@ -83,10 +99,6 @@ private fun ProductDetailScreenPreview() {
                 productName = "[든든] 동원 스위트콘",
                 price = 99800,
             ),
-        quantity = 1,
         onClose = {},
-        onQuantityIncrease = {},
-        onQuantityDecrease = {},
-        onAddToCart = {},
     )
 }
