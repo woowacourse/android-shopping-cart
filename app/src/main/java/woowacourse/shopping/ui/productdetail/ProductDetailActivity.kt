@@ -55,8 +55,6 @@ class ProductDetailActivity : ComponentActivity() {
         ): Intent = Intent(context, ProductDetailActivity::class.java)
             .putExtra(EXTRA_PRODUCT_ID, productId)
 
-        fun getAddedId(intent: Intent?): String? = intent?.getStringExtra(EXTRA_ADDED_ID)
-
         private fun addedIdResult(productId: String?): Intent = Intent().putExtra(EXTRA_ADDED_ID, productId)
     }
 }

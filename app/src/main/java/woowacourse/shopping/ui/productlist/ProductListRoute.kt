@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productlist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
@@ -10,9 +9,8 @@ import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
 @Composable
 fun ProductListRoute(
     productListViewModel: ProductListViewModel = viewModel(),
-    onProductClick: (String) -> Unit,
+    onNavigateToDetail: (String) -> Unit,
     onCartIconClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -21,7 +19,10 @@ fun ProductListRoute(
         recentProductUiModels = uiState.recentProducts,
         cartCount = uiState.cartCount,
         isEnd = uiState.isEnd,
-        onProductClick = onProductClick,
+        onProductClick = { id ->
+            productListViewModel.onClickProduct(id)
+            onNavigateToDetail(id)
+        },
         onIncrement = { id ->
             productListViewModel.addCartItem(id)
         },
