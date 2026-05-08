@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 @Parcelize
 data class PurchaseProduct(
@@ -13,11 +12,8 @@ data class PurchaseProduct(
         require(count > 0) { "구매할 상품의 개수는 1개 이상이어야 합니다." }
     }
 
-    fun updateCount(type: CountUpdateType): PurchaseProduct {
-        val newCount = when(type) {
-            CountUpdateType.INCREASE -> count + 1
-            CountUpdateType.DECREASE -> count - 1
-        }
+    fun updateCount(updateAmount: Int): PurchaseProduct {
+        val newCount = count + updateAmount
         return copy(count = newCount)
     }
 

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
-import woowacourse.shopping.domain.util.CountUpdateType
 
 class PurchaseProductsTest {
     @Test
@@ -32,7 +31,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productsId = newPurchaseProduct.uuid
+        val productsId = newPurchaseProduct.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -40,7 +39,7 @@ class PurchaseProductsTest {
 
         val updatedPurchaseProducts = purchaseProducts.updateCountWithUuid(
             uuid = productsId,
-            updateType = CountUpdateType.INCREASE
+            updateAmount = 1
         )
 
         assert(updatedPurchaseProducts.purchaseProducts.find { it.isSameUUID(productsId) }?.count == 2)
@@ -64,7 +63,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val product1Id = purchaseProduct1.uuid
+        val product1Id = purchaseProduct1.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(purchaseProduct1, purchaseProduct2)
@@ -89,7 +88,7 @@ class PurchaseProductsTest {
             count = 3
         )
 
-        val productsId = newPurchaseProduct.uuid
+        val productsId = newPurchaseProduct.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -144,7 +143,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid
+        val productId = newPurchaseProduct.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -165,7 +164,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid
+        val productId = newPurchaseProduct.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -184,7 +183,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid
+        val productId = newPurchaseProduct.uuid()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)

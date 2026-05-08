@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 
 @Parcelize
@@ -13,8 +12,8 @@ class Cart(
 
     fun updateCountWithId(
         uuid: UUID,
-        updateType: CountUpdateType
-    ) = Cart(purchaseProducts.updateCountWithUuid(uuid, updateType))
+        updateAmount: Int
+    ) = Cart(purchaseProducts.updateCountWithUuid(uuid, updateAmount))
 
     fun removeWithId(uuid: UUID) = Cart(purchaseProducts.removeProduct(uuid))
 

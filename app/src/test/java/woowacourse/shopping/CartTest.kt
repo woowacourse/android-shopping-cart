@@ -6,7 +6,6 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
-import woowacourse.shopping.domain.util.CountUpdateType
 
 class CartTest {
     @Test
@@ -28,7 +27,7 @@ class CartTest {
             Product(imageUri = "image", name = "TwoHander", price = 10000)
         )
 
-        val targetId = newPurchaseProduct.uuid
+        val targetId = newPurchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(
@@ -36,7 +35,7 @@ class CartTest {
             )
         )
 
-        val updatedCart = cart.updateCountWithId(targetId, CountUpdateType.INCREASE)
+        val updatedCart = cart.updateCountWithId(targetId, 1)
 
         assert(
             updatedCart.findById(targetId)?.count == 2
@@ -49,7 +48,7 @@ class CartTest {
             Product(imageUri = "image", name = "TwoHander", price = 10000)
         )
 
-        val targetId = newPurchaseProduct.uuid
+        val targetId = newPurchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(
@@ -69,7 +68,7 @@ class CartTest {
             count = 10
         )
 
-        val targetId = newPurchaseProduct.uuid
+        val targetId = newPurchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(
@@ -106,7 +105,7 @@ class CartTest {
             ),
         )
 
-        val targetId = purchaseProduct.uuid
+        val targetId = purchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(
@@ -129,7 +128,7 @@ class CartTest {
             ),
         )
 
-        val targetId = purchaseProduct.uuid
+        val targetId = purchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(
@@ -150,7 +149,7 @@ class CartTest {
             ),
         )
 
-        val targetId = purchaseProduct.uuid
+        val targetId = purchaseProduct.uuid()
 
         val cart = Cart(
             purchaseProducts = PurchaseProducts(

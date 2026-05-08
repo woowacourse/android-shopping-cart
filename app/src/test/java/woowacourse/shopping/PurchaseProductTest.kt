@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
-import woowacourse.shopping.domain.util.CountUpdateType
 
 class PurchaseProductTest {
     @Test
@@ -30,7 +29,7 @@ class PurchaseProductTest {
             ),
         )
 
-        val updatedPurchaseProduct = purchaseProduct.updateCount(CountUpdateType.INCREASE)
+        val updatedPurchaseProduct = purchaseProduct.updateCount(1)
 
         assert(updatedPurchaseProduct.count == 2)
     }

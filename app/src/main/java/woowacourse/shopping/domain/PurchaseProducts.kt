@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 
 @Parcelize
@@ -11,11 +10,11 @@ class PurchaseProducts(
 ): Parcelable {
     fun add(purchaseProduct: PurchaseProduct) =
         if(findById(purchaseProduct.uuid()) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
-        else updateCountWithUuid(purchaseProduct.uuid(), CountUpdateType.INCREASE)
+        else updateCountWithUuid(purchaseProduct.uuid(), purchaseProduct.count)
 
-    fun updateCountWithUuid(uuid: UUID, updateType: CountUpdateType) = PurchaseProducts (
+    fun updateCountWithUuid(uuid: UUID, updateAmount: Int) = PurchaseProducts (
         purchaseProducts.map {
-            if(it.isSameUUID(uuid)) it.updateCount(updateType) else it
+            if(it.isSameUUID(uuid)) it.updateCount(updateAmount) else it
         }
     )
 
