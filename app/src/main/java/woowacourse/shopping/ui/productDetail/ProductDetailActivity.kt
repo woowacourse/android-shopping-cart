@@ -31,7 +31,7 @@ class ProductDetailActivity : ComponentActivity() {
                         ProductDetailViewModel.factory(
                             productId = productId,
                             productRepository = MockProductRepository(),
-                            cartRepository = MockCartRepository,
+                            cartRepository = MockCartRepository(),
                         ),
                 )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

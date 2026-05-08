@@ -1,14 +1,23 @@
 package woowacourse.shopping.domain.cart
 
+import woowacourse.shopping.domain.product.Product
+
 data class Cart(
-    val cartItems: CartItems,
+    val cartItems: CartItems = CartItems(),
 ) {
-    val totalCount: Int = cartItems.size()
+    val totalQuantity: Int = cartItems.totalQuantity
+    val totalPrice: Int = cartItems.totalPrice
+    val isEmpty:Boolean = cartItems.size() == 0
 
-    fun addCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.addCartItem(cartItem))
+    fun addProduct(product: Product):Cart =  copy(cartItems = cartItems.addProduct(product))
 
-    fun removeCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.removeCartItem(cartItem))
+    fun increase(productId:String):Cart = copy(cartItems = cartItems.increase(productId))
 
+    fun decrease(productId:String):Cart = copy(cartItems = cartItems.decrease(productId))
+
+    fun remove(productId:String):Cart = copy(cartItems = cartItems.remove(productId))
+
+    fun findQuantity(productId:String):Quantity = cartItems.findQuantity(productId)
     fun getPage(
         page: Int,
         pageSize: Int,

@@ -87,7 +87,7 @@ fun CartScreen(
                 CartItemList(
                     cartItems = state.cartItems,
                     modifier = Modifier.weight(1f),
-                    onRemoveClick = viewModel::removeCartItem,
+                    onRemoveClick =  { productId -> viewModel.removeCartItem(productId) },
                 )
 
                 if (state.showPageNavigator) {
@@ -159,7 +159,7 @@ private fun ErrorContent(
 @Composable
 private fun CartItemList(
     cartItems: List<CartItem>,
-    onRemoveClick: (CartItem) -> Unit,
+    onRemoveClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -167,7 +167,10 @@ private fun CartItemList(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(bottom = 4.dp),
     ) {
-        items(cartItems) { cartItem ->
+        items(
+            items = cartItems,
+            key = {it.product.id}
+        ) { cartItem ->
             CartItemCard(
                 modifier =
                     Modifier
@@ -175,7 +178,7 @@ private fun CartItemList(
                         .padding(top = 8.dp, start = 16.dp, end = 16.dp),
                 cartItem = cartItem,
                 onRemoveClick = {
-                    onRemoveClick(cartItem)
+                    onRemoveClick(cartItem.product.id)
                 },
             )
         }
@@ -351,6 +354,6 @@ private fun ProductImage(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        viewModel = CartViewModel(MockCartRepository),
+        viewModel = CartViewModel(MockCartRepository()),
     )
 }

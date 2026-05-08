@@ -18,9 +18,10 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             val viewModel: CartViewModel =
                 viewModel(
-                    factory = CartViewModel.factory(MockCartRepository),
+                    factory = CartViewModel.factory(MockCartRepository()),
                 )
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

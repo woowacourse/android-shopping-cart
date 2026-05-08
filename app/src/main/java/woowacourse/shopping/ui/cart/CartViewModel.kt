@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.repository.cart.CartRepository
 import kotlin.math.ceil
 import kotlin.math.max
@@ -29,9 +28,9 @@ class CartViewModel(
         }
     }
 
-    fun removeCartItem(cartItem: CartItem) {
+    fun removeCartItem(productId: String) {
         viewModelScope.launch {
-            cartRepository.removeCartItem(cartItem)
+            cartRepository.remove(productId)
             loadCart()
         }
     }
@@ -64,9 +63,9 @@ class CartViewModel(
     }
 
     private fun mapToUiState(cart: Cart): CartUiState {
-        if (cart.totalCount == 0) return CartUiState.Empty
+        if (cart.isEmpty) return CartUiState.Empty
 
-        val totalPages = max(1, ceil(cart.totalCount.toDouble() / PAGE_SIZE).toInt())
+        val totalPages = max(1, ceil(cart.totalQuantity.toDouble() / PAGE_SIZE).toInt())
         if (currentPage >= totalPages) {
             currentPage = max(0, totalPages - 1)
         }

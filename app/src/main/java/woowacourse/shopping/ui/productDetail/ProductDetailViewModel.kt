@@ -48,7 +48,7 @@ class ProductDetailViewModel(
     fun addToCart() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
         viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = current.product))
+            cartRepository.addProduct(current.product)
         }
     }
 

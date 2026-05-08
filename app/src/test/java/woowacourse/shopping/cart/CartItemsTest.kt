@@ -6,135 +6,118 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
+import woowacourse.shopping.domain.cart.Quantity
 import woowacourse.shopping.domain.product.ImageUrl
 import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartItemsTest {
-    private val cartItem1 =
-        CartItem(
-            product =
-                Product(
-                    name = ProductName("우아한두유"),
-                    price = Price(3000),
-                    imageUrl = ImageUrl("https://velog.io"),
-                ),
-        )
 
-    private val cartItem2 =
-        CartItem(
-            product =
-                Product(
-                    name = ProductName("우아한물"),
-                    price = Price(1000),
-                    imageUrl = ImageUrl("https://naver.com"),
-                ),
-        )
-
-    private val cartItem3 =
-        CartItem(
-            product =
-                Product(
-                    name = ProductName("우아한우유"),
-                    price = Price(2000),
-                    imageUrl = ImageUrl("https://google.com"),
-                ),
-        )
-
-    private val cartItem4 =
-        CartItem(
-            product =
-                Product(
-                    name = ProductName("우아한스무디"),
-                    price = Price(1000),
-                    imageUrl = ImageUrl("https://daum.net"),
-                ),
-        )
-
-    private val cartItemsValue =
-        listOf(
-            cartItem1,
-            cartItem2,
-            cartItem3,
-        )
+    private fun product(id: String, price: Int = 10_000): Product = Product(
+        id = id,
+        imageUrl = ImageUrl("https://example.com/$id.png"),
+        name = ProductName("상품-$id"),
+        price = Price(price),
+    )
 
     @Test
-    fun `장바구니 목록에 상품을 추가했을 때 장바구니 목록에 추가된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem4
+    fun `addProduct - 새 상품을 추가하면 수량 1로 담긴다`() {
+        val cartItems = CartItems()
 
-        val addedCartItems = cartItems.addCartItem(targetCartItem)
+        val result = cartItems.addProduct(product("p1"))
 
-        assertTrue(addedCartItems.searchCartItem(targetCartItem))
+        assertEquals(1, result.size())
+        assertEquals(Quantity(1), result.findQuantity("p1"))
     }
 
     @Test
-    fun `장바구니 목록에 상품 존재하는 상품을 삭제했을 때 장바구니 목록에서 삭제된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
-        val targetCartItem = cartItem3
+    fun `addProduct - 이미 담긴 상품을 다시 추가하면 수량이 1 증가한다`() {
+        val cartItems = CartItems().addProduct(product("p1"))
 
-        val removedCartItems = cartItems.removeCartItem(targetCartItem)
+        val result = cartItems.addProduct(product("p1"))
 
-        assertFalse(removedCartItems.searchCartItem(targetCartItem))
+        assertEquals(1, result.size())
+        assertEquals(Quantity(2), result.findQuantity("p1"))
     }
 
     @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 있을 경우 true를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `increase - 담긴 상품의 수량이 1 증가한다`() {
+        val cartItems = CartItems().addProduct(product("p1"))
 
-        assertTrue(cartItems.searchCartItem(cartItem1))
+        val result = cartItems.increase("p1")
+
+        assertEquals(Quantity(2), result.findQuantity("p1"))
     }
 
     @Test
-    fun `장바구니 목록 안에 target id와 동일한 상품이 없을 경우 false를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `increase - 담겨있지 않은 상품에 대해서는 변화가 없다`() {
+        val cartItems = CartItems().addProduct(product("p1"))
 
-        assertFalse(cartItems.searchCartItem(cartItem4))
+        val result = cartItems.increase("p2")
+
+        assertEquals(1, result.size())
+        assertEquals(Quantity(1), result.findQuantity("p1"))
     }
 
     @Test
-    fun `subList는 정상 범위에서 부분 리스트를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `decrease - 담긴 상품의 수량이 1 감소한다`() {
+        val cartItems = CartItems()
+            .addProduct(product("p1"))
+            .increase("p1")
 
-        val sub = cartItems.subList(fromIndex = 0, toIndex = 2)
+        val result = cartItems.decrease("p1")
 
-        assertEquals(listOf(cartItem1, cartItem2), sub)
+        assertEquals(Quantity(1), result.findQuantity("p1"))
     }
 
     @Test
-    fun `subList는 fromIndex가 음수여도 0으로 클램핑된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `decrease - 수량이 1인 상태에서 감소하면 컬렉션에서 제거된다`() {
+        val cartItems = CartItems().addProduct(product("p1"))
 
-        val sub = cartItems.subList(fromIndex = -3, toIndex = 2)
+        val result = cartItems.decrease("p1")
 
-        assertEquals(listOf(cartItem1, cartItem2), sub)
+        assertEquals(0, result.size())
+        assertFalse(result.contains("p1"))
     }
 
     @Test
-    fun `subList는 toIndex가 size보다 커도 size로 클램핑된다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `remove - 지정한 상품이 컬렉션에서 제거된다`() {
+        val cartItems = CartItems()
+            .addProduct(product("p1"))
+            .addProduct(product("p2"))
 
-        val sub = cartItems.subList(fromIndex = 1, toIndex = 100)
+        val result = cartItems.remove("p1")
 
-        assertEquals(listOf(cartItem2, cartItem3), sub)
+        assertEquals(1, result.size())
+        assertTrue(result.contains("p2"))
+        assertFalse(result.contains("p1"))
     }
 
     @Test
-    fun `subList는 fromIndex가 size보다 크면 빈 리스트를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `findQuantity - 담겨있지 않은 상품은 0을 반환한다`() {
+        val cartItems = CartItems()
 
-        val sub = cartItems.subList(fromIndex = 10, toIndex = 20)
-
-        assertTrue(sub.isEmpty())
+        assertEquals(Quantity.ZERO, cartItems.findQuantity("p1"))
     }
 
     @Test
-    fun `subList는 fromIndex가 toIndex보다 크면 빈 리스트를 반환한다`() {
-        val cartItems = CartItems(value = cartItemsValue)
+    fun `totalQuantity - 담긴 모든 상품의 수량 합계를 반환한다`() {
+        val cartItems = CartItems()
+            .addProduct(product("p1"))
+            .addProduct(product("p1"))
+            .addProduct(product("p2"))
 
-        val sub = cartItems.subList(fromIndex = 3, toIndex = 1)
+        assertEquals(3, cartItems.totalQuantity)
+    }
 
-        assertTrue(sub.isEmpty())
+    @Test
+    fun `totalPrice - 담긴 모든 상품의 가격 합계를 반환한다`() {
+        val cartItems = CartItems()
+            .addProduct(product("p1", price = 10_000))
+            .addProduct(product("p1", price = 10_000))
+            .addProduct(product("p2", price = 5_000))
+
+        assertEquals(25_000, cartItems.totalPrice)
     }
 }

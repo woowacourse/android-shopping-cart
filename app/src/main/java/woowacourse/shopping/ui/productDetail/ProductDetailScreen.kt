@@ -296,7 +296,7 @@ fun ProductDetailScreenPreview() {
             ProductDetailViewModel(
                 productId = "0",
                 productRepository = MockProductRepository(),
-                cartRepository = MockCartRepository,
+                cartRepository = MockCartRepository(),
             ),
         onAddToCartClick = {},
     )
