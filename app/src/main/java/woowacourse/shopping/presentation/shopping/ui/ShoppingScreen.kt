@@ -40,9 +40,9 @@ import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 
 @Composable
 fun ShoppingScreen(
+    viewModel: ShoppingViewModel,
     onNavigateToCart: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ShoppingViewModel = viewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -156,6 +156,7 @@ private fun ShoppingContents(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
+        viewModel = viewModel(),
         onNavigateToCart = {},
     )
 }
