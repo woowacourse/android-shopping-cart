@@ -126,6 +126,8 @@ fun CartScreen(
                     }
                 },
                 cartItems = uiState.currentCartItems.toImmutableList(),
+                onIncrease = { scope.launch { viewModel.increase(it) } },
+                onDecrease = { scope.launch { viewModel.decrease(it) } },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -135,6 +137,8 @@ fun CartScreen(
 @Composable
 private fun CartContent(
     onDeleteItem: (String) -> Unit,
+    onIncrease: (String) -> Unit,
+    onDecrease: (String) -> Unit,
     cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
 ) {
@@ -149,10 +153,17 @@ private fun CartContent(
             val product = item.product
             CartCard(
                 productName = product.name,
-                price = product.price,
+                price = item.totalPrice,
                 imageUrl = product.imageUrl,
+                quantity = item.quantity,
                 onDeleteItem = {
                     onDeleteItem(product.id)
+                },
+                onIncrease = {
+                    onIncrease(product.id)
+                },
+                onDecrease = {
+                    onDecrease(product.id)
                 },
             )
         }
@@ -170,6 +181,8 @@ private fun CartScreenPreview() {
 private fun CartContentPreview() {
     CartContent(
         onDeleteItem = {},
+        onIncrease = {},
+        onDecrease = {},
         cartItems =
             listOf(
                 CartItemUiModel(
@@ -181,7 +194,6 @@ private fun CartContentPreview() {
                             price = 1000,
                         ),
                     quantity = 1,
-                    totalPrice = 1000,
                 ),
                 CartItemUiModel(
                     product =
@@ -192,7 +204,6 @@ private fun CartContentPreview() {
                             price = 1000,
                         ),
                     quantity = 1,
-                    totalPrice = 1000,
                 ),
             ).toImmutableList(),
     )

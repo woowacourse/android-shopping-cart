@@ -54,6 +54,16 @@ class CartViewModel(
         return result
     }
 
+    suspend fun increase(productId: String) {
+        cartRepository.addItem(productId)
+        loadCartItems()
+    }
+
+    suspend fun decrease(productId: String) {
+        cartRepository.decrease(productId)
+        loadCartItems()
+    }
+
     suspend fun nextPage() {
         if (!uiState.value.isCanMoveNext) return
         _uiState.update {

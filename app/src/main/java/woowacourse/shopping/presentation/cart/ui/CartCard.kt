@@ -20,9 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.presentation.common.QuantityCounter
+import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.util.formattedPrice
@@ -33,6 +36,9 @@ fun CartCard(
     productName: String,
     imageUrl: String,
     price: Long,
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -85,13 +91,39 @@ fun CartCard(
                     Modifier
                         .width(136.dp),
             )
-            Text(
-                text = formattedPrice(price),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 26.sp,
-                color = Gray50,
-            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.End,
+            ) {
+                QuantityCounter(
+                    quantity = quantity,
+                    onIncrease = onIncrease,
+                    onDecrease = onDecrease,
+                )
+                Text(
+                    text = formattedPrice(price),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 26.sp,
+                    color = Gray50,
+                )
+            }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CartCartPreview() {
+    AndroidshoppingTheme {
+        CartCard(
+            onDeleteItem = {},
+            productName = "Test",
+            imageUrl = "",
+            price = 10000,
+            quantity = 3,
+            onIncrease = {},
+            onDecrease = {},
+        )
     }
 }
