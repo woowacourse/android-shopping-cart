@@ -34,6 +34,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.common.ShoppingAppBar
+import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
 import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
@@ -99,6 +100,10 @@ fun ShoppingScreen(
                 onDecrease = { id ->
                     scope.launch { viewModel.decrease(id) }
                 },
+                onUpsertRecentProduct = { id ->
+                    scope.launch { viewModel.upsertRecentProduct(id) }
+                },
+                recentProducts = state.recentProducts.toImmutableList(),
             )
         }
     }
@@ -111,6 +116,8 @@ private fun ShoppingContents(
     onProductCardClick: (String) -> Unit,
     onIncrease: (String) -> Unit,
     onDecrease: (String) -> Unit,
+    onUpsertRecentProduct: (String) -> Unit,
+    recentProducts: ImmutableList<ProductUiModel>,
     isCanLoadMore: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -127,6 +134,13 @@ private fun ShoppingContents(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(top = 20.dp),
         ) {
+            item(
+                span = { GridItemSpan(2) },
+            ) {
+                RecentSection(
+                    recentProducts = recentProducts,
+                )
+            }
             items(
                 items = items,
                 key = { it.product.id },
@@ -134,7 +148,10 @@ private fun ShoppingContents(
                 ProductCard(
                     product = item.product,
                     quantity = item.quantity,
-                    onClick = { onProductCardClick(item.product.id) },
+                    onClick = {
+                        onProductCardClick(item.product.id)
+                        onUpsertRecentProduct(item.product.id)
+                    },
                     onIncrease = { onIncrease(item.product.id) },
                     onDecrease = { onDecrease(item.product.id) },
                 )

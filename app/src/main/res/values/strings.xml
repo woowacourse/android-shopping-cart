@@ -16,4 +16,5 @@
     <string name="not_found_item">존재하지 않는 상품입니다.</string>
     <string name="decrease_quantity">수량 감소</string>
     <string name="increase_quantity">수량 추가</string>
+    <string name="recent_product">최근 본 상품</string>
 </resources>

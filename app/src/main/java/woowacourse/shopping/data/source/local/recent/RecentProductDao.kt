@@ -12,7 +12,10 @@ interface RecentProductDao {
     suspend fun getRecent(limit: Int = 10): List<RecentProductEntity>
 
     @Transaction
-    suspend fun upsertAndTrim(entity: RecentProductEntity, keep: Int) {
+    suspend fun upsertAndTrim(
+        entity: RecentProductEntity,
+        keep: Int,
+    ) {
         upsert(entity)
         trimToLast(keep)
     }
@@ -20,12 +23,14 @@ interface RecentProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entity: RecentProductEntity)
 
-    @Query("""                                                                                                                                                                                                     
+    @Query(
+        """                                                                                                                                                                                                     
       DELETE FROM recent_products
       WHERE productId NOT IN (                                                                                                                                                                                   
           SELECT productId FROM recent_products                                                                                                                                                                
           ORDER BY lastViewedAt DESC LIMIT :keep
       )
-  """)
+  """,
+    )
     suspend fun trimToLast(keep: Int)
 }

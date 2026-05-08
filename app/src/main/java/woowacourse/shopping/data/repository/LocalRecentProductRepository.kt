@@ -19,7 +19,7 @@ class LocalRecentProductRepository(
                 productId = productId,
                 lastViewedAt = System.currentTimeMillis(),
             ),
-            keep = maxKeep
+            keep = maxKeep,
         )
     }
 

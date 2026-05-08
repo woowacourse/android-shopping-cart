@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.common.model.toUiModel
 import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
@@ -18,6 +19,7 @@ import woowacourse.shopping.presentation.shopping.model.ShoppingUiState
 class ShoppingViewModel(
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
+    private val recentProductRepository: RecentProductRepository = RepositoryProvider.recentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -26,6 +28,7 @@ class ShoppingViewModel(
 
     suspend fun initialize() {
         if (uiState.value.offset == 0) loadMore()
+        loadRecentProducts(10)
     }
 
     suspend fun loadCartItemQuantities() {
@@ -76,6 +79,22 @@ class ShoppingViewModel(
             throw e
         } finally {
             _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    suspend fun upsertRecentProduct(productId: String) {
+        recentProductRepository.upsertRecentProduct(productId)
+        loadRecentProducts(10)
+    }
+
+    suspend fun loadRecentProducts(limit: Int) {
+        _uiState.update {
+            it.copy(
+                recentProducts =
+                    recentProductRepository.getRecentProducts(limit).map { product ->
+                        product.toUiModel()
+                    },
+            )
         }
     }
 
