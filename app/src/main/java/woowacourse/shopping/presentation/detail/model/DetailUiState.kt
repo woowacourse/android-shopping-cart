@@ -10,7 +10,7 @@ data class DetailUiState(
             imageUrl = "",
             price = 0,
         ),
-    val quantity: Int = 0,
+    val quantity: Int = 1,
 ) {
     val price: Long get() = product.price * quantity
 }

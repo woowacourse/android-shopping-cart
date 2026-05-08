@@ -44,6 +44,7 @@ class DetailViewModel(
     }
 
     fun decrease() {
+        if (_uiState.value.quantity == 1) return
         _uiState.update {
             it.copy(
                 quantity = it.quantity - 1,
