@@ -59,6 +59,7 @@ fun ProductListScreen(
     onProductClick: (Product) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val cartCount = (uiState as? ProductListUiState.Success)?.totalCartCount ?: 0
 
     Column(
         modifier = modifier,
@@ -67,6 +68,7 @@ fun ProductListScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
+            cartCount = cartCount,
             onClick = onCartClick,
         )
 
@@ -101,6 +103,43 @@ fun ProductListScreen(
         }
     }
 }
+@Composable
+private fun CartBadgeIcon(
+    cartCount: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_cart),
+                contentDescription = "장바구니 아이콘",
+            )
+        }
+        if (cartCount > 0) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 6.dp, end = 4.dp)
+                    .size(18.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF1ABC9C)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "$cartCount",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun LoadingContent(modifier: Modifier = Modifier) {
@@ -132,6 +171,7 @@ private fun ErrorContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductListTopAppBar(
+    cartCount: Int,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -144,12 +184,10 @@ private fun ProductListTopAppBar(
             )
         },
         actions = {
-            IconButton(onClick = onClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_cart),
-                    contentDescription = "장바구니 아이콘",
-                )
-            }
+            CartBadgeIcon(
+                cartCount = cartCount,
+                onClick = onClick,
+            )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(APP_BAR_COLOR),

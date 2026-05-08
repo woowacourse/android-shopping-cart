@@ -105,6 +105,7 @@ class ProductListViewModel(
             quantitiesByProductId = quantities,
             canLoadMore = canLoadMore,
             isLoadingMore = false,
+            totalCartCount = cart.totalQuantity,
         )
     }
 

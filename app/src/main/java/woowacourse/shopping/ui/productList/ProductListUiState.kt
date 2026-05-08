@@ -10,6 +10,7 @@ sealed interface ProductListUiState {
         val quantitiesByProductId: Map<String, Int> = emptyMap(),
         val canLoadMore: Boolean,
         val isLoadingMore: Boolean = false,
+        val totalCartCount:Int = 0,
     ) : ProductListUiState
 
     data class Error(
