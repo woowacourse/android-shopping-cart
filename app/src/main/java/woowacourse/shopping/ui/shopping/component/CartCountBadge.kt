@@ -18,12 +18,13 @@ fun CartCountBadge(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(20.dp)
-            .background(
-                color = Color(0xFF04C09E),
-                shape = CircleShape,
-            ),
+        modifier =
+            modifier
+                .size(20.dp)
+                .background(
+                    color = Color(0xFF04C09E),
+                    shape = CircleShape,
+                ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -38,4 +39,3 @@ fun CartCountBadge(
 fun CartCountBadgePreview() {
     CartCountBadge(1)
 }
-

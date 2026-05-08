@@ -37,7 +37,7 @@ fun ProductDetailScreen(
         CartAddButton(
             isEnabled = !isAdding,
             onClick = onAddToCart,
-            )
+        )
     }
 }
 

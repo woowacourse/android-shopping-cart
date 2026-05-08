@@ -13,7 +13,7 @@ data class Cart(
         val newItems = items.toMutableList()
         val index = newItems.indexOfFirst { it.productId == productId }
 
-        if(index == -1) {
+        if (index == -1) {
             newItems.add(CartItem(productId, 1))
         } else {
             newItems[index] = newItems[index].increase()
@@ -30,7 +30,7 @@ data class Cart(
 
         val updatedItem = newItems[index].decreaseOrNull()
 
-        if(updatedItem == null) {
+        if (updatedItem == null) {
             newItems.removeAt(index)
         } else {
             newItems[index] = updatedItem

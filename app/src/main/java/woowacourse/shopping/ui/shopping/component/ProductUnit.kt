@@ -60,18 +60,20 @@ fun ProductUnit(
             if (product.isInCart) {
                 QuantityStepper(
                     quantity = product.quantity,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(8.dp),
                     onIncreaseQuantity = onIncreaseQuantity,
                     onDecreaseQuantity = onDecreaseQuantity,
                 )
             } else {
                 AddToCartButton(
                     isEnabled = true,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp),
                     onAddToCart = onAddToCart,
                 )
             }

@@ -27,9 +27,8 @@ object InMemoryCartRepository : CartRepository {
         return cart.items.subList(safeFrom, safeTo)
     }
 
-    override suspend fun getCartItemsByProductIds(productIds: Set<ProductId>): List<CartItem> {
-        return cart.items.filter { it.productId in productIds }
-    }
+    override suspend fun getCartItemsByProductIds(productIds: Set<ProductId>): List<CartItem> =
+        cart.items.filter { it.productId in productIds }
 
     override suspend fun count(): Int = cart.count()
 }

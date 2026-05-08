@@ -48,7 +48,7 @@ fun ShoppingScreen(
             onMoreClick = onMoreClick,
             onAddToCart = onAddToCart,
             onIncreaseQuantity = onIncreaseQuantity,
-            onDecreaseQuantity = onDecreaseQuantity
+            onDecreaseQuantity = onDecreaseQuantity,
         )
     }
 }

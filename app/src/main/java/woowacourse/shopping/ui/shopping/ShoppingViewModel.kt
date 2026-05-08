@@ -51,12 +51,13 @@ class ShoppingViewModel(
         val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
         val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
 
-        val products = visibleProducts.map { product ->
-            ShoppingProductUiState(
-                product = product,
-                quantity = quantityByProductId[product.id] ?: 0,
-            )
-        }
+        val products =
+            visibleProducts.map { product ->
+                ShoppingProductUiState(
+                    product = product,
+                    quantity = quantityByProductId[product.id] ?: 0,
+                )
+            }
 
         _uiState.value =
             ShoppingUiState(
@@ -77,7 +78,7 @@ class ShoppingViewModel(
     fun addToCart(productId: ProductId) = increaseQuantity(productId)
 
     fun increaseQuantity(productId: ProductId) {
-        if(_uiState.value.isLoading) return
+        if (_uiState.value.isLoading) return
         viewModelScope.launch {
             cartRepository.add(productId)
             refreshProducts()
@@ -85,7 +86,7 @@ class ShoppingViewModel(
     }
 
     fun decreaseQuantity(productId: ProductId) {
-        if(_uiState.value.isLoading) return
+        if (_uiState.value.isLoading) return
         viewModelScope.launch {
             cartRepository.delete(productId)
             refreshProducts()

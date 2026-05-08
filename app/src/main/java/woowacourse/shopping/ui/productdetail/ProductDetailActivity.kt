@@ -28,9 +28,10 @@ class ProductDetailActivity : ComponentActivity() {
             context: Context,
             productId: ProductId,
         ) {
-            val intent = Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId.value.toString())
-            }
+            val intent =
+                Intent(context, ProductDetailActivity::class.java).apply {
+                    putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId.value.toString())
+                }
             context.startActivity(intent)
         }
     }

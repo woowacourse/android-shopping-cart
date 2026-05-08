@@ -181,12 +181,12 @@ private fun ImageAndPricePreview() {
     ImageAndPrice(
         item =
             CartItemUiModel(
-            productId = InMemoryProductRepository.APPLE.id,
-            name = InMemoryProductRepository.APPLE.name,
-            imageUrl = InMemoryProductRepository.APPLE.imageUrl,
-            price = InMemoryProductRepository.APPLE.price.value,
-            quantity = 2,
-        ),
+                productId = InMemoryProductRepository.APPLE.id,
+                name = InMemoryProductRepository.APPLE.name,
+                imageUrl = InMemoryProductRepository.APPLE.imageUrl,
+                price = InMemoryProductRepository.APPLE.price.value,
+                quantity = 2,
+            ),
         onIncreaseQuantity = {},
         onDecreaseQuantity = {},
     )

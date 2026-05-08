@@ -36,7 +36,10 @@ fun ShoppingBody(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(items = products, key = { it.product.id.value.toString() }) { product ->
+        items(items = products, key = {
+            it.product.id.value
+                .toString()
+        }) { product ->
             ProductUnit(
                 product = product,
                 onClick = { onProductClick(product.product) },

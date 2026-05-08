@@ -28,10 +28,11 @@ fun AddToCartButton(
         modifier = modifier.size(48.dp),
         shape = CircleShape,
         contentPadding = PaddingValues(0.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color(0xFF555555),
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color(0xFF555555),
+            ),
     ) {
         Icon(
             imageVector = Icons.Default.Add,
