@@ -34,9 +34,9 @@ class CartRepositoryImpl(
 
     override fun increaseQuantity(
         product: Product,
-        amount: Int,
+        quantity: Int,
     ) {
-        cart = cart.increaseQuantity(product, amount)
+        cart = cart.increaseQuantity(product, quantity)
     }
 
     @OptIn(ExperimentalUuidApi::class)

@@ -7,6 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.screen.CartScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
@@ -28,9 +30,11 @@ class CartActivity : ComponentActivity() {
         @OptIn(ExperimentalUuidApi::class)
         setContent {
             androidshoppingTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
                 CartScreen(
-                    cart = viewModel.cart,
-                    currentPage = viewModel.currentPage,
+                    cart = uiState.cart,
+                    currentPage = uiState.currentPage,
                     hasMoreItems = viewModel.hasMoreItems,
                     onPreviousPageClick = viewModel::goToPreviousPage,
                     onNextPageClick = viewModel::goToNextPage,

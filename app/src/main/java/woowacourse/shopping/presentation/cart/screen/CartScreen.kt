@@ -46,7 +46,9 @@ fun CartScreen(
             onNextPageClick = onNextPageClick,
             hasPreviousPage = hasPreviousPage,
             hasNextPage = hasNextPage,
-            onDelete = onDelete,
+            onDelete = { productId ->
+                deleteProductId = productId
+            },
             onQuantityIncrease = onQuantityIncrease,
             onQuantityDecrease = { productId, quantity ->
                 if (quantity == 1) {

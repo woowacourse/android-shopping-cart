@@ -8,7 +8,7 @@ data class CartItem(
     val product: Product,
     val quantity: Int,
 ) {
-    fun increaseQuantity(amount: Int): CartItem = copy(quantity = quantity + amount)
+    fun increaseQuantity(quantityToAdd: Int): CartItem = copy(quantity = quantity + quantityToAdd)
 
     fun decreaseQuantity(): CartItem =
         if (quantity == 0) {

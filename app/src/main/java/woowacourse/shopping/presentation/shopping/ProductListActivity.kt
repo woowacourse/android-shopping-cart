@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -27,11 +29,13 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             androidshoppingTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
                 ProductListScreen(
-                    products = viewModel.products,
+                    products = uiState.products,
+                    productQuantities = uiState.productQuantities,
                     hasNextPage = viewModel.hasNextPage,
-                    totalQuantity = viewModel.totalQuantity,
-                    productQuantity = viewModel::getQuantity,
+                    totalQuantity = uiState.totalQuantity,
                     onLoadMore = viewModel::loadMore,
                     onCartIconClick = {
                         startActivity(CartActivity.newIntent(this))

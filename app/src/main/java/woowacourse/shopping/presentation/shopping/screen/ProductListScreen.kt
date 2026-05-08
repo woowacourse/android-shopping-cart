@@ -15,9 +15,9 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProductListScreen(
     products: Products,
+    productQuantities: Map<Uuid, Int>,
     hasNextPage: Boolean,
     totalQuantity: Int,
-    productQuantity: (Uuid) -> Int,
     onLoadMore: () -> Unit,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
@@ -32,7 +32,7 @@ fun ProductListScreen(
     ) {
         ProductListContent(
             products = products,
-            productQuantity = productQuantity,
+            productQuantities = productQuantities,
             hasNextPage = hasNextPage,
             onLoadMore = onLoadMore,
             onItemClick = onItemClick,
@@ -48,9 +48,9 @@ fun ProductListScreen(
 private fun ProductListScreenPreview() {
     ProductListScreen(
         products = Products(emptyList()),
+        productQuantities = emptyMap(),
         hasNextPage = true,
         totalQuantity = 0,
-        productQuantity = { 0 },
         onLoadMore = {},
         onCartIconClick = {},
         onItemClick = {},

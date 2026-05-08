@@ -1,10 +1,11 @@
 package woowacourse.shopping.presentation.shopping
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
@@ -17,42 +18,38 @@ class ProductListViewModel(
     private val cartRepository: CartRepository,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : ViewModel() {
-    var currentPageIndex by mutableStateOf(0)
-        private set
-
-    var products by mutableStateOf(Products())
-        private set
-
-    var cart by mutableStateOf(cartRepository.getItems())
-        private set
+    private val _uiState = MutableStateFlow(ProductListUiState())
+    val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
     val hasNextPage: Boolean
         get() =
             productRepository.hasNextPage(
-                currentPage = currentPageIndex,
+                currentPage = _uiState.value.currentPageIndex,
                 pageSize = pageSize,
             )
 
-    val totalQuantity: Int
-        get() = cart.getTotalQuantity()
-
     init {
-        loadPages(currentPageIndex)
+        loadPages()
         refreshCart()
     }
 
     fun loadMore() {
         if (!hasNextPage) return
 
-        currentPageIndex++
+        val nextPageIndex = _uiState.value.currentPageIndex + 1
 
         val nextProducts =
             productRepository.getPagingProducts(
-                page = currentPageIndex,
+                page = nextPageIndex,
                 pageSize = pageSize,
             )
 
-        products += nextProducts
+        _uiState.update {
+            it.copy(
+                currentPageIndex = nextPageIndex,
+                products = it.products + nextProducts,
+            )
+        }
     }
 
     fun increaseQuantity(product: Product) {
@@ -66,26 +63,30 @@ class ProductListViewModel(
         refreshCart()
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun getQuantity(productId: Uuid): Int =
-        cart.cartItems
-            .find { it.product.productId == productId }
-            ?.quantity ?: 0
+    private fun loadPages() {
+        var products = Products()
 
-    private fun loadPages(currentPageIndex: Int) {
-        products = Products()
-
-        for (page in 0..currentPageIndex) {
+        for (page in 0.._uiState.value.currentPageIndex) {
             products +=
                 productRepository.getPagingProducts(
                     page = page,
                     pageSize = pageSize,
                 )
         }
+
+        _uiState.update {
+            it.copy(
+                products = products,
+            )
+        }
     }
 
     fun refreshCart() {
-        cart = cartRepository.getItems()
+        _uiState.update {
+            it.copy(
+                cart = cartRepository.getItems(),
+            )
+        }
     }
 
     companion object {

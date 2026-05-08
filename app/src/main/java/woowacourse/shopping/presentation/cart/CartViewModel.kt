@@ -1,11 +1,13 @@
 package woowacourse.shopping.presentation.cart
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.model.cart.Cart
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
@@ -14,14 +16,8 @@ import kotlin.uuid.Uuid
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    var cart by mutableStateOf(Cart())
-        private set
-
-    var currentPageIndex by mutableStateOf(0)
-        private set
-
-    val currentPage: Int
-        get() = currentPageIndex + 1
+    private val _uiState = MutableStateFlow(CartUiState())
+    val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
     val totalItemCount: Int
         get() = cartRepository.getTotalItemCount()
@@ -30,10 +26,10 @@ class CartViewModel(
         get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / DEFAULT_PAGE_SIZE
 
     val hasPreviousPage: Boolean
-        get() = currentPageIndex > 0
+        get() = _uiState.value.currentPageIndex > 0
 
     val hasNextPage: Boolean
-        get() = currentPageIndex < lastPageIndex
+        get() = _uiState.value.currentPageIndex < lastPageIndex
 
     val hasMoreItems: Boolean
         get() = totalItemCount > DEFAULT_PAGE_SIZE
@@ -62,14 +58,24 @@ class CartViewModel(
     fun goToPreviousPage() {
         if (!hasPreviousPage) return
 
-        currentPageIndex--
+        _uiState.update {
+            it.copy(
+                currentPageIndex = it.currentPageIndex - 1,
+            )
+        }
+
         refreshPagedCart()
     }
 
     fun goToNextPage() {
         if (!hasNextPage) return
 
-        currentPageIndex++
+        _uiState.update {
+            it.copy(
+                currentPageIndex = it.currentPageIndex + 1,
+            )
+        }
+
         refreshPagedCart()
     }
 
@@ -79,16 +85,22 @@ class CartViewModel(
     }
 
     private fun refreshPagedCart() {
-        cart =
-            cartRepository.getPagingItems(
-                page = currentPageIndex,
-                pageSize = DEFAULT_PAGE_SIZE,
+        _uiState.update {
+            it.copy(
+                cart =
+                    cartRepository.getPagingItems(
+                        page = it.currentPageIndex,
+                        pageSize = DEFAULT_PAGE_SIZE,
+                    ),
             )
+        }
     }
 
     private fun adjustCurrentPage() {
-        if (currentPageIndex > lastPageIndex) {
-            currentPageIndex = lastPageIndex
+        if (_uiState.value.currentPageIndex > lastPageIndex) {
+            _uiState.update {
+                it.copy(currentPageIndex = lastPageIndex)
+            }
         }
     }
 

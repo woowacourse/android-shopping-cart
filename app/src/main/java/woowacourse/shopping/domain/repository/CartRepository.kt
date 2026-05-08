@@ -19,7 +19,7 @@ interface CartRepository {
 
     fun increaseQuantity(
         product: Product,
-        amount: Int,
+        quantity: Int,
     )
 
     @OptIn(ExperimentalUuidApi::class)

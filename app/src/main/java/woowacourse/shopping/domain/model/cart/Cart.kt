@@ -10,11 +10,9 @@ data class Cart(
 ) {
     fun getTotalQuantity(): Int = cartItems.sumOf { it.quantity }
 
-    fun getTotalPrice(): Int = cartItems.sumOf { it.product.price.value * it.quantity }
-
     fun increaseQuantity(
         product: Product,
-        amount: Int,
+        quantity: Int,
     ): Cart {
         val exists = cartItems.any { product.productId == it.product.productId }
 
@@ -26,7 +24,7 @@ data class Cart(
             cartItems =
                 cartItems.map {
                     if (product.productId == it.product.productId) {
-                        it.increaseQuantity(amount)
+                        it.increaseQuantity(quantity)
                     } else {
                         it
                     }

@@ -21,8 +21,8 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProductListContent(
     products: Products,
+    productQuantities: Map<Uuid, Int>,
     hasNextPage: Boolean,
-    productQuantity: (Uuid) -> Int,
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
@@ -42,7 +42,7 @@ fun ProductListContent(
         ) { product ->
             ProductItem(
                 product = product,
-                quantity = productQuantity(product.productId),
+                quantity = productQuantities[product.productId] ?: 0,
                 onClick = { onItemClick(product) },
                 onQuantityIncrease = { onQuantityIncrease(product) },
                 onQuantityDecrease = { onQuantityDecrease(product.productId) },
@@ -66,8 +66,8 @@ fun ProductListContent(
 fun ProductListContentPreview() {
     ProductListContent(
         products = Products(emptyList()),
+        productQuantities = emptyMap(),
         hasNextPage = true,
-        productQuantity = { 0 },
         onLoadMore = {},
         onItemClick = {},
         onQuantityIncrease = {},

@@ -1,10 +1,13 @@
 package woowacourse.shopping.presentation.productdetail
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.uuid.ExperimentalUuidApi
@@ -14,22 +17,32 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    var amount by mutableStateOf(1)
-        private set
+    private val _uiState = MutableStateFlow(ProductDetailUiState())
+    val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     fun increaseQuantity() {
-        amount++
+        _uiState.update {
+            it.copy(quantity = it.quantity + 1)
+        }
     }
 
     fun decreaseQuantity() {
-        if (amount == 1) return
-        amount--
+        _uiState.update {
+            if (it.quantity == 1) {
+                it
+            } else {
+                it.copy(quantity = it.quantity - 1)
+            }
+        }
     }
 
     @OptIn(ExperimentalUuidApi::class)
     fun addToCart(productId: Uuid) {
         val product = productRepository.findProductById(productId) ?: return
-        cartRepository.increaseQuantity(product, amount)
+        cartRepository.increaseQuantity(
+            product = product,
+            quantity = _uiState.value.quantity,
+        )
     }
 }
 
