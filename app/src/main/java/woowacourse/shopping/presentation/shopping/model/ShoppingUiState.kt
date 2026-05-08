@@ -9,4 +9,6 @@ data class ShoppingUiState(
     val offset: Int = 0,
     val totalQuantity: Int = 0,
     val recentProducts: List<ProductUiModel> = emptyList(),
-)
+) {
+    val isShowCartQuantityIcon: Boolean get() = totalQuantity > 0
+}

@@ -67,6 +67,7 @@ fun ShoppingScreen(
                     )
                     CartIcon(
                         quantity = state.totalQuantity,
+                        isShowCartQuantityIcon = state.isShowCartQuantityIcon,
                         onNavigateToCart = onNavigateToCart,
                     )
                 },

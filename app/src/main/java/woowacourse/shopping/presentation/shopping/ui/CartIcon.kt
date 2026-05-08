@@ -27,6 +27,7 @@ import woowacourse.shopping.ui.theme.Green40
 @Composable
 fun CartIcon(
     quantity: Int,
+    isShowCartQuantityIcon: Boolean,
     onNavigateToCart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,20 +43,22 @@ fun CartIcon(
                     .size(24.dp)
                     .clickable { onNavigateToCart() },
         )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier =
-                Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-                    .background(Green40),
-        ) {
-            Text(
-                text = quantity.toString(),
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-            )
+        if (isShowCartQuantityIcon) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(Green40),
+            ) {
+                Text(
+                    text = quantity.toString(),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                )
+            }
         }
     }
 }
@@ -67,6 +70,7 @@ private fun CartIconPreview() {
         CartIcon(
             quantity = 1,
             onNavigateToCart = {},
+            isShowCartQuantityIcon = true,
         )
     }
 }
