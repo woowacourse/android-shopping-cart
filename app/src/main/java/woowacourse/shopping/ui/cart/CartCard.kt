@@ -26,9 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import woowacourse.shopping.ui.component.QuantitySelector
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.ui.util.formattedPrice
@@ -102,46 +104,11 @@ fun CartCard(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Row(
-                    modifier = Modifier.width(126.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "-",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 18.sp,
-                        color = if(quantity > 1) Color.Black else Gray50,
-                        modifier =
-                            Modifier
-                                .size(42.dp)
-                                .clickable(enabled = quantity > 1) {
-                                    onDecreaseQuantity()
-                                }
-                    )
-                    Text(
-                        text = "$quantity",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 18.sp,
-                        color = Color.Black,
-                        modifier = Modifier.size(42.dp)
-                    )
-                    Text(
-                        text = "+",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 18.sp,
-                        color = Color.Black,
-                        modifier =
-                            Modifier
-                                .size(42.dp)
-                                .clickable {
-                                    onIncreaseQuantity()
-                                }
-                    )
-                }
+                QuantitySelector(
+                    onIncreaseQuantity = onIncreaseQuantity,
+                    onDecreaseQuantity = onDecreaseQuantity,
+                    quantity = quantity,
+                )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = formattedPrice(price),
@@ -154,4 +121,18 @@ fun CartCard(
 
         }
     }
+}
+
+@Preview
+@Composable
+fun CartCardPreview() {
+    CartCard(
+        onDeleteItem = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+        productName = "Test",
+        imageUrl = "Test",
+        price = 1000,
+        quantity = 1,
+    )
 }

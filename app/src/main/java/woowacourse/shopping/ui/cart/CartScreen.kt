@@ -87,7 +87,7 @@ fun CartScreen(
             onDeleteItem = {
                 onDeleteItem(it)
             },
-            cartItems = uiState.items.toImmutableList(),
+            cartItems = uiState.items,
             modifier =
                 Modifier
                     .fillMaxSize()

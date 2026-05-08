@@ -1,10 +1,14 @@
 package woowacourse.shopping.ui.cart
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.model.Cart
@@ -13,7 +17,8 @@ import woowacourse.shopping.ui.model.mapper.toUiModel
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    var uiState by mutableStateOf(CartUiState())
+    private val _uiState = MutableStateFlow(CartUiState())
+    val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
     private var page = 0
     private var cart = Cart()
 
@@ -33,9 +38,9 @@ class CartViewModel(
     private fun updateUiState() {
         val cartPage = cart.getPage(page = page, pageSize = 5)
         page = cartPage.page
-        uiState =
-            uiState.copy(
-                items = cartPage.items.map { it.toUiModel() },
+        _uiState.value =
+            _uiState.value.copy(
+                items = cartPage.items.map { it.toUiModel() }.toImmutableList(),
                 page = cartPage.page,
                 isCanMoveNext = cartPage.isCanMoveNext,
                 totalCartSize = cart.getTotalSize(),
@@ -68,6 +73,18 @@ class CartViewModel(
     fun decreaseQuantity(productId: String) {
         viewModelScope.launch {
             cartRepository.decreaseQuantity(productId)
+        }
+    }
+
+    companion object {
+        fun provideFactory(
+            cartRepository: CartRepository,
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                CartViewModel(
+                    cartRepository = cartRepository,
+                )
+            }
         }
     }
 }

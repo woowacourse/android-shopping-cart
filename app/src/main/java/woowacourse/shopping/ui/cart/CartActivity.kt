@@ -7,6 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import woowacourse.shopping.data.CartRepository
+import woowacourse.shopping.data.localdb.ShoppingDB
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class CartActivity : ComponentActivity() {
@@ -14,15 +18,21 @@ class CartActivity : ComponentActivity() {
         fun getIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels {
+        val database = ShoppingDB.getInstance(applicationContext)
+        CartViewModel.provideFactory(
+            cartRepository = CartRepository(database.cartItemDao()),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             AndroidshoppingTheme {
                 CartScreen(
-                    uiState = viewModel.uiState,
+                    uiState = uiState,
                     onBackClick = { finish() },
                     onDeleteItem = { viewModel.deleteItem(it) },
                     onNextPage = viewModel::nextPage,

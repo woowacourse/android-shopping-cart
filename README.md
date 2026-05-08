@@ -25,8 +25,8 @@
 
 ### Detail
 - [x] DetailViewModel 추가
-- [ ] 상품 상세 수량 선택 UI 추가
-- [ ] 상품 상세 장바구니 추가 기능 연결
+- [x] 상품 상세 수량 선택 UI 추가
+- [x] 상품 상세 장바구니 추가 기능 연결
 
 ### Recent Items
 - [x] RecentItemEntity 추가
