@@ -4,7 +4,7 @@ import woowacourse.shopping.ui.model.ProductUiModel
 
 data class DetailUiState(
     val product: ProductUiModel = ProductUiModel(),
-    val quantity : Int = 1,
-    val totalPrice : Int = 0,
-    val isNotFound : Boolean = false
+    val quantity: Int = 1,
+    val totalPrice: Int = 0,
+    val isNotFound: Boolean = false,
 )

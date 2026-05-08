@@ -8,18 +8,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.ShoppingApplication
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.MockProductRepository
+import woowacourse.shopping.data.localdb.ShoppingDB
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
-    private val viewModel: DetailViewModel by viewModels()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,29 +32,43 @@ class DetailActivity : ComponentActivity() {
             return
         }
 
-        val application = application as ShoppingApplication
-
-        viewModel.initialize(
-            id = id,
-            productRepository = MockProductRepository(),
-            cartRepository = CartRepository(application.database.cartItemDao()),
-        )
+        val database = ShoppingDB.getInstance(applicationContext)
+        val viewModel: DetailViewModel by viewModels {
+            DetailViewModel.provideFactory(
+                id = id,
+                productRepository = MockProductRepository(),
+                cartRepository = CartRepository(database.cartItemDao()),
+            )
+        }
 
         setContent {
             AndroidshoppingTheme {
-                val uiState = viewModel.uiState.collectAsState()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                LaunchedEffect(viewModel) {
+                    viewModel.event.collect { event ->
+                        when (event) {
+                            DetailEvent.NavigateToCart -> {
+                                startActivity(CartActivity.getIntent(this@DetailActivity))
+                            }
+
+                            DetailEvent.ShowAddCartFailureMessage -> {
+                                Toast.makeText(
+                                    this@DetailActivity,
+                                    "장바구니에 상품을 담지 못했습니다.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        }
+                    }
+                }
+
                 DetailScreen(
-                    id = id,
-                    onNavigateToCart = {
-                        startActivity(CartActivity.getIntent(this))
-                    },
-                    onProductNotFound = {
-                        Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
-                        finish()
-                    },
-                    onFailure = {
-                        Toast.makeText(this, "이미 장바구니에 담긴 상품입니다.", Toast.LENGTH_SHORT).show()
-                    },
+                    uiState = uiState,
+                    onCloseClick = { finish() },
+                    onIncreaseQuantity = viewModel::increaseQuantity,
+                    onDecreaseQuantity = viewModel::decreaseQuantity,
+                    onAddToCart = viewModel::addToCart,
                     modifier = Modifier,
                 )
             }
