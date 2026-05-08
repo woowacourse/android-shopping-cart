@@ -13,8 +13,8 @@ object CartRepositoryImpl : CartRepository {
     override fun getCartItem(productId: String): CartItem? =
         currentCart.items.find { it.product.id == productId }
 
-    override fun addCartItem(cartItem: CartItem) {
-        currentCart = currentCart.addOrMerge(cartItem)
+    override fun updateCart(cartItem: CartItem) {
+        currentCart = currentCart.updateItems(cartItem)
     }
 
     override fun deleteCartItem(productId: String) {

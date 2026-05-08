@@ -6,7 +6,7 @@ class CartItems(
     items: List<CartItem> = emptyList(),
 ) {
     val items: List<CartItem> = items.toList()
-    fun addOrMerge(newItem: CartItem): CartItems {
+    fun updateItems(newItem: CartItem): CartItems {
         val existingItem = items.find { it.product.id == newItem.product.id }
 
         val newItems =
