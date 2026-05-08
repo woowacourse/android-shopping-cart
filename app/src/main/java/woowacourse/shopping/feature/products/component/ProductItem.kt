@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.products.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +26,11 @@ fun ProductItem(
     productImageUrl: String,
     productName: String,
     formattedPrice: String,
+    formattedQuantity: String,
     onClick: () -> Unit,
+    onAddClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -34,13 +40,30 @@ fun ProductItem(
                 .background(Color.White)
                 .clickable(onClick = onClick),
     ) {
-        AppImage(
-            imageUrl = productImageUrl,
-            modifier = Modifier.aspectRatio(1f),
-        )
+        Box {
+            AppImage(
+                imageUrl = productImageUrl,
+                modifier = Modifier.aspectRatio(1f),
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp)
+            ) {
+                if (formattedQuantity == "0") {
+                    AddCartButton(onClick = onAddClick)
+                } else {
+                    QuantityStepper(
+                        onPlusClick = onIncreaseClick,
+                        onMinusClick = onDecreaseClick,
+                        quantity = formattedQuantity,
+                    )
+                }
+            }
+        }
 
         Spacer(Modifier.height(8.dp))
-
         Text(
             text = productName,
             color = Color.Black,
@@ -74,5 +97,9 @@ fun ProductItemPreview() {
         productName = "리자몽은 강력한 불꽃과 비행 능력을 지닌 포켓몬으로, 전투에서 뛰어난 공격력과 카리스마를 발휘하며 많은 트레이너들에게 사랑받는 존재이다.",
         formattedPrice = "10,000원",
         onClick = {},
+        formattedQuantity = "1",
+        onAddClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }
