@@ -1,11 +1,12 @@
 package woowacourse.shopping.ui.productdetail.state
 
 import woowacourse.shopping.ui.model.DetailProductUiModel
-import woowacourse.shopping.ui.model.SimpleProductUiModel
+import woowacourse.shopping.ui.model.LatestProductUiModel
 
 data class ProductDetailUiState(
     val product: DetailProductUiModel? = null,
     val selectedQuantity: Int = 1,
     val totalPrice: String = "",
-    val latestProduct: SimpleProductUiModel? = null,
+    val latestProduct: LatestProductUiModel? = null,
+    val isError: Boolean = false,
 )

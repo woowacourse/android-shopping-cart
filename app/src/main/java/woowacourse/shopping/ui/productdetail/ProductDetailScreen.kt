@@ -40,7 +40,6 @@ fun ProductDetailScreen(
     title: String,
     price: String,
     quantity: Int,
-    recentProductTitle: String,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
     onCloseClick: () -> Unit,
@@ -180,6 +179,5 @@ private fun ProductScreenPreview() {
         quantity = 1,
         onIncrement = {},
         onDecrement = {},
-        recentProductTitle = "최근 본 상품",
     )
 }

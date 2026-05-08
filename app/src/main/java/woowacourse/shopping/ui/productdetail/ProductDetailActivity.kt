@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import woowacourse.shopping.ui.productdetail.stateholder.ProductDetailStateHolder
 import woowacourse.shopping.ui.productdetail.ui.theme.AndroidshoppingcartTheme
 
 class ProductDetailActivity : ComponentActivity() {
@@ -16,10 +15,8 @@ class ProductDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val id = intent.getStringExtra(EXTRA_PRODUCT_ID)
-        val holder = ProductDetailStateHolder()
 
-        val productModel = id?.let { holder.getProductUiModel(it) }
-        if (productModel == null) {
+        if (id.isNullOrBlank()) {
             Toast.makeText(this, "해당 상품 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
             finish()
             return
@@ -28,9 +25,9 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingcartTheme {
                 ProductDetailScreen(
-                    imageUrl = productModel.imageUrl,
-                    title = productModel.title,
-                    price = productModel.price,
+                    imageUrl = "",
+                    title = "",
+                    price = "",
                     onCloseClick = { finish() },
                     onAddToCartClick = {
                         setResult(RESULT_OK, addedIdResult(id))
@@ -39,7 +36,6 @@ class ProductDetailActivity : ComponentActivity() {
                     quantity = 1,
                     onIncrement = {},
                     onDecrement = {},
-                    recentProductTitle = "최근 본 상품",
                 )
             }
         }

@@ -67,7 +67,7 @@ class ProductListViewModel : ViewModel() {
         _uiState.update { state ->
             state.copy(
                 products = _products.map { product ->
-                    toDetailProductUiModel(product, cart.getQuantity(product))
+                    toDetailProductUiModel(product, cart.getQuantity(product) ?: Quantity(0))
                 },
                 recentProducts = _recentProducts.map { product ->
                     toSimpleProductUiModel(product)
@@ -80,13 +80,13 @@ class ProductListViewModel : ViewModel() {
 
     private fun toDetailProductUiModel(
         product: Product,
-        quantity: Quantity?,
+        quantity: Quantity,
     ): DetailProductUiModel = DetailProductUiModel.of(
         name = product.name,
         price = product.price.amount,
         imageUrl = product.imageUrl,
         id = product.id,
-        quantity = quantity?.count ?: 0,
+        quantity = quantity.count,
     )
 
     private fun toSimpleProductUiModel(product: Product): SimpleProductUiModel = SimpleProductUiModel(
