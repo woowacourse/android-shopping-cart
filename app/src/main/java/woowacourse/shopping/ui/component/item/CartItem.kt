@@ -28,14 +28,13 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
-import woowacourse.shopping.domain.util.CountUpdateType
 import java.util.UUID
 
 @Composable
 fun CartItem(
     product: PurchaseProduct,
-    onAdd: (UUID, CountUpdateType) -> Unit,
-    onMinus: (UUID, CountUpdateType) -> Unit,
+    onAdd: (UUID, Int) -> Unit,
+    onMinus: (UUID, Int) -> Unit,
     onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -82,8 +81,8 @@ fun CartItem(
                 ){
                     QuantitySelector(
                         count = product.count,
-                        onAdd = { onAdd(product.uuid(), CountUpdateType.INCREASE) },
-                        onMinus = { onMinus(product.uuid(), CountUpdateType.DECREASE) },
+                        onAdd = { onAdd(product.uuid(), 1) },
+                        onMinus = { onMinus(product.uuid(), -1) },
                         onDelete = { onDelete(product.uuid()) },
                         modifier = Modifier.align(Alignment.CenterEnd)
                     )

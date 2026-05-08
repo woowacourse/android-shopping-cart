@@ -53,11 +53,11 @@ class CartActivity : ComponentActivity() {
                         setResult(RESULT_OK, intent)
                         finish()
                     },
-                    onAdd = { id, updateType ->
-                        cart = cart.updateCountWithId(id, updateType)
+                    onAdd = { id, updateAmount ->
+                        cart = cart.updateCountWithId(id, updateAmount)
                     },
-                    onMinus = { id, updateType ->
-                        cart = cart.updateCountWithId(id, updateType)
+                    onMinus = { id, updateAmount ->
+                        cart = cart.updateCountWithId(id, updateAmount)
                     },
                     onDelete = { id ->
                         cart = cart.removeWithId(id)

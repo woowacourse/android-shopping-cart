@@ -28,7 +28,6 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.PurchaseProduct
-import woowacourse.shopping.domain.util.CountUpdateType
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartCountLabel
 import woowacourse.shopping.ui.component.item.ShoppingItem
@@ -42,8 +41,8 @@ fun CatalogScreen(
     onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onLoadClick: () -> Unit,
-    onAdd: (UUID, CountUpdateType) -> Unit,
-    onMinus: (UUID, CountUpdateType) -> Unit,
+    onAdd: (UUID, Int) -> Unit,
+    onMinus: (UUID, Int) -> Unit,
     onDelete: (UUID) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
     isContainedInCart: (UUID) -> Boolean,
@@ -56,11 +55,11 @@ fun CatalogScreen(
                 catalog = catalog,
                 onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
-                onAdd = { uuid, countUpdateType ->
-                    onAdd(uuid, countUpdateType)
+                onAdd = { uuid, updateAmount ->
+                    onAdd(uuid, updateAmount)
                 },
-                onMinus = { uuid, countUpdateType ->
-                    onMinus(uuid, countUpdateType)
+                onMinus = { uuid, updateAmount ->
+                    onMinus(uuid, updateAmount)
                 },
                 onDelete = { onDelete(it) },
                 onAddInCart = { onAddInCart(it) },
@@ -114,8 +113,8 @@ private fun CatalogBody(
     specificProductCount: (UUID) -> Int,
     onItemClick: (Product) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
-    onAdd: (UUID, CountUpdateType) -> Unit,
-    onMinus: (UUID, CountUpdateType) -> Unit,
+    onAdd: (UUID, Int) -> Unit,
+    onMinus: (UUID, Int) -> Unit,
     onDelete: (UUID) -> Unit,
     onLoadClick: () -> Unit,
     isContainedInCart: (UUID) ->  Boolean,
@@ -139,16 +138,10 @@ private fun CatalogBody(
                     isContainedInCart(catalog.getSingleItem(item).uuid)
                 },
                 onAdd = {
-                    onAdd(
-                        catalog.getSingleItem(item).uuid,
-                        CountUpdateType.INCREASE
-                    )
+                    onAdd(catalog.getSingleItem(item).uuid, 1)
                 },
                 onMinus = {
-                    onMinus(
-                        catalog.getSingleItem(item).uuid,
-                        CountUpdateType.DECREASE
-                    )
+                    onMinus(catalog.getSingleItem(item).uuid, -1)
                 },
                 onDelete = {
                     onDelete(catalog.getSingleItem(item).uuid)

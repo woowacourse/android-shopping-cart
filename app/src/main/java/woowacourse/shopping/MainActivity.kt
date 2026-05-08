@@ -85,8 +85,8 @@ class MainActivity : ComponentActivity() {
                             currentIndex++
                         },
                         modifier = Modifier.padding(innerPadding),
-                        onAdd = { id, countUpdateType ->
-                            cart = cart.updateCountWithId(id, countUpdateType)
+                        onAdd = { id, updateAmount ->
+                            cart = cart.updateCountWithId(id, updateAmount)
                         },
                         onMinus = { id, countUpdateType ->
                             cart = cart.updateCountWithId(id, countUpdateType)

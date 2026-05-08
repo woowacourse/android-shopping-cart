@@ -34,7 +34,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
-import woowacourse.shopping.domain.util.CountUpdateType
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
 import java.util.UUID
@@ -46,8 +45,8 @@ fun CartScreen(
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onClose: () -> Unit,
-    onAdd: (UUID, CountUpdateType) -> Unit,
-    onMinus: (UUID, CountUpdateType) -> Unit,
+    onAdd: (UUID, Int) -> Unit,
+    onMinus: (UUID, Int) -> Unit,
     onDelete: (UUID) -> Unit,
     isPageable: Boolean,
     previousEnable: Boolean,
@@ -108,8 +107,8 @@ private fun CartHeader(
 private fun CartBody(
     cart: PurchaseProducts,
     currentPage: Int,
-    onAdd: (UUID, CountUpdateType) -> Unit,
-    onMinus: (UUID, CountUpdateType) -> Unit,
+    onAdd: (UUID, Int) -> Unit,
+    onMinus: (UUID, Int) -> Unit,
     onDelete: (UUID) -> Unit,
     onPrevious: () -> Unit = {},
     onNext: () -> Unit = {},
