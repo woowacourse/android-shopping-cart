@@ -273,11 +273,16 @@ private fun CartItemCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = formatPrice(cartItem.product.price.value),
+                    text = "수량: ${cartItem.quantity.value}",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                )
+                Text(
+                    text = formatPrice(cartItem.totalPrice),
                     fontSize = 16.sp,
                     color = Color.Black,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 4.dp),
+                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
                 )
             }
         }

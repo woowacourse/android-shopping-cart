@@ -6,15 +6,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,6 +47,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,10 +64,9 @@ fun ProductListScreen(
         modifier = modifier,
     ) {
         ProductListTopAppBar(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             onClick = onCartClick,
         )
 
@@ -73,13 +78,16 @@ fun ProductListScreen(
             is ProductListUiState.Success -> {
                 ProductCardGrid(
                     visibleProducts = state.products,
+                    quantitiesByProductId = state.quantitiesByProductId,
                     canLoadMore = state.canLoadMore,
                     isLoadingMore = state.isLoadingMore,
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(20.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
                     onProductClick = onProductClick,
+                    onAddClick = { product -> viewModel.addProduct(product) },
+                    onIncrease = { productId -> viewModel.increase(productId) },
+                    onDecrease = { productId -> viewModel.decrease(productId) },
                     onMoreClick = { viewModel.moreProducts() },
                 )
             }
@@ -136,23 +144,20 @@ private fun ProductListTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = onClick,
-            ) {
+            IconButton(onClick = onClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_cart),
                     contentDescription = "장바구니 아이콘",
                 )
             }
         },
-        colors =
-            TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(APP_BAR_COLOR),
-                scrolledContainerColor = Color.Unspecified,
-                navigationIconContentColor = Color.White,
-                titleContentColor = Color.White,
-                actionIconContentColor = Color.White,
-            ),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(APP_BAR_COLOR),
+            scrolledContainerColor = Color.Unspecified,
+            navigationIconContentColor = Color.White,
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White,
+        ),
         windowInsets = WindowInsets(0, 0, 0, 0),
     )
 }
@@ -160,10 +165,14 @@ private fun ProductListTopAppBar(
 @Composable
 private fun ProductCardGrid(
     visibleProducts: List<Product>,
+    quantitiesByProductId: Map<String, Int>,
     canLoadMore: Boolean,
-    isLoadingMore:Boolean,
+    isLoadingMore: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
+    onAddClick: (Product) -> Unit = {},
+    onIncrease: (String) -> Unit = {},
+    onDecrease: (String) -> Unit = {},
     onMoreClick: () -> Unit = {},
 ) {
     LazyVerticalGrid(
@@ -180,36 +189,34 @@ private fun ProductCardGrid(
                 imageUrl = item.imageUrl.value,
                 productName = item.name.value,
                 price = item.price.value,
-                onClick = {
-                    onProductClick(item)
-                },
+                quantity = quantitiesByProductId[item.id] ?: 0,
+                onClick = { onProductClick(item) },
+                onAddClick = { onAddClick(item) },
+                onIncrease = { onIncrease(item.id) },
+                onDecrease = { onDecrease(item.id) },
             )
         }
-        if (isLoadingMore){
-           item(
-               span = {GridItemSpan(2)},
-           ) {
-               Box(
-                   modifier = Modifier.fillMaxWidth()
-                       .padding(vertical = 16.dp),
-                   contentAlignment = Alignment.Center,
-               ){
-                   CircularProgressIndicator()
-               }
-           }
+        if (isLoadingMore) {
+            item(span = { GridItemSpan(2) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         } else if (canLoadMore) {
-            item(
-                span = { GridItemSpan(2) },
-            ) {
+            item(span = { GridItemSpan(2) }) {
                 MoreButton(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp, horizontal = 20.dp)
-                            .background(
-                                color = Color(0xFF555555),
-                                shape = RoundedCornerShape(size = 45.dp),
-                            ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp, horizontal = 20.dp)
+                        .background(
+                            color = Color(0xFF555555),
+                            shape = RoundedCornerShape(size = 45.dp),
+                        ),
                 ) {
                     onMoreClick()
                 }
@@ -223,28 +230,35 @@ private fun ProductCard(
     productName: String,
     price: Int,
     imageUrl: String,
+    quantity: Int,
     onClick: () -> Unit,
+    onAddClick: () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier.clickable {
-                onClick()
-            },
-    ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "상품 이미지",
-            modifier =
-                Modifier
+    Column(modifier = modifier.clickable { onClick() }) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "상품 이미지",
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(154.dp),
-            contentScale = ContentScale.Crop,
-        )
+                contentScale = ContentScale.Crop,
+            )
+            ProductCardQuantityControl(
+                quantity = quantity,
+                onAddClick = onAddClick,
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+            )
+        }
         ProductInfoColumn(
-            modifier =
-                Modifier
-                    .padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
+            modifier = Modifier.padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
             productName = productName,
             price = price,
         )
@@ -257,9 +271,7 @@ private fun ProductInfoColumn(
     price: Int,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-    ) {
+    Column(modifier = modifier) {
         Text(
             productName,
             fontSize = 18.sp,
@@ -288,9 +300,110 @@ private fun MoreButton(
     }
 }
 
+@Composable
+private fun ProductCardQuantityControl(
+    quantity: Int,
+    onAddClick: () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (quantity == 0) {
+        AddCircleButton(onClick = onAddClick, modifier = modifier)
+    } else {
+        InlineStepper(
+            quantity = quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
+private fun AddCircleButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(32.dp)
+            .clip(CircleShape)
+            .background(Color(0xFFB0B0B0))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "+",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+        )
+    }
+}
+
+@Composable
+private fun InlineStepper(
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .height(32.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(Color.White),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        StepperSign(symbol = "-", onClick = onDecrease)
+        Box(
+            modifier = Modifier
+                .width(28.dp)
+                .height(32.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "$quantity",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black,
+            )
+        }
+        StepperSign(symbol = "+", onClick = onIncrease)
+    }
+}
+
+@Composable
+private fun StepperSign(
+    symbol: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(width = 28.dp, height = 32.dp)
+            .clickable { onClick() }
+            .padding(horizontal = 6.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = symbol,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+        )
+    }
+}
+
 @SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun ProductListScreenPreview() {
-    ProductListScreen(viewModel = ProductListViewModel(MockProductRepository()))
+    ProductListScreen(
+        viewModel = ProductListViewModel(
+            productRepository = MockProductRepository(),
+            cartRepository = MockCartRepository(),
+        ),
+    )
 }
