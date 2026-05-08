@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.repository.cart.CartRepository
@@ -17,21 +18,28 @@ import kotlin.math.max
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow<CartUiState>(CartUiState.Loading)
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
     private var currentPage = 0
 
     init {
+        observeCart()
+    }
+
+    private fun observeCart() {
         viewModelScope.launch {
-            loadCart()
+            cartRepository.cartFlow
+                .collect { cart ->
+                    updateUiState(cart)
+                }
         }
     }
 
     fun removeCartItem(productId: String) {
         viewModelScope.launch {
             cartRepository.remove(productId)
-            loadCart()
         }
     }
 
@@ -39,40 +47,29 @@ class CartViewModel(
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasNext) return
         currentPage++
-        viewModelScope.launch {
-            loadCart()
-        }
+        updateUiState(cartRepository.cartFlow.value)
     }
 
     fun goToPreviousPage() {
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasPrevious) return
         currentPage--
-        viewModelScope.launch {
-            loadCart()
-        }
+        updateUiState(cartRepository.cartFlow.value)
     }
 
-    private suspend fun loadCart() {
-        runCatching { cartRepository.getCart() }
-            .onSuccess { cart ->
-                _uiState.value = mapToUiState(cart)
-            }.onFailure { throwable ->
-                _uiState.value = CartUiState.Error(throwable)
-            }
-    }
-
-    private fun mapToUiState(cart: Cart): CartUiState {
-        if (cart.isEmpty) return CartUiState.Empty
-
-        val totalPages = max(1, ceil(cart.totalQuantity.toDouble() / PAGE_SIZE).toInt())
-        if (currentPage >= totalPages) {
-            currentPage = max(0, totalPages - 1)
+    private fun updateUiState(cart: Cart) {
+        if (cart.isEmpty) {
+            _uiState.value = CartUiState.Empty
+            return
         }
+
+        val totalPages = max(1, ceil(cart.cartItems.size().toDouble() / PAGE_SIZE).toInt())
+        if (currentPage >= totalPages) currentPage = totalPages - 1
+        if (currentPage < 0) currentPage = 0
 
         val pageItems = cart.getPage(currentPage, PAGE_SIZE)
 
-        return CartUiState.Success(
+        _uiState.value = CartUiState.Success(
             cartItems = pageItems,
             currentPage = currentPage,
             totalPages = totalPages,

@@ -1,12 +1,13 @@
 package woowacourse.shopping.repository.cart
 
+import kotlinx.coroutines.flow.StateFlow
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
 import woowacourse.shopping.domain.product.Product
 
 interface CartRepository {
-    suspend fun getCart(): Cart
+    val cartFlow: StateFlow<Cart>
 
     suspend fun addProduct(product: Product)
 

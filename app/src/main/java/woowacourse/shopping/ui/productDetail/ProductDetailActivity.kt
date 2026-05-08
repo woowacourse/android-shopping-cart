@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.di.DataContainer
 import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
@@ -30,8 +31,8 @@ class ProductDetailActivity : ComponentActivity() {
                     factory =
                         ProductDetailViewModel.factory(
                             productId = productId,
-                            productRepository = MockProductRepository(),
-                            cartRepository = MockCartRepository(),
+                            productRepository = DataContainer.productRepository,
+                            cartRepository = DataContainer.cartRepository,
                         ),
                 )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

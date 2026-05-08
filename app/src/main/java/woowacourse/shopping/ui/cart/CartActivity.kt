@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.di.DataContainer
 import woowacourse.shopping.repository.cart.MockCartRepository
 
 class CartActivity : ComponentActivity() {
@@ -21,7 +22,7 @@ class CartActivity : ComponentActivity() {
 
             val viewModel: CartViewModel =
                 viewModel(
-                    factory = CartViewModel.factory(MockCartRepository()),
+                    factory = CartViewModel.factory(DataContainer.cartRepository),
                 )
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
