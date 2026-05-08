@@ -26,8 +26,8 @@ fun ProductList(
     isEnd: Boolean,
     onProductClick: (String) -> Unit,
     onLoading: () -> Unit,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -51,8 +51,8 @@ fun ProductList(
                     },
                 ),
                 quantity = it.quantity,
-                onIncrement = onIncrement,
-                onDecrement = onDecrement,
+                onIncrement = { onIncrement(it.id) },
+                onDecrement = { onDecrement(it.id) },
             )
         }
         if (isEnd.not())

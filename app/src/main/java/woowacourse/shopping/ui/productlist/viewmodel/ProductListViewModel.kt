@@ -43,6 +43,26 @@ class ProductListViewModel : ViewModel() {
         syncUiState()
     }
 
+    fun addCartItem(productId: String) {
+        val product = _products.find { it.hasId(productId) } ?: return
+        cart = cart.plusProduct(product, Quantity(1))
+        syncUiState()
+    }
+
+    fun removeCartItem(productId: String) {
+        val product = _products.find { it.hasId(productId) } ?: return
+        if (!cart.contains(product)) return
+        cart = cart.minusProduct(product, Quantity(1))
+        syncUiState()
+    }
+
+    fun onClickProduct(productId: String) {
+        val product = _products.find { it.hasId(productId) } ?: return
+        _recentProducts.remove(product)
+        _recentProducts.add(0, product)
+        syncUiState()
+    }
+
     private fun syncUiState() {
         _uiState.update { state ->
             state.copy(

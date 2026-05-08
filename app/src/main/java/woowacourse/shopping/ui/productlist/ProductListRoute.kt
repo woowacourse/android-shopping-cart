@@ -22,9 +22,13 @@ fun ProductListRoute(
         cartCount = uiState.cartCount,
         isEnd = uiState.isEnd,
         onProductClick = onProductClick,
-        onIncrement = {},
-        onDecrement = {},
+        onIncrement = { id ->
+            productListViewModel.addCartItem(id)
+        },
+        onDecrement = { id ->
+            productListViewModel.removeCartItem(id)
+        },
         onCartIconClick = onCartIconClick,
-        onLoading = {},
+        onLoading = { productListViewModel.fetchProducts() },
     )
 }

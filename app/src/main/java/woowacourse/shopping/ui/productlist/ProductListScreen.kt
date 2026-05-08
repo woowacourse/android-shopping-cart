@@ -23,8 +23,8 @@ fun ProductListScreen(
     cartCount: Int,
     isEnd: Boolean,
     onProductClick: (String) -> Unit,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onCartIconClick: () -> Unit,
     onLoading: () -> Unit,
     modifier: Modifier = Modifier,
@@ -113,7 +113,13 @@ private fun PreviewProductListScreen() {
         isEnd = false,
         onIncrement = {},
         onDecrement = {},
-        recentProductUiModels = listOf(),
+        recentProductUiModels = listOf(
+            SimpleProductUiModel(
+                id = "1",
+                imageUrl = "",
+                title = "최근 본 상품1",
+            ),
+        ),
         cartCount = 3,
     )
 }
