@@ -13,7 +13,7 @@ class CartItems(
             if (existingItem != null) {
                 items.map { cartItem ->
                     if (cartItem.product.id != newItem.product.id) return@map cartItem
-                    cartItem.copy(quantity = Quantity(cartItem.quantity.value + newItem.quantity.value))
+                    cartItem.copy(quantity = Quantity(newItem.quantity.value))
                 }
             } else {
                 items + newItem
