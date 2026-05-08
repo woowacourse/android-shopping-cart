@@ -9,178 +9,178 @@ import java.util.UUID
 class InMemoryProductRepository(
     initialProducts: List<Product> = emptyList(),
 ) : ProductRepository {
-    val DARAM =
+    val daram =
         Product(
             name = "다람",
             price = Money(10_000),
-            imageUrl = "https://i.namu.wiki/i/MVXBZRYvGBlNoYN2ZzV9Ttk68Euao5BK_eK4FpCF30TjqAH4FmkkLWlB-jJcnejeoSpo5lsIqqU1abloNZ4mdw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BBOYAMI =
+    val bboyami =
         Product(
             name = "뽀야미",
             price = Money(11_000),
-            imageUrl = "https://i.namu.wiki/i/Fl6hgrl84FWyeRUFM42oScLecflbDFrnMvgNmTo15v7WZpFj_m_EQ7XAK7EX-0G8x7l10E4NqLaTUFL5J6LZCQ.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BANILLA =
+    val banilla =
         Product(
             name = "바닐라",
             price = Money(12_000),
-            imageUrl = "https://i.namu.wiki/i/cjd1kMdYSIteKb_SQyWcrfz6WEEpLQi1RsvUPoEsPxWrVGZKoRBGhBTz0F2y9-6ws0XPD9jQgCfhQgYioHNJrw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val APPLE =
+    val apple =
         Product(
             name = "애플",
             price = Money(13_000),
-            imageUrl = "https://i.namu.wiki/i/dmM9VlFuGbkvS3b4B9uEcNntBb7egFMySJi9MFSY2_u8DvDEC0W1sysET0UJjPanUz1hiZPQ-s7nWNdYR4Kzgw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val SYANTI =
+    val syanti =
         Product(
             name = "샤니",
             price = Money(14_000),
-            imageUrl = "https://i.namu.wiki/i/uxeGhj6C7SKpvwV_ViQMn_wVojVACIUWpFzPw7ukBjcDaEwt8l32a4un10JhT-nBsY2uayXLkrfg1vzCncXwTw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val GLLUMIN =
+    val gllumin =
         Product(
             name = "글루민",
             price = Money(15_000),
-            imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val DARAM2 =
+    val daram2 =
         Product(
             name = "다람2",
             price = Money(10_000),
-            imageUrl = "https://i.namu.wiki/i/MVXBZRYvGBlNoYN2ZzV9Ttk68Euao5BK_eK4FpCF30TjqAH4FmkkLWlB-jJcnejeoSpo5lsIqqU1abloNZ4mdw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BBOYAMI2 =
+    val bboyami2 =
         Product(
             name = "뽀야미2",
             price = Money(11_000),
-            imageUrl = "https://i.namu.wiki/i/Fl6hgrl84FWyeRUFM42oScLecflbDFrnMvgNmTo15v7WZpFj_m_EQ7XAK7EX-0G8x7l10E4NqLaTUFL5J6LZCQ.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BANILLA2 =
+    val banilla2 =
         Product(
             name = "바닐라2",
             price = Money(12_000),
-            imageUrl = "https://i.namu.wiki/i/cjd1kMdYSIteKb_SQyWcrfz6WEEpLQi1RsvUPoEsPxWrVGZKoRBGhBTz0F2y9-6ws0XPD9jQgCfhQgYioHNJrw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val APPLE2 =
+    val apple2 =
         Product(
             name = "애플2",
             price = Money(13_000),
-            imageUrl = "https://i.namu.wiki/i/dmM9VlFuGbkvS3b4B9uEcNntBb7egFMySJi9MFSY2_u8DvDEC0W1sysET0UJjPanUz1hiZPQ-s7nWNdYR4Kzgw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val SYANTI2 =
+    val syanti2 =
         Product(
             name = "샤니2",
             price = Money(14_000),
-            imageUrl = "https://i.namu.wiki/i/uxeGhj6C7SKpvwV_ViQMn_wVojVACIUWpFzPw7ukBjcDaEwt8l32a4un10JhT-nBsY2uayXLkrfg1vzCncXwTw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val GLLUMIN2 =
+    val gllumin2 =
         Product(
             name = "글루민2",
             price = Money(15_000),
-            imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val DARAM3 =
+    val daram3 =
         Product(
             name = "다람3",
             price = Money(10_000),
-            imageUrl = "https://i.namu.wiki/i/MVXBZRYvGBlNoYN2ZzV9Ttk68Euao5BK_eK4FpCF30TjqAH4FmkkLWlB-jJcnejeoSpo5lsIqqU1abloNZ4mdw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BBOYAMI3 =
+    val bboyami3 =
         Product(
             name = "뽀야미3",
             price = Money(11_000),
-            imageUrl = "https://i.namu.wiki/i/Fl6hgrl84FWyeRUFM42oScLecflbDFrnMvgNmTo15v7WZpFj_m_EQ7XAK7EX-0G8x7l10E4NqLaTUFL5J6LZCQ.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BANILLA3 =
+    val banilla3 =
         Product(
             name = "바닐라3",
             price = Money(12_000),
-            imageUrl = "https://i.namu.wiki/i/cjd1kMdYSIteKb_SQyWcrfz6WEEpLQi1RsvUPoEsPxWrVGZKoRBGhBTz0F2y9-6ws0XPD9jQgCfhQgYioHNJrw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val APPLE3 =
+    val apple3 =
         Product(
             name = "애플3",
             price = Money(13_000),
-            imageUrl = "https://i.namu.wiki/i/dmM9VlFuGbkvS3b4B9uEcNntBb7egFMySJi9MFSY2_u8DvDEC0W1sysET0UJjPanUz1hiZPQ-s7nWNdYR4Kzgw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val SYANTI3 =
+    val syanti3 =
         Product(
             name = "샤니3",
             price = Money(14_000),
-            imageUrl = "https://i.namu.wiki/i/uxeGhj6C7SKpvwV_ViQMn_wVojVACIUWpFzPw7ukBjcDaEwt8l32a4un10JhT-nBsY2uayXLkrfg1vzCncXwTw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val GLLUMIN3 =
+    val gllumin3 =
         Product(
             name = "글루민3",
             price = Money(15_000),
-            imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val DARAM4 =
+    val daram4 =
         Product(
             name = "다람4",
             price = Money(10_000),
-            imageUrl = "https://i.namu.wiki/i/MVXBZRYvGBlNoYN2ZzV9Ttk68Euao5BK_eK4FpCF30TjqAH4FmkkLWlB-jJcnejeoSpo5lsIqqU1abloNZ4mdw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BBOYAMI4 =
+    val bboyami4 =
         Product(
             name = "뽀야미4",
             price = Money(11_000),
-            imageUrl = "https://i.namu.wiki/i/Fl6hgrl84FWyeRUFM42oScLecflbDFrnMvgNmTo15v7WZpFj_m_EQ7XAK7EX-0G8x7l10E4NqLaTUFL5J6LZCQ.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val BANILLA4 =
+    val banilla4 =
         Product(
             name = "바닐라4",
             price = Money(12_000),
-            imageUrl = "https://i.namu.wiki/i/cjd1kMdYSIteKb_SQyWcrfz6WEEpLQi1RsvUPoEsPxWrVGZKoRBGhBTz0F2y9-6ws0XPD9jQgCfhQgYioHNJrw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val APPLE4 =
+    val apple4 =
         Product(
             name = "애플4",
             price = Money(13_000),
-            imageUrl = "https://i.namu.wiki/i/dmM9VlFuGbkvS3b4B9uEcNntBb7egFMySJi9MFSY2_u8DvDEC0W1sysET0UJjPanUz1hiZPQ-s7nWNdYR4Kzgw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val SYANTI4 =
+    val syanti4 =
         Product(
             name = "샤니4",
             price = Money(14_000),
-            imageUrl = "https://i.namu.wiki/i/uxeGhj6C7SKpvwV_ViQMn_wVojVACIUWpFzPw7ukBjcDaEwt8l32a4un10JhT-nBsY2uayXLkrfg1vzCncXwTw.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
-    val GLLUMIN4 =
+    val gllumin4 =
         Product(
             name = "글루민4",
             price = Money(15_000),
-            imageUrl = "https://i.namu.wiki/i/TcJbe57AzBWnJ9jXsj71eI-sdCx5nt63Oxqw_Y9PXOxCcFjAx4d1DTa3Sw35PmVoZZcQX2gpETrwIqOjDfdegA.webp",
+            imageUrl = "https://picsum.photos/360/360",
         )
     val products: Products =
         if (initialProducts.isEmpty()) {
             Products(
                 listOf(
-                    DARAM,
-                    BBOYAMI,
-                    BANILLA,
-                    APPLE,
-                    GLLUMIN,
-                    SYANTI,
-                    DARAM2,
-                    BBOYAMI2,
-                    BANILLA2,
-                    APPLE2,
-                    GLLUMIN2,
-                    SYANTI2,
-                    DARAM3,
-                    BBOYAMI3,
-                    BANILLA3,
-                    APPLE3,
-                    GLLUMIN3,
-                    SYANTI3,
-                    DARAM4,
-                    BBOYAMI4,
-                    BANILLA4,
-                    APPLE4,
-                    GLLUMIN4,
-                    SYANTI4,
+                    daram,
+                    bboyami,
+                    banilla,
+                    apple,
+                    gllumin,
+                    syanti,
+                    daram2,
+                    bboyami2,
+                    banilla2,
+                    apple2,
+                    gllumin2,
+                    syanti2,
+                    daram3,
+                    bboyami3,
+                    banilla3,
+                    apple3,
+                    gllumin3,
+                    syanti3,
+                    daram4,
+                    bboyami4,
+                    banilla4,
+                    apple4,
+                    gllumin4,
+                    syanti4,
                 ),
             )
         } else {
