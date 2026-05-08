@@ -15,11 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.state.ProductUiModel
+import woowacourse.shopping.ui.model.SimpleProductUiModel
 
 @Composable
 fun RecentProductList(
-    recentProducts: List<ProductUiModel>,
+    recentProducts: List<SimpleProductUiModel>,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -77,15 +77,13 @@ private fun RecentProductItem(
 private fun RecentProductListPreview() {
     RecentProductList(
         recentProducts = listOf(
-            ProductUiModel(
+            SimpleProductUiModel(
                 title = "상품1",
-                price = "1000원",
                 imageUrl = "",
                 id = "1",
             ),
-            ProductUiModel(
+            SimpleProductUiModel(
                 title = "상품2",
-                price = "1000원",
                 imageUrl = "",
                 id = "2",
             ),

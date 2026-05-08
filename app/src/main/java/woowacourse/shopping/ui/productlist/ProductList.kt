@@ -18,11 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.state.ProductUiModel
+import woowacourse.shopping.ui.model.DetailProductUiModel
 
 @Composable
 fun ProductList(
-    products: List<ProductUiModel>,
+    products: List<DetailProductUiModel>,
     isEnd: Boolean,
     onProductClick: (String) -> Unit,
     onLoading: () -> Unit,
@@ -50,7 +50,7 @@ fun ProductList(
                         onProductClick(it.id)
                     },
                 ),
-                quantity = 0,
+                quantity = it.quantity,
                 onIncrement = onIncrement,
                 onDecrement = onDecrement,
             )

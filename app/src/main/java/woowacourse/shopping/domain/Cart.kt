@@ -1,6 +1,10 @@
 package woowacourse.shopping.domain
 
 class Cart(val cartItems: List<CartItem> = emptyList()) {
+    val totalQuantity: Quantity = cartItems.fold(Quantity(0)) { total, item ->
+        total + item.quantity
+    }
+
     fun plusCartItem(cartItem: CartItem): Cart {
         val isSameCartItem = cartItems.any { it == cartItem }
 

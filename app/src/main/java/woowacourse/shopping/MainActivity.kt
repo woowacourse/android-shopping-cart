@@ -9,11 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.productlist.ProductListScreen
+import woowacourse.shopping.ui.productlist.ProductListRoute
 import woowacourse.shopping.ui.productlist.stateholder.rememberProductListStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
@@ -56,23 +55,13 @@ class MainActivity : ComponentActivity() {
                 productListStateHolder.removeCartItems(deletedCartItems)
             }
             AndroidshoppingTheme {
-                ProductListScreen(
-                    productUiModels = productListStateHolder.productUiModels,
-                    isEnd = productListStateHolder.isEndList(),
-                    onLoading = {
-                        scope.launch {
-                            delay(500)
-                            productListStateHolder.fetchProducts()
-                        }
-                    },
+                ProductListRoute(
                     onProductClick = { id ->
                         detailLauncher.launch(ProductDetailActivity.newIntent(this, id))
                     },
                     onCartIconClick = {
                         cartLauncher.launch(CartActivity.newIntent(this, productListStateHolder.cartUiModels))
                     },
-                    onIncrement = {},
-                    onDecrement = {},
                 )
             }
         }

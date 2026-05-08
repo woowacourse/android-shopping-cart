@@ -2,15 +2,14 @@ package woowacourse.shopping.domain
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class QuantityTest {
     @Test
-    fun `수량이 1개 미만이면 오류가 발생한다`() {
-        // given & when & then : 0개인 수량이 주어지면 오류가 발생한다
-        assertThrows<IllegalArgumentException> {
-            Quantity(0)
-        }
+    fun `수량이 0개 이상이면 오류가 발생하지 않는다`() {
+        // given & when & then : 0개인 수량이 주어지면 오류가 발생하지 않는다
+        assertDoesNotThrow { Quantity(0) }
     }
 
     @Test
