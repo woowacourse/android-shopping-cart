@@ -2,42 +2,40 @@ package woowacourse.shopping.presentation.shopping.screen
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.product.Product
-import woowacourse.shopping.domain.model.product.Products
+import woowacourse.shopping.presentation.shopping.ProductListViewModel
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
-    products: Products,
-    productQuantities: Map<Uuid, Int>,
-    hasNextPage: Boolean,
-    totalQuantity: Int,
-    onLoadMore: () -> Unit,
+    viewModel: ProductListViewModel,
     onCartIconClick: () -> Unit,
     onItemClick: (Product) -> Unit,
-    onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     ProductListScaffold(
-        totalQuantity = totalQuantity,
+        totalQuantity = uiState.totalQuantity,
         onClick = onCartIconClick,
         modifier = modifier,
     ) {
         ProductListContent(
-            products = products,
-            productQuantities = productQuantities,
-            hasNextPage = hasNextPage,
-            onLoadMore = onLoadMore,
+            products = uiState.products,
+            productQuantities = uiState.productQuantities,
+            hasNextPage = viewModel.hasNextPage,
+            onLoadMore = viewModel::loadMore,
             onItemClick = onItemClick,
-            onQuantityIncrease = onQuantityIncrease,
-            onQuantityDecrease = onQuantityDecrease,
+            onQuantityIncrease = viewModel::increaseQuantity,
+            onQuantityDecrease = viewModel::decreaseQuantity,
         )
     }
 }
@@ -47,14 +45,12 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     ProductListScreen(
-        products = Products(emptyList()),
-        productQuantities = emptyMap(),
-        hasNextPage = true,
-        totalQuantity = 0,
-        onLoadMore = {},
+        viewModel =
+            ProductListViewModel(
+                productRepository = AppContainer.productRepository,
+                cartRepository = AppContainer.cartRepository,
+            ),
         onCartIconClick = {},
         onItemClick = {},
-        onQuantityIncrease = {},
-        onQuantityDecrease = {},
     )
 }
