@@ -36,6 +36,7 @@ class ShoppingViewModel(
                     it.products.map { product ->
                         ShoppingItemUiModel(product.product, quantities[product.product.id] ?: 0)
                     },
+                totalQuantity = quantities.values.sum(),
             )
         }
     }

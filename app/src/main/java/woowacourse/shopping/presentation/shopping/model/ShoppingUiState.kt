@@ -5,4 +5,5 @@ data class ShoppingUiState(
     val canLoadMore: Boolean = true,
     val isLoading: Boolean = false,
     val offset: Int = 0,
+    val totalQuantity: Int = 0,
 )
