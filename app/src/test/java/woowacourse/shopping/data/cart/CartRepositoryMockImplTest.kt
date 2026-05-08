@@ -43,7 +43,7 @@ class CartRepositoryMockImplTest {
                     price = Price(3000),
                     imageUrl = ImageUrl("https://velog.io"),
                 ),
-            quantity = CartItemQuantity(1)
+            quantity = CartItemQuantity(1),
         )
 
     private val cartItem2 =
@@ -54,7 +54,7 @@ class CartRepositoryMockImplTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://naver.com"),
                 ),
-            quantity = CartItemQuantity(2)
+            quantity = CartItemQuantity(2),
         )
 
     private val cartItem3 =
@@ -65,6 +65,6 @@ class CartRepositoryMockImplTest {
                     price = Price(2000),
                     imageUrl = ImageUrl("https://google.com"),
                 ),
-            quantity = CartItemQuantity(3)
+            quantity = CartItemQuantity(3),
         )
 }

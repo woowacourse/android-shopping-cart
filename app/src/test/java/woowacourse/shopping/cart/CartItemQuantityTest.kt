@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
-import kotlin.intArrayOf
 
 class CartItemQuantityTest {
-
     @ParameterizedTest
     @ValueSource(ints = [-1, -2, -100, -1000, -2000, -3000])
     fun `개수의 값이 음수일 경우 예외가 발생한다`(value: Int) {

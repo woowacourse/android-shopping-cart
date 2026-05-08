@@ -10,13 +10,13 @@ import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.model.ProductName
 
 class CartItemTest {
-
     @Test
     fun `해당 장바구니 상품과 같은 상품이 존재한다면 true를 반환한다`() {
-        val cartItem = CartItem(
-            product = mockProduct,
-            quantity = CartItemQuantity(1)
-        )
+        val cartItem =
+            CartItem(
+                product = mockProduct,
+                quantity = CartItemQuantity(1),
+            )
         val targetCartItem = cartItem1
 
         cartItem.isSameCartItem(targetCartItem) shouldBe true
@@ -24,10 +24,11 @@ class CartItemTest {
 
     @Test
     fun `해당 장바구니 상품과 같은 상품이 존재한지 않는다면 false를 반환한다`() {
-        val cartItem = CartItem(
-            product = mockProduct,
-            quantity = CartItemQuantity(1)
-        )
+        val cartItem =
+            CartItem(
+                product = mockProduct,
+                quantity = CartItemQuantity(1),
+            )
         val targetCartItem = cartItem2
 
         cartItem.isSameCartItem(targetCartItem) shouldBe false
@@ -71,7 +72,7 @@ class CartItemTest {
     private val cartItem1 =
         CartItem(
             product = mockProduct,
-            quantity = CartItemQuantity(3)
+            quantity = CartItemQuantity(3),
         )
 
     private val cartItem2 =
@@ -82,6 +83,6 @@ class CartItemTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://naver.com"),
                 ),
-            quantity = CartItemQuantity(2)
+            quantity = CartItemQuantity(2),
         )
 }

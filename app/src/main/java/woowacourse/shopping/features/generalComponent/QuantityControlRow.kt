@@ -18,7 +18,7 @@ fun QuantityControlRow(
     minusEnabled: Boolean,
     onIncrementClick: () -> Unit,
     onDecrementClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
@@ -30,19 +30,19 @@ fun QuantityControlRow(
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
-                contentDescription = "개수 감소 버튼"
+                contentDescription = "개수 감소 버튼",
             )
         }
         Text(
             text = quantity.toString(),
-            fontSize = 22.sp
+            fontSize = 22.sp,
         )
         IconButton(
-            onClick = onIncrementClick
+            onClick = onIncrementClick,
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "개수 증가 버튼"
+                contentDescription = "개수 증가 버튼",
             )
         }
     }

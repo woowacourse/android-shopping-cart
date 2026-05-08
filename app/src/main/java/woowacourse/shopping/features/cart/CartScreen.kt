@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -189,7 +188,7 @@ private fun CartItemCard(
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -225,7 +224,7 @@ private fun CartItemCard(
                 Column(
                     modifier = Modifier,
                     verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 ) {
                     QuantityControlRow(
                         quantity = cartItemQuantity,
@@ -315,16 +314,17 @@ private fun ProductImage(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartItems = listOf(
-            CartItem(
-                Product(
-                    name = ProductName("우아한두유"),
-                    price = Price(3000),
-                    imageUrl = ImageUrl("https://velog.io"),
+        cartItems =
+            listOf(
+                CartItem(
+                    Product(
+                        name = ProductName("우아한두유"),
+                        price = Price(3000),
+                        imageUrl = ImageUrl("https://velog.io"),
+                    ),
+                    quantity = CartItemQuantity(1),
                 ),
-                quantity = CartItemQuantity(1),
-            )
-        ),
+            ),
         totalPages = 0,
         currentPage = 0,
         hasPrevious = false,
@@ -334,6 +334,6 @@ private fun CartScreenPreview() {
         removeCartItem = {},
         increaseCartItem = {},
         decreaseCartItem = {},
-        isMinusEnabled = { true }
+        isMinusEnabled = { true },
     )
 }
