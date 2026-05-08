@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
 fun ProductListRoute(
     productListViewModel: ProductListViewModel = viewModel(),
     onNavigateToDetail: (String) -> Unit,
-    onCartIconClick: () -> Unit,
+    onNavigateToCart: () -> Unit,
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -29,7 +29,7 @@ fun ProductListRoute(
         onDecrement = { id ->
             productListViewModel.removeCartItem(id)
         },
-        onCartIconClick = onCartIconClick,
+        onCartIconClick = onNavigateToCart,
         onLoading = { productListViewModel.fetchProducts() },
     )
 }
