@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui.component.topbar
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -16,7 +18,12 @@ fun DismissTopBar(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ShoppingTopBar(type = TopBarType.TAILING, modifier = modifier) {
+    ShoppingTopBar(
+        paddingValues = PaddingValues(end = 26.dp, top = 16.dp, bottom = 16.dp),
+        modifier = modifier,
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+
         Icon(
             painter = painterResource(R.drawable.ic_dismiss),
             contentDescription = "닫기 버튼",

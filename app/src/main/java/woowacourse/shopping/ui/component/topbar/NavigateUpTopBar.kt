@@ -1,7 +1,10 @@
 package woowacourse.shopping.ui.component.topbar
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +23,10 @@ fun NavigateUpTopBar(
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ShoppingTopBar(type = TopBarType.TITLE, modifier = modifier) {
+    ShoppingTopBar(
+        paddingValues = PaddingValues(horizontal = 23.dp, vertical = 20.dp),
+        modifier = modifier,
+    ) {
         Icon(
             painter = painterResource(R.drawable.ic_arrow_back),
             contentDescription = "뒤로가기 버튼",
@@ -29,6 +35,8 @@ fun NavigateUpTopBar(
                 .clickable(onClick = onNavigateUp),
             tint = Color.White,
         )
+
+        Spacer(modifier = Modifier.width(24.dp))
 
         Text(
             text = title,
