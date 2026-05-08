@@ -28,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.state.ProductUiModel
+import woowacourse.shopping.ui.model.DetailProductUiModel
 
 @Composable
 fun CartScreen(
-    cartItems: List<ProductUiModel>,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    cartItems: List<DetailProductUiModel>,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onCloseClick: () -> Unit,
     onDelete: (String) -> Unit,
     page: Int,
@@ -89,10 +89,10 @@ fun CartScreen(
 
 @Composable
 private fun CartListContent(
-    cartItems: List<ProductUiModel>,
+    cartItems: List<DetailProductUiModel>,
     page: Int,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onDelete: (String) -> Unit,
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
@@ -188,9 +188,9 @@ private fun PageButton(
 
 @Composable
 private fun CartItemList(
-    cartItems: List<ProductUiModel>,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    cartItems: List<DetailProductUiModel>,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -212,8 +212,8 @@ private fun CartItemList(
                     onDelete(it.id)
                 },
                 quantity = 1,
-                onIncrement = onIncrement,
-                onDecrement = onDecrement,
+                onIncrement = { onIncrement(it.id) },
+                onDecrement = { onDecrement(it.id) },
             )
         }
     }
@@ -258,11 +258,12 @@ private fun EmptyCartScreenPreview() {
 private fun CartScreenPreview() {
     CartScreen(
         cartItems = listOf(
-            ProductUiModel.of(
-                name = "카트 상품 1",
-                price = 1000,
-                imageUrl = "",
+            DetailProductUiModel(
                 id = "1",
+                imageUrl = "",
+                title = "카트 상품1",
+                price = "1000원",
+                quantity = 1,
             ),
         ),
         onCloseClick = {},
@@ -282,11 +283,12 @@ private fun CartScreenPreview() {
 private fun InvalidPageCartScreenPreview() {
     CartScreen(
         cartItems = listOf(
-            ProductUiModel.of(
-                name = "카트 상품 1",
-                price = 1000,
-                imageUrl = "",
+            DetailProductUiModel(
                 id = "1",
+                imageUrl = "",
+                title = "카트 상품1",
+                price = "1000원",
+                quantity = 1,
             ),
         ),
         onCloseClick = {},
