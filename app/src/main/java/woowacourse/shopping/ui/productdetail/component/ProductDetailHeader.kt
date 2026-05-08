@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.ui.theme.Gray5
 
 @Composable
 fun ProductDetailHeader(
@@ -25,7 +26,7 @@ fun ProductDetailHeader(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(color = Color.DarkGray)
+                .background(color = Gray5)
                 .padding(20.dp),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically,

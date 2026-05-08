@@ -17,7 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.theme.Gray5
+import woowacourse.shopping.ui.theme.Typography
 
 @Composable
 fun CartHeader(
@@ -28,7 +29,7 @@ fun CartHeader(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(color = Color.DarkGray)
+                .background(color = Gray5)
                 .padding(start = 26.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -42,7 +43,7 @@ fun CartHeader(
         Text(
             text = "Cart",
             color = Color.White,
-            style = ShoppingTypography.titleMedium,
+            style = Typography.titleMedium,
         )
     }
 }

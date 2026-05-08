@@ -4,7 +4,7 @@
 
 ### UI/UX 및 디자인 시스템
 - [x] 이미지 링크를 가짜 이미지 링크로 변경
-- [ ] 하드코딩된 TextStyle과 TextColor를 공통 테마 파일로 분리
+- [x] 하드코딩된 TextStyle과 TextColor를 공통 테마 파일로 분리
 
 ### 아키텍처 및 상태 관리
 - [ ] 기존 StateHolder 방식을 ViewModel + UiState 구조로 전환

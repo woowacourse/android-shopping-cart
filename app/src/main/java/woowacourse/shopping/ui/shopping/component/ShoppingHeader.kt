@@ -17,7 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.theme.Gray5
+import woowacourse.shopping.ui.theme.Typography
 
 @Composable
 fun ShoppingHeader(
@@ -29,7 +30,7 @@ fun ShoppingHeader(
             modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(color = Color.DarkGray)
+                .background(color = Gray5)
                 .padding(start = 26.dp, end = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -37,7 +38,7 @@ fun ShoppingHeader(
         Text(
             text = "Shopping",
             color = Color.White,
-            style = ShoppingTypography.titleMedium,
+            style = Typography.titleMedium,
         )
 
         Icon(

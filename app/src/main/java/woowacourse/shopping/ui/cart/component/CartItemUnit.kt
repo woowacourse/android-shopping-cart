@@ -23,12 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.component.ShoppingImage
 
 @Composable
@@ -70,7 +71,8 @@ private fun NameAndCloseIcon(
         Text(
             text = product.name,
             color = Color.DarkGray,
-            style = ShoppingTypography.productName,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.W700,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -110,7 +112,8 @@ private fun ImageAndPrice(
         Text(
             text = "$formatted 원",
             color = Color.DarkGray,
-            style = ShoppingTypography.productPrice,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.W400,
             modifier = Modifier.padding(start = 6.dp),
         )
     }
