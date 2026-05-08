@@ -27,6 +27,9 @@ fun ProductsScreen(
     isLastPage: Boolean,
     onCartClick: () -> Unit,
     onProductClick: (id: String) -> Unit,
+    onAddClick: (id: String) -> Unit,
+    onIncreaseClick: (id: String) -> Unit,
+    onDecreaseClick: (id: String) -> Unit,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,6 +56,10 @@ fun ProductsScreen(
                     productName = it.productName,
                     formattedPrice = it.formattedPrice,
                     onClick = { onProductClick(it.id) },
+                    formattedQuantity = it.formattedQuantity,
+                    onAddClick = { onAddClick(it.id) },
+                    onIncreaseClick = { onIncreaseClick(it.id) },
+                    onDecreaseClick = { onDecreaseClick(it.id) },
                 )
             }
 
@@ -73,6 +80,7 @@ private fun ProductsScreenPreview() {
                 productImageUrl = "",
                 productName = "$it 번 상품",
                 formattedPrice = "$it 원",
+                formattedQuantity = "1",
             )
         }.toImmutableList()
 
@@ -81,6 +89,9 @@ private fun ProductsScreenPreview() {
         isLastPage = false,
         onCartClick = {},
         onProductClick = {},
+        onAddClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
         onLoadClick = {},
     )
 }

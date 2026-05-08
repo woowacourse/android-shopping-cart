@@ -28,6 +28,9 @@ class ProductsActivity : ComponentActivity() {
                         onProductClick = { startActivity(ProductDetailActivity.newIntent(this, it)) },
                         onLoadClick = stateHolder::getProducts,
                         modifier = Modifier.padding(innerPadding),
+                        onAddClick = stateHolder::onAddClick,
+                        onIncreaseClick = stateHolder::onIncreaseClick,
+                        onDecreaseClick = stateHolder::onDecreaseClick,
                     )
                 }
             }

@@ -9,6 +9,7 @@ data class ShoppingProductInfo(
     val productImageUrl: String,
     val productName: String,
     val formattedPrice: String,
+    val formattedQuantity: String,
 )
 
 fun Product.toUiModel(): ShoppingProductInfo =
@@ -17,4 +18,5 @@ fun Product.toUiModel(): ShoppingProductInfo =
         productImageUrl = imageUrl,
         productName = productTitle.value,
         formattedPrice = "%,d원".format(price.value),
+        formattedQuantity = "0"
     )
