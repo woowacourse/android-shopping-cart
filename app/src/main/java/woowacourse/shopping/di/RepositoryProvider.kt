@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import woowacourse.shopping.data.repository.InMemoryProductRepository
 import woowacourse.shopping.data.repository.LocalCartRepository
-import woowacourse.shopping.data.source.local.CartDatabase
+import woowacourse.shopping.data.source.local.ShoppingDatabase
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 object RepositoryProvider {
-    private lateinit var database: CartDatabase
+    private lateinit var database: ShoppingDatabase
 
     val productRepository: ProductRepository = InMemoryProductRepository()
     val cartRepository: CartRepository by lazy {
@@ -24,7 +24,7 @@ object RepositoryProvider {
             Room
                 .databaseBuilder(
                     context.applicationContext,
-                    CartDatabase::class.java,
+                    ShoppingDatabase::class.java,
                     "cart-db",
                 ).build()
     }

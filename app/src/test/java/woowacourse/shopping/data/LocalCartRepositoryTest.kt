@@ -8,8 +8,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.LocalCartRepository
-import woowacourse.shopping.data.source.local.CartDao
-import woowacourse.shopping.data.source.local.CartEntity
+import woowacourse.shopping.data.source.local.cart.CartDao
+import woowacourse.shopping.data.source.local.cart.CartEntity
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Money
 import woowacourse.shopping.domain.model.Product
