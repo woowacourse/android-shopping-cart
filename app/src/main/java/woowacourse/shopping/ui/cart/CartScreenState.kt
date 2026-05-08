@@ -91,14 +91,12 @@ class CartScreenState(
         val newTotalCount = cartRepo.getSize()
 
         val validMaxPage = ((newTotalCount - 1) / PAGE_SIZE + 1).coerceAtLeast(1)
-
         if (currentPage > validMaxPage) currentPage = validMaxPage
 
-        pagedItems =
-            cartRepo.getPagedItems(
-                fromIndex = (currentPage - 1) * PAGE_SIZE,
-                count = PAGE_SIZE,
-            )
+        pagedItems = cartRepo.getPagedItems(
+            fromIndex = (currentPage - 1) * PAGE_SIZE,
+            count = PAGE_SIZE,
+        )
         totalItemCount = newTotalCount
     }
 
