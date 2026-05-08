@@ -13,5 +13,6 @@ import woowacourse.shopping.data.local.entity.ProductEntity
 @TypeConverters(PriceConverter::class)
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+
     abstract fun cartDao(): CartDao
 }

@@ -16,25 +16,28 @@ class RoomCartRepository(
 ) : CartRepository {
     override suspend fun getTotalProductQuantity(): Int = cartDao.getTotalQuantity()
 
-    override suspend fun getProductQuantity(productId: Uuid): Int =
-        cartDao.getByProductId(productId = productId.toString())?.quantity ?: 0
+    override suspend fun getProductQuantity(productId: Uuid): Int = cartDao.getByProductId(productId = productId.toString())?.quantity ?: 0
 
     override fun getCartProducts(): Flow<List<ProductWithQuantity>> =
         cartDao.getCartProducts().map { rows ->
             rows.map { row ->
                 ProductWithQuantity(
-                    product = Product(
-                        productId = Uuid.parse(row.productId),
-                        imageUrl = row.imageUrl,
-                        productName = row.productName,
-                        price = Price(row.price),
-                    ),
+                    product =
+                        Product(
+                            productId = Uuid.parse(row.productId),
+                            imageUrl = row.imageUrl,
+                            productName = row.productName,
+                            price = Price(row.price),
+                        ),
                     quantity = row.quantity,
                 )
             }
         }
 
-    override suspend fun addProduct(product: Product, quantityToAdd: Int) {
+    override suspend fun addProduct(
+        product: Product,
+        quantityToAdd: Int,
+    ) {
         val productId = product.productId.toString()
         val existing = cartDao.getByProductId(productId)
 
@@ -45,12 +48,12 @@ class RoomCartRepository(
         }
     }
 
+    override suspend fun deleteProduct(productId: Uuid) = cartDao.deleteByProductId(productId = productId.toString())
 
-    override suspend fun deleteProduct(productId: Uuid) {
-        return cartDao.deleteByProductId(productId = productId.toString())
-    }
-
-    override suspend fun decreaseProduct(productId: Uuid, quantityToRemove: Int) {
+    override suspend fun decreaseProduct(
+        productId: Uuid,
+        quantityToRemove: Int,
+    ) {
         val cartProductId = productId.toString()
         val existing = cartDao.getByProductId(cartProductId) ?: return
         val updatedQuantity = existing.quantity - quantityToRemove
@@ -61,5 +64,4 @@ class RoomCartRepository(
             cartDao.deleteByProductId(cartProductId)
         }
     }
-
 }

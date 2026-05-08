@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.shopping.viewmodel.ProductListViewModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme

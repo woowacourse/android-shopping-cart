@@ -31,8 +31,7 @@ class ProductListViewModel(
     }
 
     // cartRepository
-    fun getProductQuantity(productId: Uuid): Int =
-        productQuantities[productId] ?: 0
+    fun getProductQuantity(productId: Uuid): Int = productQuantities[productId] ?: 0
 
     var totalProductQuantity by mutableIntStateOf(0)
         private set
@@ -81,9 +80,6 @@ class ProductListViewModel(
             .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
             .items
 
-
     var productQuantities by mutableStateOf<Map<Uuid, Int>>(emptyMap())
         private set
-
-
 }

@@ -9,7 +9,6 @@ import woowacourse.shopping.data.local.entity.CartProductRow
 
 @Dao
 interface CartDao {
-
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     suspend fun getByProductId(productId: String): CartItemEntity?
 
@@ -17,7 +16,10 @@ interface CartDao {
     suspend fun insert(item: CartItemEntity)
 
     @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
-    suspend fun updateQuantity(productId: String, quantity: Int)
+    suspend fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    )
 
     @Query("DELETE FROM cart_items WHERE productId = :productId")
     suspend fun deleteByProductId(productId: String)
@@ -35,7 +37,7 @@ interface CartDao {
               c.quantity AS quantity
           FROM cart_items c
           JOIN products p ON p.productId = c.productId
-      """
+      """,
     )
     fun getCartProducts(): Flow<List<CartProductRow>>
 }

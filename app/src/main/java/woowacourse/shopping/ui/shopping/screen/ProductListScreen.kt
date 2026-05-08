@@ -14,16 +14,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.AppContainer
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.ProductWithQuantity
-import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.productdetail.component.MintButton
 import woowacourse.shopping.ui.shopping.component.ProductItem
 import woowacourse.shopping.ui.shopping.component.ProductListTopAppBar
@@ -34,10 +31,10 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ProductListScreen(
+    modifier: Modifier = Modifier,
     viewModel: ProductListViewModel = viewModel(),
     onCartClick: () -> Unit,
     onProductClick: (Uuid) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
@@ -97,8 +94,6 @@ fun ProductListScreen(
 @Preview
 @Composable
 private fun ProductListScreenPreview() {
-    val packageName = LocalContext.current.packageName
-
     ProductListScreen(
         onCartClick = {},
         onProductClick = {},
