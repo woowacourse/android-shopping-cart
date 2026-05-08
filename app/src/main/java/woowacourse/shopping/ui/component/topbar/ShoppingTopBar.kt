@@ -1,0 +1,29 @@
+package woowacourse.shopping.ui.component.topbar
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+
+@Composable
+fun ShoppingTopBar(
+    paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color(0xFF555555))
+            .padding(paddingValues),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        content()
+    }
+}
