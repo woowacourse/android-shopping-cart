@@ -39,7 +39,7 @@ fun CartContent(
             ) { cartItem ->
                 CartProductItem(
                     cartItem = cartItem,
-                    onDelete = onDelete,
+                    onDelete = { onDelete(cartItem.product.productId) },
                     onQuantityIncrease = { onQuantityIncrease(cartItem.product) },
                     onQuantityDecrease = { onQuantityDecrease(cartItem.product.productId, cartItem.quantity) },
                 )

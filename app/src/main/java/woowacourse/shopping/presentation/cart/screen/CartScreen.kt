@@ -1,15 +1,20 @@
 package woowacourse.shopping.presentation.cart.screen
 
+import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.domain.model.cart.Cart
-import woowacourse.shopping.domain.model.product.Product
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import woowacourse.shopping.app.AppContainer
+import woowacourse.shopping.presentation.cart.CartUiEvent
+import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.presentation.cart.component.CartContent
 import woowacourse.shopping.presentation.cart.component.CartScaffold
 import woowacourse.shopping.presentation.cart.component.DeleteProductDialog
@@ -19,19 +24,23 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun CartScreen(
-    cart: Cart,
-    currentPage: Int,
-    hasMoreItems: Boolean,
-    onPreviousPageClick: () -> Unit,
-    onNextPageClick: () -> Unit,
-    hasPreviousPage: Boolean,
-    hasNextPage: Boolean,
-    onDelete: (Uuid) -> Unit,
-    onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
+    viewModel: CartViewModel,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is CartUiEvent.ShowMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var deleteProductId by remember { mutableStateOf<Uuid?>(null) }
 
     CartScaffold(
@@ -39,22 +48,22 @@ fun CartScreen(
         modifier = modifier,
     ) {
         CartContent(
-            cart = cart,
-            currentPage = currentPage,
-            hasMoreItems = hasMoreItems,
-            onPreviousPageClick = onPreviousPageClick,
-            onNextPageClick = onNextPageClick,
-            hasPreviousPage = hasPreviousPage,
-            hasNextPage = hasNextPage,
+            cart = uiState.cart,
+            currentPage = uiState.currentPage,
+            hasMoreItems = viewModel.hasMoreItems,
+            onPreviousPageClick = viewModel::goToPreviousPage,
+            onNextPageClick = viewModel::goToNextPage,
+            hasPreviousPage = viewModel.hasPreviousPage,
+            hasNextPage = viewModel.hasNextPage,
             onDelete = { productId ->
                 deleteProductId = productId
             },
-            onQuantityIncrease = onQuantityIncrease,
+            onQuantityIncrease = viewModel::increaseQuantity,
             onQuantityDecrease = { productId, quantity ->
                 if (quantity == 1) {
                     deleteProductId = productId
                 } else {
-                    onQuantityDecrease(productId)
+                    viewModel.decreaseQuantity(productId)
                 }
             },
         )
@@ -64,7 +73,7 @@ fun CartScreen(
         DeleteProductDialog(
             onDismissRequest = { deleteProductId = null },
             onConfirm = {
-                deleteProductId?.let(onDelete)
+                deleteProductId?.let(viewModel::deleteProduct)
                 deleteProductId = null
             },
             onDismiss = { deleteProductId = null },
@@ -77,16 +86,7 @@ fun CartScreen(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cart = Cart(),
-        currentPage = 1,
-        hasMoreItems = false,
-        onPreviousPageClick = {},
-        onNextPageClick = {},
-        hasPreviousPage = false,
-        hasNextPage = false,
-        onDelete = {},
-        onQuantityIncrease = {},
-        onQuantityDecrease = {},
+        viewModel = CartViewModel(AppContainer.cartRepository),
         onBack = {},
     )
 }

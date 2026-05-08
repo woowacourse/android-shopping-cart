@@ -1,13 +1,15 @@
 package woowacourse.shopping.presentation.cart
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
@@ -18,6 +20,9 @@ class CartViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
+
+    private val _uiEvent = Channel<CartUiEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     val totalItemCount: Int
         get() = cartRepository.getTotalItemCount()
@@ -40,8 +45,11 @@ class CartViewModel(
 
     @OptIn(ExperimentalUuidApi::class)
     fun deleteProduct(productId: Uuid) {
-        cartRepository.deleteProduct(productId)
-        refresh()
+        viewModelScope.launch {
+            cartRepository.deleteProduct(productId)
+            refresh()
+            _uiEvent.send(CartUiEvent.ShowMessage("삭제되었습니다."))
+        }
     }
 
     fun increaseQuantity(product: Product) {
