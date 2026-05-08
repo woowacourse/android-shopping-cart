@@ -120,4 +120,6 @@ class CartItemsTest {
 
         assertEquals(25_000, cartItems.totalPrice)
     }
+
+
 }

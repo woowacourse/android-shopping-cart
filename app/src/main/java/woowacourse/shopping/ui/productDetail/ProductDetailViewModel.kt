@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.CartItem
+import woowacourse.shopping.domain.cart.Quantity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
@@ -45,14 +46,24 @@ class ProductDetailViewModel(
         }
     }
 
+    fun increaseSelected(){
+        val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        _uiState.value = current.copy(selectedQuantity = current.selectedQuantity + 1)
+    }
+
+    fun decreaseSelected(){
+        val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        if (current.selectedQuantity <= 1) return
+        _uiState.value = current.copy(selectedQuantity = current.selectedQuantity - 1)
+    }
     fun addToCart() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
         viewModelScope.launch {
-            cartRepository.addProduct(current.product)
+            cartRepository.addProduct(current.product, Quantity(current.selectedQuantity))
         }
     }
 
-    companion object {
+        companion object {
         fun factory(
             productId: String,
             productRepository: ProductRepository,

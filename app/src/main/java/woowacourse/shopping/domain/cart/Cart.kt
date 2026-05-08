@@ -9,7 +9,7 @@ data class Cart(
     val totalPrice: Int = cartItems.totalPrice
     val isEmpty:Boolean = cartItems.size() == 0
 
-    fun addProduct(product: Product):Cart =  copy(cartItems = cartItems.addProduct(product))
+    fun addProduct(product: Product, quantity: Quantity = Quantity.ONE):Cart =  copy(cartItems = cartItems.addProduct(product, quantity))
 
     fun increase(productId:String):Cart = copy(cartItems = cartItems.increase(productId))
 

@@ -41,7 +41,7 @@ class CartTest {
     private val cartItem3 = CartItem(product = product3)
 
     private val cartItemsValue = CartItems(
-        value = listOf(cartItem1, cartItem2, cartItem3),
+        values = listOf(cartItem1, cartItem2, cartItem3),
     )
 
     @Test
