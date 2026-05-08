@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
@@ -55,11 +57,6 @@ import woowacourse.shopping.features.generalComponent.QuantityControlRow
 
 @Composable
 fun CartScreen(
-    cartItems: List<CartItem>,
-    totalPages: Int,
-    currentPage: Int,
-    hasPrevious: Boolean,
-    hasNext: Boolean,
     isMinusEnabled: (CartItem) -> Boolean,
     goToPreviousPage: () -> Unit,
     goToNextPage: () -> Unit,
@@ -67,7 +64,9 @@ fun CartScreen(
     increaseCartItem: (CartItem) -> Unit,
     decreaseCartItem: (CartItem) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: CartViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
 
     Column(
@@ -88,7 +87,7 @@ fun CartScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 4.dp),
         ) {
-            items(cartItems) { cartItem ->
+            items(uiState.pageCartItems) { cartItem ->
                 CartItemCard(
                     modifier =
                         Modifier
@@ -114,11 +113,11 @@ fun CartScreen(
             }
         }
 
-        if (totalPages > 1) {
+        if (uiState.totalPageCount > 1) {
             PageNavigator(
-                currentPage = currentPage,
-                hasPrevious = hasPrevious,
-                hasNext = hasNext,
+                currentPage = uiState.currentPage,
+                hasPrevious = !uiState.isFirstPage,
+                hasNext = !uiState.isLastPage,
                 onPreviousClick = { goToPreviousPage() },
                 onNextClick = { goToNextPage() },
                 modifier =
@@ -314,21 +313,6 @@ private fun ProductImage(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartItems =
-            listOf(
-                CartItem(
-                    Product(
-                        name = ProductName("우아한두유"),
-                        price = Price(3000),
-                        imageUrl = ImageUrl("https://velog.io"),
-                    ),
-                    quantity = CartItemQuantity(1),
-                ),
-            ),
-        totalPages = 0,
-        currentPage = 0,
-        hasPrevious = false,
-        hasNext = false,
         goToPreviousPage = {},
         goToNextPage = {},
         removeCartItem = {},

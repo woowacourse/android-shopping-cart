@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.features.constant.Format.formatPrice
@@ -50,18 +52,18 @@ import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 
 @Composable
 fun ProductListScreen(
-    productList: List<ProductUiState>,
-    totalCartItemsCount: Int,
-    isLastPage: Boolean,
+    viewModel: ProductListViewModel= viewModel(),
     onCartClick: () -> Unit,
+    onProductClick: (ProductUiModel) -> Unit,
     loadProducts: () -> Unit,
-    getQuantity: (ProductUiState) -> Int,
-    isExistProductToCart: (ProductUiState) -> Boolean,
-    onDecrementClick: (ProductUiState) -> Unit,
-    onAddCartClick: (ProductUiState) -> Unit,
-    onProductClick: (ProductUiState) -> Unit,
+    onAddCartClick: (ProductUiModel) -> Unit,
+    getQuantity: (ProductUiModel) -> Int,
+    isExistProductToCart: (ProductUiModel) -> Boolean,
+    onDecrementClick: (ProductUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Column(
         modifier = modifier,
     ) {
@@ -70,12 +72,12 @@ fun ProductListScreen(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-            totalCartItemsCount = totalCartItemsCount,
+            totalCartItemsCount = uiState.totalCartItemsCount,
             onClick = onCartClick,
         )
 
         ProductCardGrid(
-            products = productList,
+            products = uiState.productList,
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -90,7 +92,7 @@ fun ProductListScreen(
             onAddCartClick = {
                 onAddCartClick(it)
             },
-            isLastPage = isLastPage,
+            isLastPage = uiState.isLastPage,
         )
     }
 }
@@ -149,14 +151,14 @@ private fun ProductListTopAppBar(
 
 @Composable
 private fun ProductCardGrid(
-    products: List<ProductUiState>,
+    products: List<ProductUiModel>,
     isLastPage: Boolean,
-    onProductClick: (ProductUiState) -> Unit,
+    onProductClick: (ProductUiModel) -> Unit,
     onMoreClick: () -> Unit,
-    getQuantity: (ProductUiState) -> Int,
-    onAddCartClick: (ProductUiState) -> Unit,
-    isExistProductToCart: (ProductUiState) -> Boolean,
-    onDecrementClick: (ProductUiState) -> Unit,
+    getQuantity: (ProductUiModel) -> Int,
+    onAddCartClick: (ProductUiModel) -> Unit,
+    isExistProductToCart: (ProductUiModel) -> Boolean,
+    onDecrementClick: (ProductUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -340,9 +342,6 @@ private fun MoreButton(
 @Composable
 fun ProductListScreenPreview() {
     ProductListScreen(
-        productList = emptyList(),
-        totalCartItemsCount = 0,
-        isLastPage = false,
         onCartClick = {},
         loadProducts = {},
         onProductClick = {},

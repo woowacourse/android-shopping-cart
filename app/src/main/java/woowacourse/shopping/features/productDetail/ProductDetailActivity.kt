@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.data.DataProvider
 
 class ProductDetailActivity : ComponentActivity() {
@@ -18,30 +19,29 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")!!
-        val stateHolder =
-            ProductDetailStateHolder(
-                parcelProduct = parcelProduct,
-                cartRepository = DataProvider.cartRepository,
-            )
 
         setContent {
+            val viewModel: ProductDetailViewModel = viewModel(
+                factory = ProductDetailViewModelFactory(
+                    product = parcelProduct,
+                    cartRepository = DataProvider.cartRepository,
+                )
+            )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
+                    viewModel = viewModel,
                     productName = parcelProduct.name,
-                    productPrice = stateHolder.productPrice,
                     productImageUrl = parcelProduct.imageUrl,
-                    productQuantity = stateHolder.quantity,
-                    minusEnabled = stateHolder.minusEnabled,
                     onAddToCartClick = {
-                        stateHolder.addToCart()
+                        viewModel.addToCart()
                         Toast.makeText(this, "장바구니에 추가되었습니다.", Toast.LENGTH_SHORT).show()
                     },
                     onIncreaseClick = {
-                        stateHolder.increaseCartItem()
+                        viewModel.increaseCartItem()
                     },
                     onDecreaseClick = {
-                        stateHolder.decreaseCartItem()
+                        viewModel.decreaseCartItem()
                     },
                 )
             }

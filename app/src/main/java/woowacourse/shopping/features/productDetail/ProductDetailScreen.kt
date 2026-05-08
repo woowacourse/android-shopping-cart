@@ -32,6 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
@@ -42,16 +44,15 @@ import woowacourse.shopping.features.generalComponent.QuantityControlRow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
+    viewModel: ProductDetailViewModel = viewModel(),
     productName: String,
-    productPrice: Int,
     productImageUrl: String,
-    productQuantity: Int,
-    minusEnabled: Boolean,
     onAddToCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
 
     Column(
@@ -74,9 +75,9 @@ fun ProductDetailScreen(
                     .weight(1f),
             imageUrl = productImageUrl,
             productName = productName,
-            price = productPrice,
-            minusEnabled = minusEnabled,
-            productQuantity = productQuantity,
+            price = uiState.productPrice,
+            minusEnabled = uiState.minusEnabled,
+            productQuantity = uiState.quantity,
             onIncreaseClick = onIncreaseClick,
             onDecreaseClick = onDecreaseClick,
         )
@@ -271,15 +272,12 @@ private fun CardAddButton(
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productName = "케로로",
-        productPrice = 10000,
         productImageUrl =
             """
             https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=
             http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
             """.trimIndent(),
         onAddToCartClick = {},
-        productQuantity = 1,
-        minusEnabled = false,
         onIncreaseClick = {},
         onDecreaseClick = {},
     )
