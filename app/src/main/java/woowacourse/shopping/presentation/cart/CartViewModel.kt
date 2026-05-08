@@ -15,6 +15,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
@@ -43,12 +44,12 @@ class CartViewModel(
         refresh()
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun deleteProduct(productId: Uuid) {
         viewModelScope.launch {
             cartRepository.deleteProduct(productId)
             refresh()
             _uiEvent.send(CartUiEvent.ShowMessage("삭제되었습니다."))
+            dismissDeleteDialog()
         }
     }
 
@@ -57,10 +58,17 @@ class CartViewModel(
         refresh()
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun decreaseQuantity(productId: Uuid) {
-        cartRepository.decreaseQuantity(productId)
-        refresh()
+        val item =
+            _uiState.value.cart.cartItems
+                .find { it.product.productId == productId }
+
+        if (item?.quantity == 1) {
+            _uiState.update { it.copy(deleteProductId = productId) }
+        } else {
+            cartRepository.decreaseQuantity(productId)
+            refresh()
+        }
     }
 
     fun goToPreviousPage() {
@@ -85,6 +93,14 @@ class CartViewModel(
         }
 
         refreshPagedCart()
+    }
+
+    fun showDeleteDialog(productId: Uuid) {
+        _uiState.update { it.copy(deleteProductId = productId) }
+    }
+
+    fun dismissDeleteDialog() {
+        _uiState.update { it.copy(deleteProductId = null) }
     }
 
     private fun refresh() {

@@ -24,7 +24,7 @@ fun CartContent(
     hasNextPage: Boolean,
     onDelete: (Uuid) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid, Int) -> Unit,
+    onQuantityDecrease: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -41,7 +41,7 @@ fun CartContent(
                     cartItem = cartItem,
                     onDelete = { onDelete(cartItem.product.productId) },
                     onQuantityIncrease = { onQuantityIncrease(cartItem.product) },
-                    onQuantityDecrease = { onQuantityDecrease(cartItem.product.productId, cartItem.quantity) },
+                    onQuantityDecrease = { onQuantityDecrease(cartItem.product.productId) },
                 )
             }
         }
@@ -71,6 +71,6 @@ fun CartContentPreview() {
         hasNextPage = true,
         onDelete = {},
         onQuantityIncrease = {},
-        onQuantityDecrease = { _, _ -> },
+        onQuantityDecrease = {},
     )
 }

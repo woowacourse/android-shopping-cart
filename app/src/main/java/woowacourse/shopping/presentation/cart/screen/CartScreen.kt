@@ -5,9 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +16,6 @@ import woowacourse.shopping.presentation.cart.component.CartContent
 import woowacourse.shopping.presentation.cart.component.CartScaffold
 import woowacourse.shopping.presentation.cart.component.DeleteProductDialog
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
@@ -29,6 +25,8 @@ fun CartScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val deleteProductId = uiState.deleteProductId
 
     LaunchedEffect(viewModel.uiEvent) {
         viewModel.uiEvent.collect { event ->
@@ -39,9 +37,6 @@ fun CartScreen(
             }
         }
     }
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var deleteProductId by remember { mutableStateOf<Uuid?>(null) }
 
     CartScaffold(
         onBack = onBack,
@@ -55,28 +50,17 @@ fun CartScreen(
             onNextPageClick = viewModel::goToNextPage,
             hasPreviousPage = viewModel.hasPreviousPage,
             hasNextPage = viewModel.hasNextPage,
-            onDelete = { productId ->
-                deleteProductId = productId
-            },
+            onDelete = viewModel::showDeleteDialog,
             onQuantityIncrease = viewModel::increaseQuantity,
-            onQuantityDecrease = { productId, quantity ->
-                if (quantity == 1) {
-                    deleteProductId = productId
-                } else {
-                    viewModel.decreaseQuantity(productId)
-                }
-            },
+            onQuantityDecrease = viewModel::decreaseQuantity,
         )
     }
 
     if (deleteProductId != null) {
         DeleteProductDialog(
-            onDismissRequest = { deleteProductId = null },
-            onConfirm = {
-                deleteProductId?.let(viewModel::deleteProduct)
-                deleteProductId = null
-            },
-            onDismiss = { deleteProductId = null },
+            onDismissRequest = viewModel::dismissDeleteDialog,
+            onConfirm = { viewModel.deleteProduct(deleteProductId) },
+            onDismiss = viewModel::dismissDeleteDialog,
         )
     }
 }
