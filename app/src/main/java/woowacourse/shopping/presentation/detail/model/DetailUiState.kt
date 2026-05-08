@@ -11,4 +11,6 @@ data class DetailUiState(
             price = 0,
         ),
     val quantity: Int = 0,
-)
+) {
+    val price: Long get() = product.price * quantity
+}

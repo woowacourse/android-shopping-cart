@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
+import org.w3c.dom.Text
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.presentation.common.QuantityCounter
@@ -118,7 +119,7 @@ fun DetailScreen(
         DetailContent(
             imageUrl = product.imageUrl,
             productName = product.name,
-            price = product.price,
+            price = uiState.price,
             quantity = uiState.quantity,
             onIncrease = {
                 scope.launch { viewModel.increase() }
@@ -162,31 +163,31 @@ private fun DetailContent(
             modifier = Modifier.padding(horizontal = 18.dp),
         )
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Gray40)
-        QuantityCounter(
-            quantity = quantity,
-            onIncrease = onIncrease,
-            onDecrease = onDecrease,
-        )
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                text = stringResource(R.string.price),
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 24.sp,
-            )
             Text(
                 text = formattedPrice(price),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
                 lineHeight = 26.sp,
                 color = Color.Black,
+                modifier =
+                    Modifier
+                        .weight(.5f),
+            )
+            QuantityCounter(
+                quantity = quantity,
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
+                modifier =
+                    Modifier
+                        .weight(.5f),
             )
         }
     }
