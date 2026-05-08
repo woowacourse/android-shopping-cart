@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CART_PAGE_SIZE
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Product
@@ -20,21 +22,27 @@ class CartViewModel(
     var currentPageIndex by mutableStateOf(0)
         private set
 
+    var cartProducts by mutableStateOf<List<ProductWithQuantity>>(emptyList())
+        private set
+
+    init {
+        viewModelScope.launch {
+            cartRepository.getCartProducts().collect { updatedCartProducts ->
+                cartProducts = updatedCartProducts
+                adjustCurrentPage()
+            }
+        }
+    }
+
     fun lastPageIndex(): Int =
-        if (cartRepository
-                .getCartProducts()
-                .isEmpty()
-        ) {
+        if (cartProducts.isEmpty()) {
             0
         } else {
-            (cartRepository.getCartProducts().size - 1) / CART_PAGE_SIZE
+            (cartProducts.size - 1) / CART_PAGE_SIZE
         }
 
-    fun getCartProducts(): List<ProductWithQuantity> = cartRepository.getCartProducts()
-
     fun visibleProducts(): List<ProductWithQuantity> =
-        cartRepository
-            .getCartProducts()
+        cartProducts
             .toPage(PageRequest(index = currentPageIndex, size = CART_PAGE_SIZE))
             .items
 
@@ -58,17 +66,20 @@ class CartViewModel(
     }
 
     fun addProduct(product: Product) {
-        cartRepository.addProduct(product = product, quantityToAdd = 1)
-        adjustCurrentPage()
+        viewModelScope.launch {
+            cartRepository.addProduct(product = product, quantityToAdd = 1)
+        }
     }
 
     fun decraseProduct(productId: Uuid) {
-        cartRepository.decreaseProduct(productId = productId, quantityToRemove = 1)
-        adjustCurrentPage()
+        viewModelScope.launch {
+            cartRepository.decreaseProduct(productId = productId, quantityToRemove = 1)
+        }
     }
 
     fun deleteProduct(productId: Uuid) {
-        cartRepository.deleteProduct(productId)
-        adjustCurrentPage()
+        viewModelScope.launch {
+            cartRepository.deleteProduct(productId)
+        }
     }
 }

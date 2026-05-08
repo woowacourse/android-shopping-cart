@@ -1,11 +1,15 @@
 package woowacourse.shopping.ui.shopping.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
 import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.repository.cart.CartRepository
@@ -22,34 +26,64 @@ class ProductListViewModel(
     var currentPageIndex by mutableStateOf(0)
         private set
 
-    fun visibleProducts(): List<Product> =
-        productRepository
-            .getAllProducts()
-            .products
-            .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
-            .items
-
     fun increasePageIndex() {
         currentPageIndex++
     }
 
     // cartRepository
-    fun getProductQuantity(productId: Uuid): Int = cartRepository.getProductQuantity(productId = productId)
+    fun getProductQuantity(productId: Uuid): Int =
+        productQuantities[productId] ?: 0
 
-    val totalProductQuantity: Int
-        get() = cartRepository.getCartProducts().sumOf { it.quantity }
+    var totalProductQuantity by mutableIntStateOf(0)
+        private set
 
     fun addProduct(
         product: Product,
         quantityToAdd: Int,
     ) {
-        cartRepository.addProduct(product = product, quantityToAdd = quantityToAdd)
+        viewModelScope.launch {
+            cartRepository.addProduct(product = product, quantityToAdd = quantityToAdd)
+        }
     }
 
     fun decreaseProduct(
         productId: Uuid,
         quantityToRemove: Int,
     ) {
-        cartRepository.decreaseProduct(productId = productId, quantityToRemove = quantityToRemove)
+        viewModelScope.launch {
+            cartRepository.decreaseProduct(
+                productId = productId,
+                quantityToRemove = quantityToRemove,
+            )
+        }
     }
+
+    // RoomCartRepository
+    var products by mutableStateOf(Products())
+        private set
+
+    init {
+        viewModelScope.launch {
+            productRepository.getAllProducts().collect { loadedProducts ->
+                products = loadedProducts
+            }
+        }
+        viewModelScope.launch {
+            cartRepository.getCartProducts().collect { cartProducts ->
+                totalProductQuantity = cartProducts.sumOf { it.quantity }
+                productQuantities = cartProducts.associate { it.productId to it.quantity }
+            }
+        }
+    }
+
+    fun visibleProducts(): List<Product> =
+        products.products
+            .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
+            .items
+
+
+    var productQuantities by mutableStateOf<Map<Uuid, Int>>(emptyMap())
+        private set
+
+
 }

@@ -20,7 +20,7 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         val viewModel =
             ProductListViewModel(
-                AppContainer.createProductRepository(packageName),
+                AppContainer.productRepository,
                 AppContainer.cartRepository,
             )
 
@@ -28,7 +28,6 @@ class ProductListActivity : ComponentActivity() {
             AndroidShoppingTheme {
                 ProductListScreen(
                     viewModel = viewModel,
-                    products = Products(ProductFixture.productList(packageName)),
                     onCartClick = { startActivity(Intent(this, CartActivity::class.java)) },
                     onProductClick = { productId ->
                         ProductDetailActivity.start(this, productId)

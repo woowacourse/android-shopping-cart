@@ -35,7 +35,6 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProductListScreen(
     viewModel: ProductListViewModel = viewModel(),
-    products: Products,
     onCartClick: () -> Unit,
     onProductClick: (Uuid) -> Unit,
     modifier: Modifier = Modifier,
@@ -80,7 +79,7 @@ fun ProductListScreen(
                         modifier = Modifier.testTag("product_item_${product.productId}"),
                     )
                 }
-                if (products.hasNextPage(currentPageIndex = viewModel.currentPageIndex)) {
+                if (viewModel.products.hasNextPage(currentPageIndex = viewModel.currentPageIndex)) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         MintButton(
                             onClick = { viewModel.increasePageIndex() },
@@ -99,10 +98,8 @@ fun ProductListScreen(
 @Composable
 private fun ProductListScreenPreview() {
     val packageName = LocalContext.current.packageName
-    val productRepository = AppContainer.createProductRepository(packageName)
 
     ProductListScreen(
-        products = productRepository.getAllProducts(),
         onCartClick = {},
         onProductClick = {},
     )

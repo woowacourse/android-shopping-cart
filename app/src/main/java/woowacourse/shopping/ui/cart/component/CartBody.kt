@@ -35,7 +35,7 @@ fun CartBody(
                     )
                 }
             }
-            if (viewModel.getCartProducts().size > CART_PAGE_SIZE) {
+            if (viewModel.cartProducts.size > CART_PAGE_SIZE) {
                 Pagination(
                     pageMoveToLeft = { viewModel.moveToPreviousPage() },
                     pageMoveToLeftButtonEnabled = viewModel.canNavigateToLeft(),

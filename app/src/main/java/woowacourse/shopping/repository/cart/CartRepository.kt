@@ -1,5 +1,6 @@
 package woowacourse.shopping.repository.cart
 
+import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductWithQuantity
 import kotlin.uuid.ExperimentalUuidApi
@@ -7,20 +8,20 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 interface CartRepository {
-    fun getTotalProductQuantity(): Int
+    suspend fun getTotalProductQuantity(): Int
 
-    fun getProductQuantity(productId: Uuid): Int
+    suspend fun getProductQuantity(productId: Uuid): Int
 
-    fun getCartProducts(): List<ProductWithQuantity>
+    fun getCartProducts(): Flow<List<ProductWithQuantity>>
 
-    fun addProduct(
+    suspend fun addProduct(
         product: Product,
         quantityToAdd: Int,
     )
 
-    fun deleteProduct(productId: Uuid)
+    suspend fun deleteProduct(productId: Uuid)
 
-    fun decreaseProduct(
+    suspend fun decreaseProduct(
         productId: Uuid,
         quantityToRemove: Int,
     )

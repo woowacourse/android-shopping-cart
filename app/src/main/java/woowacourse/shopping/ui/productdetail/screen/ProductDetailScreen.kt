@@ -62,11 +62,11 @@ fun ProductDetailScreen(
                 )
                 MintButton(
                     onClick = {
+                        scope.launch {
                         cartRepository.addProduct(
                             product = product,
                             quantityToAdd = quantity,
                         )
-                        scope.launch {
                             snackbarHostState.showSnackbar(addToCartSnackbarText)
                         }
                     },
