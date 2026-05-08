@@ -23,7 +23,7 @@ class ProductDetailStateHolder(
 
     fun addToCart() {
         product?.let {
-            cartRepository.addCartItem(CartItem(it, Quantity(1)))
+            cartRepository.updateCart(CartItem(it, Quantity(1)))
         }
     }
 }

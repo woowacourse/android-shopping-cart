@@ -61,7 +61,7 @@ class CartRepositoryImplTest {
     fun `장바구니에 새로운 항목을 추가할 수 있다`() {
         val initialCount = repository.getCartItemCount()
         val newProduct = dataSource[15]
-        repository.addCartItem(CartItem(newProduct, Quantity(1)))
+        repository.updateCart(CartItem(newProduct, Quantity(1)))
         
         assertEquals(initialCount + 1, repository.getCartItemCount())
         assertEquals(newProduct.id, repository.getCartItem(newProduct.id)?.product?.id)

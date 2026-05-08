@@ -8,7 +8,7 @@ interface CartRepository {
 
     fun getCartItem(productId: String): CartItem?
 
-    fun addCartItem(cartItem: CartItem)
+    fun updateCart(cartItem: CartItem)
 
     fun deleteCartItem(productId: String)
 
