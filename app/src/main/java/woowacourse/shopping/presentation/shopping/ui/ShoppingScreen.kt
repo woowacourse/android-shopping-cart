@@ -139,6 +139,10 @@ private fun ShoppingContents(
             ) {
                 RecentSection(
                     recentProducts = recentProducts,
+                    onClick = {
+                        onProductCardClick(it)
+                        onUpsertRecentProduct(it)
+                    },
                 )
             }
             items(

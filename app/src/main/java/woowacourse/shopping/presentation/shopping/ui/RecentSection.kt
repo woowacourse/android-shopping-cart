@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.shopping.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -33,6 +34,7 @@ import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 @Composable
 fun RecentSection(
     recentProducts: ImmutableList<ProductUiModel>,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -52,6 +54,7 @@ fun RecentSection(
             items(recentProducts.size) { index ->
                 RecentProductCart(
                     product = recentProducts[index],
+                    onClick = { onClick(recentProducts[index].id) },
                 )
             }
         }
@@ -64,12 +67,14 @@ fun RecentSection(
 @Composable
 private fun RecentProductCart(
     product: ProductUiModel,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
             modifier
-                .width(130.dp),
+                .width(130.dp)
+                .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
@@ -105,6 +110,7 @@ private fun RecentSectionPreview() {
         ).toUiModel()
     AndroidshoppingTheme {
         RecentSection(
+            onClick = {},
             recentProducts = listOf(product).toImmutableList(),
         )
     }
