@@ -52,7 +52,7 @@ fun RecentSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             items(recentProducts.size) { index ->
-                RecentProductCart(
+                RecentProductCard(
                     product = recentProducts[index],
                     onClick = { onClick(recentProducts[index].id) },
                 )
@@ -65,7 +65,7 @@ fun RecentSection(
 }
 
 @Composable
-private fun RecentProductCart(
+private fun RecentProductCard(
     product: ProductUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
