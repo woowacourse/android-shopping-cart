@@ -5,15 +5,23 @@ data class Cart(
 ) {
     fun getCartSize(): Int = cartItems.size()
 
-    fun addCartItem(cartItem: CartItem, targetQuantity: Int): Cart = copy(cartItems = cartItems.addCartItem(cartItem, targetQuantity))
+    fun addCartItem(
+        cartItem: CartItem,
+        targetQuantity: Int,
+    ): Cart = copy(cartItems = cartItems.addCartItem(cartItem, targetQuantity))
 
-    fun minusCartItem(cartItem: CartItem, targetQuantity: Int): Cart = copy(cartItems = cartItems.minusCartItem(cartItem, targetQuantity))
+    fun minusCartItem(
+        cartItem: CartItem,
+        targetQuantity: Int,
+    ): Cart = copy(cartItems = cartItems.minusCartItem(cartItem, targetQuantity))
 
     fun removeCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.removeCartItem(cartItem))
 
     fun searchCartItem(cartItem: CartItem): Boolean = cartItems.searchCartItem(cartItem)
 
     fun getTotalCartItemCount(): Int = cartItems.getTotalCartItemCount()
+
+    fun getQuantity(cartItem: CartItem): Int = cartItems.getQuantity(cartItem)
 
     fun getPage(
         page: Int,

@@ -1,19 +1,27 @@
 package woowacourse.shopping.features.productList
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +32,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -35,18 +45,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.data.MockData
-import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 
 @Composable
 fun ProductListScreen(
-    productList: List<Product>,
+    productList: List<ProductUiState>,
+    totalCartItemsCount: Int,
     isLastPage: Boolean,
     onCartClick: () -> Unit,
     loadProducts: () -> Unit,
-    onProductClick: (Product) -> Unit,
+    getQuantity: (ProductUiState) -> Int,
+    isExistProductToCart: (ProductUiState) -> Boolean,
+    onDecrementClick: (ProductUiState) -> Unit,
+    onAddCartClick: (ProductUiState) -> Unit,
+    onProductClick: (ProductUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -57,6 +70,7 @@ fun ProductListScreen(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp),
+            totalCartItemsCount = totalCartItemsCount,
             onClick = onCartClick,
         )
 
@@ -66,9 +80,15 @@ fun ProductListScreen(
                 Modifier
                     .fillMaxSize()
                     .padding(20.dp),
-            onProductClick = { product -> onProductClick(product) },
+            onProductClick = { onProductClick(it) },
+            getQuantity = { getQuantity(it) },
+            isExistProductToCart = { isExistProductToCart(it) },
+            onDecrementClick = { onDecrementClick(it) },
             onMoreClick = {
                 loadProducts()
+            },
+            onAddCartClick = {
+                onAddCartClick(it)
             },
             isLastPage = isLastPage,
         )
@@ -78,6 +98,7 @@ fun ProductListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductListTopAppBar(
+    totalCartItemsCount: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,13 +111,28 @@ private fun ProductListTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = onClick,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_cart),
-                    contentDescription = "장바구니 아이콘",
-                )
+                IconButton(
+                    onClick = onClick,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_cart),
+                        contentDescription = "장바구니 아이콘",
+                    )
+                }
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp)
+                            .clip(CircleShape)
+                            .size(24.dp)
+                            .background(Color.Green, CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(totalCartItemsCount.toString())
+                }
             }
         },
         colors =
@@ -113,10 +149,14 @@ private fun ProductListTopAppBar(
 
 @Composable
 private fun ProductCardGrid(
-    products: List<Product>,
+    products: List<ProductUiState>,
     isLastPage: Boolean,
-    onProductClick: (Product) -> Unit,
+    onProductClick: (ProductUiState) -> Unit,
     onMoreClick: () -> Unit,
+    getQuantity: (ProductUiState) -> Int,
+    onAddCartClick: (ProductUiState) -> Unit,
+    isExistProductToCart: (ProductUiState) -> Boolean,
+    onDecrementClick: (ProductUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -130,9 +170,17 @@ private fun ProductCardGrid(
         ) { item ->
             ProductCard(
                 modifier = Modifier.fillMaxWidth(),
-                imageUrl = item.imageUrl.value,
-                productName = item.name.value,
-                price = item.price.value,
+                imageUrl = item.imageUrl,
+                productName = item.name,
+                price = item.price,
+                quantity = getQuantity(item),
+                isExistProductToCart = isExistProductToCart(item),
+                onDecrementClick = {
+                    onDecrementClick(item)
+                },
+                onAddCartClick = {
+                    onAddCartClick(item)
+                },
                 onClick = {
                     onProductClick(item)
                 },
@@ -163,7 +211,11 @@ private fun ProductCard(
     productName: String,
     price: Int,
     imageUrl: String,
+    quantity: Int,
     onClick: () -> Unit,
+    onAddCartClick: () -> Unit,
+    onDecrementClick: () -> Unit,
+    isExistProductToCart: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -172,15 +224,71 @@ private fun ProductCard(
                 onClick()
             },
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "상품 이미지",
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(154.dp),
-            contentScale = ContentScale.Crop,
-        )
+        Box(
+            contentAlignment = Alignment.BottomEnd,
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "상품 이미지",
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(154.dp),
+                contentScale = ContentScale.Crop,
+            )
+            if (isExistProductToCart) {
+                Row(
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .fillMaxWidth()
+                            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
+                            .background(color = Color.White),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    IconButton(
+                        onClick = onDecrementClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Remove,
+                            contentDescription = "개수 감소 버튼",
+                        )
+                    }
+                    Text(
+                        text = quantity.toString(),
+                        fontSize = 22.sp,
+                    )
+                    IconButton(
+                        onClick = onAddCartClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "개수 증가 버튼",
+                        )
+                    }
+                }
+            } else {
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                            .background(color = Color.White)
+                            .size(48.dp),
+                ) {
+                    IconButton(
+                        onClick = onAddCartClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "장바구니 추가 버튼",
+                        )
+                    }
+                }
+            }
+        }
         ProductInfoColumn(
             modifier =
                 Modifier
@@ -232,10 +340,15 @@ private fun MoreButton(
 @Composable
 fun ProductListScreenPreview() {
     ProductListScreen(
-        productList = MockData.products,
+        productList = emptyList(),
+        totalCartItemsCount = 0,
         isLastPage = false,
         onCartClick = {},
         loadProducts = {},
         onProductClick = {},
+        onAddCartClick = {},
+        getQuantity = { 0 },
+        isExistProductToCart = { false },
+        onDecrementClick = {},
     )
 }

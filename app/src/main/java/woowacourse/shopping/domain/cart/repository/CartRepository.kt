@@ -8,9 +8,19 @@ interface CartRepository {
 
     fun getTotalCartCount(): Int
 
-    fun addCartItem(cartItem: CartItem, targetQuantity: Int)
+    fun getTotalCartItemCount(): Int
 
-    fun minusCartItem(cartItem: CartItem, targetQuantity: Int)
+    fun getQuantity(cartItem: CartItem): Int
+
+    fun addCartItem(
+        cartItem: CartItem,
+        targetQuantity: Int,
+    )
+
+    fun minusCartItem(
+        cartItem: CartItem,
+        targetQuantity: Int,
+    )
 
     fun removeCartItem(cartItem: CartItem)
 

@@ -3,6 +3,7 @@ package woowacourse.shopping.features.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.data.DataProvider
-import woowacourse.shopping.features.cart.CartActivity
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +34,8 @@ class ProductDetailActivity : ComponentActivity() {
                     productQuantity = stateHolder.quantity,
                     minusEnabled = stateHolder.minusEnabled,
                     onAddToCartClick = {
-                        val cartIntent = Intent(this, CartActivity::class.java)
                         stateHolder.addToCart()
-                        startActivity(cartIntent)
+                        Toast.makeText(this, "장바구니에 추가되었습니다.", Toast.LENGTH_SHORT).show()
                     },
                     onIncreaseClick = {
                         stateHolder.increaseCartItem()

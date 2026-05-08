@@ -8,10 +8,8 @@ import androidx.compose.runtime.setValue
 import woowacourse.shopping.data.DataProvider
 import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
-import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import kotlin.math.ceil
-import kotlin.math.max
 
 class CartStateHolder(
     private val cartRepository: CartRepository,
@@ -31,7 +29,6 @@ class CartStateHolder(
     fun isMinusEnabled(cartItem: CartItem): Boolean = cartItem.quantity.value > 1
 
     fun loadCartPage() {
-        println("[123123] : ${cartRepository.getTotalCartCount()}")
         if (!Cart.isPageValid(currentPage)) currentPage = 0
         totalPages = ceil(cartRepository.getTotalCartCount().toDouble() / PAGE_SIZE).toInt()
         if (currentPage > totalPages) {
