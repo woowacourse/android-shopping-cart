@@ -1,5 +1,7 @@
 # android-shopping-cart
 
+## step 3 / step 4  기능 구현 목록
+
 ## 기능 구현 목록
 ### 도메인
 #### Product
