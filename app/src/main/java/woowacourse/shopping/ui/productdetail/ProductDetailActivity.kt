@@ -24,18 +24,10 @@ class ProductDetailActivity : ComponentActivity() {
 
         setContent {
             AndroidshoppingcartTheme {
-                ProductDetailScreen(
-                    imageUrl = "",
-                    title = "",
-                    price = "",
-                    onCloseClick = { finish() },
-                    onAddToCartClick = {
-                        setResult(RESULT_OK, addedIdResult(id))
+                ProductDetailRoute(
+                    onNavigateToHome = {
                         finish()
                     },
-                    quantity = 1,
-                    onIncrement = {},
-                    onDecrement = {},
                 )
             }
         }
