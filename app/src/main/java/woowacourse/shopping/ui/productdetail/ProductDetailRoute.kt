@@ -30,8 +30,8 @@ fun ProductDetailRoute(
             title = product.title,
             price = product.price,
             quantity = uiState.selectedQuantity,
-            onIncrement = {},
-            onDecrement = {},
+            onIncrement = { productDetailViewModel.increment() },
+            onDecrement = { productDetailViewModel.decrement() },
             onCloseClick = onNavigateToHome,
             onAddToCartClick = onNavigateToHome,
         )

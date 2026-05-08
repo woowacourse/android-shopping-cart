@@ -49,6 +49,30 @@ class ProductDetailViewModel(private val savedStateHandle: SavedStateHandle) : V
         }
     }
 
+    fun increment() {
+        _uiState.update { state ->
+            val count = state.selectedQuantity + 1
+            state.copy(
+                selectedQuantity = count,
+                product = toDetailProductUiModel(product!!, Quantity(count)),
+            )
+        }
+    }
+
+    fun decrement() {
+        _uiState.update { state ->
+            if (state.selectedQuantity == 1) {
+                state
+            } else {
+                val count = state.selectedQuantity - 1
+                state.copy(
+                    selectedQuantity = count,
+                    product = toDetailProductUiModel(product!!, Quantity(count)),
+                )
+            }
+        }
+    }
+
     private fun toDetailProductUiModel(
         product: Product,
         quantity: Quantity,
