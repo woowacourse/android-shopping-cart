@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.core.designsystem.component.AppImage
+import woowacourse.shopping.core.designsystem.component.QuantityStepper
 
 @Composable
 fun ProductItem(
