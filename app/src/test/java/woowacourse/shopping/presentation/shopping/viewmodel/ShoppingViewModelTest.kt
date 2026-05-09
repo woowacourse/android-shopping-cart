@@ -9,12 +9,10 @@ import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.domain.model.Money
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ProductName
 import woowacourse.shopping.fake.FakeCartRepository
 import woowacourse.shopping.fake.FakeProductRepository
 import woowacourse.shopping.fake.FakeRecentProductRepository
+import woowacourse.shopping.fake.fakeProduct
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ShoppingViewModelTest {
@@ -122,12 +120,4 @@ class ShoppingViewModelTest {
             val updatedItem = updatedState.products.first { it.product.id == 1L }
             Assertions.assertThat(updatedItem.quantity).isEqualTo(0)
         }
-
-    private fun fakeProduct(id: Long): Product =
-        Product(
-            id = id,
-            name = ProductName(id.toString()),
-            price = Money(1250L),
-            imageUrl = "",
-        )
 }
