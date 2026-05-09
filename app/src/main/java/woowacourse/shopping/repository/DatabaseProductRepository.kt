@@ -12,7 +12,7 @@ class DatabaseProductRepository(
     override suspend fun getProduct(productId: String): Product? = productDao.getProductEntity(productId.toInt())?.toModel()
 
     override suspend fun getProducts(
-        lastId: Int,
+        offset: Int,
         size: Int,
-    ): List<Product> = productDao.getProducts(lastId, size).map { it.toModel() }
+    ): List<Product> = productDao.getProducts(offset, size).map { it.toModel() }
 }

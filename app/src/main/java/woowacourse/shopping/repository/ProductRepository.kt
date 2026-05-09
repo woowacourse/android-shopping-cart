@@ -8,7 +8,7 @@ interface ProductRepository {
     suspend fun getProduct(productId: String): Product?
 
     suspend fun getProducts(
-        lastId: Int,
+        offset: Int,
         size: Int,
     ): List<Product>
 }

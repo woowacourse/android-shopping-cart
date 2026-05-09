@@ -1,8 +1,6 @@
 package woowacourse.shopping.productlist
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -28,7 +26,6 @@ data class ProductListUiState(
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
-    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(
@@ -40,21 +37,12 @@ class ProductListViewModel(
 
     val uiState = _uiState.asStateFlow()
 
-    private var productIds: List<String>
-        get() = savedStateHandle.get<List<String>>(KEY_PRODUCT_IDS) ?: emptyList()
-        set(value) {
-            savedStateHandle[KEY_PRODUCT_IDS] = value
-        }
-
     fun loadProducts() {
         viewModelScope.launch {
-            val newProducts = productRepository.getProducts(productIds.size, 20)
-
-            productIds = productIds + newProducts.map { product -> product.id }
-
-            val updatedProductUiModel =
+            val currentProductSize = _uiState.value.productUiModels.size
+            val updatedProductUiModels =
                 _uiState.value.productUiModels +
-                    newProducts.map { product ->
+                    productRepository.getProducts(currentProductSize, 20).map { product ->
                         ProductUiModel(
                             id = product.id,
                             name = product.getTitle(),
@@ -65,21 +53,18 @@ class ProductListViewModel(
 
             _uiState.value =
                 _uiState.value.copy(
-                    productUiModels = updatedProductUiModel,
-                    enableMoreButton = productIds.size < productRepository.totalSize(),
+                    productUiModels = updatedProductUiModels,
+                    enableMoreButton = updatedProductUiModels.size < productRepository.totalSize(),
                 )
         }
     }
 
     companion object {
-        private const val KEY_PRODUCT_IDS = "productIds"
-
         fun factory(shoppingApplication: ShoppingApplication) =
             viewModelFactory {
                 initializer {
                     ProductListViewModel(
                         shoppingApplication.productRepository,
-                        savedStateHandle = createSavedStateHandle(),
                     )
                 }
             }

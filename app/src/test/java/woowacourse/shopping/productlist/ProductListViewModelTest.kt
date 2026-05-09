@@ -1,6 +1,5 @@
 package woowacourse.shopping.productlist
 
-import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,7 +41,6 @@ class ProductListViewModelTest {
                     DatabaseProductRepository(
                         productDao = MockProductDao(itemSize),
                     ),
-                savedStateHandle = SavedStateHandle(),
             )
 
         productListViewModel.loadProducts()
@@ -65,7 +63,6 @@ class ProductListViewModelTest {
                     DatabaseProductRepository(
                         productDao = MockProductDao(itemSize),
                     ),
-                savedStateHandle = SavedStateHandle(),
             )
 
         repeat(pageMoveCount) {
@@ -78,7 +75,7 @@ class ProductListViewModelTest {
     }
 }
 
-class MockProductDao(
+private class MockProductDao(
     itemSize: Int,
 ) : ProductDao {
     private val products =
