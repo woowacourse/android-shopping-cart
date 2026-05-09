@@ -9,9 +9,9 @@
 ### 기능 구현 목록
 #### 도메인
 ##### CartProduct
-- [ ] CartProduct는 Product를 가진다
-- [ ] 개수를 가진다
-- [ ] 개수는 0 이상이어야 한다
+- [x] CartProduct는 Product를 가진다
+- [x] 개수를 가진다
+- [x] 개수는 0 이상이어야 한다
 
 ##### Cart
 - [ ] 전체 개수를 계산한다
