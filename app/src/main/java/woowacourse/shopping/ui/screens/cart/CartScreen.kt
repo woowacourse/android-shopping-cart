@@ -76,6 +76,9 @@ fun CartScreen(
                     imageUrl = it.product.imageUrl,
                     name = it.product.name,
                     price = it.product.price,
+                    quantity = 1,
+                    onPlusClick = { },
+                    onMinusClick = { },
                     onDelete = {
                         scope.launch {
                             cartStateHolder.deleteCartItem(it.product.id)
