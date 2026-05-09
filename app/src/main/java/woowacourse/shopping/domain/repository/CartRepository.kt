@@ -1,19 +1,19 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Product
+import kotlinx.coroutines.flow.Flow
+import woowacourse.shopping.domain.CartItems
 
 interface CartRepository {
     suspend fun addItem(
-        product: Product,
+        productId: String,
         amount: Int,
     )
 
-    suspend fun deleteItem(id: String)
+    suspend fun deleteItem(productId: String)
 
-    suspend fun minusItemAmount(id: String)
+    suspend fun minusItemAmount(productId: String)
 
-    suspend fun getCartItemByPage(page: Int): List<CartItem>
+    suspend fun getCartItemByPage(page: Int): CartItems
 
-    fun isLastPage(page: Int): Boolean
+    fun getAllCartItems(): Flow<CartItems>
 }
