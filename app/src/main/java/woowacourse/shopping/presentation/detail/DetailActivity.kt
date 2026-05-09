@@ -7,12 +7,19 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.ui.DetailScreen
+import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class DetailActivity : ComponentActivity() {
+    private val viewModel: DetailViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,13 +33,14 @@ class DetailActivity : ComponentActivity() {
 
         setContent {
             AndroidshoppingTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                LaunchedEffect(Unit) {
+                    viewModel.loadProduct(id, isFromLastSeen)
+                }
+
                 DetailScreen(
-                    id = id,
-                    isFromLastSeen = isFromLastSeen,
-                    onNavigateToCart = {
-                        val intent = Intent(this, CartActivity::class.java)
-                        startActivity(intent)
-                    },
+                    uiState = uiState,
                     onClickLastProductCard = { lastProductId ->
                         val intent =
                             Intent(this, DetailActivity::class.java).apply {
@@ -43,6 +51,13 @@ class DetailActivity : ComponentActivity() {
                         finish()
                     },
                     onBack = { finish() },
+                    onAddToCart = {
+                        viewModel.addToCart(id, uiState.quantity)
+                        val intent = Intent(this, CartActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onIncrease = { viewModel.increase() },
+                    onDecrease = { viewModel.decrease() },
                 )
             }
         }

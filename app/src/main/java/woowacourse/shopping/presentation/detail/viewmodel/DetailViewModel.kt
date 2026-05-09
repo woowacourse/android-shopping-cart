@@ -1,14 +1,15 @@
 package woowacourse.shopping.presentation.detail.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.di.RepositoryProvider.cartRepository
 import woowacourse.shopping.di.RepositoryProvider.productRepository
-import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -26,32 +27,34 @@ class DetailViewModel(
 
     private var loadedProduct: Product? = null
 
-    suspend fun loadProduct(
+    fun loadProduct(
         id: Long,
         isFromLastSeen: Boolean,
     ) {
-        val loaded = productRepository.getProductById(id)
-        loadedProduct = loaded
+        viewModelScope.launch {
+            val loaded = productRepository.getProductById(id)
+            loadedProduct = loaded
 
-        val lastSeen =
-            if (!isFromLastSeen) {
-                recentProductRepository
-                    .getRecentProducts(limit = 1)
-                    .firstOrNull()
-                    ?.toUiModel()
-            } else {
-                null
+            val lastSeen =
+                if (!isFromLastSeen) {
+                    recentProductRepository
+                        .getRecentProducts(limit = 1)
+                        .firstOrNull()
+                        ?.toUiModel()
+                } else {
+                    null
+                }
+
+            _uiState.update {
+                it.copy(
+                    product = loaded.toUiModel(),
+                    quantity = cartRepository.getQuantity(loaded.id),
+                    lastSeenProduct = lastSeen,
+                )
             }
 
-        _uiState.update {
-            it.copy(
-                product = loaded.toUiModel(),
-                quantity = cartRepository.getQuantity(loaded.id),
-                lastSeenProduct = lastSeen,
-            )
+            if (!isFromLastSeen) recentProductRepository.upsertRecentProduct(id)
         }
-
-        if (!isFromLastSeen) recentProductRepository.upsertRecentProduct(id)
     }
 
     fun increase() {
@@ -71,14 +74,16 @@ class DetailViewModel(
         }
     }
 
-    suspend fun addToCart(
+    fun addToCart(
         id: Long,
         quantity: Int,
-    ): AddItemResult {
-        val product =
-            loadedProduct ?: productRepository.getProductById(id).also {
-                loadedProduct = it
-            }
-        return cartRepository.addItem(product.id, quantity)
+    ) {
+        viewModelScope.launch {
+            val product =
+                loadedProduct ?: productRepository.getProductById(id).also {
+                    loadedProduct = it
+                }
+            cartRepository.addItem(product.id, quantity)
+        }
     }
 }
