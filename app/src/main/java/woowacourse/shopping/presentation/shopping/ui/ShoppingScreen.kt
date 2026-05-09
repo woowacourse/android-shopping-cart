@@ -84,6 +84,13 @@ fun ShoppingScreen(
             contentAlignment = Alignment.Center,
         ) {
             if (state.isLoading) CircularProgressIndicator()
+            state.errorMessage?.let { errorMessage ->
+                Text(
+                    text = errorMessage,
+                    color = Color.Gray,
+                    fontSize = 18.sp,
+                )
+            }
             ShoppingContents(
                 items = state.products.toImmutableList(),
                 onLoad = {

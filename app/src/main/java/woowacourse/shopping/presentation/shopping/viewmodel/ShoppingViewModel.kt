@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import okio.IOException
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -75,8 +76,8 @@ class ShoppingViewModel(
                 )
             }
             loadCartItemQuantities()
-        } catch (e: Exception) {
-            throw e
+        } catch (e: IOException) {
+            _uiState.update { it.copy(errorMessage = "네트워크 연결을 확인해주세요.") }
         } finally {
             _uiState.update { it.copy(isLoading = false) }
         }
