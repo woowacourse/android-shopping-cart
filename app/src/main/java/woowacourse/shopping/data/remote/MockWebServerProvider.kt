@@ -4,7 +4,7 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.data.mock.MockData
+import woowacourse.shopping.data.mock.MockProductSeedData
 
 object MockWebServerProvider {
     private var server: MockWebServer? = null
@@ -48,10 +48,10 @@ object MockWebServerProvider {
     private fun notFound(): MockResponse = MockResponse().setResponseCode(404)
 
     private fun productsJson(): String =
-        MockData.products.joinToString(prefix = "[", postfix = "]") { it.toJson() }
+        MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { it.toJson() }
 
     private fun productJson(id: String): String? =
-        MockData.products.firstOrNull { it.id == id }?.toJson()
+        MockProductSeedData.products.firstOrNull { it.id == id }?.toJson()
 
     private fun woowacourse.shopping.domain.product.Product.toJson(): String = """
         {

@@ -9,16 +9,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.Quantity
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModel(
     val productId: String,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -34,6 +34,7 @@ class ProductDetailViewModel(
                 .onSuccess { product ->
                     _uiState.value =
                         if (product != null) {
+                            recentProductRepository.save(product)
                             ProductDetailUiState.Success(product)
                         } else {
                             ProductDetailUiState.Error(
@@ -68,6 +69,7 @@ class ProductDetailViewModel(
             productId: String,
             productRepository: ProductRepository,
             cartRepository: CartRepository,
+            recentProductRepository: RecentProductRepository,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
@@ -75,6 +77,7 @@ class ProductDetailViewModel(
                         productId = productId,
                         productRepository = productRepository,
                         cartRepository = cartRepository,
+                        recentProductRepository = recentProductRepository,
                     )
                 }
             }

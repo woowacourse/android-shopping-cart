@@ -23,7 +23,8 @@ class ProductListActivity : ComponentActivity() {
                 viewModel(
                     factory = ProductListViewModel.factory(
                         productRepository = DataContainer.productRepository,
-                        cartRepository = DataContainer.cartRepository
+                        cartRepository = DataContainer.cartRepository,
+                        recentProductRepository = DataContainer.recentProductRepository,
                     ),
                 )
 

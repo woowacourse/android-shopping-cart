@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items as lazyRowItems
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.items as lazyGridItems
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,9 +48,10 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
+import woowacourse.shopping.data.preview.FakeProductRepository
+import woowacourse.shopping.data.preview.FakeRecentProductRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.data.repository.cart.MockCartRepository
-import woowacourse.shopping.data.repository.product.MockProductRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,14 +81,15 @@ fun ProductListScreen(
             }
 
             is ProductListUiState.Success -> {
-                ProductCardGrid(
-                    visibleProducts = state.products,
-                    quantitiesByProductId = state.quantitiesByProductId,
-                    canLoadMore = state.canLoadMore,
-                    isLoadingMore = state.isLoadingMore,
+                ProductListContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(20.dp),
+                    visibleProducts = state.products,
+                    recentProducts = state.recentProducts,
+                    quantitiesByProductId = state.quantitiesByProductId,
+                    canLoadMore = state.canLoadMore,
+                    isLoadingMore = state.isLoadingMore,
                     onProductClick = onProductClick,
                     onAddClick = { product -> viewModel.addProduct(product) },
                     onIncrease = { productId -> viewModel.increase(productId) },
@@ -101,6 +105,106 @@ fun ProductListScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ProductListContent(
+    visibleProducts: List<Product>,
+    recentProducts: List<Product>,
+    quantitiesByProductId: Map<String, Int>,
+    canLoadMore: Boolean,
+    isLoadingMore: Boolean,
+    modifier: Modifier = Modifier,
+    onProductClick: (Product) -> Unit = {},
+    onAddClick: (Product) -> Unit = {},
+    onIncrease: (String) -> Unit = {},
+    onDecrease: (String) -> Unit = {},
+    onMoreClick: () -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        if (recentProducts.isNotEmpty()) {
+            RecentProductsSection(
+                recentProducts = recentProducts,
+                onProductClick = onProductClick,
+            )
+        }
+        ProductCardGrid(
+            visibleProducts = visibleProducts,
+            quantitiesByProductId = quantitiesByProductId,
+            canLoadMore = canLoadMore,
+            isLoadingMore = isLoadingMore,
+            modifier = Modifier.weight(1f),
+            onProductClick = onProductClick,
+            onAddClick = onAddClick,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+            onMoreClick = onMoreClick,
+        )
+    }
+}
+
+@Composable
+private fun RecentProductsSection(
+    recentProducts: List<Product>,
+    onProductClick: (Product) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.padding(bottom = 20.dp)) {
+        Text(
+            text = "최근 본 상품",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+        )
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            lazyRowItems(
+                items = recentProducts,
+                key = { product -> product.id },
+            ) { product ->
+                RecentProductCard(
+                    product = product,
+                    onClick = { onProductClick(product) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecentProductCard(
+    product: Product,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .width(96.dp)
+            .clickable(onClick = onClick),
+    ) {
+        AsyncImage(
+            model = product.imageUrl.value,
+            contentDescription = product.name.value,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(96.dp)
+                .background(Color(0xFFF4F4F4)),
+            contentScale = ContentScale.Crop,
+        )
+        Text(
+            text = product.name.value,
+            modifier = Modifier.padding(top = 8.dp),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 @Composable
@@ -218,7 +322,7 @@ private fun ProductCardGrid(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(
+        lazyGridItems(
             items = visibleProducts,
             key = { item -> item.id },
         ) { item ->
@@ -440,8 +544,9 @@ private fun StepperSign(
 fun ProductListScreenPreview() {
     ProductListScreen(
         viewModel = ProductListViewModel(
-            productRepository = MockProductRepository(),
+            productRepository = FakeProductRepository(),
             cartRepository = MockCartRepository(),
+            recentProductRepository = FakeRecentProductRepository(),
         ),
     )
 }

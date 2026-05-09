@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.product.Product
 interface CartRepository {
     val cartFlow: StateFlow<Cart>
 
-    suspend fun addProduct(product: Product, quantity: Quantity = Quantity.Companion.ONE)
+    suspend fun addProduct(product: Product, quantity: Quantity = Quantity.ONE)
 
     suspend fun increase(productId:String)
 

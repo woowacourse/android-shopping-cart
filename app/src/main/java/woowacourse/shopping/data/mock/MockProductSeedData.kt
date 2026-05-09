@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
-object MockData {
+object MockProductSeedData {
     val products = listOf(
         // ===== 시즌 음료 / 주스 / 스무디 (page 1) =====
         Product(
