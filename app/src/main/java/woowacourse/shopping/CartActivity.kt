@@ -18,6 +18,7 @@ class CartActivity : ComponentActivity() {
             CartViewModel(
                 AppContainer.cartRepository,
             )
+
         @OptIn(ExperimentalUuidApi::class)
         setContent {
             AndroidShoppingTheme {

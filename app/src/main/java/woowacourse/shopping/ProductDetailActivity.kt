@@ -91,6 +91,7 @@ class ProductDetailActivity : ComponentActivity() {
                     if (shouldClearTop) {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     }
+
                 }
             context.startActivity(intent)
         }

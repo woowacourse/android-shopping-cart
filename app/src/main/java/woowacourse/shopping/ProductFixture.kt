@@ -34,7 +34,6 @@ object ProductFixture {
             Uuid.parse("00000000-0000-0000-0000-000000000017"),
             Uuid.parse("00000000-0000-0000-0000-000000000018"),
         )
-
     private fun imageResourceUri(
         packageName: String,
         drawableResId: Int,
@@ -167,24 +166,28 @@ object ProductFixture {
                 productId = productIds[20],
                 imageUrl = imageResourceUri(packageName, R.drawable.product_image21),
                 productName = "상품 21",
+
                 price = Price(99800),
             ),
             Product(
                 productId = productIds[21],
                 imageUrl = imageResourceUri(packageName, R.drawable.product_image22),
                 productName = "상품 22",
+
                 price = Price(10000),
             ),
             Product(
                 productId = productIds[22],
                 imageUrl = imageResourceUri(packageName, R.drawable.product_image23),
                 productName = "상품 23",
+
                 price = Price(12000),
             ),
             Product(
                 productId = productIds[23],
                 imageUrl = imageResourceUri(packageName, R.drawable.product_image24),
                 productName = "상품 24",
+
                 price = Price(99800),
             ),
         )
