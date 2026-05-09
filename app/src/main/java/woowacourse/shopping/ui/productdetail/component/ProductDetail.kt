@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productdetail.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
@@ -35,7 +36,8 @@ fun ProductDetail(
             contentDescription = product.productName,
             modifier =
                 Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
         )
         Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
             Text(

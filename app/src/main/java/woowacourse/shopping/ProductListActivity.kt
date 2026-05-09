@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import woowacourse.ProductDetailSource
 import woowacourse.shopping.ui.shopping.screen.ProductListScreen
 import woowacourse.shopping.ui.shopping.viewmodel.ProductListViewModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
@@ -19,6 +20,7 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         val viewModel =
             ProductListViewModel(
+                AppContainer.recentlyViewedProductsRepository,
                 AppContainer.productRepository,
                 AppContainer.cartRepository,
             )
@@ -29,7 +31,14 @@ class ProductListActivity : ComponentActivity() {
                     viewModel = viewModel,
                     onCartClick = { startActivity(Intent(this, CartActivity::class.java)) },
                     onProductClick = { productId ->
-                        ProductDetailActivity.start(this, productId)
+                        val source =
+                            if (viewModel.recentlyViewedProducts.products.firstOrNull()?.productId == productId) {
+                                ProductDetailSource.LATEST_RECENTLY_VIEWED_PRODUCT
+                            } else {
+                                ProductDetailSource.PRODUCT_LIST
+                            }
+
+                        ProductDetailActivity.start(this, productId, source)
                     },
                     modifier = Modifier.testTag("product_list"),
                 )
