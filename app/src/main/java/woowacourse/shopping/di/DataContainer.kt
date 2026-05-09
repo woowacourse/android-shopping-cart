@@ -1,6 +1,10 @@
 package woowacourse.shopping.di
 
 import android.content.Context
+import woowacourse.shopping.data.remote.HttpClientProvider
+import woowacourse.shopping.data.remote.MockWebServerProvider
+import woowacourse.shopping.data.remote.api.ProductService
+import woowacourse.shopping.data.remote.api.ProductServiceImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.data.repository.cart.MockCartRepository
 import woowacourse.shopping.data.repository.product.MockProductRepository
@@ -15,4 +19,11 @@ object DataContainer {
     }
     val cartRepository: CartRepository by lazy { MockCartRepository() }
     val productRepository: ProductRepository by lazy { MockProductRepository() }
+
+    val productService: ProductService by lazy {
+        ProductServiceImpl(
+            client = HttpClientProvider.okHttpClient,
+            baseUrl = MockWebServerProvider.BASE_URL,
+        )
+    }
 }
