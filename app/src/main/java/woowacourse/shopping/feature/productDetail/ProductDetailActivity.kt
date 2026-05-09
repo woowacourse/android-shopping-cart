@@ -32,7 +32,9 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         productInfo = stateHolder.productInfo,
                         onCloseClick = { finish() },
-                        onAddCartClick = stateHolder::addToCart,
+                        onAddCartClick = stateHolder::onAddClick,
+                        onIncreaseClick = stateHolder::onIncreaseClick,
+                        onDecreaseClick = stateHolder::onDecreaseClick,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
@@ -57,4 +59,3 @@ class ProductDetailActivity : ComponentActivity() {
             }
     }
 }
-

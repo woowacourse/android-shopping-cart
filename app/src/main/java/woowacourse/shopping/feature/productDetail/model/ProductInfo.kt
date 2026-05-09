@@ -8,6 +8,7 @@ data class ProductInfo(
     val productImageUrl: String,
     val productName: String,
     val formattedPrice: String,
+    val formattedQuantity: String,
 ) {
     companion object {
         val PREVIEW =
@@ -15,6 +16,7 @@ data class ProductInfo(
                 productImageUrl = "",
                 productName = "리자몽",
                 formattedPrice = "10,000원",
+                formattedQuantity = "1",
             )
     }
 }
@@ -24,4 +26,5 @@ fun Product.toUiModel(): ProductInfo =
         productImageUrl = imageUrl,
         productName = productTitle.value,
         formattedPrice = "%,d원".format(price.value),
+        formattedQuantity = "0",
     )
