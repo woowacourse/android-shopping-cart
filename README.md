@@ -137,7 +137,7 @@
 ### RecentlyViewedProducts
 
 - [ ] 최근 본 상품을 최대 10개 까지 표시한다
-- [ ] LazyRow를 통해 스크롤할 수 있다
+- [x] LazyRow를 통해 스크롤할 수 있다
 - [ ] 표시된 상품을 클릭하면 해당 상품의 ProductDetailScreen으로 이동한다
 
 ### RecentlyViewedProductItem
