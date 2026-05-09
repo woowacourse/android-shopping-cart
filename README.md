@@ -2,7 +2,7 @@
 
 ## HTTP Client
 - [x] OkHttp 의존성 추가하기
-- [ ] Product DTO 만들기
+- [x] Product DTO 만들기
 - [ ] Mock 서버 만들기
 - [ ] 상품 목록 가져오는 API 만들기
 - [ ] RemoteProductRepository 만들기
