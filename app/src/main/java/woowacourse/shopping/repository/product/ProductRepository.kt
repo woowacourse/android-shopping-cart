@@ -9,6 +9,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 interface ProductRepository {
     fun getAllProducts(): Flow<Products>
-
     suspend fun getProductById(productId: Uuid): Product?
+
+    suspend fun refreshProducts()
 }

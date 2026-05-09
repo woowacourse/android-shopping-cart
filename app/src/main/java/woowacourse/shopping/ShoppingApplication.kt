@@ -12,6 +12,5 @@ class ShoppingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppContainer.initialize(this)
-        applicationScope.launch { AppContainer.seedProducts(packageName) }
     }
 }

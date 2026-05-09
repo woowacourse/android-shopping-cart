@@ -22,4 +22,6 @@ class InMemoryProductRepository(
     override fun getAllProducts(): Flow<Products> = productsFlow.asStateFlow()
 
     override suspend fun getProductById(productId: Uuid): Product? = products.findProductById(productId)
+
+    override suspend fun refreshProducts() = Unit
 }

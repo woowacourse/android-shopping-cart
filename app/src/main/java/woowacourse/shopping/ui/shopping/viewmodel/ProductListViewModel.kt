@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.local.entity.RecentViewedProductsEntity
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
@@ -80,8 +79,12 @@ class ProductListViewModel(
     // Common
     init {
         viewModelScope.launch {
-            productRepository.getAllProducts().collect { loadedProducts ->
-                products = loadedProducts
+            productRepository.refreshProducts()
+        }
+
+        viewModelScope.launch {
+            productRepository.getAllProducts().collect { products ->
+                this@ProductListViewModel.products = products
             }
         }
         viewModelScope.launch {
@@ -91,9 +94,10 @@ class ProductListViewModel(
             }
         }
         viewModelScope.launch {
-            recentViewedProductsRepository.getRecentlyViewedProducts().collect { loadedRecentlyViewedProducts ->
-                recentlyViewedProducts = loadedRecentlyViewedProducts
-            }
+            recentViewedProductsRepository.getRecentlyViewedProducts()
+                .collect { recentlyViewedProducts ->
+                    this@ProductListViewModel.recentlyViewedProducts = recentlyViewedProducts
+                }
         }
     }
 

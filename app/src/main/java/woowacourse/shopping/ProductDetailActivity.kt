@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.AppContainer.productRepository
 import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.ui.productdetail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
@@ -43,31 +43,34 @@ class ProductDetailActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             AppContainer.recentlyViewedProductsRepository.saveViewedProduct(productId = productId)
-        }
-        val product = Products(ProductFixture.productList(packageName)).findProductById(productId)
-        if (product == null) {
-            finish()
-            return
-        }
-        val shouldHideLastViewedProductCard  = intent.getBooleanExtra(HIDE_LAST_VIEWED_PRODUCT_CARD_KEY,false)
-        setContent {
-            AndroidShoppingTheme {
-                ProductDetailScreen(
-                    viewModel = viewModel,
-                    product = product,
-                    shouldHideLastViewedProductCard = shouldHideLastViewedProductCard,
-                    onProductClick = { clickedProductId ->
-                        ProductDetailActivity.start(
-                            context = this,
-                            productId = clickedProductId,
-                            shouldHideLastViewedProductCard = true,
-                            shouldClearTop = true
-                        )
-                    },
-                    onClose = { finish() },
-                )
+            val product = productRepository.getProductById(productId)
+            if (product == null) {
+                finish()
+                return@launch
+            }
+            val shouldHideLastViewedProductCard =
+                intent.getBooleanExtra(HIDE_LAST_VIEWED_PRODUCT_CARD_KEY, false)
+            setContent {
+                AndroidShoppingTheme {
+                    ProductDetailScreen(
+                        viewModel = viewModel,
+                        product = product,
+                        shouldHideLastViewedProductCard = shouldHideLastViewedProductCard,
+                        onProductClick = { clickedProductId ->
+                            ProductDetailActivity.start(
+                                context = this@ProductDetailActivity,
+                                productId = clickedProductId,
+                                shouldHideLastViewedProductCard = true,
+                                shouldClearTop = true
+                            )
+                        },
+                        onClose = { finish() },
+                    )
+                }
             }
         }
+
+
     }
 
     companion object {
@@ -86,7 +89,7 @@ class ProductDetailActivity : ComponentActivity() {
                 Intent(context, ProductDetailActivity::class.java).apply {
                     putExtra(PRODUCT_ID_EXTRA_KEY, productId.toString())
                     putExtra(HIDE_LAST_VIEWED_PRODUCT_CARD_KEY, shouldHideLastViewedProductCard)
-                    if(shouldClearTop) {
+                    if (shouldClearTop) {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     }
                 }
