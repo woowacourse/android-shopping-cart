@@ -2,7 +2,9 @@ package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.entity.PurchaseProductEntity
 import java.util.UUID
@@ -16,6 +18,15 @@ interface PurchaseProductsDao {
 
     @Insert
     suspend fun insertAll(vararg purchaseProductEntity: PurchaseProductEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIgnore(entity: PurchaseProductEntity): Long
+
+    @Transaction
+    suspend fun upsert(entity: PurchaseProductEntity) {
+        val id = insertIgnore(entity)
+        if(id == -1L) updateCount(entity.id, entity.count)
+    }
 
     @Query("UPDATE purchase_products SET count = count + :delta WHERE uuid = :id")
     suspend fun updateCount(id: UUID, delta: Int)

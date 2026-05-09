@@ -20,7 +20,7 @@ class PurchaseProductsRepository(private val purchaseProductsDao: PurchaseProduc
 
     suspend fun insert(purchaseProduct: PurchaseProduct) {
         val entityItem = purchaseProduct.toEntity()
-        purchaseProductsDao.insertAll(entityItem)
+        purchaseProductsDao.upsert(entityItem)
     }
 
     fun findWithId(id: UUID): Flow<PurchaseProduct> {
