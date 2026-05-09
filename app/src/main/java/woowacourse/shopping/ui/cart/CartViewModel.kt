@@ -42,6 +42,18 @@ class CartViewModel(
             cartRepository.remove(productId)
         }
     }
+    
+    fun increase(productId:String){
+        viewModelScope.launch{
+            cartRepository.increase(productId)
+        }
+    }
+    
+    fun decrease(productId:String){
+        viewModelScope.launch{
+            cartRepository.decrease(productId)
+        }
+    }
 
     fun goToNextPage() {
         val current = _uiState.value as? CartUiState.Success ?: return
