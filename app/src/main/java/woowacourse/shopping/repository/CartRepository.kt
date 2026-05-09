@@ -1,9 +1,12 @@
 package woowacourse.shopping.repository
 
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 interface CartRepository {
+    suspend fun getAllCartItems(): Cart
+
     suspend fun increase(item: Product)
 
     suspend fun decrease(item: Product)

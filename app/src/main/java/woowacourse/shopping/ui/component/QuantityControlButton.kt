@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun QuantityControlButton(
     count: Int,
-    onAddClick: () -> Unit,
-    onRemoveClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -33,7 +33,7 @@ fun QuantityControlButton(
     ) {
         ControlButton(
             roundedCornerShape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp),
-            onClick = onRemoveClick,
+            onClick = onDecreaseClick,
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -58,7 +58,7 @@ fun QuantityControlButton(
 
         ControlButton(
             roundedCornerShape = RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp),
-            onClick = onAddClick,
+            onClick = onIncreaseClick,
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -92,7 +92,7 @@ private fun ControlButton(
 private fun QuantityControlButtonPreview() {
     QuantityControlButton(
         count = 2,
-        onAddClick = {},
-        onRemoveClick = {}
+        onIncreaseClick = {},
+        onDecreaseClick = {}
     )
 }

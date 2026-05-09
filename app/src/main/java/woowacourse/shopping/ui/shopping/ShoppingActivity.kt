@@ -19,6 +19,7 @@ import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
     val productRepo = AppContainer.productRepository
+    val cartRepo = AppContainer.cartRepository
     val loadSize = 20
 
     @Suppress("UNCHECKED_CAST")
@@ -33,6 +34,7 @@ class ShoppingActivity : ComponentActivity() {
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 return ShoppingViewModel(
                                     productRepo = productRepo,
+                                    cartRepo = cartRepo,
                                     loadSize = loadSize
                                 ) as T
                             }

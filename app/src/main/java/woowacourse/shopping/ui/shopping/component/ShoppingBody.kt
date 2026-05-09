@@ -16,15 +16,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Products
+import woowacourse.shopping.ui.shopping.ProductUiModel
 
 @Composable
 fun ShoppingBody(
-    products: Products,
+    products: List<ProductUiModel>,
     showMoreButton: Boolean,
     lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
+    onIncreaseClick: (Product) -> Unit,
+    onDecreaseClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
 ) {
     LazyVerticalGrid(
@@ -34,8 +36,13 @@ fun ShoppingBody(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(items = products.toList(), key = { it.id }) { product ->
-            ProductUnit(product, onClick = { onProductClick(product) })
+        items(items = products, key = { it.product.id }) { productModel ->
+            ProductUnit(
+                model = productModel,
+                onClick = { onProductClick(productModel.product) },
+                onIncreaseClick = onIncreaseClick,
+                onDecreaseClick = onDecreaseClick
+            )
         }
 
         if (showMoreButton) {
@@ -74,10 +81,12 @@ private fun ShoppingBodyPreview() {
         )
 
     ShoppingBody(
-        products = Products(listOf(product1, product2, product3)),
+        products = listOf(product1, product2, product3).map { ProductUiModel(it) },
         showMoreButton = true,
         lazyGridState = rememberLazyGridState(),
         onProductClick = {},
         onMoreClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {}
     )
 }

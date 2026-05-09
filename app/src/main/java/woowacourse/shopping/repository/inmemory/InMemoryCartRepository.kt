@@ -1,5 +1,6 @@
 package woowacourse.shopping.repository.inmemory
 
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
@@ -8,6 +9,8 @@ class InMemoryCartRepository(
     cartItems: List<CartItem> = emptyList(),
 ) : CartRepository {
     private val value = cartItems.toMutableList()
+
+    override suspend fun getAllCartItems(): Cart = Cart(value)
 
     override suspend fun increase(item: Product) {
         val existingIndex = value.indexOfFirst { it.product.id == item.id }

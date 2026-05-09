@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Products
 import woowacourse.shopping.ui.component.ShoppingLoading
 import woowacourse.shopping.ui.shopping.component.ShoppingBody
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
@@ -31,12 +30,14 @@ fun ShoppingScreen(
 
     Box(modifier = modifier) {
         ShoppingScreen(
-            products = Products(state.visibleProducts),
+            products = state.visibleProducts,
             hasNext = state.hasNext,
             lazyGridState = lazyGridState,
             onCartClick = onCartClick,
             onProductClick = onProductClick,
             onMoreClick = { viewModel.loadMore() },
+            onIncreaseClick = { viewModel.increase(it) },
+            onDecreaseClick = { viewModel.decrease(it) }
         )
 
         if (state.isLoading) ShoppingLoading()
@@ -45,13 +46,15 @@ fun ShoppingScreen(
 
 @Composable
 fun ShoppingScreen(
-    products: Products,
+    products: List<ProductUiModel>,
     hasNext: Boolean,
     lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
+    onIncreaseClick: (Product) -> Unit,
+    onDecreaseClick: (Product) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -69,6 +72,8 @@ fun ShoppingScreen(
                     .weight(1f),
             onProductClick = onProductClick,
             onMoreClick = onMoreClick,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick
         )
     }
 }
@@ -94,14 +99,17 @@ private fun ShoppingScreenPreview1() {
             price = Money(1000),
             imageUrl = "",
         )
+    val productUiModels = listOf(product1, product2, product3).map { ProductUiModel(it) }
 
     ShoppingScreen(
-        products = Products(listOf(product1, product2, product3)),
+        products = productUiModels,
         hasNext = true,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }
 
@@ -109,11 +117,13 @@ private fun ShoppingScreenPreview1() {
 @Composable
 private fun ShoppingScreenPreview2() {
     ShoppingScreen(
-        products = Products(emptyList()),
+        products = emptyList(),
         hasNext = false,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {}
     )
 }

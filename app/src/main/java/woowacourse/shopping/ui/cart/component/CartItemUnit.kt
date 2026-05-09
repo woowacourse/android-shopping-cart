@@ -126,8 +126,8 @@ private fun CartItemBody(
         ) {
             QuantityControlButton(
                 count = cartItem.quantity,
-                onAddClick = onAddClick,
-                onRemoveClick = onRemoveClick,
+                onIncreaseClick = onAddClick,
+                onDecreaseClick = onRemoveClick,
                 modifier = Modifier,
             )
 
