@@ -55,7 +55,7 @@ import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
 import woowacourse.shopping.di.DataContainer.cartRepository
 import woowacourse.shopping.domain.cart.CartItem
-import woowacourse.shopping.repository.cart.MockCartRepository
+import woowacourse.shopping.data.repository.cart.MockCartRepository
 
 @Composable
 fun CartScreen(

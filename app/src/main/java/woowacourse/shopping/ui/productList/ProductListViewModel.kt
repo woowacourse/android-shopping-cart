@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.di.DataContainer.cartRepository
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.repository.cart.CartRepository
-import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,

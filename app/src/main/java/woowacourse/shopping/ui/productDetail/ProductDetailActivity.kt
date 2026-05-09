@@ -12,8 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.di.DataContainer
-import woowacourse.shopping.repository.cart.MockCartRepository
-import woowacourse.shopping.repository.product.MockProductRepository
+import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.repository.product.MockProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 
 class ProductDetailActivity : ComponentActivity() {

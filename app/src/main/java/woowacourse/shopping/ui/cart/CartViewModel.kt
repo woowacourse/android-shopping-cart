@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.repository.cart.CartRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.math.ceil
 import kotlin.math.max
 

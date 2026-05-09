@@ -45,8 +45,8 @@ import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
-import woowacourse.shopping.repository.cart.MockCartRepository
-import woowacourse.shopping.repository.product.MockProductRepository
+import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.repository.product.MockProductRepository
 
 
 @OptIn(ExperimentalMaterial3Api::class)
