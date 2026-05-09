@@ -36,7 +36,7 @@ import woowacourse.shopping.ui.component.item.toPriceString
 fun ProductDetailScreen(
     product: Product,
     count: Int,
-    lastViewedProduct: Product,
+    lastViewedProduct: Product?,
     onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
@@ -89,7 +89,7 @@ private fun ProductDetailHeader(
 private fun ProductDetailBody(
     product: Product,
     count: Int,
-    lastViewedProduct: Product,
+    lastViewedProduct: Product?,
     onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
@@ -132,7 +132,7 @@ private fun ProductDetailBody(
 @Composable
 private fun ProductDetailInfo(
     product: Product,
-    lastViewedProduct: Product,
+    lastViewedProduct: Product?,
     count: Int,
     onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
@@ -177,17 +177,19 @@ private fun ProductDetailInfo(
                 onMinus = onMinus,
             )
         }
-        LastViewedProduct(
-            product = lastViewedProduct,
-            onClick = onLastViewedClick,
-            modifier = Modifier.padding(18.dp)
-        )
+        if (lastViewedProduct != null && lastViewedProduct.id != product.id) {
+            LastViewedProduct(
+                product = lastViewedProduct,
+                onClick = onLastViewedClick,
+                modifier = Modifier.padding(18.dp)
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ProductDetailScreenPreview() {
+private fun ProductDetailScreenPreview1() {
     ProductDetailScreen(
         product = Product(
                 imageUri = "emptyUri",
@@ -200,6 +202,27 @@ private fun ProductDetailScreenPreview() {
             name = "우유",
             price = 100,
         ),
+        onLastViewedClick = {},
+        onAddRequest = {},
+        onClose = {},
+        onAdd = {  },
+        onMinus = {  },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProductDetailScreenPreview2() {
+    val product = Product(
+        imageUri = "emptyUri",
+        name = "우유",
+        price = 100,
+    )
+
+    ProductDetailScreen(
+        product = product,
+        count = 0,
+        lastViewedProduct = product,
         onLastViewedClick = {},
         onAddRequest = {},
         onClose = {},

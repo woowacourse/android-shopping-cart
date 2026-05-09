@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,10 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,11 +28,14 @@ class ProductDetailActivity : ComponentActivity() {
                 return
             }
 
+        val lastViewedProduct = intent?.getParcelableExtra<Product>(IntentKeys.LATEST_VIEWED_PRODUCT)
+
         enableEdgeToEdge()
         setContent {
             val viewModel: ProductDetailViewModel = viewModel<ProductDetailViewModel>(
                 factory = ProductDetailViewModelFactory(
-                    (application as ShoppingApplication).purchaseProductsRepository
+                    (application as ShoppingApplication).purchaseProductsRepository,
+                    (application as ShoppingApplication).recentlyViewedProductRepository
                 )
             )
 
@@ -46,6 +46,15 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         count = count.value,
+                        lastViewedProduct = lastViewedProduct,
+                        onLastViewedClick = {
+                            viewModel.updateHistory(lastViewedProduct!!)
+                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                                putExtra(IntentKeys.SELECTED_PRODUCT_KEY, lastViewedProduct)
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            }
+                            startActivity(intent)
+                        },
                         onAdd = { viewModel.addCount() },
                         onMinus = { viewModel.minusCount() },
                         onAddRequest = {
