@@ -21,6 +21,30 @@ class CartViewModel(
         loadData()
     }
 
+    fun increase(product: Product) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            try {
+                cartRepo.increase(product)
+                loadData()
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    fun decrease(product: Product) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            try {
+                cartRepo.decrease(product)
+                loadData()
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
     fun delete(product: Product) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }

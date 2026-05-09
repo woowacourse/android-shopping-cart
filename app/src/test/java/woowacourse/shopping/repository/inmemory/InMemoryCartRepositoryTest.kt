@@ -21,7 +21,7 @@ class InMemoryCartRepositoryTest {
     fun `정상적인 상품 객체를 장바구니에 추가하면, 장바구니 내부 목록에 해당 상품이 올바르게 반영된다`() =
         runTest {
             val repo = InMemoryCartRepository()
-            repo.add(product1)
+            repo.increase(product1)
 
             assertTrue(repo.getSize() == 1)
             assertTrue(
@@ -37,7 +37,7 @@ class InMemoryCartRepositoryTest {
         runTest {
             val repo = InMemoryCartRepository()
 
-            repo.add(product1)
+            repo.increase(product1)
             repo.delete(product1)
 
             assertTrue(repo.getSize() == 0)

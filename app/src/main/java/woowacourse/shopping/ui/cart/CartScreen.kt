@@ -33,9 +33,11 @@ fun CartScreen(
             totalPages = uiState.totalPages,
             showPagination = uiState.showPagination,
             onBackClick = onBackClick,
-            onDeleteClick = { viewModel.delete(it) },
+            onDeleteClick = { viewModel.delete(it.product) },
             onPreviousClick = { viewModel.previousPage() },
             onNextClick = { viewModel.nextPage() },
+            onAddClick = { viewModel.increase(it.product) },
+            onRemoveClick = { viewModel.decrease(it.product) }
         )
 
         if (uiState.isLoading) ShoppingLoading()
@@ -50,9 +52,11 @@ fun CartScreen(
     showPagination: Boolean,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onDeleteClick: (Product) -> Unit,
+    onDeleteClick: (CartItem) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onAddClick: (CartItem) -> Unit,
+    onRemoveClick: (CartItem) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -71,6 +75,8 @@ fun CartScreen(
             onDeleteClick = onDeleteClick,
             onPreviousClick = onPreviousClick,
             onNextClick = onNextClick,
+            onAddClick = onAddClick,
+            onRemoveClick = onRemoveClick
         )
     }
 }
@@ -98,6 +104,8 @@ private fun CartScreenPreview1() {
         modifier = Modifier,
         onPreviousClick = {},
         onNextClick = {},
+        onAddClick = {},
+        onRemoveClick = {}
     )
 }
 
@@ -116,5 +124,7 @@ private fun CartScreenPreview2() {
         modifier = Modifier,
         onPreviousClick = {},
         onNextClick = {},
+        onAddClick = {},
+        onRemoveClick = {}
     )
 }

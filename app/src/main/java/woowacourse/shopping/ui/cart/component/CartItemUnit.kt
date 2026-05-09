@@ -28,15 +28,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.component.QuantityControlButton
 import woowacourse.shopping.ui.component.ShoppingImage
 
 @Composable
 fun CartItemUnit(
-    product: Product,
+    cartItem: CartItem,
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
+    onAddClick: () -> Unit,
+    onRemoveClick: () -> Unit
+
 ) {
     Column(
         modifier =
@@ -47,17 +52,21 @@ fun CartItemUnit(
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                 .padding(18.dp),
     ) {
-        NameAndCloseIcon(product = product, onClick = onDeleteClick)
+        CartItemHeader(cartItem = cartItem, onClick = onDeleteClick)
 
         Spacer(Modifier.size(20.dp))
 
-        ImageAndPrice(product)
+        CartItemBody(
+            cartItem = cartItem,
+            onAddClick = onAddClick,
+            onRemoveClick = onRemoveClick
+        )
     }
 }
 
 @Composable
-private fun NameAndCloseIcon(
-    product: Product,
+private fun CartItemHeader(
+    cartItem: CartItem,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -69,7 +78,7 @@ private fun NameAndCloseIcon(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = product.name,
+            text = cartItem.product.name,
             color = Color.DarkGray,
             fontSize = 18.sp,
             fontWeight = FontWeight.W700,
@@ -87,11 +96,13 @@ private fun NameAndCloseIcon(
 
 @SuppressLint("DefaultLocale")
 @Composable
-private fun ImageAndPrice(
-    product: Product,
+private fun CartItemBody(
+    cartItem: CartItem,
     modifier: Modifier = Modifier,
+    onAddClick: () -> Unit,
+    onRemoveClick: () -> Unit
 ) {
-    val price = product.price.value
+    val price = cartItem.totalPrice.value
     val formatted = String.format("%,d", price)
 
     Row(
@@ -102,55 +113,74 @@ private fun ImageAndPrice(
         verticalAlignment = Alignment.Bottom,
     ) {
         ShoppingImage(
-            model = product.imageUrl,
+            model = cartItem.product.imageUrl,
             contentDescription = "상품 이미지",
             modifier =
                 Modifier
                     .width(136.dp)
                     .height(72.dp),
         )
-        Text(
-            text = "$formatted 원",
-            color = Color.DarkGray,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.W400,
-            modifier = Modifier.padding(start = 6.dp),
-        )
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            QuantityControlButton(
+                count = cartItem.quantity,
+                onAddClick = onAddClick,
+                onRemoveClick = onRemoveClick,
+                modifier = Modifier,
+            )
+
+            Text(
+                text = "$formatted 원",
+                color = Color.DarkGray,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W400,
+                modifier = Modifier
+            )
+        }
     }
 }
 
 @Preview(showBackground = true, name = "카트 아이템 유닛")
 @Composable
 private fun CartItemUnitPreview() {
-    val product =
+    val cartItem = CartItem(
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
-        )
-    CartItemUnit(product = product, onDeleteClick = {})
+        ), 2
+    )
+    CartItemUnit(cartItem = cartItem, onDeleteClick = {}, onAddClick = {}, onRemoveClick = {})
 }
 
 @Preview(showBackground = true, name = "이름과 닫기아이콘")
 @Composable
-private fun NameAndCloseIconPreview() {
-    val product =
+private fun CartItemHeaderPreview() {
+    val cartItem = CartItem(
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
-        )
-    NameAndCloseIcon(product = product, onClick = {})
+        ), 2
+    )
+    CartItemHeader(cartItem = cartItem, onClick = {})
 }
 
-@Preview(showBackground = true, name = "사진과 금액")
+@Preview(showBackground = true, name = "사진과 수량, 금액")
 @Composable
-private fun ImageAndPricePreview() {
-    val product =
+private fun CartItemBodyPreview() {
+    val cartItem = CartItem(
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
-        )
-    ImageAndPrice(product)
+        ), 2
+    )
+    CartItemBody(
+        cartItem = cartItem,
+        onAddClick = {},
+        onRemoveClick = {}
+    )
 }

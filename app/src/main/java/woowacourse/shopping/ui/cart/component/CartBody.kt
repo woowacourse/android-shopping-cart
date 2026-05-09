@@ -22,9 +22,11 @@ fun CartBody(
     currentPage: Int,
     totalPages: Int,
     modifier: Modifier = Modifier,
-    onDeleteClick: (Product) -> Unit,
+    onDeleteClick: (CartItem) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onAddClick: (CartItem) -> Unit,
+    onRemoveClick: (CartItem) -> Unit,
 ) {
     val cartItems = cart.items
 
@@ -35,8 +37,10 @@ fun CartBody(
     ) {
         items(items = cartItems, key = { it.product.id }) { cartItem ->
             CartItemUnit(
-                product = cartItem.product,
-                onDeleteClick = { onDeleteClick(cartItem.product) },
+                cartItem = cartItem,
+                onDeleteClick = { onDeleteClick(cartItem) },
+                onAddClick = { onAddClick(cartItem) },
+                onRemoveClick = { onRemoveClick(cartItem) },
             )
         }
 
@@ -66,7 +70,7 @@ private fun CartBodyPreview() {
             Cart(
                 listOf(
                     CartItem(product1, 1),
-                    CartItem(product2, 1),
+                    CartItem(product2, 3),
                 ),
             ),
         onDeleteClick = {},
@@ -75,5 +79,7 @@ private fun CartBodyPreview() {
         totalPages = 5,
         onPreviousClick = {},
         onNextClick = {},
+        onAddClick = {},
+        onRemoveClick = {}
     )
 }

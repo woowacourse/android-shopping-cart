@@ -9,7 +9,7 @@ class InMemoryCartRepository(
 ) : CartRepository {
     private val value = cartItems.toMutableList()
 
-    override suspend fun add(item: Product) {
+    override suspend fun increase(item: Product) {
         val existingIndex = value.indexOfFirst { it.product.id == item.id }
 
         if (existingIndex != -1) {
@@ -20,17 +20,24 @@ class InMemoryCartRepository(
         }
     }
 
-    override suspend fun delete(item: Product) {
-        val index = value.indexOfFirst { it.product.id == item.id }
-        require(index != -1) { "장바구니에 해당 제품(${item.name})이 없습니다." }
+    override suspend fun decrease(item: Product) {
+        val existingIndex = value.indexOfFirst { it.product.id == item.id }
+        require(existingIndex != -1) { "장바구니에 해당 제품(${item.name})이 없습니다." }
 
-        val cartItem = value[index]
+        val cartItem = value[existingIndex]
 
         if (cartItem.quantity > 1) {
-            value[index] = cartItem.copy(quantity = cartItem.quantity - 1)
+            value[existingIndex] = cartItem.copy(quantity = cartItem.quantity - 1)
         } else {
-            value.removeAt(index)
+            value.removeAt(existingIndex)
         }
+    }
+
+    override suspend fun delete(item: Product) {
+        val existingIndex = value.indexOfFirst { it.product.id == item.id }
+        require(existingIndex != -1) { "장바구니에 해당 제품(${item.name})이 없습니다." }
+
+        value.removeAt(existingIndex)
     }
 
     override suspend fun getPagedItems(

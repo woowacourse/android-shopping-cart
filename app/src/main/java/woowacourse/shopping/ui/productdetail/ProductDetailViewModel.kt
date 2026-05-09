@@ -22,7 +22,7 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                cartRepo.add(product)
+                cartRepo.increase(product)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

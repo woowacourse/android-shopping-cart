@@ -54,7 +54,7 @@ private fun ProductLabel(
             text = product.name,
             fontSize = 24.sp,
             color = Color.Black,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.W700,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 18.dp, top = 16.dp, bottom = 17.dp),
