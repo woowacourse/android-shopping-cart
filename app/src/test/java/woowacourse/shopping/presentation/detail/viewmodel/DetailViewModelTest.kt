@@ -12,6 +12,7 @@ import woowacourse.shopping.fake.FakeCartRepository
 import woowacourse.shopping.fake.FakeProductRepository
 import woowacourse.shopping.fake.FakeRecentProductRepository
 import woowacourse.shopping.fake.fakeProduct
+import woowacourse.shopping.presentation.detail.model.DetailUiState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailViewModelTest {
@@ -42,7 +43,9 @@ class DetailViewModelTest {
             viewModel.loadProduct(id = 1L, isFromLastSeen = false)
 
             val state = viewModel.uiState.value
-            assertThat(state.product.id).isEqualTo(1L)
+
+            assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
+            if (state is DetailUiState.Success) assertThat(state.product.id).isEqualTo(1L)
         }
 
     @Test
@@ -51,34 +54,47 @@ class DetailViewModelTest {
             cartRepository.addItem(1L, 3)
 
             viewModel.loadProduct(id = 1L, isFromLastSeen = false)
+            val state = viewModel.uiState.value
 
-            assertThat(viewModel.uiState.value.quantity).isEqualTo(3)
+            assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
+            if (state is DetailUiState.Success) assertThat(state.quantity).isEqualTo(3)
         }
 
     @Test
     fun `increase는 quantity를 1 증가시킨다`() {
-        val initial = viewModel.uiState.value.quantity
+        viewModel.loadProduct(1L, false)
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
+        if (state is DetailUiState.Success) {
+            val initial = state.quantity
+            viewModel.increase()
 
-        viewModel.increase()
-
-        assertThat(viewModel.uiState.value.quantity).isEqualTo(initial + 1)
+            val updatedState = viewModel.uiState.value as DetailUiState.Success
+            assertThat(updatedState.quantity).isEqualTo(initial + 1)
+        }
     }
 
     @Test
     fun `decrease는 quantity가 1보다 크면 1 감소시킨다`() {
+        viewModel.loadProduct(1L, false)
         viewModel.increase()
         viewModel.increase()
 
         viewModel.decrease()
 
-        assertThat(viewModel.uiState.value.quantity).isEqualTo(2)
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
+        if (state is DetailUiState.Success) assertThat(state.quantity).isEqualTo(2)
     }
 
     @Test
     fun `decrease는 quantity가 1이면 감소시키지 않는다`() {
+        viewModel.loadProduct(1L, false)
         viewModel.decrease()
 
-        assertThat(viewModel.uiState.value.quantity).isEqualTo(1)
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
+        if (state is DetailUiState.Success) assertThat(state.quantity).isEqualTo(1)
     }
 
     @Test

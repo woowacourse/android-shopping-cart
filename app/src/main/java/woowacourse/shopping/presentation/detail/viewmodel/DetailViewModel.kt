@@ -22,7 +22,7 @@ class DetailViewModel(
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
     private val recentProductRepository: RecentProductRepository = RepositoryProvider.recentProductRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(DetailUiState())
+    private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
     private var loadedProduct: Product? = null
@@ -44,33 +44,34 @@ class DetailViewModel(
                 } else {
                     null
                 }
-
-            _uiState.update {
-                it.copy(
+            _uiState.value =
+                DetailUiState.Success(
                     product = loaded.toUiModel(),
                     quantity = cartRepository.getQuantity(loaded.id),
                     lastSeenProduct = lastSeen,
                 )
-            }
 
             if (!isFromLastSeen) recentProductRepository.upsertRecentProduct(id)
         }
     }
 
     fun increase() {
-        _uiState.update {
-            it.copy(
-                quantity = it.quantity + 1,
-            )
+        _uiState.update { state ->
+            if (state is DetailUiState.Success) {
+                state.copy(quantity = state.quantity + 1)
+            } else {
+                state
+            }
         }
     }
 
     fun decrease() {
-        if (_uiState.value.quantity == 1) return
-        _uiState.update {
-            it.copy(
-                quantity = it.quantity - 1,
-            )
+        _uiState.update { state ->
+            if (state is DetailUiState.Success && state.quantity > 1) {
+                state.copy(quantity = state.quantity - 1)
+            } else {
+                state
+            }
         }
     }
 

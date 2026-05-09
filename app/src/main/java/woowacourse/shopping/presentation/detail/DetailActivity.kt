@@ -8,11 +8,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.detail.model.DetailUiState
 import woowacourse.shopping.presentation.detail.ui.DetailScreen
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -39,26 +41,32 @@ class DetailActivity : ComponentActivity() {
                     viewModel.loadProduct(id, isFromLastSeen)
                 }
 
-                DetailScreen(
-                    uiState = uiState,
-                    onClickLastProductCard = { lastProductId ->
-                        val intent =
-                            Intent(this, DetailActivity::class.java).apply {
-                                putExtra(INTENT_PRODUCT_ID, lastProductId)
-                                putExtra(IS_FROM_LAST_SEEN, true)
-                            }
-                        startActivity(intent)
-                        finish()
-                    },
-                    onBack = { finish() },
-                    onAddToCart = {
-                        viewModel.addToCart(id, uiState.quantity)
-                        val intent = Intent(this, CartActivity::class.java)
-                        startActivity(intent)
-                    },
-                    onIncrease = { viewModel.increase() },
-                    onDecrease = { viewModel.decrease() },
-                )
+                when (val state = uiState) {
+                    is DetailUiState.Loading -> CircularProgressIndicator()
+                    is DetailUiState.Error -> Toast.makeText(this, (uiState as DetailUiState.Error).message, Toast.LENGTH_SHORT).show()
+                    is DetailUiState.Success -> {
+                        DetailScreen(
+                            uiState = state,
+                            onClickLastProductCard = { lastProductId ->
+                                val intent =
+                                    Intent(this, DetailActivity::class.java).apply {
+                                        putExtra(INTENT_PRODUCT_ID, lastProductId)
+                                        putExtra(IS_FROM_LAST_SEEN, true)
+                                    }
+                                startActivity(intent)
+                                finish()
+                            },
+                            onBack = { finish() },
+                            onAddToCart = {
+                                viewModel.addToCart(id, state.quantity)
+                                val intent = Intent(this, CartActivity::class.java)
+                                startActivity(intent)
+                            },
+                            onIncrease = { viewModel.increase() },
+                            onDecrease = { viewModel.decrease() },
+                        )
+                    }
+                }
             }
         }
     }
