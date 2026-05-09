@@ -17,12 +17,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.DisplayableMoney
+import woowacourse.shopping.ui.DisplayText
 
 @Composable
 fun ProductItem(
     title: String,
-    price: DisplayableMoney,
+    price: DisplayText,
     imageUrl: String,
     modifier: Modifier = Modifier,
 ) {

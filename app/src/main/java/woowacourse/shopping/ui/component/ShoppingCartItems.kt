@@ -28,13 +28,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.DisplayableMoney
+import woowacourse.shopping.ui.DisplayText
 
 @Composable
 fun ShoppingCartItems(
     title: String,
     imageUrl: String,
-    displayableMoney: DisplayableMoney,
+    displayableMoney: DisplayText,
     onRemoveShoppingItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

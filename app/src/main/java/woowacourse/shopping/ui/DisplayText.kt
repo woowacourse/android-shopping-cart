@@ -2,13 +2,13 @@ package woowacourse.shopping.ui
 
 import android.icu.text.DecimalFormat
 
-interface DisplayableMoney {
+interface DisplayText {
     fun display(): String
 }
 
 @JvmInline
 value class WonMoney(
     private val amount: Int,
-) : DisplayableMoney {
+) : DisplayText {
     override fun display(): String = DecimalFormat("#,###원").format(amount)
 }

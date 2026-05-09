@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.ui.DisplayableMoney
+import woowacourse.shopping.ui.DisplayText
 import woowacourse.shopping.ui.WonMoney
 
 data class ProductUiModel(
     val id: String,
     val name: String,
-    val price: DisplayableMoney,
+    val price: DisplayText,
     val imageUrl: String,
 )
 
