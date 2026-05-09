@@ -57,12 +57,12 @@
 
 ### ShoppingViewModel
 
-- [ ] ROOM db에 상품을 저장할 수 있다
-- [ ] 장바구니에 이미 담긴 상품이면 count를 update한다
-- [ ] 장바구니에 담겨있는 상품을 제거할 수 있다
-- [ ] 전체 상품 목록을 불러온다
-- [ ] 불러올 상품 목록에 loadMore를 적용한다
-- [ ] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
+- [x] ROOM db에 상품을 저장할 수 있다
+- [x] 장바구니에 이미 담긴 상품이면 count를 update한다
+- [x] 장바구니에 담겨있는 상품을 제거할 수 있다
+- [x] 전체 상품 목록을 불러온다
+- [x] 불러올 상품 목록에 loadMore를 적용한다
+- [x] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
 ### ProductDetailViewModel
 
