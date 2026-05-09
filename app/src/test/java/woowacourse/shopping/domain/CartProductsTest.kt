@@ -1,11 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.domain
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartProducts
-import woowacourse.shopping.domain.Product
 
 class CartProductsTest {
     @Test
