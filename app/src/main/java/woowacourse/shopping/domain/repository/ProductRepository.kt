@@ -1,11 +1,12 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 
 interface ProductRepository {
-    val hasNext: Boolean
-
     fun getProductById(id: String): Product
 
-    suspend fun getProducts(): List<Product>
+    fun getProductsByIds(ids: List<String>): List<Product>
+
+    suspend fun getProducts(offset: Int): Products
 }
