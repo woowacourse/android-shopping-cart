@@ -127,5 +127,5 @@
 
 ### ShoppingApplication
 
-- [ ] ROOM DB 인스턴스 초기화
-- [ ] Repository 인스턴스 초기화
+- [x] ROOM DB 인스턴스 초기화
+- [x] Repository 인스턴스 초기화
