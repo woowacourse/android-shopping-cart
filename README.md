@@ -152,7 +152,7 @@
 
 ### ProductDetailActivity
 
-- [ ] 가장 마지막으로 본 상품의 상품 정보 페이지에서 뒤로가기를 누르면 MainActivity로 이동한다
+- [x] 가장 마지막으로 본 상품의 상품 정보 페이지에서 뒤로가기를 누르면 MainActivity로 이동한다
 
 ## ROOM db
 
