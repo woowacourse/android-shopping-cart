@@ -8,7 +8,7 @@ import java.util.UUID
 data class CartProduct(
     val cartProductId: UUID = UUID.randomUUID(),
     val product: Product,
-    val amount: Int = 0,
+    val amount: Int = 1,
 ) : Parcelable {
     init {
         require(amount >= 0) { "수량은 0 이상이여야 합니다." }
