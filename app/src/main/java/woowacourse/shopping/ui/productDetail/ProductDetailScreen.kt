@@ -3,15 +3,19 @@ package woowacourse.shopping.ui.productDetail
 import android.annotation.SuppressLint
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -30,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +47,7 @@ import woowacourse.shopping.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
 import woowacourse.shopping.repository.cart.MockCartRepository
 import woowacourse.shopping.repository.product.MockProductRepository
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,6 +86,9 @@ fun ProductDetailScreen(
                     imageUrl = state.product.imageUrl.value,
                     productName = state.product.name.value,
                     price = state.product.price.value,
+                    selectedQuantity = state.selectedQuantity,
+                    onIncrease = viewModel::increaseSelected,
+                    onDecrease = viewModel::decreaseSelected,
                 )
 
                 CardAddButton(
@@ -87,7 +96,9 @@ fun ProductDetailScreen(
                         Modifier
                             .fillMaxWidth()
                             .height(52.dp),
-                    onAddToCartClick = onAddToCartClick,
+                    onAddToCartClick = {
+                        onAddToCartClick()
+                    },
                 )
             }
 
@@ -166,6 +177,9 @@ private fun ProductDetailContent(
     imageUrl: String,
     productName: String,
     price: Int,
+    selectedQuantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -188,7 +202,12 @@ private fun ProductDetailContent(
             color = Color.Black,
             thickness = 1.dp,
         )
-        ProductPriceSection(price = price, modifier = Modifier)
+        ProductPriceSection(price = price)
+        ProductQuantitySection(
+            quantity = selectedQuantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+        )
     }
 }
 
@@ -253,6 +272,82 @@ private fun ProductPriceSection(
 }
 
 @Composable
+private fun ProductQuantitySection(
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier =
+            modifier
+                .padding(horizontal = 16.dp, vertical = 14.dp)
+                .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "수량",
+            fontSize = 18.sp,
+            color = Color.Black,
+        )
+        QuantityStepper(
+            quantity = quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+        )
+    }
+}
+
+@Composable
+private fun QuantityStepper(
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        StepperSign(symbol = "−", onClick = onDecrease)
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = quantity.toString(),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black,
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        StepperSign(symbol = "+", onClick = onIncrease)
+    }
+}
+
+@Composable
+private fun StepperSign(
+    symbol: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .size(28.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color(0xFFF0F0F0))
+                .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = symbol,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black,
+        )
+    }
+}
+
+@Composable
 private fun ProductImage(
     modifier: Modifier = Modifier,
     imageUrl: String,
@@ -294,7 +389,7 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         viewModel =
             ProductDetailViewModel(
-                productId = "0",
+                productId = "1",
                 productRepository = MockProductRepository(),
                 cartRepository = MockCartRepository(),
             ),
