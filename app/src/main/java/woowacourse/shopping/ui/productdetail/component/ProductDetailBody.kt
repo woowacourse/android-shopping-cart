@@ -20,12 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.component.QuantityControlButton
 import woowacourse.shopping.ui.component.ShoppingImage
 
 @Composable
 fun ProductDetailBody(
     product: Product,
+    totalPrice: Int,
+    count: Int,
     modifier: Modifier = Modifier,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -36,22 +41,31 @@ fun ProductDetailBody(
             contentDescription = "상품 상세 이미지",
             modifier = Modifier.height(360.dp),
         )
-        ProductLabel(product)
+        ProductOption(
+            productName = product.name,
+            price = totalPrice,
+            count = count,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
+        )
     }
 }
 
 @SuppressLint("DefaultLocale")
 @Composable
-private fun ProductLabel(
-    product: Product,
+private fun ProductOption(
+    productName: String,
+    price: Int,
+    count: Int,
     modifier: Modifier = Modifier,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
 ) {
-    val price = product.price.value
     val formatted = String.format("%,d", price)
 
     Column(modifier = modifier) {
         Text(
-            text = product.name,
+            text = productName,
             fontSize = 24.sp,
             color = Color.Black,
             fontWeight = FontWeight.W700,
@@ -68,16 +82,16 @@ private fun ProductLabel(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.W400,
-            )
-            Text(
                 text = "$formatted 원",
                 fontSize = 20.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.W400,
+            )
+
+            QuantityControlButton(
+                count = count,
+                onIncreaseClick = onIncreaseClick,
+                onDecreaseClick = onDecreaseClick,
             )
         }
     }
@@ -92,17 +106,29 @@ private fun ProductUnitPreview() {
             price = Money(1000),
             imageUrl = "",
         )
-    ProductDetailBody(product)
+    ProductDetailBody(
+        product = product,
+        totalPrice = 30000,
+        count = 3,
+        onIncreaseClick = {},
+        onDecreaseClick = {}
+    )
 }
 
 @Composable
 @Preview(showBackground = true, name = "상품 이름만")
-private fun ProductLabelPreview() {
+private fun ProductOptionPreview() {
     val product =
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
         )
-    ProductLabel(product = product)
+    ProductOption(
+        productName = product.name,
+        price = product.price.value,
+        count = 3,
+        onIncreaseClick = {},
+        onDecreaseClick = {}
+    )
 }

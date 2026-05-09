@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,11 +15,9 @@ import woowacourse.shopping.ui.component.ShoppingLoading
 import woowacourse.shopping.ui.productdetail.component.CartAddButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetailBody
 import woowacourse.shopping.ui.productdetail.component.ProductDetailHeader
-import java.util.UUID
 
 @Composable
 fun ProductDetailScreen(
-    productId: UUID,
     viewModel: ProductDetailViewModel,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
@@ -28,19 +25,19 @@ fun ProductDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(productId) {
-        viewModel.findProduct(productId)
-    }
-
     Box(modifier = modifier) {
         uiState.product?.let { product ->
             ProductDetailScreen(
                 product = product,
+                totalPrice = uiState.totalPrice.value,
+                count = uiState.selectedQuantity,
                 onCloseClick = onCloseClick,
                 onAddToCartClick = {
-                    viewModel.addToCart(product)
+                    viewModel.addToCart()
                     onAddToCartClick()
                 },
+                onIncreaseClick = { viewModel.increase() },
+                onDecreaseClick = { viewModel.decrease() }
             )
         }
 
@@ -51,14 +48,24 @@ fun ProductDetailScreen(
 @Composable
 fun ProductDetailScreen(
     product: Product,
+    totalPrice: Int,
+    count: Int,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProductDetailHeader(onCloseClick = onCloseClick)
 
-        ProductDetailBody(product = product)
+        ProductDetailBody(
+            product = product,
+            totalPrice = totalPrice,
+            count = count,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -79,6 +86,10 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         product = product,
         onCloseClick = {},
-        onAddToCartClick = { },
+        onAddToCartClick = {},
+        totalPrice = 30000,
+        count = 3,
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }

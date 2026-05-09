@@ -37,14 +37,14 @@ class ProductDetailActivity : ComponentActivity() {
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 return ProductDetailViewModel(
                                     productRepo = productRepo,
-                                    cartRepo = cartRepo
+                                    cartRepo = cartRepo,
+                                    productId = UUID.fromString(receivedProductId)
                                 ) as T
                             }
                         }
                     )
 
                     ProductDetailScreen(
-                        productId = UUID.fromString(receivedProductId),
                         viewModel = viewModel,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,

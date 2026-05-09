@@ -57,6 +57,17 @@ class ShoppingViewModel(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 cartRepo.increase(product)
+
+                _uiState.update { state ->
+                    val updatedProducts = state.visibleProducts.map { uiModel ->
+                        if (uiModel.product.id == product.id) {
+                            uiModel.copy(cartQuantity = uiModel.cartQuantity + 1)
+                        } else {
+                            uiModel
+                        }
+                    }
+                    state.copy(visibleProducts = updatedProducts)
+                }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
@@ -68,6 +79,17 @@ class ShoppingViewModel(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 cartRepo.decrease(product)
+
+                _uiState.update { state ->
+                    val updatedProducts = state.visibleProducts.map { uiModel ->
+                        if (uiModel.product.id == product.id) {
+                            uiModel.copy(cartQuantity = maxOf(0, uiModel.cartQuantity - 1))
+                        } else {
+                            uiModel
+                        }
+                    }
+                    state.copy(visibleProducts = updatedProducts)
+                }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
@@ -108,6 +130,22 @@ class ShoppingViewModel(
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    fun syncCartState() {
+        viewModelScope.launch {
+            val cartItems = cartRepo.getAllCartItems()
+            val cartQuantityMap = cartItems.items.associate { it.product.id to it.quantity }
+
+            _uiState.update { state ->
+                val updatedProducts = state.visibleProducts.map { uiModel ->
+                    uiModel.copy(
+                        cartQuantity = cartQuantityMap[uiModel.product.id] ?: 0
+                    )
+                }
+                state.copy(visibleProducts = updatedProducts)
             }
         }
     }
