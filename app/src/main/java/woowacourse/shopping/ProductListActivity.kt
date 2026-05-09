@@ -22,6 +22,7 @@ class ProductListActivity : ComponentActivity() {
                 AppContainer.recentlyViewedProductsRepository,
                 AppContainer.productRepository,
                 AppContainer.cartRepository,
+                AppContainer.networkMonitor,
             )
 
         setContent {

@@ -6,12 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
 import woowacourse.shopping.domain.toPage
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
 import woowacourse.shopping.repository.recentviewedproduct.RecentlyViewedProductsRepository
@@ -23,6 +25,7 @@ class ProductListViewModel(
     private val recentViewedProductsRepository: RecentlyViewedProductsRepository,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
     // productRepository
     var currentPageIndex by mutableStateOf(0)
@@ -76,10 +79,20 @@ class ProductListViewModel(
     var recentlyViewedProducts by mutableStateOf(Products())
         private set
 
+    var isOnline by mutableStateOf(true)
+        private set
+
     // Common
     init {
         viewModelScope.launch {
-            productRepository.refreshProducts()
+            networkMonitor.isOnline().collectLatest { isOnline ->
+                this@ProductListViewModel.isOnline = isOnline
+                if (isOnline) {
+                    runCatching {
+                        productRepository.refreshProducts()
+                    }
+                }
+            }
         }
 
         viewModelScope.launch {

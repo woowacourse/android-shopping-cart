@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.shopping.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -37,6 +39,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductWithQuantity
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.cart.InMemoryCartRepository
 import woowacourse.shopping.repository.product.InMemoryProductRepository
 import woowacourse.shopping.repository.recentviewedproduct.RecentlyViewedProductsRepository
@@ -76,6 +79,22 @@ fun ProductListScreen(
                 .padding(innerPadding)
                 .testTag("product_grid"),
         ) {
+            if (!viewModel.isOnline) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFFFE3E3))
+                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.network_unavailable),
+                            color = Color(0xFFB3261E),
+                            fontWeight = FontWeight.W600,
+                        )
+                    }
+                }
+            }
             if (viewModel.recentlyViewedProducts.products.isNotEmpty()) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     RecentlyViewedProductsItemsBox(
@@ -149,12 +168,18 @@ private fun ProductListScreenPreview() {
                 allProducts.firstOrNull()
         }
     }
+    val networkMonitor = remember {
+        object : NetworkMonitor {
+            override fun isOnline(): Flow<Boolean> = flowOf(true)
+        }
+    }
 
     val viewModel = remember {
         ProductListViewModel(
             recentViewedProductsRepository = recentViewedProductsRepository,
             productRepository = InMemoryProductRepository(packageName),
             cartRepository = InMemoryCartRepository(),
+            networkMonitor = networkMonitor,
         )
     }
 

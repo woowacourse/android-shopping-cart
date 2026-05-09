@@ -28,6 +28,7 @@ import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.cart.InMemoryCartRepository
 import woowacourse.shopping.repository.product.InMemoryProductRepository
 import woowacourse.shopping.repository.recentviewedproduct.RecentlyViewedProductsRepository
@@ -99,12 +100,18 @@ private fun RecentlyViewedProductsItemsBox() {
                 allProducts.firstOrNull()
         }
     }
+    val networkMonitor = remember {
+        object : NetworkMonitor {
+            override fun isOnline(): Flow<Boolean> = flowOf(true)
+        }
+    }
 
     val viewModel = remember {
         ProductListViewModel(
             recentViewedProductsRepository = recentViewedProductsRepository,
             productRepository = InMemoryProductRepository(packageName),
             cartRepository = InMemoryCartRepository(),
+            networkMonitor = networkMonitor,
         )
     }
 

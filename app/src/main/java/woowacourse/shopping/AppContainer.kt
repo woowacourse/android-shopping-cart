@@ -5,8 +5,9 @@ import androidx.room.Room
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import woowacourse.shopping.data.local.db.ShoppingDatabase
-import woowacourse.shopping.data.local.mapper.toEntity
 import woowacourse.shopping.data.remote.product.ProductHttpClient
+import woowacourse.shopping.network.AndroidNetworkMonitor
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.cart.RoomCartRepository
 import woowacourse.shopping.repository.product.ProductRepository
@@ -15,6 +16,7 @@ import woowacourse.shopping.repository.recentviewedproduct.RecentlyViewedProduct
 import woowacourse.shopping.repository.recentviewedproduct.RoomRecentlyViewedProductsRepository
 
 object AppContainer {
+    private lateinit var appContext: Context
     private lateinit var database: ShoppingDatabase
 
     private val okHttpClient: OkHttpClient by lazy {
@@ -27,8 +29,9 @@ object AppContainer {
         }
     }
 
-    private const val BASE_URL = "http://10.0.2.2:12345/"
+    private val baseUrl = BuildConfig.BASE_URL
     fun initialize(context: Context) {
+        appContext = context.applicationContext
         database =
             Room.databaseBuilder(
                 context.applicationContext,
@@ -43,11 +46,15 @@ object AppContainer {
             productDao = database.productDao(),
             productHttpClient =
                 ProductHttpClient(
-                    baseUrl = BASE_URL,
+                    baseUrl = baseUrl,
                     okHttpClient = okHttpClient,
                     json = json,
                 ),
         )
+    }
+
+    val networkMonitor: NetworkMonitor by lazy {
+        AndroidNetworkMonitor(appContext)
     }
 
     val cartRepository: CartRepository by lazy {

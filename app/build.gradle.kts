@@ -6,6 +6,12 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val shoppingBaseUrl =
+    providers
+        .gradleProperty("SHOPPING_BASE_URL")
+        .orElse("http://10.0.2.2:12345/")
+        .get()
+
 android {
     namespace = "woowacourse.shopping"
     compileSdk = 36
@@ -16,6 +22,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "BASE_URL", "\"$shoppingBaseUrl\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     testOptions {
         unitTests.all {
