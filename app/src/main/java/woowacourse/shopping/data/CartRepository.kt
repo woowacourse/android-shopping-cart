@@ -33,19 +33,20 @@ class CartRepository(
     }
 
     suspend fun increaseQuantity(id: String) {
-        val item = cartItemDao.findById(id)?.toDomain() ?: return
-        cartItemDao.insert(item.increaseQuantity().toEntity(System.currentTimeMillis()))
+        val cartItem = cartItemDao.findById(id) ?: return
+        val item = cartItem.toDomain()
+        cartItemDao.insert(item.increaseQuantity().toEntity(cartItem.timestamp))
     }
 
     suspend fun decreaseQuantity(id: String) {
-        val item = cartItemDao.findById(id)?.toDomain() ?: return
-
+        val cartItem = cartItemDao.findById(id) ?: return
+        val item = cartItem.toDomain()
         if (item.quantity <= 1) {
             cartItemDao.deleteById(id)
             return
         }
 
-        cartItemDao.insert(item.decreaseQuantity().toEntity(System.currentTimeMillis()))
+        cartItemDao.insert(item.decreaseQuantity().toEntity(cartItem.timestamp))
     }
 
     suspend fun deleteItem(id: String) {

@@ -1,8 +1,9 @@
 package woowacourse.shopping.ui.shopping
 
-import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,19 +14,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,50 +29,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
-import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.component.ShoppingAppBar
 import woowacourse.shopping.ui.model.ProductUiModel
+import woowacourse.shopping.ui.theme.Green40
 
 @Composable
 fun ShoppingScreen(
+    uiState: ShoppingUiState,
+    onLoad: () -> Unit,
     onProductClick: (String) -> Unit,
+    onCartClick: () -> Unit,
+    onIncreaseQuantity: (String) -> Unit,
+    onDecreaseQuantity: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
-    val scope = rememberCoroutineScope()
-    var savedProducts by rememberSaveable {
-        mutableStateOf(arrayListOf<ProductUiModel>())
-    }
-
-    var savedCanLoadMore by rememberSaveable {
-        mutableStateOf(true)
-    }
-
-    var savedOffset by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-
-    val state =
-        remember {
-            ShoppingStateHolder(
-                scope = scope,
-                initialProducts = savedProducts.toPersistentList(),
-                initialCanLoadMore = savedCanLoadMore,
-                initialOffset = savedOffset,
-                onProductsChanged = { products ->
-                    savedProducts = ArrayList(products)
-                },
-                onCanLoadMoreChanged = { canLoadMore ->
-                    savedCanLoadMore = canLoadMore
-                },
-                onOffsetChanged = { offset ->
-                    savedOffset = offset
-                },
-            )
-        }
-    val products = state.currentProducts
-
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -98,9 +63,24 @@ fun ShoppingScreen(
                             Modifier
                                 .size(24.dp)
                                 .clickable {
-                                    activity?.startActivity(CartActivity.getIntent(activity))
+                                    onCartClick()
                                 },
                     )
+                    if (uiState.cartSize > 0) {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(Green40, shape = CircleShape),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = uiState.cartSize.toString(),
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.W500,
+                            )
+                        }
+                    }
                 },
                 modifier = modifier.fillMaxWidth(),
             )
@@ -108,11 +88,14 @@ fun ShoppingScreen(
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         ShoppingContents(
-            products = products,
+            products = uiState.products,
+            cartQuantities = uiState.cartQuantities,
             modifier = Modifier.padding(innerPadding),
-            onLoad = { state.loadMore() },
+            onLoad = onLoad,
             onProductClick = onProductClick,
-            isCanLoadMore = state.canLoadMore,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity,
+            isCanLoadMore = uiState.canLoadMore,
         )
     }
 }
@@ -120,9 +103,12 @@ fun ShoppingScreen(
 @Composable
 private fun ShoppingContents(
     products: ImmutableList<ProductUiModel>,
+    cartQuantities: Map<String, Int>,
     onLoad: () -> Unit,
     isCanLoadMore: Boolean,
     onProductClick: (String) -> Unit,
+    onIncreaseQuantity: (String) -> Unit,
+    onDecreaseQuantity: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -143,12 +129,19 @@ private fun ShoppingContents(
                 key = { product -> product.id },
             ) { product ->
                 ProductCard(
-                    onClick = {
-                        onProductClick(product.id)
-                    },
                     imageUrl = product.imageUrl,
                     productName = product.name,
                     price = product.price,
+                    quantity = cartQuantities[product.id] ?: 0,
+                    onClick = {
+                        onProductClick(product.id)
+                    },
+                    onIncreaseQuantity = {
+                        onIncreaseQuantity(product.id)
+                    },
+                    onDecreaseQuantity = {
+                        onDecreaseQuantity(product.id)
+                    },
                 )
             }
             if (isCanLoadMore) {
@@ -168,6 +161,11 @@ private fun ShoppingContents(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
+        uiState = ShoppingUiState(),
+        onLoad = {},
         onProductClick = {},
+        onCartClick = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
     )
 }

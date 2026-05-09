@@ -37,6 +37,8 @@ data class Cart(
 
     fun getTotalSize(): Int = items.size
 
+    fun getTotalQuantity(): Int = items.sumOf { it.quantity }
+
     fun calculateTotalPrice(): Int {
         val totalPrice = items.sumOf { it.getTotalPrice().amount }
         return totalPrice
