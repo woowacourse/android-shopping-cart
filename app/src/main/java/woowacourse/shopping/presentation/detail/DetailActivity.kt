@@ -42,6 +42,7 @@ class DetailActivity : ComponentActivity() {
                         startActivity(intent)
                         finish()
                     },
+                    onBack = { finish() },
                 )
             }
         }

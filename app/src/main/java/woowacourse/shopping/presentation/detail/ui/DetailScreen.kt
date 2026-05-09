@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.detail.ui
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,11 +55,11 @@ fun DetailScreen(
     isFromLastSeen: Boolean = false,
     onNavigateToCart: (AddItemResult) -> Unit,
     onClickLastProductCard: (Long) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = viewModel(),
 ) {
     val scope = rememberCoroutineScope()
-    val activity = LocalActivity.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val product = uiState.product
 
@@ -81,9 +80,7 @@ fun DetailScreen(
                         modifier =
                             Modifier
                                 .size(16.dp)
-                                .clickable {
-                                    activity?.finish()
-                                },
+                                .clickable { onBack() },
                     )
                 },
             )
@@ -216,6 +213,7 @@ private fun DetailScreenPreview() {
         id = 1L,
         onNavigateToCart = {},
         onClickLastProductCard = {},
+        onBack = {},
     )
 }
 

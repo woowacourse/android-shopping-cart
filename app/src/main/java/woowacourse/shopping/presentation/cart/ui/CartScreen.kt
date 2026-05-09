@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.cart.ui
 
 import android.widget.Toast
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,9 +45,9 @@ import woowacourse.shopping.presentation.common.model.ProductUiModel
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
+    onBack: () -> Unit,
     viewModel: CartViewModel = viewModel(),
 ) {
-    val activity = LocalActivity.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -69,9 +68,7 @@ fun CartScreen(
                         modifier =
                             Modifier
                                 .size(16.dp)
-                                .clickable {
-                                    activity?.finish()
-                                },
+                                .clickable { onBack() },
                     )
                     Spacer(modifier = Modifier.width(21.dp))
                     Text(
@@ -173,7 +170,7 @@ private fun CartContent(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen()
+    CartScreen(onBack = {})
 }
 
 @Preview(showBackground = true)

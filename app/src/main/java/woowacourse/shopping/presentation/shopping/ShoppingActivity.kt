@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.shopping.ui.ShoppingScreen
 import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -27,6 +28,7 @@ class ShoppingActivity : ComponentActivity() {
                         val intent = Intent(this, CartActivity::class.java)
                         startActivity(intent)
                     },
+                    onProductCardClick = { startActivity(DetailActivity.newIntent(this, it)) },
                 )
             }
         }

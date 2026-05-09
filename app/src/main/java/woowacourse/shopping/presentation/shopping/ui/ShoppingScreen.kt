@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.ui
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,6 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
-import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
 import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 
@@ -43,11 +41,11 @@ import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
 fun ShoppingScreen(
     viewModel: ShoppingViewModel,
     onNavigateToCart: () -> Unit,
+    onProductCardClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val activity = LocalActivity.current
 
     LaunchedEffect(Unit) {
         viewModel.initialize()
@@ -99,9 +97,7 @@ fun ShoppingScreen(
                     }
                 },
                 isCanLoadMore = state.canLoadMore,
-                onProductCardClick = {
-                    activity?.startActivity(DetailActivity.newIntent(activity, it))
-                },
+                onProductCardClick = { onProductCardClick(it) },
                 onIncrease = { id ->
                     scope.launch { viewModel.increase(id) }
                 },
@@ -184,5 +180,6 @@ private fun ShoppingScreenPreview() {
     ShoppingScreen(
         viewModel = viewModel(),
         onNavigateToCart = {},
+        onProductCardClick = {},
     )
 }
