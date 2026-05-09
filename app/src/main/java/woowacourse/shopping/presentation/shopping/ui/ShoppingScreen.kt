@@ -15,9 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,30 +23,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.launch
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
 import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
-import woowacourse.shopping.presentation.shopping.viewmodel.ShoppingViewModel
+import woowacourse.shopping.presentation.shopping.model.ShoppingUiState
+import woowacourse.shopping.presentation.shopping.ui.components.CartIcon
+import woowacourse.shopping.presentation.shopping.ui.components.LoadButton
+import woowacourse.shopping.presentation.shopping.ui.components.ProductCard
+import woowacourse.shopping.presentation.shopping.ui.components.RecentSection
 
 @Composable
 fun ShoppingScreen(
-    viewModel: ShoppingViewModel,
+    uiState: ShoppingUiState,
     onNavigateToCart: () -> Unit,
+    onLoadMore: () -> Unit,
+    onIncrease: (Long) -> Unit,
+    onDecrease: (Long) -> Unit,
+    onUpsertRecentProduct: (Long) -> Unit,
     onProductCardClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -64,8 +60,8 @@ fun ShoppingScreen(
                         modifier = Modifier.weight(1f),
                     )
                     CartIcon(
-                        quantity = state.totalQuantity,
-                        isShowCartQuantityIcon = state.isShowCartQuantityIcon,
+                        quantity = uiState.totalQuantity,
+                        isShowCartQuantityIcon = uiState.isShowCartQuantityIcon,
                         onNavigateToCart = onNavigateToCart,
                     )
                 },
@@ -81,8 +77,8 @@ fun ShoppingScreen(
                     .padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {
-            if (state.isLoading) CircularProgressIndicator()
-            state.errorMessage?.let { errorMessage ->
+            if (uiState.isLoading) CircularProgressIndicator()
+            uiState.errorMessage?.let { errorMessage ->
                 Text(
                     text = errorMessage,
                     color = Color.Gray,
@@ -90,24 +86,14 @@ fun ShoppingScreen(
                 )
             }
             ShoppingContents(
-                items = state.products.toImmutableList(),
-                onLoad = {
-                    scope.launch {
-                        viewModel.loadMore()
-                    }
-                },
-                isCanLoadMore = state.canLoadMore,
+                items = uiState.products.toImmutableList(),
+                onLoad = { onLoadMore() },
+                isCanLoadMore = uiState.canLoadMore,
                 onProductCardClick = { onProductCardClick(it) },
-                onIncrease = { id ->
-                    scope.launch { viewModel.increase(id) }
-                },
-                onDecrease = { id ->
-                    scope.launch { viewModel.decrease(id) }
-                },
-                onUpsertRecentProduct = { id ->
-                    scope.launch { viewModel.upsertRecentProduct(id) }
-                },
-                recentProducts = state.recentProducts.toImmutableList(),
+                onIncrease = { onIncrease(it) },
+                onDecrease = { onDecrease(it) },
+                onUpsertRecentProduct = { onUpsertRecentProduct(it) },
+                recentProducts = uiState.recentProducts.toImmutableList(),
             )
         }
     }
@@ -178,8 +164,12 @@ private fun ShoppingContents(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
-        viewModel = viewModel(),
+        uiState = ShoppingUiState(),
         onNavigateToCart = {},
         onProductCardClick = {},
+        onDecrease = {},
+        onIncrease = {},
+        onLoadMore = {},
+        onUpsertRecentProduct = {},
     )
 }

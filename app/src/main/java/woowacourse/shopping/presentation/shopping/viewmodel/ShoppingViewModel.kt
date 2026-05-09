@@ -1,12 +1,14 @@
 package woowacourse.shopping.presentation.shopping.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import okio.IOException
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
@@ -45,17 +47,25 @@ class ShoppingViewModel(
         }
     }
 
-    suspend fun increase(id: Long) {
-        cartRepository.addItem(id)
-        loadCartItemQuantities()
+    fun loadMore() {
+        viewModelScope.launch { loadNext() }
     }
 
-    suspend fun decrease(id: Long) {
-        cartRepository.decrease(id)
-        loadCartItemQuantities()
+    fun increase(id: Long) {
+        viewModelScope.launch {
+            cartRepository.addItem(id)
+            loadCartItemQuantities()
+        }
     }
 
-    suspend fun loadMore() {
+    fun decrease(id: Long) {
+        viewModelScope.launch {
+            cartRepository.decrease(id)
+            loadCartItemQuantities()
+        }
+    }
+
+    private suspend fun loadNext() {
         if (uiState.value.isLoading || !uiState.value.canLoadMore) return
         _uiState.update {
             it.copy(isLoading = true)
@@ -83,8 +93,10 @@ class ShoppingViewModel(
         }
     }
 
-    suspend fun upsertRecentProduct(id: Long) {
-        recentProductRepository.upsertRecentProduct(id)
+    fun upsertRecentProduct(id: Long) {
+        viewModelScope.launch {
+            recentProductRepository.upsertRecentProduct(id)
+        }
     }
 
     suspend fun loadRecentProducts(limit: Int) {

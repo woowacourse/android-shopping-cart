@@ -1,6 +1,5 @@
-package woowacourse.shopping.presentation.shopping.ui
+package woowacourse.shopping.presentation.shopping.ui.components
 
-import android.R.attr.name
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -107,7 +106,7 @@ private fun RecentSectionPreview() {
             id = 1L,
             name = ProductName("아메리카노"),
             price = Money(6000),
-            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2025/06/[106509]_20250626092521116.jpg",
+            imageUrl = "",
         ).toUiModel()
     AndroidshoppingTheme {
         RecentSection(

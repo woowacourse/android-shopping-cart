@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping.ui
+package woowacourse.shopping.presentation.shopping.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -126,7 +126,7 @@ private fun InCartProductCardPreview() {
     )
 }
 
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 private fun NoCartProductCardPreview() {
     AndroidshoppingTheme {
