@@ -129,3 +129,50 @@
 
 - [x] ROOM DB 인스턴스 초기화
 - [x] Repository 인스턴스 초기화
+
+--- 
+
+## UI
+
+### RecentlyViewedProducts
+
+- [ ] 최근 본 상품을 최대 10개 까지 표시한다
+- [ ] LazyRow를 통해 스크롤할 수 있다
+- [ ] 표시된 상품을 클릭하면 해당 상품의 ProductDetailScreen으로 이동한다
+
+### RecentlyViewedProductItem
+
+- [ ] 상품의 이미지를 표시한다
+- [ ] 상품의이름을 표시한다
+
+### LastViewedProduct
+
+- [ ] 가장 마지막에 본 상품의 이름을 표시한다
+- [ ] 클릭 시 해당 상품의 ProductDetailScreen으로 이동한다
+
+### ProductDetailActivity
+
+- [ ] 가장 마지막으로 본 상품의 상품 정보 페이지에서 뒤로가기를 누르면 MainActivity로 이동한다
+
+## ROOM db
+
+### RecentlyViewedProductEntity
+
+- [ ] 도메인 객체에 대한 Column 정의
+    - [ ] 도메인 객체에 대한 테이블 정의
+    - [ ] 상품 ID Column
+    - [ ] 상품 이름 Column
+    - [ ] 상품 가격 Column
+    - [ ] 상품 이미지 Uri Column
+- [ ] Entity를 Domain 객체로 변환할 수 있다
+
+### RecentlyViewedProductDao
+
+- [ ] db에 저장된 전체 목록을 조화할 수 있다
+- [ ] 상품은 최대 10개가지 저장된다
+- [ ] 10개가 저장된 상태로 새로운 Entity가 들어오면 가장 오래 저장되어 있던 데이터를 제거한다
+- [ ] 가장 마지막에 저장된 상품을 조회할 수 있다
+
+## WebClient
+
+- [ ] url을 통해 상품 목록을 WebServer에 요청해 상품 목록을 조회할 수 있다
