@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.data.DataProvider.getCartRepository
+import woowacourse.shopping.data.DataProvider.getRecentProductRepository
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class ProductDetailActivity : ComponentActivity() {
                         ProductDetailViewModelFactory(
                             product = parcelProduct,
                             cartRepository = getCartRepository(this),
+                            recentProductRepository = getRecentProductRepository(this),
                         ),
                 )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

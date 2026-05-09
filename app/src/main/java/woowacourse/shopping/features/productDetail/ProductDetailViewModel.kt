@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
@@ -19,6 +20,7 @@ import woowacourse.shopping.domain.product.model.ProductName
 class ProductDetailViewModel(
     parcelProduct: ParcelProduct,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -38,6 +40,13 @@ class ProductDetailViewModel(
                 quantity = quantity,
                 minusEnabled = minusEnabled,
             )
+        }
+        addRecentProducts(product.id)
+    }
+
+    fun addRecentProducts(productId: String) {
+        viewModelScope.launch {
+            recentProductRepository.addRecentProduct(productId)
         }
     }
 
@@ -96,11 +105,12 @@ class ProductDetailViewModel(
 class ProductDetailViewModelFactory(
     private val product: ParcelProduct,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ProductDetailViewModel(product, cartRepository) as T
+            return ProductDetailViewModel(product, cartRepository, recentProductRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

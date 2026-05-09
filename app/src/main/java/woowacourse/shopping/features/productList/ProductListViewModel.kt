@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
@@ -16,10 +17,12 @@ import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.model.ProductName
 import woowacourse.shopping.domain.product.repository.ProductRepository
+import woowacourse.shopping.features.productList.uiModel.ProductUiModel
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
@@ -33,6 +36,27 @@ class ProductListViewModel(
 
     init {
         moreProducts()
+    }
+
+    fun loadRecentProducts() {
+        viewModelScope.launch {
+            val recentProductUiList =
+                recentProductRepository.getAllRecentProducts().map {
+                    ProductUiModel(
+                        id = it.id,
+                        name = it.name.value,
+                        imageUrl = it.imageUrl.value,
+                        price = it.price.value,
+                        quantity = 0,
+                        isExistProductToCart = false,
+                    )
+                }
+            _uiState.update {
+                it.copy(
+                    recentProductList = recentProductUiList,
+                )
+            }
+        }
     }
 
     fun moreProducts() {
@@ -172,11 +196,16 @@ class ProductListViewModel(
 class ProductListViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ProductListViewModel(productRepository, cartRepository) as T
+            return ProductListViewModel(
+                productRepository,
+                cartRepository,
+                recentProductRepository,
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

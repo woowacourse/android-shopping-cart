@@ -1,4 +1,4 @@
-package woowacourse.shopping.features.productList
+package woowacourse.shopping.features.productList.uiModel
 
 data class ProductUiModel(
     val id: String,

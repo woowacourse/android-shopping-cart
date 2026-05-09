@@ -13,16 +13,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -49,10 +52,10 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
+import woowacourse.shopping.features.productList.uiModel.ProductUiModel
 
 @Composable
 fun ProductListScreen(
-    viewModel: ProductListViewModel = viewModel(),
     onCartClick: () -> Unit,
     onProductClick: (ProductUiModel) -> Unit,
     loadProducts: () -> Unit,
@@ -60,6 +63,7 @@ fun ProductListScreen(
     isExistProductToCart: (ProductUiModel) -> Boolean,
     onDecrementClick: (ProductUiModel) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ProductListViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -77,10 +81,11 @@ fun ProductListScreen(
 
         ProductCardGrid(
             products = uiState.productList,
+            recentlyProducts = uiState.recentProductList,
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
+                    .background(color = Color.White),
             onProductClick = { onProductClick(it) },
             isExistProductToCart = { isExistProductToCart(it) },
             onDecrementClick = { onDecrementClick(it) },
@@ -150,6 +155,7 @@ private fun ProductListTopAppBar(
 @Composable
 private fun ProductCardGrid(
     products: List<ProductUiModel>,
+    recentlyProducts: List<ProductUiModel>,
     isLastPage: Boolean,
     onProductClick: (ProductUiModel) -> Unit,
     onMoreClick: () -> Unit,
@@ -161,14 +167,31 @@ private fun ProductCardGrid(
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        item(
+            span = { GridItemSpan(2) },
+        ) {
+            RecentlyProductLazyRow(
+                modifier =
+                    Modifier
+                        .padding(vertical = 20.dp)
+                        .fillMaxWidth(),
+                recentlyProducts = recentlyProducts,
+                onProductClick = {
+                    onProductClick(it)
+                },
+            )
+        }
+
         items(
             items = products,
             key = { item -> item.id },
         ) { item ->
             ProductCard(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 imageUrl = item.imageUrl,
                 productName = item.name,
                 price = item.price,
@@ -180,7 +203,7 @@ private fun ProductCardGrid(
                 onAddCartClick = {
                     onAddCartClick(item)
                 },
-                onClick = {
+                onProductClick = {
                     onProductClick(item)
                 },
             )
@@ -206,12 +229,89 @@ private fun ProductCardGrid(
 }
 
 @Composable
+private fun RecentlyProductCard(
+    productUiModel: ProductUiModel,
+    onProductClick: (ProductUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        AsyncImage(
+            model = productUiModel.imageUrl,
+            contentDescription = "상품 이미지",
+            modifier =
+                Modifier
+                    .padding(bottom = 7.dp)
+                    .size(100.dp)
+                    .clickable {
+                        onProductClick(productUiModel)
+                    },
+        )
+        Text(
+            text = productUiModel.name,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+@Composable
+private fun RecentlyProductLazyRow(
+    recentlyProducts: List<ProductUiModel>,
+    onProductClick: (ProductUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Text(
+            text = "최근 본 상품",
+            modifier = Modifier.padding(start = 20.dp),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        if (recentlyProducts.isEmpty()) {
+            Text(
+                "최근 본 상품이 존재하지 않음",
+                modifier = Modifier.padding(start = 20.dp),
+                fontSize = 14.sp,
+            )
+        } else {
+            LazyRow(
+                modifier = Modifier.padding(vertical = 20.dp),
+            ) {
+                items(
+                    items = recentlyProducts,
+                    key = { item -> item.id },
+                ) { item ->
+                    RecentlyProductCard(
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        productUiModel = item,
+                        onProductClick = {
+                            onProductClick(item)
+                        },
+                    )
+                }
+            }
+        }
+        HorizontalDivider(
+            color = Color.Gray,
+            thickness = 5.dp,
+        )
+    }
+}
+
+@Composable
 private fun ProductCard(
     productName: String,
     price: Int,
     imageUrl: String,
     quantity: Int,
-    onClick: () -> Unit,
+    onProductClick: () -> Unit,
     onAddCartClick: () -> Unit,
     onDecrementClick: () -> Unit,
     isExistProductToCart: Boolean,
@@ -220,7 +320,7 @@ private fun ProductCard(
     Column(
         modifier =
             modifier.clickable {
-                onClick()
+                onProductClick()
             },
     ) {
         Box(
@@ -242,8 +342,11 @@ private fun ProductCard(
                             .padding(8.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .fillMaxWidth()
-                            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
-                            .background(color = Color.White),
+                            .border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = RoundedCornerShape(10.dp),
+                            ).background(color = Color.White),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {

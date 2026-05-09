@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.data.DataProvider.getCartRepository
+import woowacourse.shopping.data.DataProvider.getRecentProductRepository
 import woowacourse.shopping.data.DataProvider.productRepository
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
@@ -31,6 +32,7 @@ class ProductListActivity : ComponentActivity() {
                         ProductListViewModelFactory(
                             productRepository = productRepository,
                             cartRepository = getCartRepository(this),
+                            recentProductRepository = getRecentProductRepository(this),
                         ),
                 )
 
@@ -39,6 +41,7 @@ class ProductListActivity : ComponentActivity() {
 
                 LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
                     viewModel.loadProductUiList()
+                    viewModel.loadRecentProducts()
                 }
 
                 ProductListScreen(
@@ -62,7 +65,6 @@ class ProductListActivity : ComponentActivity() {
                             Toast.makeText(context, "상품이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
                             return@ProductListScreen
                         }
-
                         val detailIntent =
                             ProductDetailActivity.newIntent(
                                 this,
