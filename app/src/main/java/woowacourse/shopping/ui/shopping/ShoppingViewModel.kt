@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.CartRepository
-import woowacourse.shopping.data.ProductRepository
-import woowacourse.shopping.data.RecentItemRepository
+import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class ShoppingViewModel(

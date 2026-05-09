@@ -12,9 +12,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import woowacourse.shopping.data.CartRepository
-import woowacourse.shopping.data.MockProductRepository
-import woowacourse.shopping.data.RecentItemRepository
+import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.MockProductRepository
+import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.data.localdb.ShoppingDB
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme

@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import kotlinx.collections.immutable.ImmutableList
 import woowacourse.shopping.model.Product
