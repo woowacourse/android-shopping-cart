@@ -156,7 +156,7 @@ private fun ProductDetailInfo(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = product.price.toPriceString(),
+                text = (product.price * count).toPriceString(),
                 fontSize = 20.sp,
             )
 
