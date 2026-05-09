@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudOff
@@ -46,6 +48,7 @@ fun DetailScreen(
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     onAddToCart: () -> Unit,
+    onRecentItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -93,7 +96,21 @@ fun DetailScreen(
             totalPrice = uiState.totalPrice,
             onIncreaseQuantity = onIncreaseQuantity,
             onDecreaseQuantity = onDecreaseQuantity,
-            modifier = Modifier.padding(innerPadding),
+            recentItem = {
+                if (uiState.recentItem != null && uiState.recentItem.id != uiState.product.id) {
+                    RecentItemCard(
+                        name = uiState.recentItem.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp)
+                            .clickable {
+                                onRecentItemClick(uiState.recentItem.id)
+                            }
+                    )
+                    Spacer(modifier = Modifier.height(34.dp))
+                }
+            },
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }
@@ -106,10 +123,11 @@ private fun DetailContent(
     totalPrice: Int,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
+    recentItem: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         AsyncImage(
@@ -151,6 +169,8 @@ private fun DetailContent(
                 quantity = quantity,
             )
         }
+        Spacer(modifier = Modifier.height(4.dp))
+        recentItem()
     }
 }
 
@@ -162,6 +182,7 @@ private fun DetailScreenPreview() {
         onCloseClick = {},
         onIncreaseQuantity = {},
         onDecreaseQuantity = {},
+        onRecentItemClick = {},
         onAddToCart = {},
     )
 }
@@ -176,5 +197,6 @@ private fun DetailContentPreview() {
         totalPrice = 1000,
         onIncreaseQuantity = {},
         onDecreaseQuantity = {},
+        recentItem = {}
     )
 }

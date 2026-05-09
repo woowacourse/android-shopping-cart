@@ -13,12 +13,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.ProductRepository
+import woowacourse.shopping.data.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class DetailViewModel(
     private val id: String,
+    private val hideRecentItem: Boolean,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentItemRepository: RecentItemRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
@@ -30,17 +33,25 @@ class DetailViewModel(
         loadProduct()
     }
 
-
     private fun loadProduct() {
         viewModelScope.launch {
             try {
                 val product = productRepository.getProductById(id)
+                val lastViewedItem =
+                    if (hideRecentItem) {
+                        null
+                    } else {
+                        recentItemRepository.getLastViewedItem()
+                    }
                 val quantity = cartRepository.getCartItemQuantity(id)
+
+                recentItemRepository.addRecentItem(product)
 
                 _uiState.value =
                     _uiState.value.copy(
                         product = product.toUiModel(),
                         quantity = quantity,
+                        recentItem = lastViewedItem?.toUiModel(),
                         totalPrice = product.getPrice() * quantity,
                     )
             } catch (e: IllegalArgumentException) {
@@ -84,14 +95,18 @@ class DetailViewModel(
     companion object {
         fun provideFactory(
             id: String,
+            hideRecentItem: Boolean,
             productRepository: ProductRepository,
             cartRepository: CartRepository,
+            recentItemRepository: RecentItemRepository
         ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 DetailViewModel(
                     id = id,
+                    hideRecentItem = hideRecentItem,
                     productRepository = productRepository,
                     cartRepository = cartRepository,
+                    recentItemRepository = recentItemRepository
                 )
             }
         }

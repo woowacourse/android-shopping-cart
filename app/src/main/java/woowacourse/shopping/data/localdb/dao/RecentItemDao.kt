@@ -28,10 +28,9 @@ interface RecentItemDao {
     @Query(
         """
             SELECT * FROM recent_items
-            WHERE id != :currentId
             ORDER BY timestamp DESC
             LIMIT 1
         """
     )
-    suspend fun getLastViewedItem(currentId : String) : RecentItemEntity?
+    suspend fun getLastViewedItem(): RecentItemEntity?
 }

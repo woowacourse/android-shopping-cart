@@ -11,10 +11,10 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.MockProductRepository
+import woowacourse.shopping.data.RecentItemRepository
 import woowacourse.shopping.data.localdb.ShoppingDB
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -25,6 +25,7 @@ class DetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val id = intent.getStringExtra(PRODUCT_ID)
+        val hideRecentItem = intent.getBooleanExtra(HIDE_RECENT_ITEM, false)
 
         if (id == null) {
             Toast.makeText(this, "유효하지 않은 상품입니다.", Toast.LENGTH_SHORT).show()
@@ -36,8 +37,10 @@ class DetailActivity : ComponentActivity() {
         val viewModel: DetailViewModel by viewModels {
             DetailViewModel.provideFactory(
                 id = id,
+                hideRecentItem = hideRecentItem,
                 productRepository = MockProductRepository(),
                 cartRepository = CartRepository(database.cartItemDao()),
+                recentItemRepository = RecentItemRepository(database.recentItemDao())
             )
         }
 
@@ -69,6 +72,10 @@ class DetailActivity : ComponentActivity() {
                     onIncreaseQuantity = viewModel::increaseQuantity,
                     onDecreaseQuantity = viewModel::decreaseQuantity,
                     onAddToCart = viewModel::addToCart,
+                    onRecentItemClick = { id ->
+                        startActivity(getIntent(this, id, hideRecentItem = true))
+                        finish()
+                    },
                     modifier = Modifier,
                 )
             }
@@ -77,13 +84,16 @@ class DetailActivity : ComponentActivity() {
 
     companion object {
         private const val PRODUCT_ID = "id"
+        private const val HIDE_RECENT_ITEM = "hide_recent_item"
 
         fun getIntent(
             context: Context,
             id: String,
+            hideRecentItem: Boolean = false,
         ): Intent =
             Intent(context, DetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, id)
+                putExtra(HIDE_RECENT_ITEM, hideRecentItem)
             }
     }
 }
