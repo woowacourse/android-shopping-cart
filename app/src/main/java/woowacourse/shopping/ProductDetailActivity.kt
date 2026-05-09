@@ -12,10 +12,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import woowacourse.shopping.ui.viewmodel.ProductDetailViewModel
+import woowacourse.shopping.ui.viewmodel.ProductDetailViewModelFactory
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,22 +32,21 @@ class ProductDetailActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            var count by rememberSaveable { mutableIntStateOf(1) }
+            val viewModel: ProductDetailViewModel = viewModel<ProductDetailViewModel>(
+                factory = ProductDetailViewModelFactory(
+                    (application as ShoppingApplication).purchaseProductsRepository
+                )
+            )
 
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
-                        count = count,
-                        onAdd = { count++ },
-                        onMinus = {
-                            if (count != 1) count-- else count
-                        },
+                        count = viewModel.countState,
+                        onAdd = { viewModel.addCount() },
+                        onMinus = { viewModel.minusCount() },
                         onAddRequest = {
-                            intent.putExtra(IntentKeys.STORED_PRODUCT_KEY,
-                                PurchaseProduct(product, count)
-                            )
-                            setResult(RESULT_OK, intent)
+                            viewModel.addPurchaseProduct(PurchaseProduct(product, viewModel.countState))
                             finish()
                         },
                         onClose = { finish() },
