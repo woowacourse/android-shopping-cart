@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package woowacourse.shopping.ui
+package woowacourse.shopping.productdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,8 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.ui.pagination.DetailProductViewModel
-import woowacourse.shopping.ui.pagination.ProductUiModel
+import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable

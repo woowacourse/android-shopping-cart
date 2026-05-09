@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.pagination
+package woowacourse.shopping.productdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.ui.WonMoney
 

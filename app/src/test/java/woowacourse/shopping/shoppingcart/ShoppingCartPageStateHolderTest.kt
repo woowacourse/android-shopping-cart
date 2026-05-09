@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.pagination
+package woowacourse.shopping.shoppingcart
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.pagination
+package woowacourse.shopping.shoppingcart
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf

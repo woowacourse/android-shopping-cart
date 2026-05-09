@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package woowacourse.shopping.ui
+package woowacourse.shopping.shoppingcart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,7 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.pagination
+package woowacourse.shopping.productlist
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe

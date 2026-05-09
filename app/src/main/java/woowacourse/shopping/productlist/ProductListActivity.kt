@@ -1,6 +1,4 @@
-@file:Suppress("FunctionName")
-
-package woowacourse.shopping
+package woowacourse.shopping.productlist
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import woowacourse.shopping.ui.ProductListScreen
+import woowacourse.shopping.productdetail.DetailProductActivity
+import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

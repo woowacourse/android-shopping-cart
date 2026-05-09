@@ -1,6 +1,4 @@
-@file:Suppress("FunctionName")
-
-package woowacourse.shopping
+package woowacourse.shopping.shoppingcart
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,13 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.ui.ShoppingCartScreen
-import woowacourse.shopping.ui.pagination.ShoppingCartPageStateHolder
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.shoppingcart.ShoppingCartPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ShoppingCartActivity : ComponentActivity() {
-    private val shoppingCartRepository = ShoppingApplication.shoppingCartRepository
+    private val shoppingCartRepository = ShoppingApplication.Companion.shoppingCartRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +39,8 @@ class ShoppingCartActivity : ComponentActivity() {
                     onBackClick = this::finish,
                     onRemoveShoppingItemClick = { shoppingCartItem ->
                         ShoppingApplication.shoppingCartRepository.remove(shoppingCartItem)
-                        shoppingCartItems = ShoppingApplication.shoppingCartRepository.getShoppingItems()
+                        shoppingCartItems =
+                            ShoppingApplication.shoppingCartRepository.getShoppingItems()
                     },
                     currentPage = shoppingCartPageStateHolder.currentPage,
                     canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),
