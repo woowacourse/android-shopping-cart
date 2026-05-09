@@ -6,6 +6,7 @@ import woowacourse.shopping.ui.model.ProductUiModel
 
 data class ShoppingUiState(
     val products: ImmutableList<ProductUiModel> = persistentListOf(),
+    val recentItems: ImmutableList<ProductUiModel> = persistentListOf(),
     val cartSize: Int = 0,
     val cartQuantities: Map<String, Int> = emptyMap(),
     val canLoadMore: Boolean = true,

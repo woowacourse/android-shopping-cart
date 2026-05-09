@@ -89,6 +89,7 @@ fun ShoppingScreen(
     ) { innerPadding ->
         ShoppingContents(
             products = uiState.products,
+            recentItems = uiState.recentItems,
             cartQuantities = uiState.cartQuantities,
             modifier = Modifier.padding(innerPadding),
             onLoad = onLoad,
@@ -103,6 +104,7 @@ fun ShoppingScreen(
 @Composable
 private fun ShoppingContents(
     products: ImmutableList<ProductUiModel>,
+    recentItems: ImmutableList<ProductUiModel>,
     cartQuantities: Map<String, Int>,
     onLoad: () -> Unit,
     isCanLoadMore: Boolean,
@@ -113,16 +115,21 @@ private fun ShoppingContents(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp),
+            modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        if (recentItems.isNotEmpty()) {
+            RecentItemsSection(
+                recentItems = recentItems,
+                onProductClick = onProductClick,
+                modifier = Modifier.padding(top = 20.dp, start = 20.dp),
+            )
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(top = 20.dp),
+            modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp),
         ) {
             items(
                 items = products,

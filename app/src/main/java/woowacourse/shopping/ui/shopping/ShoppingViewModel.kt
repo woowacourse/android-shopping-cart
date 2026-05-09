@@ -12,11 +12,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.ProductRepository
+import woowacourse.shopping.data.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentItemRepository: RecentItemRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -27,6 +29,7 @@ class ShoppingViewModel(
     init {
         loadMore()
         observeCart()
+        loadRecentItems()
     }
 
     private fun observeCart() {
@@ -38,6 +41,15 @@ class ShoppingViewModel(
                         cartQuantities = cart.items.associate { it.product.id to it.quantity },
                     )
             }
+        }
+    }
+
+    fun loadRecentItems() {
+        viewModelScope.launch {
+            val recentItems =
+                recentItemRepository.getRecentItems().map { it.toUiModel() }.toImmutableList()
+
+            _uiState.value = _uiState.value.copy(recentItems = recentItems)
         }
     }
 
@@ -84,11 +96,13 @@ class ShoppingViewModel(
         fun provideFactory(
             productRepository: ProductRepository,
             cartRepository: CartRepository,
+            recentItemRepository: RecentItemRepository,
         ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 ShoppingViewModel(
                     productRepository = productRepository,
                     cartRepository = cartRepository,
+                    recentItemRepository = recentItemRepository,
                 )
             }
         }
