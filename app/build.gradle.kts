@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -77,4 +78,11 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
+    // OkHttp
+    implementation(libs.okhttp)
+    testImplementation(libs.okhttp.mockwebserver3)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 }
