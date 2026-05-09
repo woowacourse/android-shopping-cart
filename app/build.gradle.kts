@@ -65,4 +65,8 @@ dependencies {
 
     // Suspend Test
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 }

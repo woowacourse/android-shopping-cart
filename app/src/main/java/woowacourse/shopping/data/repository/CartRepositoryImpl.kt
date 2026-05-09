@@ -14,6 +14,9 @@ class CartRepositoryImpl(
     private val totalPage
         get() = ((cartItems.size + PAGE_SIZE - 1) / PAGE_SIZE).coerceAtLeast(1)
 
+    override val cartItemCount: Int
+        get() = cartItems.size
+
     override fun isLastPage(page: Int) = page == totalPage
 
     override fun addItem(
