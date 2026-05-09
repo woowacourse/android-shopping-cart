@@ -153,10 +153,7 @@ private fun ShoppingContents(
                 ProductCard(
                     product = item.product,
                     quantity = item.quantity,
-                    onClick = {
-                        onProductCardClick(item.product.id)
-                        onUpsertRecentProduct(item.product.id)
-                    },
+                    onClick = { onProductCardClick(item.product.id) },
                     onIncrease = { onIncrease(item.product.id) },
                     onDecrease = { onDecrease(item.product.id) },
                 )

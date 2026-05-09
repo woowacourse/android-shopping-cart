@@ -84,7 +84,6 @@ class ShoppingViewModel(
 
     suspend fun upsertRecentProduct(productId: String) {
         recentProductRepository.upsertRecentProduct(productId)
-        loadRecentProducts(10)
     }
 
     suspend fun loadRecentProducts(limit: Int) {

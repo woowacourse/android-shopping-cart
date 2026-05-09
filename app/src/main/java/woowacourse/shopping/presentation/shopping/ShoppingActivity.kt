@@ -36,6 +36,7 @@ class ShoppingActivity : ComponentActivity() {
         super.onResume()
         lifecycleScope.launch {
             viewModel.loadCartItemQuantities()
+            viewModel.loadRecentProducts(10)
         }
     }
 }

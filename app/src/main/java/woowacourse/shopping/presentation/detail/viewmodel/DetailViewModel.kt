@@ -12,27 +12,46 @@ import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.common.model.toUiModel
 import woowacourse.shopping.presentation.detail.model.DetailUiState
 
 class DetailViewModel(
     private val productRepository: ProductRepository = RepositoryProvider.productRepository,
     private val cartRepository: CartRepository = RepositoryProvider.cartRepository,
+    private val recentProductRepository: RecentProductRepository = RepositoryProvider.recentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
     private var loadedProduct: Product? = null
 
-    suspend fun loadProduct(id: String) {
+    suspend fun loadProduct(
+        id: String,
+        isFromLastSeen: Boolean,
+    ) {
         val loaded = productRepository.getProductById(id)
         loadedProduct = loaded
+
+        val lastSeen =
+            if (!isFromLastSeen) {
+                recentProductRepository
+                    .getRecentProducts(limit = 1)
+                    .firstOrNull()
+                    ?.toUiModel()
+            } else {
+                null
+            }
+
         _uiState.update {
             it.copy(
                 product = loaded.toUiModel(),
                 quantity = cartRepository.getQuantity(loaded.id),
+                lastSeenProduct = lastSeen,
             )
         }
+
+        if (!isFromLastSeen) recentProductRepository.upsertRecentProduct(id)
     }
 
     fun increase() {

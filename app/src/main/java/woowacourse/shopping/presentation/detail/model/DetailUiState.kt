@@ -11,6 +11,8 @@ data class DetailUiState(
             price = 0,
         ),
     val quantity: Int = 1,
+    val lastSeenProduct: ProductUiModel? = null,
 ) {
     val price: Long get() = product.price * quantity
+    val showLastSeenProductCard: Boolean get() = lastSeenProduct?.let { it.id != product.id } ?: false
 }

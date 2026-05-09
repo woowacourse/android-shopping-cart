@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
@@ -51,7 +53,9 @@ import woowacourse.shopping.util.formattedPrice
 @Composable
 fun DetailScreen(
     id: String,
+    isFromLastSeen: Boolean = false,
     onNavigateToCart: (AddItemResult) -> Unit,
+    onClickLastProductCard: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = viewModel(),
 ) {
@@ -61,7 +65,7 @@ fun DetailScreen(
     val product = uiState.product
 
     LaunchedEffect(Unit) {
-        viewModel.loadProduct(id)
+        viewModel.loadProduct(id, isFromLastSeen)
     }
 
     Scaffold(
@@ -116,19 +120,31 @@ fun DetailScreen(
             modifier
                 .statusBarsPadding(),
     ) { innerPadding ->
-        DetailContent(
-            imageUrl = product.imageUrl,
-            productName = product.name,
-            price = uiState.price,
-            quantity = uiState.quantity,
-            onIncrease = {
-                scope.launch { viewModel.increase() }
-            },
-            onDecrease = {
-                scope.launch { viewModel.decrease() }
-            },
-            modifier = Modifier.padding(innerPadding),
-        )
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(30.dp),
+        ) {
+            DetailContent(
+                imageUrl = product.imageUrl,
+                productName = product.name,
+                price = uiState.price,
+                quantity = uiState.quantity,
+                onIncrease = {
+                    scope.launch { viewModel.increase() }
+                },
+                onDecrease = {
+                    scope.launch { viewModel.decrease() }
+                },
+                modifier = Modifier.padding(innerPadding),
+            )
+            if (uiState.showLastSeenProductCard) {
+                LastSeenProductCard(
+                    name = uiState.lastSeenProduct!!.name,
+                    onClick = { onClickLastProductCard(uiState.lastSeenProduct!!.id) },
+                    modifier = Modifier.padding(horizontal = 18.dp),
+                )
+            }
+        }
     }
 }
 
@@ -153,7 +169,7 @@ private fun DetailContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .aspectRatio(0.8f),
+                    .aspectRatio(1f),
         )
         Text(
             text = productName,
@@ -199,6 +215,7 @@ private fun DetailScreenPreview() {
     DetailScreen(
         id = "1",
         onNavigateToCart = {},
+        onClickLastProductCard = {},
     )
 }
 
