@@ -4,6 +4,8 @@ data class CartItem(
     val product: Product,
     val quantity: Quantity,
 ) {
+    val totalPrice: Money = product.calPrice(quantity)
+
     fun hasProductId(targetId: String): Boolean = product.hasId(targetId)
 
     fun hasProduct(targetProduct: Product): Boolean = product == targetProduct

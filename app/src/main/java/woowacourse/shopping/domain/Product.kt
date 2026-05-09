@@ -14,6 +14,8 @@ class Product(
 
     fun hasId(targetId: String): Boolean = this.id == targetId
 
+    fun calPrice(quantity: Quantity): Money = price * quantity
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Product) return false

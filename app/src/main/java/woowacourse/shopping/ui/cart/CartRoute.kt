@@ -28,7 +28,7 @@ fun CartRoute(
         page = uiState.page,
         onLeftClick = { cartViewModel.onLeftClick() },
         onRightClick = { cartViewModel.onRightClick() },
-        isLeftEnable = uiState.isStartPage,
-        isRightEnable = uiState.isEndPage,
+        isLeftEnable = uiState.isStartPage.not(),
+        isRightEnable = uiState.isEndPage.not(),
     )
 }
