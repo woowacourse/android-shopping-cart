@@ -8,8 +8,8 @@ import java.util.UUID
 class Cart(
     val cartProducts: CartProducts,
 ) : Parcelable {
-    fun uniqueItemCount() = cartProducts.uniqueItemCount
-    fun totalQuantity() = cartProducts.totalQuantity
+    fun getUniqueItemCount() = cartProducts.uniqueItemCount
+    fun getTotalQuantity() = cartProducts.totalQuantity
 
     fun addProduct(product: Product, plusAmount: Int = 1): Cart {
         val newCartProducts = cartProducts.addQuantityOfCartProduct(product, plusAmount)
