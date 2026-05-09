@@ -12,10 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ProductDetailActivity
 import woowacourse.shopping.data.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 
 class ProductDetailViewModel(
-    private val purchaseProductsRepository: PurchaseProductsRepository
+    private val purchaseProductsRepository: PurchaseProductsRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository
 ): ViewModel() {
     private val _count = MutableStateFlow(1)
 
@@ -34,15 +37,22 @@ class ProductDetailViewModel(
     fun addPurchaseProduct(purchaseProduct: PurchaseProduct) {
         viewModelScope.launch { purchaseProductsRepository.insert(purchaseProduct) }
     }
+
+    fun updateHistory(product: Product) {
+        viewModelScope.launch {
+            recentlyViewedProductRepository.updateList(product)
+        }
+    }
 }
 
 class ProductDetailViewModelFactory(
-    private val purchaseProductsRepository: PurchaseProductsRepository
+    private val purchaseProductsRepository: PurchaseProductsRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ProductDetailViewModel(purchaseProductsRepository) as T
+            return ProductDetailViewModel(purchaseProductsRepository, recentlyViewedProductRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
