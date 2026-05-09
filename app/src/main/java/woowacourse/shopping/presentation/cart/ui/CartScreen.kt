@@ -1,8 +1,6 @@
 package woowacourse.shopping.presentation.cart.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,43 +15,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.RemoveItemResult
-import woowacourse.shopping.presentation.cart.model.CartItemUiModel
-import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
+import woowacourse.shopping.presentation.cart.model.CartUiState
+import woowacourse.shopping.presentation.cart.ui.components.CartContent
+import woowacourse.shopping.presentation.cart.ui.components.CartPageSection
 import woowacourse.shopping.presentation.common.ShoppingAppBar
-import woowacourse.shopping.presentation.common.model.ProductUiModel
 
 @Composable
 fun CartScreen(
-    modifier: Modifier = Modifier,
+    uiState: CartUiState,
     onBack: () -> Unit,
-    viewModel: CartViewModel = viewModel(),
+    onNextPage: () -> Unit,
+    onPreviousPage: () -> Unit,
+    onDeleteItem: (Long) -> Unit,
+    onIncrease: (Long) -> Unit,
+    onDecrease: (Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCartItems()
-    }
-
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -85,8 +69,8 @@ fun CartScreen(
             if (uiState.isShowPageSection) {
                 CartPageSection(
                     page = uiState.page + 1,
-                    onNext = { scope.launch { viewModel.nextPage() } },
-                    onPrevious = { scope.launch { viewModel.previousPage() } },
+                    onNext = { onNextPage() },
+                    onPrevious = { onPreviousPage() },
                     isCanMoveNext = uiState.isCanMoveNext,
                 )
             }
@@ -101,67 +85,11 @@ fun CartScreen(
         ) {
             if (uiState.isLoading) CircularProgressIndicator()
             CartContent(
-                onDeleteItem = {
-                    scope.launch {
-                        val result = viewModel.deleteItem(it)
-                        when (result) {
-                            is RemoveItemResult.Success -> {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        R.string.delete_item_success,
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            }
-
-                            is RemoveItemResult.NotFoundItem -> {
-                                Toast
-                                    .makeText(context, R.string.not_found_item, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                    }
-                },
+                onDeleteItem = { onDeleteItem(it) },
                 cartItems = uiState.currentCartItems.toImmutableList(),
-                onIncrease = { scope.launch { viewModel.increase(it) } },
-                onDecrease = { scope.launch { viewModel.decrease(it) } },
+                onIncrease = { onIncrease(it) },
+                onDecrease = { onDecrease(it) },
                 modifier = Modifier.fillMaxSize(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun CartContent(
-    onDeleteItem: (Long) -> Unit,
-    onIncrease: (Long) -> Unit,
-    onDecrease: (Long) -> Unit,
-    cartItems: ImmutableList<CartItemUiModel>,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier,
-    ) {
-        items(
-            items = cartItems,
-            key = { it.product.id },
-        ) { item ->
-            val product = item.product
-            CartCard(
-                productName = product.name,
-                price = item.totalPrice,
-                imageUrl = product.imageUrl,
-                quantity = item.quantity,
-                onDeleteItem = {
-                    onDeleteItem(product.id)
-                },
-                onIncrease = {
-                    onIncrease(product.id)
-                },
-                onDecrease = {
-                    onDecrease(product.id)
-                },
             )
         }
     }
@@ -170,38 +98,13 @@ private fun CartContent(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    CartScreen(onBack = {})
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CartContentPreview() {
-    CartContent(
-        onDeleteItem = {},
-        onIncrease = {},
+    CartScreen(
+        uiState = CartUiState(),
+        onBack = {},
         onDecrease = {},
-        cartItems =
-            listOf(
-                CartItemUiModel(
-                    product =
-                        ProductUiModel(
-                            id = 1L,
-                            name = "커피",
-                            imageUrl = "",
-                            price = 1000,
-                        ),
-                    quantity = 1,
-                ),
-                CartItemUiModel(
-                    product =
-                        ProductUiModel(
-                            id = 2L,
-                            name = "커피",
-                            imageUrl = "",
-                            price = 1000,
-                        ),
-                    quantity = 1,
-                ),
-            ).toImmutableList(),
+        onIncrease = {},
+        onDeleteItem = {},
+        onNextPage = {},
+        onPreviousPage = {},
     )
 }

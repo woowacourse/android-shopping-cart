@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.cart.ui
+package woowacourse.shopping.presentation.cart.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.ui.theme.Green40
 
@@ -79,5 +81,18 @@ fun CartPageSection(
                 modifier = Modifier.size(14.dp),
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CartPageSectionPreview() {
+    AndroidshoppingTheme {
+        CartPageSection(
+            page = 1,
+            onPrevious = {},
+            onNext = {},
+            isCanMoveNext = true,
+        )
     }
 }

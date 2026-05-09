@@ -1,10 +1,15 @@
 package woowacourse.shopping.presentation.cart.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
@@ -17,9 +22,61 @@ class CartViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
+
+    private val _uiEvents = Channel<CartEvent>(Channel.BUFFERED)
+    val uiEvents: Flow<CartEvent> = _uiEvents.receiveAsFlow()
     private val pageSize = 5
 
-    suspend fun loadCartItems() {
+    fun refreshCart() {
+        viewModelScope.launch {
+            loadCartItems()
+        }
+    }
+
+    fun deleteItem(productId: Long) {
+        viewModelScope.launch {
+            val result = cartRepository.deleteItem(productId)
+            when (result) {
+                is RemoveItemResult.Success -> {
+                    refreshCart()
+                    _uiEvents.send(CartEvent.DeleteSuccess)
+                }
+                is RemoveItemResult.NotFoundItem -> {
+                    _uiEvents.send(CartEvent.DeleteNotFound)
+                }
+            }
+        }
+    }
+
+    fun increase(productId: Long) {
+        viewModelScope.launch {
+            cartRepository.addItem(productId)
+            refreshCart()
+        }
+    }
+
+    fun decrease(productId: Long) {
+        viewModelScope.launch {
+            cartRepository.decrease(productId)
+            refreshCart()
+        }
+    }
+
+    fun nextPage() {
+        if (!uiState.value.isCanMoveNext) return
+        _uiState.update { it.copy(page = it.page + 1) }
+        viewModelScope.launch { refreshCart() }
+    }
+
+    fun previousPage() {
+        if (uiState.value.page == 0) return
+        _uiState.update {
+            it.copy(page = it.page - 1)
+        }
+        viewModelScope.launch { refreshCart() }
+    }
+
+    private suspend fun loadCartItems() {
         if (uiState.value.isLoading) return
         _uiState.update {
             it.copy(isLoading = true)
@@ -47,36 +104,10 @@ class CartViewModel(
             }
         }
     }
+}
 
-    suspend fun deleteItem(productId: Long): RemoveItemResult {
-        val result = cartRepository.deleteItem(productId)
-        if (result is RemoveItemResult.Success) loadCartItems()
-        return result
-    }
+sealed interface CartEvent {
+    data object DeleteSuccess : CartEvent
 
-    suspend fun increase(productId: Long) {
-        cartRepository.addItem(productId)
-        loadCartItems()
-    }
-
-    suspend fun decrease(productId: Long) {
-        cartRepository.decrease(productId)
-        loadCartItems()
-    }
-
-    suspend fun nextPage() {
-        if (!uiState.value.isCanMoveNext) return
-        _uiState.update {
-            it.copy(page = it.page + 1)
-        }
-        loadCartItems()
-    }
-
-    suspend fun previousPage() {
-        if (uiState.value.page == 0) return
-        _uiState.update {
-            it.copy(page = it.page - 1)
-        }
-        loadCartItems()
-    }
+    data object DeleteNotFound : CartEvent
 }
