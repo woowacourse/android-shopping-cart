@@ -1,20 +1,29 @@
 package woowacourse.shopping.ui.productlist.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import woowacourse.shopping.constants.MockData
+import kotlinx.coroutines.launch
+import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.SimpleProductUiModel
 import woowacourse.shopping.ui.productlist.state.ProductListUiState
 
-class ProductListViewModel : ViewModel() {
+class ProductListViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState = _uiState.asStateFlow()
+
+    private var allProducts = listOf<Product>()
 
     private val _products = mutableListOf<Product>()
     private val _recentProducts = mutableListOf<Product>()
@@ -22,22 +31,29 @@ class ProductListViewModel : ViewModel() {
     private var currentPage = 0
 
     init {
-        if (_products.isEmpty()) {
-            fetchProducts()
+        loadInitData()
+    }
+
+    private fun loadInitData() {
+        viewModelScope.launch {
+            try {
+                allProducts = productRepository.getProducts()
+                fetchProducts()
+            } catch (e: Exception) {
+                println("ProductListViewModel Exception: $e.message")
+            }
         }
     }
 
     fun fetchProducts(pageSize: Int = PAGE_SIZE) {
+        require(pageSize > 0) { "PAGE_SIZE의 크기는 0보다 커야한다" }
         if (isEndList()) return
 
         val fromIndex = currentPage * pageSize
-        val toIndex = minOf(fromIndex + pageSize, MockData.MOCK_PRODUCTS.size)
+        val toIndex = minOf(fromIndex + pageSize, allProducts.size)
 
         _products.addAll(
-            MockData.MOCK_PRODUCTS.subList(
-                fromIndex = fromIndex,
-                toIndex = toIndex,
-            ),
+            allProducts.subList(fromIndex, toIndex),
         )
         currentPage++
         syncUiState()
@@ -95,9 +111,17 @@ class ProductListViewModel : ViewModel() {
         title = product.name,
     )
 
-    private fun isEndList(): Boolean = _products.size >= MockData.MOCK_PRODUCTS.size
+    private fun isEndList(): Boolean = allProducts.isNotEmpty() && _products.size >= allProducts.size
 
     companion object {
         private const val PAGE_SIZE = 20
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val dataSource = ProductRemoteDataSource()
+                val repository = ProductRepositoryImpl(dataSource)
+                ProductListViewModel(repository)
+            }
+        }
     }
 }

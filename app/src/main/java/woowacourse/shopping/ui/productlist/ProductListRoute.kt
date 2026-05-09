@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
 
 @Composable
 fun ProductListRoute(
-    productListViewModel: ProductListViewModel = viewModel(),
+    productListViewModel: ProductListViewModel = viewModel(factory = ProductListViewModel.Factory),
     onNavigateToDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
 ) {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.constants
 
+import woowacourse.shopping.data.remote.model.ProductResponse
 import woowacourse.shopping.domain.Money
 import woowacourse.shopping.domain.Product
 
@@ -17,18 +18,18 @@ object MockData {
         )
     }
 
-    val MOCK_PRODUCTS_LIST: String = """
-        [
-            ${
-        MOCK_PRODUCTS.joinToString(",\n            ") { product ->
-            """{ "id": ${product.id}, "name": "${product.name}", "price": ${product.price.amount}, "imageUrl": "${product.imageUrl}" }"""
-        }
+    val MOCK_PRODUCTS_LIST: List<ProductResponse> = (1..35).map { i ->
+        ProductResponse(
+            id = i,
+            name = "품목$i",
+            price = (i * 1_000),
+            imageUrl = "$IMAGE_BASE_URL${(i - 1) % 5}$IMAGE_URL_SUFFIX",
+        )
     }
-        ]
-    """.trimIndent()
 
-    fun getProductJson(id: String): String {
-        val product = MOCK_PRODUCTS.find { it.id == id } ?: return ""
-        return """{ "id": ${product.id}, "name": "${product.name}", "price": ${product.price.amount}, "imageUrl": "${product.imageUrl}" }"""
+    fun getProductResponse(id: String): ProductResponse? {
+        val targetId = id.toIntOrNull() ?: return null
+        val findProduct = MOCK_PRODUCTS_LIST.find { it.id == targetId } ?: return null
+        return findProduct
     }
 }

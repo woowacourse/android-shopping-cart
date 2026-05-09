@@ -77,4 +77,6 @@ dependencies {
 
 // Converter for JSON (Gson is most common)
     implementation(libs.converter.gson)
+
+    testImplementation(libs.kotlinx.coroutines.test)
 }
