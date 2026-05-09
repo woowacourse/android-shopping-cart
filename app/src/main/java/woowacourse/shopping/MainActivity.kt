@@ -33,10 +33,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: ShoppingViewModel = viewModel<ShoppingViewModel>(
                 factory = ShoppingViewModelFactory(
-                    (application as ShoppingApplication).purchaseProductsRepository
+                    (application as ShoppingApplication).purchaseProductsRepository,
+                    (application as ShoppingApplication).recentlyViewedProductRepository
                 )
             )
             val cartState by viewModel.cart.collectAsStateWithLifecycle()
+            val viewHistory by viewModel.viewingHistory.collectAsStateWithLifecycle()
+            val lastViewedProduct by viewModel.lastViewedProduct.collectAsStateWithLifecycle()
 
             var currentIndex by rememberSaveable { mutableIntStateOf(0) }
             var currentProducts by rememberSaveable { mutableStateOf(Products()) }
@@ -49,10 +52,21 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CatalogScreen(
                         catalog = currentProducts,
+                        recentlyViewedProducts = viewHistory,
+                        onRecentlyViewedClick = { product ->
+                            viewModel.updateHistory(product)
+                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                                putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
+                                putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
+                            }
+                            startActivity(intent)
+                        },
                         onItemClick = { product ->
+                            viewModel.updateHistory(product)
                             val intent =
                                 Intent(this, ProductDetailActivity::class.java).apply {
                                     putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
+                                    putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
                                 }
                             startActivity(intent)
                         },
