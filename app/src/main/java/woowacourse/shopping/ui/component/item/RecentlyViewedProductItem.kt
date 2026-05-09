@@ -1,8 +1,6 @@
 package woowacourse.shopping.ui.component.item
 
-import android.R
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.domain.Product
-import java.util.UUID
 
 @Composable
 fun RecentlyViewedProductItem(
@@ -59,7 +56,7 @@ fun RecentlyViewedProductItem(
 private fun RecentlyViewedProductItemPreview() {
     RecentlyViewedProductItem(
         Product(
-            uuid = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
+            id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
             imageUri = "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcREOx9x8uZchUa41cKYxYrqv5uj-bD4zupCW4G3ADchbwNbXaxRIZtdeG9clkH0F06NCsQnTQ690KD0G4PygBj6ZPVbvCS7KUEmMwETqd9c7xuGRnAFucVgDQhFmfK2FJ3XWHAcKw&usqp=CAc",
             name = "너무너무너무너무너무너무너무너무 긴 이름",
             price = 1000,
