@@ -9,19 +9,24 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository = InMemoryProductRepository,
     private val cartRepository: CartRepository = InMemoryCartRepository,
+    private val recentProductRepository: RecentProductRepository = InMemoryRecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     fun loadProduct(productId: ProductId) {
         viewModelScope.launch {
-            refreshProductDetail(productId)
+            val product = productRepository.findAllByIds(setOf(productId))[productId] ?: return@launch
+            recentProductRepository.recordView(product.id)
+            refreshProductDetail(product.id)
         }
     }
 
@@ -55,6 +60,11 @@ class ProductDetailViewModel(
 
     private suspend fun refreshProductDetail(productId: ProductId) {
         val product = productRepository.findAllByIds(setOf(productId))[productId] ?: return
+        val lastViewedProductId = recentProductRepository.getLatestViewedProductExcluding(productId)?.productId
+        val lastViewedProduct =
+            lastViewedProductId?.let { latestId ->
+                productRepository.findAllByIds(setOf(latestId))[latestId]
+            }
         val quantity =
             cartRepository
                 .getCartItemsByProductIds(setOf(productId))
@@ -64,6 +74,7 @@ class ProductDetailViewModel(
         _uiState.value =
             _uiState.value.copy(
                 product = product,
+                lastViewedProduct = lastViewedProduct,
                 quantity = quantity,
                 isAdding = false,
             )

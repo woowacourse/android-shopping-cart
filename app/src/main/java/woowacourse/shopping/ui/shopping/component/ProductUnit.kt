@@ -25,8 +25,8 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
-import woowacourse.shopping.ui.common.component.AddToCartButton
-import woowacourse.shopping.ui.common.component.QuantityStepper
+import woowacourse.shopping.ui.common.component.cartcontrol.AddToCartButton
+import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
 
 @SuppressLint("DefaultLocale")

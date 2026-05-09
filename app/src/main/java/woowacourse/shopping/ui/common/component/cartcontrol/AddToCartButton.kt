@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.common.component
+package woowacourse.shopping.ui.common.component.cartcontrol
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size

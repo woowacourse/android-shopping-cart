@@ -24,7 +24,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
-import woowacourse.shopping.ui.common.component.QuantityStepper
+import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 
 @Composable
 fun ProductDetailBody(

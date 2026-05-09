@@ -34,6 +34,7 @@ class ShoppingActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ShoppingScreen(
                         products = uiState.products,
+                        recentProducts = uiState.recentProducts,
                         cartQuantity = uiState.cartQuantity,
                         hasNext = uiState.hasNext,
                         isLoading = uiState.isLoading,

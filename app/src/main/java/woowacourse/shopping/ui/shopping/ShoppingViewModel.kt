@@ -9,14 +9,18 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
 
 private const val PAGE_SIZE = 20
+private const val RECENT_PRODUCT_LIMIT = 10
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository = InMemoryProductRepository,
     private val cartRepository: CartRepository = InMemoryCartRepository,
+    private val recentProductRepository: RecentProductRepository = InMemoryRecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState(isLoading = true))
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -47,6 +51,9 @@ class ShoppingViewModel(
         val hasNext = productRepository.hasNext(visibleProducts.count() - 1)
         val cartItems = cartRepository.getCartItems(0, cartRepository.count())
         val cartQuantity = cartItems.sumOf { it.quantity }
+        val recentProductIds = recentProductRepository.getRecentProducts(RECENT_PRODUCT_LIMIT).map { it.productId }
+        val recentProductsById = productRepository.findAllByIds(recentProductIds.toSet())
+        val recentProducts = recentProductIds.mapNotNull { recentProductsById[it] }
 
         val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
         val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
@@ -62,6 +69,7 @@ class ShoppingViewModel(
         _uiState.value =
             ShoppingUiState(
                 products = products,
+                recentProducts = recentProducts,
                 cartQuantity = cartQuantity,
                 hasNext = hasNext,
                 isLoading = false,

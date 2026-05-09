@@ -16,6 +16,7 @@ import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 @Composable
 fun ShoppingScreen(
     products: List<ShoppingProductUiState>,
+    recentProducts: List<Product>,
     cartQuantity: Int,
     hasNext: Boolean,
     isLoading: Boolean,
@@ -38,6 +39,7 @@ fun ShoppingScreen(
 
         ShoppingBody(
             products = products,
+            recentProducts = recentProducts,
             showMoreButton = hasNext,
             isLoading = isLoading,
             modifier =
@@ -64,6 +66,7 @@ private fun ShoppingScreenPreview() {
                     quantity = if (index < 2) 0 else 1,
                 )
             },
+        recentProducts = InMemoryProductRepository.products.take(4),
         cartQuantity = 4,
         hasNext = true,
         isLoading = false,

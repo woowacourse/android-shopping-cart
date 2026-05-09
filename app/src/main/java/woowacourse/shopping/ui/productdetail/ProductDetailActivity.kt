@@ -63,11 +63,15 @@ class ProductDetailActivity : ComponentActivity() {
 
                     ProductDetailScreen(
                         product = product,
+                        lastViewedProduct = uiState.lastViewedProduct,
                         quantity = uiState.quantity,
                         isAdding = uiState.isAdding,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
                         onAddToCart = viewModel::addToCart,
+                        onLastViewedProductClick = {
+                            ProductDetailActivity.startActivity(this, it.id)
+                        },
                         onIncreaseQuantity = viewModel::increaseQuantity,
                         onDecreaseQuantity = viewModel::decreaseQuantity,
                     )

@@ -1,8 +1,12 @@
 package woowacourse.shopping.ui.shopping.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,16 +15,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.common.component.recentlyviewed.RecentlyViewedSection
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
 
 @Composable
 fun ShoppingBody(
     products: List<ShoppingProductUiState>,
+    recentProducts: List<Product>,
     showMoreButton: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
@@ -36,6 +43,24 @@ fun ShoppingBody(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        if (recentProducts.isNotEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                RecentlyViewedSection(
+                    products = recentProducts,
+                    onProductClick = onProductClick,
+                )
+            }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Spacer(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(14.dp)
+                            .background(color = Color(0xFFEBEBEB)),
+                )
+            }
+        }
+
         items(items = products, key = {
             it.product.id.value
                 .toString()
@@ -81,6 +106,7 @@ private fun ShoppingBodyPreview() {
                     quantity = if (index % 2 == 0) 0 else 2,
                 )
             },
+        recentProducts = InMemoryProductRepository.products.take(4),
         showMoreButton = true,
         isLoading = false,
         onProductClick = {},
