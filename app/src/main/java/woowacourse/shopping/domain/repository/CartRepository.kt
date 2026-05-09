@@ -12,6 +12,10 @@ interface CartRepository {
 
     fun deleteCartItem(productId: String)
 
+    fun increaseCartItemQuantity(productId: String)
+
+    fun decreaseCartItemQuantity(productId: String)
+
     fun getCartItemCount(): Int
 
     fun getPagingCartItems(

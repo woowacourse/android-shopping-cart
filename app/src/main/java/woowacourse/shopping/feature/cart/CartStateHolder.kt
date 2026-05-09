@@ -45,6 +45,16 @@ class CartStateHolder(
         loadPage(minOf(currentPage, maxOf(0, totalPages - 1)))
     }
 
+    fun increaseQuantity(productId: String) {
+        cartRepository.increaseCartItemQuantity(productId)
+        loadPage(currentPage)
+    }
+
+    fun decreaseQuantity(productId: String) {
+        cartRepository.decreaseCartItemQuantity(productId)
+        loadPage(currentPage)
+    }
+
     private fun loadPage(page: Int) {
         currentPage = page
         scope.launch {

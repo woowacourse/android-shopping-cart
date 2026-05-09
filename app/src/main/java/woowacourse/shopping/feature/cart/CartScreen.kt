@@ -34,6 +34,8 @@ fun CartScreen(
     isLoading: Boolean,
     onBackClick: () -> Unit,
     onCartDeleteClick: (id: String) -> Unit,
+    onIncreaseClick: (id: String) -> Unit,
+    onDecreaseClick: (id: String) -> Unit,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -61,8 +63,10 @@ fun CartScreen(
                     CartItem(
                         productName = cartInfo.productName,
                         productUrl = cartInfo.productImageUrl,
-                        formattedPrice = cartInfo.formattedPrice,
+                        formattedQuantity = cartInfo.formattedQuantity,
                         onClick = { onCartDeleteClick(cartInfo.id) },
+                        onIncreaseClick = { onIncreaseClick(cartInfo.id) },
+                        onDecreaseClick = { onDecreaseClick(cartInfo.id) },
                     )
                 }
             }
@@ -96,6 +100,8 @@ private fun CartScreenPreview() {
         cartItems = List(5) { CartInfo.PREVIEW }.toImmutableList(),
         onBackClick = {},
         onCartDeleteClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
         isLastPage = false,
         isFirstPage = true,
         pageCount = 1,

@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.domain.model.Quantity
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.cart.CartItems
 import woowacourse.shopping.domain.repository.CartRepository
@@ -19,6 +20,20 @@ object CartRepositoryImpl : CartRepository {
 
     override fun deleteCartItem(productId: String) {
         currentCart = currentCart.remove(productId)
+    }
+
+    override fun increaseCartItemQuantity(productId: String) {
+        val cartItem = getCartItem(productId) ?: return
+        val newQuantity = Quantity(cartItem.quantity.value + 1)
+        updateCart(cartItem.copy(quantity = newQuantity))
+    }
+
+    override fun decreaseCartItemQuantity(productId: String) {
+        val cartItem = getCartItem(productId) ?: return
+        if (cartItem.quantity.value > 1) {
+            val newQuantity = Quantity(cartItem.quantity.value - 1)
+            updateCart(cartItem.copy(quantity = newQuantity))
+        }
     }
 
     override fun getCartItemCount(): Int = currentCart.items.size
