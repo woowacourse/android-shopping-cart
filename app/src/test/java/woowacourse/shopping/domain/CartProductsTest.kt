@@ -37,6 +37,106 @@ class CartProductsTest {
     }
 
     @Test
+    fun `상품이 없다면 개수가 0이다`() {
+        val cartProducts = CartProducts()
+        assertEquals(0, cartProducts.uniqueItemCount)
+        assertEquals(0, cartProducts.totalQuantity)
+    }
+
+    @Test
+    fun `상품의 개수를 가지고 있다`() {
+        val cartProducts = CartProducts(
+            products = listOf(
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "name",
+                        price = 10000,
+                    ),
+                    amount = 1,
+                )
+            )
+        )
+        assertEquals(1, cartProducts.uniqueItemCount)
+        assertEquals(1, cartProducts.totalQuantity)
+    }
+
+    @Test
+    fun `상품 종류가 여러 종류를 가지면 가진 종류의 개수만큼 계산한다`() {
+        val cartProducts = CartProducts(
+            products = listOf(
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "name",
+                        price = 10000,
+                    ),
+                    amount = 5,
+                ),
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "Samuel",
+                        price = 10000,
+                    ),
+                    amount = 1,
+                )
+            )
+        )
+        assertEquals(2, cartProducts.uniqueItemCount)
+    }
+
+    @Test
+    fun `상품의 전체 개수를 계산한다`() {
+        val cartProducts = CartProducts(
+            products = listOf(
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "name",
+                        price = 10000,
+                    ),
+                    amount = 5,
+                ),
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "Samuel",
+                        price = 10000,
+                    ),
+                    amount = 5,
+                )
+            )
+        )
+        assertEquals(10, cartProducts.totalQuantity)
+    }
+
+    @Test
+    fun `지울 대상 상품이 포함되어 있지 않다면 스스로를 반환한다`() {
+        val deleteProduct = Product(
+            imageUri = "uri",
+            name = "deletingProduct",
+            price = 1000
+        )
+
+        val cartProducts = CartProducts(
+            products = listOf(
+                CartProduct(
+                    product = Product(
+                        imageUri = "uri",
+                        name = "existingProduct",
+                        price = 1000,
+                    )
+                )
+            )
+        )
+
+        val newCartProducts = cartProducts.remove(deleteProduct.productId)
+
+        assertEquals(cartProducts, newCartProducts)
+    }
+
+    @Test
     fun `상품을 id로 검색 한다`() {
         val newProduct =
             CartProduct(

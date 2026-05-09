@@ -21,8 +21,8 @@ class CartProducts(
         return CartProducts(products + newCarProduct)
     }
 
-    fun remove(id: UUID): CartProducts {
-        val product = findSameProduct(id) ?: return this
+    fun remove(productId: UUID): CartProducts {
+        val product = findSameProduct(productId) ?: return this
         return CartProducts(products - product)
     }
 
