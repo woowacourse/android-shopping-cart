@@ -4,6 +4,7 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.InMemoryProductRepository
+import woowacourse.shopping.data.source.remote.mock.ProductData
 
 class InMemoryProductRepositoryTest {
     private val products = ProductData.products

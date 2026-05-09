@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repository
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.source.remote.mock.ProductData
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 

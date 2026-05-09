@@ -3,8 +3,7 @@
 ## HTTP Client
 - [x] OkHttp 의존성 추가하기
 - [x] Product DTO 만들기
-- [ ] Mock 서버 만들기
-- [ ] 상품 목록 가져오는 API 만들기
+- [x] Mock 서버 만들기
 - [ ] RemoteProductRepository 만들기
 - [ ] 네트워크 상태를 감지하여 네트워크 미연결 시 상품 목록 스크린에 미연결 UI를 출력한다.
 
