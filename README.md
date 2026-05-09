@@ -142,8 +142,8 @@
 
 ### RecentlyViewedProductItem
 
-- [ ] 상품의 이미지를 표시한다
-- [ ] 상품의이름을 표시한다
+- [x] 상품의 이미지를 표시한다
+- [x] 상품의이름을 표시한다
 
 ### LastViewedProduct
 
