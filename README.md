@@ -158,13 +158,13 @@
 
 ### RecentlyViewedProductEntity
 
-- [ ] 도메인 객체에 대한 Column 정의
-    - [ ] 도메인 객체에 대한 테이블 정의
-    - [ ] 상품 ID Column
-    - [ ] 상품 이름 Column
-    - [ ] 상품 가격 Column
-    - [ ] 상품 이미지 Uri Column
-- [ ] Entity를 Domain 객체로 변환할 수 있다
+- [x] 도메인 객체에 대한 Column 정의
+    - [x] 도메인 객체에 대한 테이블 정의
+    - [x] 상품 ID Column
+    - [x] 상품 이름 Column
+    - [x] 상품 가격 Column
+    - [x] 상품 이미지 Uri Column
+- [x] Entity를 Domain 객체로 변환할 수 있다
 
 ### RecentlyViewedProductDao
 
