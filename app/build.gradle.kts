@@ -66,4 +66,15 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // define a BOM and its version
+    implementation(platform(libs.okhttp.bom))
+
+    // define any required OkHttp artifacts without version
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.mockwebserver3)
+
+// Converter for JSON (Gson is most common)
+    implementation(libs.converter.gson)
 }

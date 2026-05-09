@@ -16,4 +16,19 @@ object MockData {
             id = "$i",
         )
     }
+
+    val MOCK_PRODUCTS_LIST: String = """
+        [
+            ${
+        MOCK_PRODUCTS.joinToString(",\n            ") { product ->
+            """{ "id": ${product.id}, "name": "${product.name}", "price": ${product.price.amount}, "imageUrl": "${product.imageUrl}" }"""
+        }
+    }
+        ]
+    """.trimIndent()
+
+    fun getProductJson(id: String): String {
+        val product = MOCK_PRODUCTS.find { it.id == id } ?: return ""
+        return """{ "id": ${product.id}, "name": "${product.name}", "price": ${product.price.amount}, "imageUrl": "${product.imageUrl}" }"""
+    }
 }
