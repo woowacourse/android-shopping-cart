@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 import kotlin.math.min
@@ -28,26 +29,26 @@ class CartStateHolder(
     fun onDeleteProduct(id: UUID) {
         cart = cart.removeProduct(id)
 
-        val maxValidPage = if (cart.size() == 0) 0 else (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
+        val maxValidPage = if (cart.uniqueItemCount() == 0) 0 else (cart.uniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
         if (currentPage > maxValidPage) currentPage = maxValidPage
     }
 
     fun hasPreviousPage(): Boolean = currentPage > 0
 
-    fun hasNextPage(): Boolean = currentPage < (cart.size() - 1) / ONE_PAGE_ITEM_COUNT
+    fun hasNextPage(): Boolean = currentPage < (cart.uniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
 
-    fun isPageable(): Boolean = cart.size() > ONE_PAGE_ITEM_COUNT
+    fun isPageable(): Boolean = cart.uniqueItemCount() > ONE_PAGE_ITEM_COUNT
 
     fun getPartedItem(
         page: Int,
         pageSize: Int = ONE_PAGE_ITEM_COUNT,
-    ): List<Product> {
+    ): List<CartProduct> {
         require(page >= 0) { "페이지는 0이상이여야 합니다" }
         require(pageSize > 0) { "페이지 사이즈는 0보다 커야 합니다" }
 
         val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, cart.size())
-        if (fromIndex >= toIndex || cart.size() == 0) return emptyList()
+        val toIndex = min(fromIndex + pageSize, cart.uniqueItemCount())
+        if (fromIndex >= toIndex || cart.uniqueItemCount() == 0) return emptyList()
         return cart.cartProducts.items.subList(fromIndex, toIndex)
     }
 

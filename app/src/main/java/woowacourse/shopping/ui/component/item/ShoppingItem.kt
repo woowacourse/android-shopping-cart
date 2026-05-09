@@ -33,7 +33,7 @@ fun ShoppingItem(
                 .height(206.dp)
                 .clickable(
                     onClick = {
-                        onClick(product.uuid)
+                        onClick(product.productId)
                     },
                 ),
         verticalArrangement = Arrangement.SpaceBetween,

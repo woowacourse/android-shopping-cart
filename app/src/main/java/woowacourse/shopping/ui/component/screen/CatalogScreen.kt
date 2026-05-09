@@ -94,7 +94,7 @@ private fun CatalogBody(
     ) {
         items(
             count = catalog.size,
-            key = { index -> catalog[index].uuid },
+            key = { index -> catalog[index].productId },
         ) { item ->
             ShoppingItem(
                 product = catalog[item],

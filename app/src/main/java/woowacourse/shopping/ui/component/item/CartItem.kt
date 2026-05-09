@@ -23,12 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 
 @Composable
 fun CartItem(
-    product: Product,
+    cartProduct: CartProduct,
     onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -52,9 +53,9 @@ fun CartItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ProductName(product.name)
+                ProductName(cartProduct.product.name)
                 CloseBtn(
-                    product = product,
+                    product = cartProduct.product,
                     onClick = onDelete,
                 )
             }
@@ -67,10 +68,10 @@ fun CartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 ProductImage(
-                    product.imageUri,
+                    cartProduct.product.imageUri,
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
-                ProductPrice(product.price)
+                ProductPrice(cartProduct.product.price)
             }
         }
     }
@@ -102,7 +103,7 @@ private fun CloseBtn(
             modifier
                 .size(16.dp)
                 .clickable(
-                    onClick = { onClick(product.uuid) },
+                    onClick = { onClick(product.productId) },
                 ),
     )
 }
@@ -124,10 +125,12 @@ private fun ProductPrice(
 @Composable
 private fun CartItemPreview() {
     CartItem(
-        Product(
-            imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
-            name = "매우매우긴상품명입니다",
-            price = 1000000000,
+        CartProduct(
+            product = Product(
+                imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
+                name = "매우매우긴상품명입니다",
+                price = 1000000000,
+            ),
         ),
         {},
     )

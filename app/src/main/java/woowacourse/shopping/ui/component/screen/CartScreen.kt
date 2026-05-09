@@ -31,12 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
-import woowacourse.shopping.ui.stateholder.CartStateHolder
 import java.util.UUID
 
 @Composable
@@ -47,7 +45,7 @@ fun CartScreen(
     previousEnable: Boolean,
     nextEnable: Boolean,
     currentPage: Int,
-    getPartedItem: (Int) -> List<Product>,
+    getPartedItem: (Int) -> List<CartProduct>,
     isPageable: () -> Boolean,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -107,7 +105,7 @@ private fun CartBody(
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     previousEnable: Boolean,
-    getPartedItem: (Int) -> List<Product>,
+    getPartedItem: (Int) -> List<CartProduct>,
     isPageable: () -> Boolean,
     nextEnable: Boolean,
     modifier: Modifier = Modifier,
@@ -125,7 +123,7 @@ private fun CartBody(
             .onSuccess {
                 it.forEach { product ->
                     CartItem(
-                        product = product,
+                        cartProduct = product,
                         onDelete = onDelete,
                         modifier = Modifier.padding(top = 24.dp),
                     )

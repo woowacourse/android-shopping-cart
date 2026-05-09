@@ -10,9 +10,9 @@ class Cart(
 ) : Parcelable {
     fun size() = cartProducts.size()
 
-    fun addProduct(product: Product): Cart {
-        val product = cartProducts.add(product)
-        return Cart(product)
+    fun addProduct(product: Product, plusAmount: Int = 1): Cart {
+        val newCartProducts = cartProducts.addQuantityOfCartProduct(product, plusAmount)
+        return Cart(newCartProducts)
     }
 
     fun removeProduct(id: UUID): Cart {

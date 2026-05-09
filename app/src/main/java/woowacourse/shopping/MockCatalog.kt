@@ -349,5 +349,5 @@ object MockCatalog {
             }
         }
 
-    fun findProductById(id: UUID): Product = catalog.find { it.uuid == id } ?: unFoundedProduct
+    fun findProductById(id: UUID): Product = catalog.find { it.productId == id } ?: unFoundedProduct
 }

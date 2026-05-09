@@ -28,7 +28,6 @@
 ##### CartScreen
 - [ ] 해당 화면에서 개수를 증가시키면 카트에 추가한다
 
-
 ### 리팩토링
 - [ ] ViewModel 적용
 - [ ] Cart, Catalog Room 에 적용
