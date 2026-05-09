@@ -1,20 +1,15 @@
 package woowacourse.shopping.ui.shopping.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -27,11 +22,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import woowacourse.shopping.ProductFixture
@@ -75,17 +67,19 @@ fun ProductListScreen(
             contentPadding = PaddingValues(vertical = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = modifier
-                .padding(innerPadding)
-                .testTag("product_grid"),
+            modifier =
+                modifier
+                    .padding(innerPadding)
+                    .testTag("product_grid"),
         ) {
             if (!viewModel.isOnline) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFFFFE3E3))
-                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(Color(0xFFFFE3E3))
+                                .padding(horizontal = 20.dp, vertical = 12.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.network_unavailable),
@@ -99,7 +93,7 @@ fun ProductListScreen(
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     RecentlyViewedProductsItemsBox(
                         viewModel = viewModel,
-                        onClick =  onProductClick,
+                        onClick = onProductClick,
                     )
                 }
                 item(span = { GridItemSpan(maxLineSpan) }) {
@@ -127,12 +121,12 @@ fun ProductListScreen(
                             quantityToRemove = 1,
                         )
                     },
-                    modifier = Modifier
-                        .padding(
-                            start = if (index % 2 == 0) 20.dp else 0.dp,
-                            end = if (index % 2 == 1) 20.dp else 0.dp,
-                        )
-                        .testTag("product_item_${product.productId}"),
+                    modifier =
+                        Modifier
+                            .padding(
+                                start = if (index % 2 == 0) 20.dp else 0.dp,
+                                end = if (index % 2 == 1) 20.dp else 0.dp,
+                            ).testTag("product_item_${product.productId}"),
                 )
             }
             if (viewModel.products.hasNextPage(currentPageIndex = viewModel.currentPageIndex)) {
@@ -140,9 +134,10 @@ fun ProductListScreen(
                     MintButton(
                         onClick = { viewModel.increasePageIndex() },
                         text = stringResource(R.string.see_more),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
                     )
                 }
             }
@@ -157,31 +152,32 @@ private fun ProductListScreenPreview() {
     val packageName = LocalContext.current.packageName
     val allProducts = ProductFixture.productList(packageName)
 
-    val recentViewedProductsRepository = remember {
-        object : RecentlyViewedProductsRepository {
-            override suspend fun saveViewedProduct(productId: Uuid) = Unit
+    val recentViewedProductsRepository =
+        remember {
+            object : RecentlyViewedProductsRepository {
+                override suspend fun saveViewedProduct(productId: Uuid) = Unit
 
-            override fun getRecentlyViewedProducts(): Flow<Products> =
-                flowOf(Products(allProducts.take(5)))
+                override fun getRecentlyViewedProducts(): Flow<Products> = flowOf(Products(allProducts.take(5)))
 
-            override suspend fun getLastViewedProduct(): Product? =
-                allProducts.firstOrNull()
+                override suspend fun getLastViewedProduct(): Product? = allProducts.firstOrNull()
+            }
         }
-    }
-    val networkMonitor = remember {
-        object : NetworkMonitor {
-            override fun isOnline(): Flow<Boolean> = flowOf(true)
+    val networkMonitor =
+        remember {
+            object : NetworkMonitor {
+                override fun isOnline(): Flow<Boolean> = flowOf(true)
+            }
         }
-    }
 
-    val viewModel = remember {
-        ProductListViewModel(
-            recentViewedProductsRepository = recentViewedProductsRepository,
-            productRepository = InMemoryProductRepository(packageName),
-            cartRepository = InMemoryCartRepository(),
-            networkMonitor = networkMonitor,
-        )
-    }
+    val viewModel =
+        remember {
+            ProductListViewModel(
+                recentViewedProductsRepository = recentViewedProductsRepository,
+                productRepository = InMemoryProductRepository(packageName),
+                cartRepository = InMemoryCartRepository(),
+                networkMonitor = networkMonitor,
+            )
+        }
 
     ProductListScreen(
         viewModel = viewModel,

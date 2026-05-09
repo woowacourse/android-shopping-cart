@@ -16,17 +16,18 @@ class ProductDetailViewModel(
     private val recentViewedProductsRepository: RecentlyViewedProductsRepository,
     private val currentProductId: Uuid,
 ) : ViewModel() {
-
     var lastViewedProduct by mutableStateOf<Product?>(null)
         private set
 
     init {
         viewModelScope.launch {
-            recentViewedProductsRepository.getRecentlyViewedProducts()
+            recentViewedProductsRepository
+                .getRecentlyViewedProducts()
                 .collect { recentlyViewedProducts ->
-                    lastViewedProduct = recentlyViewedProducts.products.firstOrNull {
-                        it.productId != currentProductId
-                    }
+                    lastViewedProduct =
+                        recentlyViewedProducts.products.firstOrNull {
+                            it.productId != currentProductId
+                        }
                 }
         }
     }

@@ -9,5 +9,5 @@ fun ProductResponse.toEntity(): ProductEntity =
         productId = id,
         productName = name,
         imageUrl = imageUrl,
-        price = Price(price)
+        price = Price(price),
     )

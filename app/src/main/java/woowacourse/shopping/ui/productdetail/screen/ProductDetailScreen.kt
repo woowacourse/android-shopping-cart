@@ -75,20 +75,20 @@ fun ProductDetailScreen(
                     text = addToCartText,
                     modifier =
                         Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
                 )
             }
-        }
+        },
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         Box(
             modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             if (product != null) {
                 Column(
-                    modifier = Modifier.verticalScroll(scrollState)
+                    modifier = Modifier.verticalScroll(scrollState),
                 ) {
                     ProductDetail(
                         product = product,
@@ -101,7 +101,7 @@ fun ProductDetailScreen(
                         Box(modifier = Modifier.padding(horizontal = 18.dp)) {
                             RecentlyViewedProductCard(
                                 viewModel = viewModel,
-                                onClick = { onProductClick(lastViewedProduct.productId) }
+                                onClick = { onProductClick(lastViewedProduct.productId) },
                             )
                         }
                     }
@@ -119,21 +119,20 @@ private fun ProductDetailScreenPreview() {
     val allProducts = ProductFixture.productList(packageName)
     val currentProduct = allProducts.last()
 
-    val viewModel = remember {
-        ProductDetailViewModel(
-            recentViewedProductsRepository =
-                object : RecentlyViewedProductsRepository {
-                    override suspend fun saveViewedProduct(productId: Uuid) = Unit
+    val viewModel =
+        remember {
+            ProductDetailViewModel(
+                recentViewedProductsRepository =
+                    object : RecentlyViewedProductsRepository {
+                        override suspend fun saveViewedProduct(productId: Uuid) = Unit
 
-                    override fun getRecentlyViewedProducts(): Flow<Products> =
-                        flowOf(Products(allProducts.take(3)))
+                        override fun getRecentlyViewedProducts(): Flow<Products> = flowOf(Products(allProducts.take(3)))
 
-                    override suspend fun getLastViewedProduct(): Product? =
-                        allProducts.firstOrNull()
-                },
-            currentProductId = currentProduct.productId,
-        )
-    }
+                        override suspend fun getLastViewedProduct(): Product? = allProducts.firstOrNull()
+                    },
+                currentProductId = currentProduct.productId,
+            )
+        }
 
     ProductDetailScreen(
         viewModel = viewModel,

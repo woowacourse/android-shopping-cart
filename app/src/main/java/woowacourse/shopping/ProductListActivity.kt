@@ -32,11 +32,13 @@ class ProductListActivity : ComponentActivity() {
                     onCartClick = { startActivity(Intent(this, CartActivity::class.java)) },
                     onProductClick = { productId ->
                         val shouldHideLastViewedProductCard =
-                            viewModel.recentlyViewedProducts.products.firstOrNull()?.productId == productId
+                            viewModel.recentlyViewedProducts.products
+                                .firstOrNull()
+                                ?.productId == productId
                         ProductDetailActivity.start(
                             context = this,
                             productId = productId,
-                            shouldHideLastViewedProductCard = shouldHideLastViewedProductCard
+                            shouldHideLastViewedProductCard = shouldHideLastViewedProductCard,
                         )
                     },
                     modifier = Modifier.testTag("product_list"),

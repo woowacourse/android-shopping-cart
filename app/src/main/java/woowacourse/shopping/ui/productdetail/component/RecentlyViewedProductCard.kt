@@ -36,18 +36,18 @@ import kotlin.uuid.Uuid
 @Composable
 fun RecentlyViewedProductCard(
     viewModel: ProductDetailViewModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = dividerColor,
-                shape = RoundedCornerShape(5.dp),
-            )
-            .padding(16.dp)
-            .clickable(onClick = onClick),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = dividerColor,
+                    shape = RoundedCornerShape(5.dp),
+                ).padding(16.dp)
+                .clickable(onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
@@ -61,7 +61,7 @@ fun RecentlyViewedProductCard(
             color = Color.Black,
             fontSize = 18.sp,
             fontWeight = FontWeight.W400,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -74,24 +74,24 @@ private fun RecentlyViewedProductCardPreview() {
     val allProducts = ProductFixture.productList(packageName)
     val currentProduct = allProducts.last()
 
-    val viewModel = remember {
-        ProductDetailViewModel(
-            recentViewedProductsRepository =
-                object : RecentlyViewedProductsRepository {
-                    override suspend fun saveViewedProduct(productId: Uuid) = Unit
+    val viewModel =
+        remember {
+            ProductDetailViewModel(
+                recentViewedProductsRepository =
+                    object : RecentlyViewedProductsRepository {
+                        override suspend fun saveViewedProduct(productId: Uuid) = Unit
 
-                    override fun getRecentlyViewedProducts(): Flow<Products> =
-                        flowOf(Products(listOf(currentProduct, allProducts.first())))
+                        override fun getRecentlyViewedProducts(): Flow<Products> =
+                            flowOf(Products(listOf(currentProduct, allProducts.first())))
 
-                    override suspend fun getLastViewedProduct(): Product? =
-                        allProducts.firstOrNull()
-                },
-            currentProductId = currentProduct.productId,
-        )
-    }
+                        override suspend fun getLastViewedProduct(): Product? = allProducts.firstOrNull()
+                    },
+                currentProductId = currentProduct.productId,
+            )
+        }
 
     RecentlyViewedProductCard(
         viewModel = viewModel,
-        onClick = {}
+        onClick = {},
     )
 }

@@ -36,10 +36,11 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val viewModel = ProductDetailViewModel(
-            recentViewedProductsRepository = AppContainer.recentlyViewedProductsRepository,
-            currentProductId = productId,
-        )
+        val viewModel =
+            ProductDetailViewModel(
+                recentViewedProductsRepository = AppContainer.recentlyViewedProductsRepository,
+                currentProductId = productId,
+            )
 
         lifecycleScope.launch {
             AppContainer.recentlyViewedProductsRepository.saveViewedProduct(productId = productId)
@@ -61,7 +62,7 @@ class ProductDetailActivity : ComponentActivity() {
                                 context = this@ProductDetailActivity,
                                 productId = clickedProductId,
                                 shouldHideLastViewedProductCard = true,
-                                shouldClearTop = true
+                                shouldClearTop = true,
                             )
                         },
                         onClose = { finish() },
@@ -69,8 +70,6 @@ class ProductDetailActivity : ComponentActivity() {
                 }
             }
         }
-
-
     }
 
     companion object {
@@ -83,7 +82,7 @@ class ProductDetailActivity : ComponentActivity() {
             context: Context,
             productId: Uuid,
             shouldHideLastViewedProductCard: Boolean = false,
-            shouldClearTop: Boolean = false
+            shouldClearTop: Boolean = false,
         ) {
             val intent =
                 Intent(context, ProductDetailActivity::class.java).apply {

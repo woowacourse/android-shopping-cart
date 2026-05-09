@@ -16,7 +16,8 @@ class ProductHttpClient(
     suspend fun getProducts(): List<ProductResponse> =
         withContext(Dispatchers.IO) {
             val request =
-                Request.Builder()
+                Request
+                    .Builder()
                     .url("${baseUrl}products")
                     .get()
                     .build()
@@ -30,7 +31,7 @@ class ProductHttpClient(
 
                 json.decodeFromString(
                     ListSerializer(ProductResponse.serializer()),
-                    responseBody
+                    responseBody,
                 )
             }
         }

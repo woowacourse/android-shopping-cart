@@ -65,7 +65,6 @@ class ProductListViewModel(
     var products by mutableStateOf(Products())
         private set
 
-
     fun visibleProducts(): List<Product> =
         products.products
             .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
@@ -107,11 +106,11 @@ class ProductListViewModel(
             }
         }
         viewModelScope.launch {
-            recentViewedProductsRepository.getRecentlyViewedProducts()
+            recentViewedProductsRepository
+                .getRecentlyViewedProducts()
                 .collect { recentlyViewedProducts ->
                     this@ProductListViewModel.recentlyViewedProducts = recentlyViewedProducts
                 }
         }
     }
-
 }

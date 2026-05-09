@@ -58,9 +58,10 @@ fun RecentlyViewedProductsItemsBox(
         ) {
             items(viewModel.recentlyViewedProducts.products) { product ->
                 Column(
-                    modifier = Modifier
-                        .width(98.dp)
-                        .clickable { onClick(product.productId) },
+                    modifier =
+                        Modifier
+                            .width(98.dp)
+                            .clickable { onClick(product.productId) },
                     verticalArrangement = Arrangement.spacedBy(7.dp),
                 ) {
                     AsyncImage(
@@ -89,34 +90,35 @@ private fun RecentlyViewedProductsItemsBox() {
     val packageName = LocalContext.current.packageName
     val allProducts = ProductFixture.productList(packageName)
 
-    val recentViewedProductsRepository = remember {
-        object : RecentlyViewedProductsRepository {
-            override suspend fun saveViewedProduct(productId: Uuid) = Unit
+    val recentViewedProductsRepository =
+        remember {
+            object : RecentlyViewedProductsRepository {
+                override suspend fun saveViewedProduct(productId: Uuid) = Unit
 
-            override fun getRecentlyViewedProducts(): Flow<Products> =
-                flowOf(Products(allProducts.take(5)))
+                override fun getRecentlyViewedProducts(): Flow<Products> = flowOf(Products(allProducts.take(5)))
 
-            override suspend fun getLastViewedProduct(): Product? =
-                allProducts.firstOrNull()
+                override suspend fun getLastViewedProduct(): Product? = allProducts.firstOrNull()
+            }
         }
-    }
-    val networkMonitor = remember {
-        object : NetworkMonitor {
-            override fun isOnline(): Flow<Boolean> = flowOf(true)
+    val networkMonitor =
+        remember {
+            object : NetworkMonitor {
+                override fun isOnline(): Flow<Boolean> = flowOf(true)
+            }
         }
-    }
 
-    val viewModel = remember {
-        ProductListViewModel(
-            recentViewedProductsRepository = recentViewedProductsRepository,
-            productRepository = InMemoryProductRepository(packageName),
-            cartRepository = InMemoryCartRepository(),
-            networkMonitor = networkMonitor,
-        )
-    }
+    val viewModel =
+        remember {
+            ProductListViewModel(
+                recentViewedProductsRepository = recentViewedProductsRepository,
+                productRepository = InMemoryProductRepository(packageName),
+                cartRepository = InMemoryCartRepository(),
+                networkMonitor = networkMonitor,
+            )
+        }
 
     RecentlyViewedProductsItemsBox(
         viewModel = viewModel,
-        onClick = {}
+        onClick = {},
     )
 }

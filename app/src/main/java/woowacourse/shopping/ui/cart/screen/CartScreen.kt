@@ -47,11 +47,12 @@ fun CartScreen(
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    val viewModel = remember {
-        CartViewModel(
-            cartRepository = InMemoryCartRepository(),
-        )
-    }
+    val viewModel =
+        remember {
+            CartViewModel(
+                cartRepository = InMemoryCartRepository(),
+            )
+        }
 
     CartScreen(
         viewModel = viewModel,

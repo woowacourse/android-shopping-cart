@@ -30,14 +30,16 @@ object AppContainer {
     }
 
     private val baseUrl = BuildConfig.BASE_URL
+
     fun initialize(context: Context) {
         appContext = context.applicationContext
         database =
-            Room.databaseBuilder(
-                context.applicationContext,
-                ShoppingDatabase::class.java,
-                "shopping.db",
-            ).fallbackToDestructiveMigration(dropAllTables = true)
+            Room
+                .databaseBuilder(
+                    context.applicationContext,
+                    ShoppingDatabase::class.java,
+                    "shopping.db",
+                ).fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
     }
 

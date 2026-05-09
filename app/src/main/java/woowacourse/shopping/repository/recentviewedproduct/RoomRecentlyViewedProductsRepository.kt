@@ -14,7 +14,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class RoomRecentlyViewedProductsRepository(
     private val recentlyViewedProductsDao: RecentlyViewedProductsDao,
-    private val productsDao: ProductDao
+    private val productsDao: ProductDao,
 ) : RecentlyViewedProductsRepository {
     override suspend fun getLastViewedProduct(): Product? {
         val lastViewedProduct = recentlyViewedProductsDao.getLastViewedProduct() ?: return null

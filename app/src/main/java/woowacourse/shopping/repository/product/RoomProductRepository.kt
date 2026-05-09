@@ -21,8 +21,7 @@ class RoomProductRepository(
             Products(entities.map { it.toDomain() })
         }
 
-    override suspend fun getProductById(productId: Uuid): Product? =
-        productDao.getProductById(productId = productId.toString())?.toDomain()
+    override suspend fun getProductById(productId: Uuid): Product? = productDao.getProductById(productId = productId.toString())?.toDomain()
 
     override suspend fun refreshProducts() {
         val products = productHttpClient.getProducts().map { it.toEntity() }

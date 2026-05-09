@@ -23,21 +23,21 @@ class ProductHttpClientTest {
 
         val products =
             """
-              [
-                  {
-                      "id": "00000000-0000-0000-0000-000000000001",
-                      "name": "상품1",
-                      "price": 10000,
-                      "imageUrl": "http://example.com/product1.jpg"
-                  },
-                  {
-                      "id": "00000000-0000-0000-0000-000000000002",
-                      "name": "상품2",
-                      "price": 20000,
-                      "imageUrl": "http://example.com/product2.jpg"
-                  }
-              ]
-              """.trimIndent()
+            [
+                {
+                    "id": "00000000-0000-0000-0000-000000000001",
+                    "name": "상품1",
+                    "price": 10000,
+                    "imageUrl": "http://example.com/product1.jpg"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000002",
+                    "name": "상품2",
+                    "price": 20000,
+                    "imageUrl": "http://example.com/product2.jpg"
+                }
+            ]
+            """.trimIndent()
         mockWebServer.dispatcher =
             object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
@@ -45,10 +45,11 @@ class ProductHttpClientTest {
                         "/products" ->
                             MockResponse(
                                 code = 200,
-                                headers = Headers.Companion.headersOf(
-                                    "Content-Type",
-                                    "application/json"
-                                ),
+                                headers =
+                                    Headers.Companion.headersOf(
+                                        "Content-Type",
+                                        "application/json",
+                                    ),
                                 body = products,
                             )
 
@@ -70,22 +71,22 @@ class ProductHttpClientTest {
     }
 
     @Test
-    fun `상품 목록을 조회할 수 있다`(): Unit = runBlocking {
-        val actual = productHttpClient.getProducts()
+    fun `상품 목록을 조회할 수 있다`(): Unit =
+        runBlocking {
+            val actual = productHttpClient.getProducts()
 
-        val recordedRequest = mockWebServer.takeRequest()
+            val recordedRequest = mockWebServer.takeRequest()
 
-        assertThat(recordedRequest.target).isEqualTo("/products")
-        assertThat(actual).hasSize(2)
-        assertThat(actual[0].id).isEqualTo("00000000-0000-0000-0000-000000000001")
-        assertThat(actual[0].name).isEqualTo("상품1")
-        assertThat(actual[0].price).isEqualTo(10000)
-        assertThat(actual[0].imageUrl).isEqualTo("http://example.com/product1.jpg")
+            assertThat(recordedRequest.target).isEqualTo("/products")
+            assertThat(actual).hasSize(2)
+            assertThat(actual[0].id).isEqualTo("00000000-0000-0000-0000-000000000001")
+            assertThat(actual[0].name).isEqualTo("상품1")
+            assertThat(actual[0].price).isEqualTo(10000)
+            assertThat(actual[0].imageUrl).isEqualTo("http://example.com/product1.jpg")
 
-        assertThat(actual[1].id).isEqualTo("00000000-0000-0000-0000-000000000002")
-        assertThat(actual[1].name).isEqualTo("상품2")
-        assertThat(actual[1].price).isEqualTo(20000)
-        assertThat(actual[1].imageUrl).isEqualTo("http://example.com/product2.jpg")
-    }
-
+            assertThat(actual[1].id).isEqualTo("00000000-0000-0000-0000-000000000002")
+            assertThat(actual[1].name).isEqualTo("상품2")
+            assertThat(actual[1].price).isEqualTo(20000)
+            assertThat(actual[1].imageUrl).isEqualTo("http://example.com/product2.jpg")
+        }
 }
