@@ -62,17 +62,20 @@
 - [ ] 장바구니에 담겨있는 상품을 제거할 수 있다
 - [ ] 전체 상품 목록을 불러온다
 - [ ] 불러올 상품 목록에 loadMore를 적용한다
+- [ ] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
 ### ProductDetailViewModel
 
 - [ ] 장바구니에 담을 수량을 조절할 수 있다
 - [ ] 장바구니에 담기 버튼을 누르면 ROOM DB에 해당 상품과 수량 정보를 저장한다
+- [ ] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
 ### CartViewModel
 
 - [ ] ROOM db에서 화면에 표시할 상품에 pagination을 적용해 불러온다
 - [ ] 특정 상품의 count를 변경하면 ROOM db에 반영된다
 - [ ] 특정 상품을 삭제하면 ROOM db에서 삭제된
+- [ ] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
 ## ROOM DB
 
