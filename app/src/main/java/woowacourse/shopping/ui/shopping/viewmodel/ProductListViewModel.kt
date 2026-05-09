@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.local.entity.RecentViewedProductsEntity
 import woowacourse.shopping.domain.PageRequest
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
@@ -14,11 +15,13 @@ import woowacourse.shopping.domain.SHOPPING_PAGE_SIZE
 import woowacourse.shopping.domain.toPage
 import woowacourse.shopping.repository.cart.CartRepository
 import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.repository.recentviewedproduct.RecentlyViewedProductsRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ProductListViewModel(
+    private val recentViewedProductsRepository: RecentlyViewedProductsRepository,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
@@ -57,10 +60,24 @@ class ProductListViewModel(
         }
     }
 
-    // RoomCartRepository
     var products by mutableStateOf(Products())
         private set
 
+
+    fun visibleProducts(): List<Product> =
+        products.products
+            .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
+            .items
+
+    var productQuantities by mutableStateOf<Map<Uuid, Int>>(emptyMap())
+        private set
+
+    // recentlyViewedProducts
+
+    var recentlyViewedProducts by mutableStateOf(Products())
+        private set
+
+    // Common
     init {
         viewModelScope.launch {
             productRepository.getAllProducts().collect { loadedProducts ->
@@ -73,13 +90,11 @@ class ProductListViewModel(
                 productQuantities = cartProducts.associate { it.productId to it.quantity }
             }
         }
+        viewModelScope.launch {
+            recentViewedProductsRepository.getRecentlyViewedProducts().collect { loadedRecentlyViewedProducts ->
+                recentlyViewedProducts = loadedRecentlyViewedProducts
+            }
+        }
     }
 
-    fun visibleProducts(): List<Product> =
-        products.products
-            .toPage(PageRequest(0, (currentPageIndex + 1) * SHOPPING_PAGE_SIZE))
-            .items
-
-    var productQuantities by mutableStateOf<Map<Uuid, Int>>(emptyMap())
-        private set
 }
