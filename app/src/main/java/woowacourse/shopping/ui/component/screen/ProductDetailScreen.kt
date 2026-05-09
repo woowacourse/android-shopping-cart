@@ -27,29 +27,34 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
+import woowacourse.shopping.ui.component.item.LastViewedProduct
 import woowacourse.shopping.ui.component.item.ProductImage
 import woowacourse.shopping.ui.component.item.QuantitySelector
 import woowacourse.shopping.ui.component.item.toPriceString
 
 @Composable
 fun ProductDetailScreen(
+    product: Product,
     count: Int,
+    lastViewedProduct: Product,
+    onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
     onAddRequest: () -> Unit,
     onClose: () -> Unit,
-    product: Product,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
         bodyContent = {
             ProductDetailBody(
+                product = product,
                 count = count,
+                lastViewedProduct = lastViewedProduct,
+                onLastViewedClick = onLastViewedClick,
                 onAdd = onAdd,
                 onMinus = onMinus,
                 onAddRequest = onAddRequest,
-                product = product,
             )
         },
         modifier = modifier,
@@ -82,11 +87,13 @@ private fun ProductDetailHeader(
 
 @Composable
 private fun ProductDetailBody(
+    product: Product,
     count: Int,
+    lastViewedProduct: Product,
+    onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
     onAddRequest: () -> Unit,
-    product: Product,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -96,7 +103,9 @@ private fun ProductDetailBody(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ProductDetailInfo(
-            product,
+            product = product,
+            lastViewedProduct = lastViewedProduct,
+            onLastViewedClick = onLastViewedClick,
             count = count,
             onAdd = onAdd,
             onMinus = onMinus,
@@ -123,7 +132,9 @@ private fun ProductDetailBody(
 @Composable
 private fun ProductDetailInfo(
     product: Product,
+    lastViewedProduct: Product,
     count: Int,
+    onLastViewedClick: (Product) -> Unit,
     onAdd: () -> Unit,
     onMinus: () -> Unit,
     modifier: Modifier = Modifier,
@@ -166,6 +177,11 @@ private fun ProductDetailInfo(
                 onMinus = onMinus,
             )
         }
+        LastViewedProduct(
+            product = lastViewedProduct,
+            onClick = onLastViewedClick,
+            modifier = Modifier.padding(18.dp)
+        )
     }
 }
 
@@ -173,15 +189,20 @@ private fun ProductDetailInfo(
 @Composable
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        onAddRequest = {},
-        onClose = {},
-        product =
-            Product(
+        product = Product(
                 imageUri = "emptyUri",
                 name = "우유",
                 price = 100,
-            ),
+        ),
         count = 0,
+        lastViewedProduct = Product(
+            imageUri = "emptyUri",
+            name = "우유",
+            price = 100,
+        ),
+        onLastViewedClick = {},
+        onAddRequest = {},
+        onClose = {},
         onAdd = {  },
         onMinus = {  },
     )
