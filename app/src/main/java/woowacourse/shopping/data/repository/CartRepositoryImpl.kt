@@ -39,6 +39,36 @@ class CartRepositoryImpl(
         return cartItems.subList(startIndex, endIndex)
     }
 
+    override fun getItemCount(productId: String): Int =
+        cartItems
+            .firstOrNull { it.product.id == productId }
+            ?.quantity
+            ?: 0
+
+    override fun plusItemCount(product: Product) {
+        val item = cartItems.firstOrNull { it.product == product }
+
+        if (item == null) {
+            addItem(product = product, amount = 1)
+            return
+        }
+
+        cartDataSource.updateItem(item.addQuantity(1))
+    }
+
+    override fun minusItemCount(productId: String) {
+        val item = cartItems.firstOrNull { it.product.id == productId }
+
+        requireNotNull(item) { "카트에 아이템이 존재하지 않습니다." }
+
+        if (item.quantity == 1) {
+            cartDataSource.deleteItem(productId = productId)
+            return
+        }
+
+        cartDataSource.updateItem(cartItem = item.minusQuantity(1))
+    }
+
     companion object {
         private const val PAGE_SIZE = 5
     }

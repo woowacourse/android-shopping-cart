@@ -16,4 +16,10 @@ interface CartRepository {
     suspend fun getCartItemByPage(page: Int): List<CartItem>
 
     fun isLastPage(page: Int): Boolean
+
+    fun getItemCount(productId: String): Int
+
+    fun plusItemCount(product: Product)
+
+    fun minusItemCount(productId: String)
 }

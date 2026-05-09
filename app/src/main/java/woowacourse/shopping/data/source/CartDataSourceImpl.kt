@@ -20,4 +20,12 @@ object CartDataSourceImpl : CartDataSource {
     override fun deleteItem(productId: String) {
         _items.removeIf { it.product.id == productId }
     }
+
+    override fun updateItem(cartItem: CartItem) {
+        val idx = _items.indexOfFirst { it.product.id == cartItem.product.id }
+
+        require(idx != -1) { "카트에 존재하지 않는 상품입니다." }
+
+        _items[idx] = cartItem
+    }
 }

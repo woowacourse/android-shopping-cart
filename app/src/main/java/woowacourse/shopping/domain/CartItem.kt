@@ -15,4 +15,10 @@ data class CartItem(
 
         return this.copy(quantity = quantity + amount)
     }
+
+    fun minusQuantity(amount: Int): CartItem {
+        require(amount > 0) { "장바구니 개수 감소는 양수여야 합니다." }
+
+        return this.copy(quantity = quantity - amount)
+    }
 }

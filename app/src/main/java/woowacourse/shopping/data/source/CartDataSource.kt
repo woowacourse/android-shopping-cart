@@ -8,4 +8,6 @@ interface CartDataSource {
     fun add(cartItem: CartItem)
 
     fun deleteItem(productId: String)
+
+    fun updateItem(cartItem: CartItem)
 }
