@@ -77,14 +77,13 @@ class CartViewModel(
     }
 
     companion object {
-        fun provideFactory(
-            cartRepository: CartRepository,
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                CartViewModel(
-                    cartRepository = cartRepository,
-                )
+        fun provideFactory(cartRepository: CartRepository): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    CartViewModel(
+                        cartRepository = cartRepository,
+                    )
+                }
             }
-        }
     }
 }

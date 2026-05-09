@@ -21,7 +21,7 @@ interface RecentItemDao {
         """
         DELETE FROM recent_items
         WHERE id NOT IN (SELECT id FROM recent_items ORDER BY timestamp DESC LIMIT 10)
-    """
+    """,
     )
     suspend fun deleteOldItem()
 
@@ -30,7 +30,7 @@ interface RecentItemDao {
             SELECT * FROM recent_items
             ORDER BY timestamp DESC
             LIMIT 1
-        """
+        """,
     )
     suspend fun getLastViewedItem(): RecentItemEntity?
 }

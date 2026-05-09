@@ -98,17 +98,18 @@ class DetailViewModel(
             hideRecentItem: Boolean,
             productRepository: ProductRepository,
             cartRepository: CartRepository,
-            recentItemRepository: RecentItemRepository
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                DetailViewModel(
-                    id = id,
-                    hideRecentItem = hideRecentItem,
-                    productRepository = productRepository,
-                    cartRepository = cartRepository,
-                    recentItemRepository = recentItemRepository
-                )
+            recentItemRepository: RecentItemRepository,
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    DetailViewModel(
+                        id = id,
+                        hideRecentItem = hideRecentItem,
+                        productRepository = productRepository,
+                        cartRepository = cartRepository,
+                        recentItemRepository = recentItemRepository,
+                    )
+                }
             }
-        }
     }
 }

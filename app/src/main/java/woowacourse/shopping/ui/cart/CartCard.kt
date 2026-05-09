@@ -102,7 +102,7 @@ fun CartCard(
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Bottom
+                verticalArrangement = Arrangement.Bottom,
             ) {
                 QuantitySelector(
                     onIncreaseQuantity = onIncreaseQuantity,
@@ -118,7 +118,6 @@ fun CartCard(
                     color = Gray50,
                 )
             }
-
         }
     }
 }

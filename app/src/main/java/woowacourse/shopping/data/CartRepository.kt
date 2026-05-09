@@ -7,28 +7,31 @@ import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.localdb.mapper.toDomain
 import woowacourse.shopping.data.localdb.mapper.toEntity
 import woowacourse.shopping.model.Cart
-import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductName
 
 class CartRepository(
     private val cartItemDao: CartItemDao,
 ) {
     fun observeCart(): Flow<Cart> =
-        cartItemDao.getAll()
+        cartItemDao
+            .getAll()
             .map { entities ->
                 Cart(items = entities.map { it.toDomain() })
             }
 
-    suspend fun addItem(product: Product, quantity: Int) {
-        val cartItem = CartItemEntity(
-            product.id,
-            product.getName(),
-            product.getPrice(),
-            product.imageUrl,
-            quantity,
-            System.currentTimeMillis()
-        )
+    suspend fun addItem(
+        product: Product,
+        quantity: Int,
+    ) {
+        val cartItem =
+            CartItemEntity(
+                product.id,
+                product.getName(),
+                product.getPrice(),
+                product.imageUrl,
+                quantity,
+                System.currentTimeMillis(),
+            )
         cartItemDao.insert(cartItem)
     }
 

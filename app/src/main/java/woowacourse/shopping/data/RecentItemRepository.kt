@@ -6,7 +6,7 @@ import woowacourse.shopping.data.localdb.mapper.toEntity
 import woowacourse.shopping.model.Product
 
 class RecentItemRepository(
-    private val recentItemDao: RecentItemDao
+    private val recentItemDao: RecentItemDao,
 ) {
     suspend fun addRecentItem(product: Product) {
         recentItemDao.insert(product.toEntity(System.currentTimeMillis()))

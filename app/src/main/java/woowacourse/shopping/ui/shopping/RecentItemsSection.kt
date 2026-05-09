@@ -69,9 +69,10 @@ private fun RecentItemCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .width(98.dp)
-            .clickable { onClick() },
+        modifier =
+            modifier
+                .width(98.dp)
+                .clickable { onClick() },
     ) {
         AsyncImage(
             model = product.imageUrl,
@@ -80,9 +81,10 @@ private fun RecentItemCard(
             error = rememberVectorPainter(Icons.Default.CloudOff),
             fallback = rememberVectorPainter(Icons.Default.CloudOff),
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
         )
 
         Text(
@@ -93,7 +95,7 @@ private fun RecentItemCard(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = Color.Black,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
@@ -102,11 +104,12 @@ private fun RecentItemCard(
 @Composable
 private fun RecentItemsSectionPreview() {
     RecentItemsSection(
-        recentItems = persistentListOf(
-            ProductUiModel(),
-            ProductUiModel(),
-            ProductUiModel()
-        ),
+        recentItems =
+            persistentListOf(
+                ProductUiModel(),
+                ProductUiModel(),
+                ProductUiModel(),
+            ),
         onProductClick = {},
     )
 }

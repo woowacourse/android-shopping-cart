@@ -100,17 +100,18 @@ fun DetailScreen(
                 if (uiState.recentItem != null && uiState.recentItem.id != uiState.product.id) {
                     RecentItemCard(
                         name = uiState.recentItem.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 18.dp)
-                            .clickable {
-                                onRecentItemClick(uiState.recentItem.id)
-                            }
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 18.dp)
+                                .clickable {
+                                    onRecentItemClick(uiState.recentItem.id)
+                                },
                     )
                     Spacer(modifier = Modifier.height(34.dp))
                 }
             },
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         )
     }
 }
@@ -153,9 +154,10 @@ private fun DetailContent(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp),
         ) {
             Text(
                 text = formattedPrice(totalPrice),
@@ -197,6 +199,6 @@ private fun DetailContentPreview() {
         totalPrice = 1000,
         onIncreaseQuantity = {},
         onDecreaseQuantity = {},
-        recentItem = {}
+        recentItem = {},
     )
 }

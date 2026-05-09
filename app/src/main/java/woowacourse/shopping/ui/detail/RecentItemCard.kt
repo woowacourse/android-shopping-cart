@@ -24,26 +24,26 @@ fun RecentItemCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .border(
-                border = BorderStroke(width = 1.dp, color = Gray40),
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(horizontal = 18.dp, vertical = 16.dp)
+        modifier =
+            modifier
+                .border(
+                    border = BorderStroke(width = 1.dp, color = Gray40),
+                    shape = RoundedCornerShape(16.dp),
+                ).padding(horizontal = 18.dp, vertical = 16.dp),
     ) {
         Text(
             text = "마지막으로 본 상품",
             color = Green40,
             fontWeight = FontWeight.W700,
             fontSize = 12.sp,
-            lineHeight = 16.sp
+            lineHeight = 16.sp,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = name,
             fontWeight = FontWeight.W400,
             fontSize = 18.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
     }
 }
@@ -52,6 +52,6 @@ fun RecentItemCard(
 @Composable
 fun RecentItemCardPreview() {
     RecentItemCard(
-        name = "Test"
+        name = "Test",
     )
 }

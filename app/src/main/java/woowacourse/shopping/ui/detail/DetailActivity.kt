@@ -40,7 +40,7 @@ class DetailActivity : ComponentActivity() {
                 hideRecentItem = hideRecentItem,
                 productRepository = MockProductRepository(),
                 cartRepository = CartRepository(database.cartItemDao()),
-                recentItemRepository = RecentItemRepository(database.recentItemDao())
+                recentItemRepository = RecentItemRepository(database.recentItemDao()),
             )
         }
 
@@ -56,11 +56,12 @@ class DetailActivity : ComponentActivity() {
                             }
 
                             DetailEvent.ShowAddCartFailureMessage -> {
-                                Toast.makeText(
-                                    this@DetailActivity,
-                                    "장바구니에 상품을 담지 못했습니다.",
-                                    Toast.LENGTH_SHORT,
-                                ).show()
+                                Toast
+                                    .makeText(
+                                        this@DetailActivity,
+                                        "장바구니에 상품을 담지 못했습니다.",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
                             }
                         }
                     }

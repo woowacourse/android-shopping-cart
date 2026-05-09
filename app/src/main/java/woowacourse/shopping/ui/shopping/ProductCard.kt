@@ -52,9 +52,10 @@ fun ProductCard(
                 },
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
             contentAlignment = Alignment.BottomCenter,
         ) {
             AsyncImage(
@@ -64,24 +65,26 @@ fun ProductCard(
                 error = rememberVectorPainter(Icons.Default.CloudOff),
                 fallback = rememberVectorPainter(Icons.Default.CloudOff),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
             if (quantity == 0) {
                 Box(
-                    modifier = Modifier
-                        .padding(bottom = 8.dp, end = 8.dp)
-                        .size(48.dp)
-                        .background(Color.White, CircleShape)
-                        .align(Alignment.BottomEnd),
+                    modifier =
+                        Modifier
+                            .padding(bottom = 8.dp, end = 8.dp)
+                            .size(48.dp)
+                            .background(Color.White, CircleShape)
+                            .align(Alignment.BottomEnd),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "추가",
                         tint = Gray50,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clickable { onIncreaseQuantity() },
+                        modifier =
+                            Modifier
+                                .size(32.dp)
+                                .clickable { onIncreaseQuantity() },
                     )
                 }
             } else {
@@ -90,7 +93,7 @@ fun ProductCard(
                     onIncreaseQuantity = onIncreaseQuantity,
                     onDecreaseQuantity = onDecreaseQuantity,
                     modifier = Modifier.padding(bottom = 8.dp),
-                    contentColor = Gray50
+                    contentColor = Gray50,
                 )
             }
         }

@@ -6,15 +6,17 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductName
 
-fun CartItemEntity.toDomain() : CartItem = CartItem(
-    product = Product(
-        id = id,
-        name = ProductName(name),
-        price = Money(price),
-        imageUrl = imageUrl,
-    ),
-    quantity = quantity,
-)
+fun CartItemEntity.toDomain(): CartItem =
+    CartItem(
+        product =
+            Product(
+                id = id,
+                name = ProductName(name),
+                price = Money(price),
+                imageUrl = imageUrl,
+            ),
+        quantity = quantity,
+    )
 
 fun CartItem.toEntity(timestamp: Long): CartItemEntity =
     CartItemEntity(

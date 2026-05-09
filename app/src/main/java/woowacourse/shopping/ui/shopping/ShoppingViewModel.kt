@@ -65,11 +65,12 @@ class ShoppingViewModel(
 
             offset += loadProducts.size
 
-            _uiState.value = _uiState.value.copy(
-                products = (currentState.products + loadProducts).toImmutableList(),
-                canLoadMore = loadProducts.size == pageSize,
-                isLoading = false,
-            )
+            _uiState.value =
+                _uiState.value.copy(
+                    products = (currentState.products + loadProducts).toImmutableList(),
+                    canLoadMore = loadProducts.size == pageSize,
+                    isLoading = false,
+                )
         }
     }
 
@@ -97,15 +98,15 @@ class ShoppingViewModel(
             productRepository: ProductRepository,
             cartRepository: CartRepository,
             recentItemRepository: RecentItemRepository,
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                ShoppingViewModel(
-                    productRepository = productRepository,
-                    cartRepository = cartRepository,
-                    recentItemRepository = recentItemRepository,
-                )
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    ShoppingViewModel(
+                        productRepository = productRepository,
+                        cartRepository = cartRepository,
+                        recentItemRepository = recentItemRepository,
+                    )
+                }
             }
-        }
     }
-
 }

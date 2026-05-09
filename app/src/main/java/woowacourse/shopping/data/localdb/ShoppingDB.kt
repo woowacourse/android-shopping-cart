@@ -8,6 +8,7 @@ import woowacourse.shopping.data.localdb.dao.CartItemDao
 import woowacourse.shopping.data.localdb.dao.RecentItemDao
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.localdb.entity.RecentItemEntity
+import kotlin.jvm.java
 
 @Database(
     entities = [CartItemEntity::class, RecentItemEntity::class],
@@ -15,23 +16,24 @@ import woowacourse.shopping.data.localdb.entity.RecentItemEntity
 )
 abstract class ShoppingDB : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
+
     abstract fun recentItemDao(): RecentItemDao
 
     companion object {
         @Volatile
-        private var INSTANCE: ShoppingDB? = null
+        private var instance: ShoppingDB? = null
 
-        fun getInstance(context: Context): ShoppingDB {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    ShoppingDB::class.java,
-                    "shopping_db",
-                ).build().also {
-                    INSTANCE = it
-                }
-
+        fun getInstance(context: Context): ShoppingDB =
+            instance ?: synchronized(this) {
+                instance ?: Room
+                    .databaseBuilder(
+                        context.applicationContext,
+                        ShoppingDB::class.java,
+                        "shopping_db",
+                    ).build()
+                    .also {
+                        instance = it
+                    }
             }
-        }
     }
 }

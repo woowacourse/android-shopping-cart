@@ -68,9 +68,10 @@ fun ShoppingScreen(
                     )
                     if (uiState.cartSize > 0) {
                         Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .background(Green40, shape = CircleShape),
+                            modifier =
+                                Modifier
+                                    .size(24.dp)
+                                    .background(Green40, shape = CircleShape),
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(

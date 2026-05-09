@@ -29,25 +29,26 @@ fun QuantitySelector(
     onDecreaseQuantity: () -> Unit,
     quantity: Int,
     modifier: Modifier = Modifier,
-    contentColor: Color = Color.Black
+    contentColor: Color = Color.Black,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .width(126.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color.White)
+        modifier =
+            modifier
+                .width(126.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White),
     ) {
         IconButton(
             onClick = onDecreaseQuantity,
-            modifier = Modifier.size(42.dp)
+            modifier = Modifier.size(42.dp),
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
                 contentDescription = "감소",
                 tint = contentColor,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(14.dp),
             )
         }
 
@@ -56,8 +57,7 @@ fun QuantitySelector(
             fontSize = 22.sp,
             fontWeight = FontWeight.Medium,
             color = contentColor,
-            modifier = Modifier.padding(horizontal = 14.dp)
-
+            modifier = Modifier.padding(horizontal = 14.dp),
         )
 
         IconButton(
@@ -69,7 +69,7 @@ fun QuantitySelector(
                 contentDescription = "증가",
                 tint = contentColor,
                 modifier =
-                    Modifier.size(14.dp)
+                    Modifier.size(14.dp),
             )
         }
     }
