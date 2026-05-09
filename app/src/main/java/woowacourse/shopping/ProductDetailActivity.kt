@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
@@ -38,15 +39,17 @@ class ProductDetailActivity : ComponentActivity() {
                 )
             )
 
+            val count = viewModel.countState.collectAsStateWithLifecycle()
+
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
-                        count = viewModel.countState,
+                        count = count.value,
                         onAdd = { viewModel.addCount() },
                         onMinus = { viewModel.minusCount() },
                         onAddRequest = {
-                            viewModel.addPurchaseProduct(PurchaseProduct(product, viewModel.countState))
+                            viewModel.addPurchaseProduct(PurchaseProduct(product, count.value))
                             finish()
                         },
                         onClose = { finish() },

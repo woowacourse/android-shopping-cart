@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,14 +19,14 @@ class ProductDetailViewModel(
 ): ViewModel() {
     private val _count = MutableStateFlow(1)
 
-    val countState = _count.value
+    val countState = _count.asStateFlow()
 
     fun addCount() {
         _count.update { it + 1 }
     }
 
     fun minusCount() {
-        if (countState > 1) {
+        if (countState.value > 1) {
             _count.update { it - 1 }
         }
     }
