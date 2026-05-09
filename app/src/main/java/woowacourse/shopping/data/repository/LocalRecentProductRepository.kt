@@ -13,10 +13,10 @@ class LocalRecentProductRepository(
     private val productRepository: ProductRepository,
     private val maxKeep: Int = 10,
 ) : RecentProductRepository {
-    override suspend fun upsertRecentProduct(productId: String) {
+    override suspend fun upsertRecentProduct(id: Long) {
         recentProductDao.upsertAndTrim(
             RecentProductEntity(
-                productId = productId,
+                productId = id,
                 lastViewedAt = System.currentTimeMillis(),
             ),
             keep = maxKeep,

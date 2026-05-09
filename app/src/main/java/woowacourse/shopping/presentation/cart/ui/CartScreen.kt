@@ -136,9 +136,9 @@ fun CartScreen(
 
 @Composable
 private fun CartContent(
-    onDeleteItem: (String) -> Unit,
-    onIncrease: (String) -> Unit,
-    onDecrease: (String) -> Unit,
+    onDeleteItem: (Long) -> Unit,
+    onIncrease: (Long) -> Unit,
+    onDecrease: (Long) -> Unit,
     cartItems: ImmutableList<CartItemUiModel>,
     modifier: Modifier = Modifier,
 ) {
@@ -188,7 +188,7 @@ private fun CartContentPreview() {
                 CartItemUiModel(
                     product =
                         ProductUiModel(
-                            id = "1",
+                            id = 1L,
                             name = "커피",
                             imageUrl = "",
                             price = 1000,
@@ -198,7 +198,7 @@ private fun CartContentPreview() {
                 CartItemUiModel(
                     product =
                         ProductUiModel(
-                            id = "2",
+                            id = 2L,
                             name = "커피",
                             imageUrl = "",
                             price = 1000,

@@ -5,7 +5,7 @@ import woowacourse.shopping.presentation.common.model.ProductUiModel
 data class DetailUiState(
     val product: ProductUiModel =
         ProductUiModel(
-            id = "",
+            id = 0L,
             name = "",
             imageUrl = "",
             price = 0,

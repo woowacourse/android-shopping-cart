@@ -13,7 +13,7 @@ interface CartDao {
     suspend fun getAll(): List<CartEntity>
 
     @Query("SELECT * FROM cart WHERE productId = :id")
-    suspend fun findById(id: String): CartEntity?
+    suspend fun findById(id: Long): CartEntity?
 
     @Query("SELECT COUNT(*) FROM cart")
     suspend fun getTotalCartSize(): Int
@@ -25,11 +25,11 @@ interface CartDao {
     suspend fun updateItem(entity: CartEntity)
 
     @Query("DELETE FROM cart WHERE productId = :id")
-    suspend fun deleteItem(id: String): Int
+    suspend fun deleteItem(id: Long): Int
 
     @Transaction
     suspend fun addOrIncrement(
-        id: String,
+        id: Long,
         quantity: Int = 1,
     ) {
         val existing = findById(id)
@@ -41,7 +41,7 @@ interface CartDao {
     }
 
     @Transaction
-    suspend fun deleteOrDecrement(id: String) {
+    suspend fun deleteOrDecrement(id: Long) {
         val existing = findById(id) ?: return
         if (existing.quantity == 1) {
             deleteItem(id)

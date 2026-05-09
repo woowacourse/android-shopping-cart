@@ -9,5 +9,5 @@ interface ProductRepository {
         limit: Int,
     ): ImmutableList<Product>
 
-    suspend fun getProductById(id: String): Product
+    suspend fun getProductById(id: Long): Product
 }

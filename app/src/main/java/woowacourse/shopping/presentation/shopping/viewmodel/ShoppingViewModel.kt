@@ -44,13 +44,13 @@ class ShoppingViewModel(
         }
     }
 
-    suspend fun increase(productId: String) {
-        cartRepository.addItem(productId)
+    suspend fun increase(id: Long) {
+        cartRepository.addItem(id)
         loadCartItemQuantities()
     }
 
-    suspend fun decrease(productId: String) {
-        cartRepository.decrease(productId)
+    suspend fun decrease(id: Long) {
+        cartRepository.decrease(id)
         loadCartItemQuantities()
     }
 
@@ -82,8 +82,8 @@ class ShoppingViewModel(
         }
     }
 
-    suspend fun upsertRecentProduct(productId: String) {
-        recentProductRepository.upsertRecentProduct(productId)
+    suspend fun upsertRecentProduct(id: Long) {
+        recentProductRepository.upsertRecentProduct(id)
     }
 
     suspend fun loadRecentProducts(limit: Int) {

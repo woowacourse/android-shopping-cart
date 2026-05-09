@@ -48,18 +48,18 @@ class CartViewModel(
         }
     }
 
-    suspend fun deleteItem(productId: String): RemoveItemResult {
+    suspend fun deleteItem(productId: Long): RemoveItemResult {
         val result = cartRepository.deleteItem(productId)
         if (result is RemoveItemResult.Success) loadCartItems()
         return result
     }
 
-    suspend fun increase(productId: String) {
+    suspend fun increase(productId: Long) {
         cartRepository.addItem(productId)
         loadCartItems()
     }
 
-    suspend fun decrease(productId: String) {
+    suspend fun decrease(productId: Long) {
         cartRepository.decrease(productId)
         loadCartItems()
     }

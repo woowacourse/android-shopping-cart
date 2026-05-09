@@ -27,7 +27,7 @@ class DetailViewModel(
     private var loadedProduct: Product? = null
 
     suspend fun loadProduct(
-        id: String,
+        id: Long,
         isFromLastSeen: Boolean,
     ) {
         val loaded = productRepository.getProductById(id)
@@ -72,7 +72,7 @@ class DetailViewModel(
     }
 
     suspend fun addToCart(
-        id: String,
+        id: Long,
         quantity: Int,
     ): AddItemResult {
         val product =

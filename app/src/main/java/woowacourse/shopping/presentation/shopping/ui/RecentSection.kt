@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.shopping.ui
 
+import android.R.attr.name
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,7 +35,7 @@ import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 @Composable
 fun RecentSection(
     recentProducts: ImmutableList<ProductUiModel>,
-    onClick: (String) -> Unit,
+    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -103,7 +104,7 @@ private fun RecentProductCard(
 private fun RecentSectionPreview() {
     val product =
         Product(
-            id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            id = 1L,
             name = ProductName("아메리카노"),
             price = Money(6000),
             imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2025/06/[106509]_20250626092521116.jpg",

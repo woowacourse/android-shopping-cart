@@ -22,7 +22,7 @@ class LocalCartRepositoryTest {
     private val productRepository: ProductRepository = mockk()
     private lateinit var repository: LocalCartRepository
 
-    private val productId = "123"
+    private val productId = 1L
     private val product = Product(productId, ProductName("상품"), Money(1400), "")
 
     @BeforeEach

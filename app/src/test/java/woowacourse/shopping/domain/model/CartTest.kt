@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class CartTest {
     private val product1 =
         Product(
-            id = "1",
+            id = 1L,
             name = ProductName("상품1"),
             price = Money(5000),
             imageUrl = "",
@@ -14,7 +14,7 @@ class CartTest {
 
     private val product2 =
         Product(
-            id = "2",
+            id = 2L,
             name = ProductName("상품2"),
             price = Money(1000),
             imageUrl = "",

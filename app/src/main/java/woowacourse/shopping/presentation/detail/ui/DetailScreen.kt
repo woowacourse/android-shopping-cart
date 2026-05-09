@@ -52,10 +52,10 @@ import woowacourse.shopping.util.formattedPrice
 
 @Composable
 fun DetailScreen(
-    id: String,
+    id: Long,
     isFromLastSeen: Boolean = false,
     onNavigateToCart: (AddItemResult) -> Unit,
-    onClickLastProductCard: (String) -> Unit,
+    onClickLastProductCard: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = viewModel(),
 ) {
@@ -213,7 +213,7 @@ private fun DetailContent(
 @Composable
 private fun DetailScreenPreview() {
     DetailScreen(
-        id = "1",
+        id = 1L,
         onNavigateToCart = {},
         onClickLastProductCard = {},
     )

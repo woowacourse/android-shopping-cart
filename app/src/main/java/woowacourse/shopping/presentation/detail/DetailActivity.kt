@@ -11,15 +11,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.ui.DetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
-import kotlin.getValue
 
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val id = this.intent.getStringExtra(INTENT_PRODUCT_ID)
+        val id = this.intent.getLongExtra(INTENT_PRODUCT_ID, -1L)
         val isFromLastSeen = this.intent.getBooleanExtra(IS_FROM_LAST_SEEN, false)
-        if (id.isNullOrBlank()) {
+        if (id == -1L) {
             Toast.makeText(this, R.string.invalid_product, Toast.LENGTH_SHORT).show()
             this.finish()
             return
@@ -54,7 +53,7 @@ class DetailActivity : ComponentActivity() {
 
         fun newIntent(
             context: Context,
-            productId: String,
+            productId: Long,
         ): Intent =
             Intent(context, DetailActivity::class.java)
                 .putExtra(INTENT_PRODUCT_ID, productId)

@@ -28,10 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.data.source.remote.mock.ProductData
 import woowacourse.shopping.presentation.common.QuantityCounter
 import woowacourse.shopping.presentation.common.model.ProductUiModel
-import woowacourse.shopping.presentation.common.model.toUiModel
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.util.formattedPrice
@@ -113,9 +111,14 @@ fun ProductCard(
 @Preview(showBackground = true)
 @Composable
 private fun InCartProductCardPreview() {
-    val product = ProductData.products.first()
     ProductCard(
-        product = product.toUiModel(),
+        product =
+            ProductUiModel(
+                id = 1L,
+                name = "아메리카노",
+                price = 6000,
+                imageUrl = "",
+            ),
         quantity = 1,
         onClick = {},
         onIncrease = {},
@@ -126,10 +129,15 @@ private fun InCartProductCardPreview() {
 @Preview(showBackground = false)
 @Composable
 private fun NoCartProductCardPreview() {
-    val product = ProductData.products.first()
     AndroidshoppingTheme {
         ProductCard(
-            product = product.toUiModel(),
+            product =
+                ProductUiModel(
+                    id = 1L,
+                    name = "아메리카노",
+                    price = 6000,
+                    imageUrl = "",
+                ),
             quantity = 0,
             onClick = {},
             onIncrease = {},
