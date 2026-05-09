@@ -46,8 +46,7 @@ fun ProductScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(20.dp),
-            modifier = Modifier
-                .padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -60,7 +59,6 @@ fun ProductScreen(
                     name = it.name,
                     price = it.price,
                     onClick = { onProductCardClick(it.id) },
-                    modifier = Modifier,
                 )
             }
 
@@ -69,9 +67,7 @@ fun ProductScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                viewModel.getProducts()
-                            },
+                            .clickable { viewModel.getProducts() },
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_down),
