@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import woowacourse.ProductDetailSource
 import woowacourse.shopping.AppContainer.cartRepository
 import woowacourse.shopping.ProductFixture
 import woowacourse.shopping.R
@@ -46,7 +45,7 @@ import kotlin.uuid.Uuid
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel,
     product: Product?,
-    source: ProductDetailSource,
+    shouldHideLastViewedProductCard: Boolean,
     onProductClick: (Uuid) -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -98,7 +97,7 @@ fun ProductDetailScreen(
                         decreaseQuantity = { quantity-- },
                     )
                     val lastViewedProduct = viewModel.lastViewedProduct
-                    if (source == ProductDetailSource.PRODUCT_LIST && lastViewedProduct != null) {
+                    if (!shouldHideLastViewedProductCard && lastViewedProduct != null) {
                         Box(modifier = Modifier.padding(horizontal = 18.dp)) {
                             RecentlyViewedProductCard(
                                 viewModel = viewModel,
@@ -139,7 +138,7 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         viewModel = viewModel,
         product = currentProduct,
-        source = ProductDetailSource.PRODUCT_LIST,
+        shouldHideLastViewedProductCard = true,
         onProductClick = {},
         onClose = {},
     )

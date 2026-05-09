@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import woowacourse.ProductDetailSource
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.ui.productdetail.viewmodel.ProductDetailViewModel
@@ -50,26 +49,20 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val sourceName =
-            intent.getStringExtra(PRODUCT_DETAIL_SOURCE_KEY)
-                ?: ProductDetailSource.PRODUCT_LIST.name
-
-        val source =
-            runCatching { ProductDetailSource.valueOf(sourceName) }
-                .getOrDefault(ProductDetailSource.PRODUCT_LIST)
+        val shouldHideLastViewedProductCard  = intent.getBooleanExtra(HIDE_LAST_VIEWED_PRODUCT_CARD_KEY,false)
         setContent {
             AndroidShoppingTheme {
                 ProductDetailScreen(
                     viewModel = viewModel,
                     product = product,
-                    source = source,
+                    shouldHideLastViewedProductCard = shouldHideLastViewedProductCard,
                     onProductClick = { clickedProductId ->
                         ProductDetailActivity.start(
-                            this,
-                            clickedProductId,
-                            ProductDetailSource.LAST_VIEWED_CARD
+                            context = this,
+                            productId = clickedProductId,
+                            shouldHideLastViewedProductCard = true,
+                            shouldClearTop = true
                         )
-                        finish()
                     },
                     onClose = { finish() },
                 )
@@ -79,19 +72,23 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         private const val PRODUCT_ID_EXTRA_KEY = "woowacourse.shopping.product_id"
-        private const val PRODUCT_DETAIL_SOURCE_KEY =
-            "woowacourse.shopping.product_detail_source"
+        private const val HIDE_LAST_VIEWED_PRODUCT_CARD_KEY =
+            "woowacourse.shopping.hide_last_viewed_product_card"
 
         @OptIn(ExperimentalUuidApi::class)
         fun start(
             context: Context,
             productId: Uuid,
-            source: ProductDetailSource = ProductDetailSource.PRODUCT_LIST
+            shouldHideLastViewedProductCard: Boolean = false,
+            shouldClearTop: Boolean = false
         ) {
             val intent =
                 Intent(context, ProductDetailActivity::class.java).apply {
                     putExtra(PRODUCT_ID_EXTRA_KEY, productId.toString())
-                    putExtra(PRODUCT_DETAIL_SOURCE_KEY, source.name)
+                    putExtra(HIDE_LAST_VIEWED_PRODUCT_CARD_KEY, shouldHideLastViewedProductCard)
+                    if(shouldClearTop) {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
                 }
             context.startActivity(intent)
         }
