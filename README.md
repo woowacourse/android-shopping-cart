@@ -72,10 +72,10 @@
 
 ### CartViewModel
 
-- [ ] ROOM db에서 화면에 표시할 상품에 pagination을 적용해 불러온다
-- [ ] 특정 상품의 count를 변경하면 ROOM db에 반영된다
-- [ ] 특정 상품을 삭제하면 ROOM db에서 삭제된
-- [ ] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
+- [x] ROOM db에서 화면에 표시할 상품에 pagination을 적용해 불러온다
+- [x] 특정 상품의 count를 변경하면 ROOM db에 반영된다
+- [x] 특정 상품을 삭제하면 ROOM db에서 삭제된
+- [x] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
 ## ROOM DB
 
