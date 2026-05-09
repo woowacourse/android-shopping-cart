@@ -3,8 +3,16 @@ package woowacourse.shopping
 import android.app.Application
 import woowacourse.shopping.data.database.DataBase
 import woowacourse.shopping.data.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
 
 class ShoppingApplication: Application() {
     val database by lazy { DataBase.getDatabase(this) }
-    val purchaseProductsRepository by lazy { PurchaseProductsRepository(database.purchaseProductsDao()) }
+
+    val purchaseProductsRepository by lazy {
+        PurchaseProductsRepository(database.purchaseProductsDao())
+    }
+
+    val recentlyViewedProductRepository by lazy {
+        RecentlyViewedProductRepository(database.recentlyViewedProductDao())
+    }
 }
