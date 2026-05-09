@@ -56,5 +56,5 @@ class LocalCartRepository(
 
     override suspend fun getAllQuantities(): Map<Long, Int> = cartDao.getAll().associate { it.productId to it.quantity }
 
-    override suspend fun getQuantity(id: Long): Int = cartDao.findById(id)?.quantity ?: 1
+    override suspend fun getQuantity(id: Long): Int = cartDao.findById(id)?.quantity ?: 0
 }
