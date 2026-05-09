@@ -62,7 +62,7 @@ fun ProductScreen(
                     name = it.name,
                     price = it.price,
                     onClick = { onProductCardClick(it.id) },
-                    cartQuantity = viewModel.getCartItemCount(it.id),
+                    cartQuantity = it.cartQuantity,
                     onPlusClick = { viewModel.plusCartCount(it.id) },
                     onMinusClick = { viewModel.minusCartCount(it.id) },
                 )
