@@ -65,8 +65,11 @@ class ProductViewModel(
             _uiState.update { it.copy(isLoading = true) }
 
             try {
-                products = (products + productRepository.getProducts(products.size, PAGE_SIZE))
+                products = products + productRepository
+                    .getProducts(products.size, PAGE_SIZE)
                     .distinct()
+
+                updateProducts()
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
