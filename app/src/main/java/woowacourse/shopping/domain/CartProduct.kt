@@ -16,4 +16,6 @@ data class CartProduct(
 
     fun addQuantity(requestedAmount: Int) = copy(amount = amount + requestedAmount)
 
+    fun calculateTotalPrice() = product.price * amount
+
 }
