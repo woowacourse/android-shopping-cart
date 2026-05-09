@@ -52,3 +52,76 @@
 - [x] `+`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 증가한다
 - [x] `-`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 감소한다
 - [x] 해당하는 `PurchaseProduct`의 `count`가 `1`인 상태에서 `-`를 누르면 해당 `PurchaseProduct`를 카트에서 제거한다
+
+## viewModel
+
+### ShoppingViewModel
+
+- [ ] ROOM db에 상품을 저장할 수 있다
+- [ ] 장바구니에 이미 담긴 상품이면 count를 update한다
+- [ ] 장바구니에 담겨있는 상품을 제거할 수 있다
+- [ ] 전체 상품 목록을 불러온다
+- [ ] 불러올 상품 목록에 loadMore를 적용한다
+
+### ProductDetailViewModel
+
+- [ ] 장바구니에 담을 수량을 조절할 수 있다
+- [ ] 장바구니에 담기 버튼을 누르면 ROOM DB에 해당 상품과 수량 정보를 저장한다
+
+### CartViewModel
+
+- [ ] ROOM db에서 화면에 표시할 상품에 pagination을 적용해 불러온다
+- [ ] 특정 상품의 count를 변경하면 ROOM db에 반영된다
+- [ ] 특정 상품을 삭제하면 ROOM db에서 삭제된
+
+## ROOM DB
+
+### DataBase
+
+- [ ] DataBase 인스턴스 필드 선언
+- [ ] DataBase 인스턴스 반환 함수 정의
+
+### PurchaseProductEntity
+
+- [ ] 도메인 객체에 대한 테이블 정의
+  - [ ] 상품 ID Column
+  - [ ] 상품 이름 Column
+  - [ ] 상품 가격 Column
+  - [ ] 상품 이미지 Uri Column
+  - [ ] 상품 수량 Column
+- [ ] Entity를 도메인 객체로 변환할 수 있다
+
+### PurchaseProductsDao
+
+- [ ] DB에 저장된 전체 장바구니 목록을 불러올 수 있다
+- [ ] 상품 ID로 특정 장바구니 목록을 불러올 수 있다
+- [ ] DB에 상품을 추가할 수 있다
+- [ ] 특정 상품의 수량을 변경할 수 있다
+- [ ] 특정 상품을 DB에서 제거할 수 있다
+- [ ] 상품 수량의 총합을 알 수 있다
+- [ ] 특정 상품의 수량을 알 수 있다
+- [ ] 특정 상품의 수량에 따른 총 금액을 알 수 있다
+- [ ] 전체 장바구니 목록에 pagination을 적용해 일부만 불러올 수 있다
+- [ ] 상품의 개수를 할 수 있다
+- [ ] id를 통해 특정 상품이 담겨있는지 확인할 수 있다
+
+### PurchaseProductsRepository
+
+- [ ] 전체 장바구니 목록을 불러올 수 있다
+- [ ] 장바구니에 상품을 추가할 수 있다
+- [ ] 장바구니에 담긴 상품의 수량을 변경할 수 있다
+- [ ] DB에 저장된 목록의 개수를 읽어올 수 있다
+- [ ] DB의 전체 목록에 pagination을 적용해 일부 목록만 불러올 수 있다
+- [ ] 특정 상품을 ID로 조회힐 수 있다
+- [ ] 특정 상품의 수량에 따른 총 금액을 조회할 수 있다
+- [ ] 장바구니에 담긴 상품 수량의 충합을 알 수 있다
+- [ ] 특정 상품의 수량을 조회할 수 있다
+- [ ] 장바구니에 담긴 상품을 제거할 수 있다
+- [ ] 도메인 객체를 Entity로 변환할 수 있다
+
+## Application
+
+### ShoppingApplication
+
+- [ ] ROOM DB 인스턴스 초기화
+- [ ] Repository 인스턴스 초기화
