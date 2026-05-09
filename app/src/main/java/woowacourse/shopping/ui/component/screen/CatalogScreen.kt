@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.component.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,18 +25,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartCountLabel
+import woowacourse.shopping.ui.component.item.RecentlyViewedProducts
 import woowacourse.shopping.ui.component.item.ShoppingItem
 import java.util.UUID
 
 @Composable
 fun CatalogScreen(
     catalog: Products,
+    recentlyViewedProducts: Products,
+    onRecentlyViewedClick: (Product) -> Unit,
     totalCount: () -> Int,
     specificProductCount: (UUID) -> Int,
     onItemClick: (Product) -> Unit,
@@ -53,6 +56,8 @@ fun CatalogScreen(
         bodyContent = {
             CatalogBody(
                 catalog = catalog,
+                recentlyViewedProducts = recentlyViewedProducts,
+                onRecentlyViewedClick = onRecentlyViewedClick,
                 onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
                 onAdd = { uuid, updateAmount ->
@@ -110,6 +115,8 @@ private fun CatalogHeader(
 @Composable
 private fun CatalogBody(
     catalog: Products,
+    recentlyViewedProducts: Products,
+    onRecentlyViewedClick: (Product) -> Unit,
     specificProductCount: (UUID) -> Int,
     onItemClick: (Product) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
@@ -120,40 +127,53 @@ private fun CatalogBody(
     isContainedInCart: (UUID) ->  Boolean,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier,
-        contentPadding = PaddingValues(12.dp),
-    ) {
-        items(catalog.size()) { item ->
-            ShoppingItem(
-                product = catalog.getSingleItem(item),
-                onClick = {
-                    onItemClick(catalog.getSingleItem(item))
-                },
-                count = {
-                    specificProductCount(catalog.getSingleItem(item).uuid)
-                },
-                isContainedInCart = {
-                    isContainedInCart(catalog.getSingleItem(item).uuid)
-                },
-                onAdd = {
-                    onAdd(catalog.getSingleItem(item).uuid, 1)
-                },
-                onMinus = {
-                    onMinus(catalog.getSingleItem(item).uuid, -1)
-                },
-                onDelete = {
-                    onDelete(catalog.getSingleItem(item).uuid)
-                },
-                onAddInCart = { onAddInCart(it) }
-            )
-        }
-
-        item(
-            span = { GridItemSpan(maxLineSpan) },
+    Column {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = modifier,
+            contentPadding = PaddingValues(12.dp),
         ) {
-            LoadBtn(onLoadClick)
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                if(!recentlyViewedProducts.isEmpty()) {
+                    RecentlyViewedProducts(
+                        recentlyViewedProducts,
+                        onClick = onRecentlyViewedClick
+                    )
+                }
+            }
+
+            items(catalog.size()) { item ->
+                ShoppingItem(
+                    product = catalog.getSingleItem(item),
+                    onClick = {
+                        onItemClick(catalog.getSingleItem(item))
+                    },
+                    count = {
+                        specificProductCount(catalog.getSingleItem(item).uuid)
+                    },
+                    isContainedInCart = {
+                        isContainedInCart(catalog.getSingleItem(item).uuid)
+                    },
+                    onAdd = {
+                        onAdd(catalog.getSingleItem(item).uuid, 1)
+                    },
+                    onMinus = {
+                        onMinus(catalog.getSingleItem(item).uuid, -1)
+                    },
+                    onDelete = {
+                        onDelete(catalog.getSingleItem(item).uuid)
+                    },
+                    onAddInCart = { onAddInCart(it) }
+                )
+            }
+
+            item(
+                span = { GridItemSpan(maxLineSpan) },
+            ) {
+                LoadBtn(onLoadClick)
+            }
         }
     }
 }
@@ -203,11 +223,139 @@ private fun CatalogScreenPreview() {
                     name = "투핸더",
                     price = 100000000,
                 ),
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
             ),
         )
 
     CatalogScreen(
         catalog,
+        catalog,
+        onRecentlyViewedClick = {},
+        totalCount = { 10 },
+        specificProductCount = { it -> 0 },
+        onItemClick = {  },
+        onCartClick = {  },
+        onLoadClick = {  },
+        onAdd = { uuid, type -> },
+        onMinus = { uuid, type -> },
+        onDelete = {  },
+        onAddInCart = {  },
+        isContainedInCart = { it -> true },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CatalogScreenPreview2() {
+    val catalog =
+        Products(
+            listOf(
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "너무너무너무긴아이템이름",
+                    price = 100000,
+                ),
+                Product(
+                    imageUri = "디디",
+                    name = "당근주스",
+                    price = 1000,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "우유",
+                    price = 100,
+                ),
+                Product(
+                    imageUri = "hello",
+                    name = "투핸더",
+                    price = 100000000,
+                ),
+            ),
+        )
+
+    CatalogScreen(
+        catalog,
+        Products(),
+        onRecentlyViewedClick = {},
         totalCount = { 10 },
         specificProductCount = { it -> 0 },
         onItemClick = {  },
