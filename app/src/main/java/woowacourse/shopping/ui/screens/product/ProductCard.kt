@@ -34,11 +34,11 @@ fun ProductCard(
     imageUrl: String,
     name: String,
     price: Price,
+    cartQuantity: Int,
     onClick: () -> Unit,
+    onPlusClick: () -> Unit,
+    onMinusClick: () -> Unit,
     modifier: Modifier = Modifier,
-    cartQuantity: Int = 0,
-    onPlusClick: () -> Unit = {},
-    onMinusClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.clickable(onClick = onClick),
@@ -120,10 +120,12 @@ private fun ProductCardPreview() {
     ProductCard(
         imageUrl =
             "https://cdn.eyesmag.com/content/uploads/posts/2024/10/23/shutterstock_250" +
-                "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
+                    "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
         name = "고양이",
         price = Price(999999999),
         onClick = { },
         cartQuantity = 0,
+        onPlusClick = { },
+        onMinusClick = { },
     )
 }
