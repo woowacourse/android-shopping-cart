@@ -10,14 +10,12 @@ import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
+import woowacourse.shopping.repository.ShoppingRepositoryProvider
 
 class ProductDetailViewModel(
-    private val productRepository: ProductRepository = InMemoryProductRepository,
-    private val cartRepository: CartRepository = InMemoryCartRepository,
-    private val recentProductRepository: RecentProductRepository = InMemoryRecentProductRepository,
+    private val productRepository: ProductRepository = ShoppingRepositoryProvider.productRepository,
+    private val cartRepository: CartRepository = ShoppingRepositoryProvider.cartRepository,
+    private val recentProductRepository: RecentProductRepository = ShoppingRepositoryProvider.recentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()

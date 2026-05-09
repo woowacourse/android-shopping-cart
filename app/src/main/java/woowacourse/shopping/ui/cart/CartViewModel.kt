@@ -9,14 +9,13 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryCartRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.repository.ShoppingRepositoryProvider
 
 private const val PAGE_SIZE = 5
 
 class CartViewModel(
-    private val productRepository: ProductRepository = InMemoryProductRepository,
-    private val cartRepository: CartRepository = InMemoryCartRepository,
+    private val productRepository: ProductRepository = ShoppingRepositoryProvider.productRepository,
+    private val cartRepository: CartRepository = ShoppingRepositoryProvider.cartRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState(isLoading = true))
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
