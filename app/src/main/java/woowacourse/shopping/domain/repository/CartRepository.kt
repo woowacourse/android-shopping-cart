@@ -6,25 +6,25 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 interface CartRepository {
-    fun getItems(): Cart
+    suspend fun getItems(): Cart
 
-    fun getPagingItems(
+    suspend fun getPagingItems(
         page: Int,
         pageSize: Int,
     ): Cart
 
-    fun getTotalItemCount(): Int
+    suspend fun getTotalItemCount(): Int
 
-    fun getTotalQuantity(): Int
+    suspend fun getTotalQuantity(): Int
 
-    fun increaseQuantity(
+    suspend fun increaseQuantity(
         product: Product,
         quantity: Int,
     )
 
     @OptIn(ExperimentalUuidApi::class)
-    fun decreaseQuantity(productId: Uuid)
+    suspend fun decreaseQuantity(productId: Uuid)
 
     @OptIn(ExperimentalUuidApi::class)
-    fun deleteProduct(productId: Uuid)
+    suspend fun deleteProduct(productId: Uuid)
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -63,4 +64,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.coil.compose)
     androidTestImplementation(libs.androidx.espresso.intents)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    testImplementation("androidx.room:room-testing:2.8.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    testImplementation("org.assertj:assertj-core:3.26.3")
+    androidTestImplementation("org.assertj:assertj-core:3.26.3")
 }

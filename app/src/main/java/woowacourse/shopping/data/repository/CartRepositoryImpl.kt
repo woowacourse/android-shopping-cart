@@ -1,51 +1,75 @@
 package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.data.local.dao.CartDao
+import woowacourse.shopping.data.mapper.toCartItemEntity
+import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.math.min
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class CartRepositoryImpl(
-    private var cart: Cart,
+    private var cartDao: CartDao,
 ) : CartRepository {
-    override fun getItems(): Cart = cart
+    override suspend fun getItems(): Cart = Cart(cartDao.findAll().map { it.toDomain() })
 
-    override fun getPagingItems(
+    override suspend fun getPagingItems(
         page: Int,
         pageSize: Int,
     ): Cart {
         if (page < 0 || pageSize <= 0) return Cart()
 
-        val fromIndex = page * pageSize
+        val offset = page * pageSize
 
-        if (fromIndex >= getTotalItemCount()) {
-            return Cart()
-        }
-
-        val toIndex = min(fromIndex + pageSize, cart.cartItems.size)
-        return Cart(cart.cartItems.subList(fromIndex, toIndex))
+        return Cart(
+            cartItems =
+                cartDao
+                    .findPagingItems(
+                        limit = pageSize,
+                        offset = offset,
+                    ).map { it.toDomain() },
+        )
     }
 
-    override fun getTotalItemCount(): Int = cart.cartItems.size
+    override suspend fun getTotalItemCount(): Int = cartDao.countItems()
 
-    override fun getTotalQuantity(): Int = cart.getTotalQuantity()
+    override suspend fun getTotalQuantity(): Int = cartDao.sumQuantity()
 
-    override fun increaseQuantity(
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun increaseQuantity(
         product: Product,
         quantity: Int,
     ) {
-        cart = cart.increaseQuantity(product, quantity)
+        val savedItem = cartDao.findByProductId(product.productId.toString())
+
+        val newQuantity =
+            if (savedItem == null) {
+                quantity
+            } else {
+                savedItem.quantity + quantity
+            }
+        cartDao.save(
+            product.toCartItemEntity(quantity = newQuantity),
+        )
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    override fun decreaseQuantity(productId: Uuid) {
-        cart = cart.decreaseQuantity(productId)
+    override suspend fun decreaseQuantity(productId: Uuid) {
+        val savedItem = cartDao.findByProductId(productId.toString()) ?: return
+
+        if (savedItem.quantity == 1) {
+            cartDao.deleteByProductId(productId.toString())
+            return
+        }
+
+        cartDao.save(
+            savedItem.copy(quantity = savedItem.quantity - 1),
+        )
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    override fun deleteProduct(productId: Uuid) {
-        cart = cart.deleteProduct(productId)
+    override suspend fun deleteProduct(productId: Uuid) {
+        cartDao.deleteByProductId(productId.toString())
     }
 }

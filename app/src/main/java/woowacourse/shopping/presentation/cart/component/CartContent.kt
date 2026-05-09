@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
@@ -62,7 +61,7 @@ fun CartContent(
 @Composable
 fun CartContentPreview() {
     CartContent(
-        cart = AppContainer.cartRepository.getItems(),
+        cart = Cart(),
         currentPage = 1,
         hasMoreItems = true,
         onPreviousPageClick = {},

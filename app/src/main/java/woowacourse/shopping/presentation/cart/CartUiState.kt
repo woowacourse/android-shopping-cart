@@ -8,6 +8,7 @@ import kotlin.uuid.Uuid
 data class CartUiState(
     val cart: Cart = Cart(),
     val currentPageIndex: Int = 0,
+    val totalItemCount: Int = 0,
     val deleteProductId: Uuid? = null,
 ) {
     val currentPage: Int

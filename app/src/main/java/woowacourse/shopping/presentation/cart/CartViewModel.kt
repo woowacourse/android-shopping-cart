@@ -25,11 +25,8 @@ class CartViewModel(
     private val _uiEvent = Channel<CartUiEvent>(Channel.BUFFERED)
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    val totalItemCount: Int
-        get() = cartRepository.getTotalItemCount()
-
     val lastPageIndex: Int
-        get() = if (totalItemCount == 0) 0 else (totalItemCount - 1) / DEFAULT_PAGE_SIZE
+        get() = getLastPageIndex(_uiState.value.totalItemCount)
 
     val hasPreviousPage: Boolean
         get() = _uiState.value.currentPageIndex > 0
@@ -38,7 +35,7 @@ class CartViewModel(
         get() = _uiState.value.currentPageIndex < lastPageIndex
 
     val hasMoreItems: Boolean
-        get() = totalItemCount > DEFAULT_PAGE_SIZE
+        get() = _uiState.value.totalItemCount > DEFAULT_PAGE_SIZE
 
     init {
         refresh()
@@ -54,8 +51,10 @@ class CartViewModel(
     }
 
     fun increaseQuantity(product: Product) {
-        cartRepository.increaseQuantity(product, 1)
-        refresh()
+        viewModelScope.launch {
+            cartRepository.increaseQuantity(product, 1)
+            refresh()
+        }
     }
 
     fun decreaseQuantity(productId: Uuid) {
@@ -66,8 +65,10 @@ class CartViewModel(
         if (item?.quantity == 1) {
             _uiState.update { it.copy(deleteProductId = productId) }
         } else {
-            cartRepository.decreaseQuantity(productId)
-            refresh()
+            viewModelScope.launch {
+                cartRepository.decreaseQuantity(productId)
+                refresh()
+            }
         }
     }
 
@@ -80,7 +81,7 @@ class CartViewModel(
             )
         }
 
-        refreshPagedCart()
+        refresh()
     }
 
     fun goToNextPage() {
@@ -92,7 +93,7 @@ class CartViewModel(
             )
         }
 
-        refreshPagedCart()
+        refresh()
     }
 
     fun showDeleteDialog(productId: Uuid) {
@@ -104,29 +105,35 @@ class CartViewModel(
     }
 
     private fun refresh() {
-        adjustCurrentPage()
-        refreshPagedCart()
-    }
+        viewModelScope.launch {
+            val totalItemCount = cartRepository.getTotalItemCount()
+            val lastPageIndex = getLastPageIndex(totalItemCount)
 
-    private fun refreshPagedCart() {
-        _uiState.update {
-            it.copy(
-                cart =
-                    cartRepository.getPagingItems(
-                        page = it.currentPageIndex,
-                        pageSize = DEFAULT_PAGE_SIZE,
-                    ),
-            )
-        }
-    }
+            val adjustedPageIndex =
+                _uiState.value.currentPageIndex.coerceAtMost(lastPageIndex)
 
-    private fun adjustCurrentPage() {
-        if (_uiState.value.currentPageIndex > lastPageIndex) {
+            val cart =
+                cartRepository.getPagingItems(
+                    page = adjustedPageIndex,
+                    pageSize = DEFAULT_PAGE_SIZE,
+                )
+
             _uiState.update {
-                it.copy(currentPageIndex = lastPageIndex)
+                it.copy(
+                    cart = cart,
+                    totalItemCount = totalItemCount,
+                    currentPageIndex = adjustedPageIndex,
+                )
             }
         }
     }
+
+    private fun getLastPageIndex(totalItemCount: Int): Int =
+        if (totalItemCount == 0) {
+            0
+        } else {
+            (totalItemCount - 1) / DEFAULT_PAGE_SIZE
+        }
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 5

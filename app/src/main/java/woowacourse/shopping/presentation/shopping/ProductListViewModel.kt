@@ -2,10 +2,12 @@ package woowacourse.shopping.presentation.shopping
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
@@ -53,14 +55,18 @@ class ProductListViewModel(
     }
 
     fun increaseQuantity(product: Product) {
-        cartRepository.increaseQuantity(product, 1)
-        refreshCart()
+        viewModelScope.launch {
+            cartRepository.increaseQuantity(product, 1)
+            refreshCart()
+        }
     }
 
     @OptIn(ExperimentalUuidApi::class)
     fun decreaseQuantity(productId: Uuid) {
-        cartRepository.decreaseQuantity(productId)
-        refreshCart()
+        viewModelScope.launch {
+            cartRepository.decreaseQuantity(productId)
+            refreshCart()
+        }
     }
 
     private fun loadPages() {
@@ -82,10 +88,12 @@ class ProductListViewModel(
     }
 
     fun refreshCart() {
-        _uiState.update {
-            it.copy(
-                cart = cartRepository.getItems(),
-            )
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    cart = cartRepository.getItems(),
+                )
+            }
         }
     }
 
