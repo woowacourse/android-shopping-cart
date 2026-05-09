@@ -83,17 +83,17 @@
 
 ### PurchaseProductEntity
 
-- [ ] 도메인 객체에 대한 테이블 정의
-  - [ ] 상품 ID Column
-  - [ ] 상품 이름 Column
-  - [ ] 상품 가격 Column
-  - [ ] 상품 이미지 Uri Column
-  - [ ] 상품 수량 Column
-- [ ] Entity를 도메인 객체로 변환할 수 있다
+- [x] 도메인 객체에 대한 테이블 정의
+  - [x] 상품 ID Column
+  - [x] 상품 이름 Column
+  - [x] 상품 가격 Column
+  - [x] 상품 이미지 Uri Column
+  - [x] 상품 수량 Column
+- [x] Entity를 도메인 객체로 변환할 수 있다
 
 ### PurchaseProductsDao
 
-- [ ] DB에 저장된 전체 장바구니 목록을 불러올 수 있다
+- [ㅌ] DB에 저장된 전체 장바구니 목록을 불러올 수 있다
 - [ ] 상품 ID로 특정 장바구니 목록을 불러올 수 있다
 - [ ] DB에 상품을 추가할 수 있다
 - [ ] 특정 상품의 수량을 변경할 수 있다
