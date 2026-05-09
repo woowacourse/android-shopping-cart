@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.cart.viewmodel
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.fake.FakeCartRepository
 import woowacourse.shopping.fake.fakeProduct
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CartViewModelTest {
     private val dispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: CartViewModel

@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.detail.viewmodel
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -12,6 +13,7 @@ import woowacourse.shopping.fake.FakeProductRepository
 import woowacourse.shopping.fake.FakeRecentProductRepository
 import woowacourse.shopping.fake.fakeProduct
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class DetailViewModelTest {
     private val dispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: DetailViewModel
