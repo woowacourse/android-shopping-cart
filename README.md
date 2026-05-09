@@ -78,8 +78,9 @@
 
 ### DataBase
 
-- [ ] DataBase 인스턴스 필드 선언
-- [ ] DataBase 인스턴스 반환 함수 정의
+- [x] PurchaseProductDao 인스턴스 선언
+- [x] DataBase 인스턴스 필드 선언
+- [x] DataBase 인스턴스 반환 함수 정의
 
 ### PurchaseProductEntity
 
