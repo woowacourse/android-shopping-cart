@@ -14,6 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.data.DataProvider.getCartRepository
+import woowacourse.shopping.data.DataProvider.productRepository
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
 import woowacourse.shopping.features.productDetail.ProductDetailViewModel
@@ -23,7 +25,14 @@ class ProductListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel: ProductListViewModel = viewModel()
+            val viewModel: ProductListViewModel =
+                viewModel(
+                    factory =
+                        ProductListViewModelFactory(
+                            productRepository = productRepository,
+                            cartRepository = getCartRepository(this),
+                        ),
+                )
 
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 val context = LocalContext.current
@@ -41,9 +50,6 @@ class ProductListActivity : ComponentActivity() {
                     },
                     onAddCartClick = { product ->
                         viewModel.addCartItem(product)
-                    },
-                    getQuantity = { product ->
-                        viewModel.getQuantity(product)
                     },
                     isExistProductToCart = { product ->
                         viewModel.isExistProduct(product)

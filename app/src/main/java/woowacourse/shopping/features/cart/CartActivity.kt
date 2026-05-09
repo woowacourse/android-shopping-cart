@@ -9,18 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.data.DataProvider
+import woowacourse.shopping.data.DataProvider.getCartRepository
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel: CartViewModel = viewModel(
-                factory = CartViewModelFactory(
-                    cartRepository = DataProvider.cartRepository
+            val viewModel: CartViewModel =
+                viewModel(
+                    factory =
+                        CartViewModelFactory(
+                            cartRepository = getCartRepository(this),
+                        ),
                 )
-            )
 
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

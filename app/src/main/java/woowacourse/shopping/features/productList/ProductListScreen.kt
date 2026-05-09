@@ -52,12 +52,11 @@ import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 
 @Composable
 fun ProductListScreen(
-    viewModel: ProductListViewModel= viewModel(),
+    viewModel: ProductListViewModel = viewModel(),
     onCartClick: () -> Unit,
     onProductClick: (ProductUiModel) -> Unit,
     loadProducts: () -> Unit,
     onAddCartClick: (ProductUiModel) -> Unit,
-    getQuantity: (ProductUiModel) -> Int,
     isExistProductToCart: (ProductUiModel) -> Boolean,
     onDecrementClick: (ProductUiModel) -> Unit,
     modifier: Modifier = Modifier,
@@ -83,7 +82,6 @@ fun ProductListScreen(
                     .fillMaxSize()
                     .padding(20.dp),
             onProductClick = { onProductClick(it) },
-            getQuantity = { getQuantity(it) },
             isExistProductToCart = { isExistProductToCart(it) },
             onDecrementClick = { onDecrementClick(it) },
             onMoreClick = {
@@ -155,7 +153,6 @@ private fun ProductCardGrid(
     isLastPage: Boolean,
     onProductClick: (ProductUiModel) -> Unit,
     onMoreClick: () -> Unit,
-    getQuantity: (ProductUiModel) -> Int,
     onAddCartClick: (ProductUiModel) -> Unit,
     isExistProductToCart: (ProductUiModel) -> Boolean,
     onDecrementClick: (ProductUiModel) -> Unit,
@@ -175,7 +172,7 @@ private fun ProductCardGrid(
                 imageUrl = item.imageUrl,
                 productName = item.name,
                 price = item.price,
-                quantity = getQuantity(item),
+                quantity = item.quantity,
                 isExistProductToCart = isExistProductToCart(item),
                 onDecrementClick = {
                     onDecrementClick(item)
@@ -346,7 +343,6 @@ fun ProductListScreenPreview() {
         loadProducts = {},
         onProductClick = {},
         onAddCartClick = {},
-        getQuantity = { 0 },
         isExistProductToCart = { false },
         onDecrementClick = {},
     )

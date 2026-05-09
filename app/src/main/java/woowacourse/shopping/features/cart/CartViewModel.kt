@@ -2,11 +2,14 @@ package woowacourse.shopping.features.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItems
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import kotlin.math.ceil
 
@@ -16,6 +19,7 @@ class CartViewModel(
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState = _uiState.asStateFlow()
 
+    var cart = Cart(CartItems(emptyList<CartItem>()))
     var pageCartItems = emptyList<CartItem>()
     var isFirstPage = true
     var isLastPage = true
@@ -29,39 +33,47 @@ class CartViewModel(
     fun isMinusEnabled(cartItem: CartItem): Boolean = cartItem.quantity.value > 1
 
     fun loadCartPage() {
-        if (!Cart.isPageValid(currentPage)) currentPage = 0
-        totalPages = ceil(cartRepository.getTotalCartCount().toDouble() / PAGE_SIZE).toInt()
-        if (currentPage >= totalPages && currentPage != 0) {
-            currentPage = totalPages - 1
-        }
-        val cart = cartRepository.getCart()
-        pageCartItems = cart.getPage(currentPage, PAGE_SIZE)
-        isFirstPage = currentPage == 0
-        isLastPage = currentPage == totalPages - 1 || totalPages == 0
-        _uiState.update {
-            it.copy(
-                pageCartItems = pageCartItems,
-                totalPageCount = totalPages,
-                currentPage = currentPage,
-                isFirstPage = isFirstPage,
-                isLastPage = isLastPage,
-            )
+        viewModelScope.launch {
+            if (!Cart.isPageValid(currentPage)) currentPage = 0
+            cart = cartRepository.getCart()
+            totalPages = ceil(cartRepository.getTotalCartCount().toDouble() / PAGE_SIZE).toInt()
+            if (currentPage >= totalPages && currentPage != 0) {
+                currentPage = totalPages - 1
+            }
+            pageCartItems = cart.getPage(currentPage, PAGE_SIZE)
+            isFirstPage = currentPage == 0
+            isLastPage = currentPage == totalPages - 1 || totalPages == 0
+            _uiState.update {
+                it.copy(
+                    pageCartItems = pageCartItems,
+                    totalPageCount = totalPages,
+                    currentPage = currentPage,
+                    isFirstPage = isFirstPage,
+                    isLastPage = isLastPage,
+                )
+            }
         }
     }
 
     fun removeCartItem(cartItem: CartItem) {
-        cartRepository.removeCartItem(cartItem)
-        loadCartPage()
+        viewModelScope.launch {
+            cartRepository.removeCartItem(cartItem)
+            loadCartPage()
+        }
     }
 
     fun increaseCartItem(cartItem: CartItem) {
-        cartRepository.addCartItem(cartItem, 1)
-        loadCartPage()
+        viewModelScope.launch {
+            cartRepository.addCartItem(cartItem, 1)
+            loadCartPage()
+        }
     }
 
     fun decreaseCartItem(cartItem: CartItem) {
-        cartRepository.minusCartItem(cartItem, 1)
-        loadCartPage()
+        viewModelScope.launch {
+            cartRepository.minusCartItem(cartItem, 1)
+            loadCartPage()
+        }
     }
 
     fun goToNextPage() {
@@ -69,7 +81,7 @@ class CartViewModel(
         currentPage += 1
         _uiState.update {
             it.copy(
-                currentPage = currentPage
+                currentPage = currentPage,
             )
         }
         loadCartPage()
@@ -80,7 +92,7 @@ class CartViewModel(
         currentPage -= 1
         _uiState.update {
             it.copy(
-                currentPage = currentPage
+                currentPage = currentPage,
             )
         }
         loadCartPage()
@@ -92,7 +104,7 @@ class CartViewModel(
 }
 
 class CartViewModelFactory(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CartViewModel::class.java)) {

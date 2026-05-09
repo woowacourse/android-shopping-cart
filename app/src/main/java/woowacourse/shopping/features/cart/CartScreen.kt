@@ -44,11 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.domain.cart.model.CartItem
-import woowacourse.shopping.domain.cart.model.CartItemQuantity
-import woowacourse.shopping.domain.product.model.ImageUrl
-import woowacourse.shopping.domain.product.model.Price
-import woowacourse.shopping.domain.product.model.Product
-import woowacourse.shopping.domain.product.model.ProductName
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR

@@ -8,31 +8,31 @@ import woowacourse.shopping.domain.cart.repository.CartRepository
 class CartRepositoryMockImpl : CartRepository {
     private var cart: Cart = Cart(cartItems = CartItems(mutableListOf()))
 
-    override fun getCart(): Cart = cart
+    override suspend fun getCart(): Cart = cart
 
-    override fun getTotalCartCount(): Int = cart.getCartSize()
+    override suspend fun getTotalCartCount(): Int = cart.getCartSize()
 
-    override fun getTotalCartItemCount(): Int = cart.getTotalCartItemCount()
+    override suspend fun getTotalCartItemCount(): Int = cart.getTotalCartItemCount()
 
-    override fun getQuantity(cartItem: CartItem): Int = cart.getQuantity(cartItem)
+    override suspend fun getQuantity(cartItem: CartItem): Int = cart.getQuantity(cartItem)
 
-    override fun addCartItem(
+    override suspend fun addCartItem(
         cartItem: CartItem,
         targetQuantity: Int,
     ) {
         cart = cart.addCartItem(cartItem, targetQuantity)
     }
 
-    override fun minusCartItem(
+    override suspend fun minusCartItem(
         cartItem: CartItem,
         targetQuantity: Int,
     ) {
         cart = cart.minusCartItem(cartItem, targetQuantity)
     }
 
-    override fun removeCartItem(cartItem: CartItem) {
+    override suspend fun removeCartItem(cartItem: CartItem) {
         cart = cart.removeCartItem(cartItem)
     }
 
-    override fun isCartItemExist(cartItem: CartItem): Boolean = cart.searchCartItem(cartItem)
+    override suspend fun isCartItemExist(cartItem: CartItem): Boolean = cart.searchCartItem(cartItem)
 }

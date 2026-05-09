@@ -9,7 +9,7 @@ object MockData {
     val products =
         listOf(
             Product(
-                id = "test",
+                id = "1",
                 name = ProductName("기본 크롱"),
                 imageUrl =
                     ImageUrl(
@@ -18,6 +18,7 @@ object MockData {
                 price = Price(5000),
             ),
             Product(
+                id = "2",
                 name = ProductName("옷 벗은 크롱"),
                 imageUrl =
                     ImageUrl(
@@ -26,36 +27,43 @@ object MockData {
                 price = Price(6000),
             ),
             Product(
+                id = "3",
                 name = ProductName("눈 커진 크롱"),
                 imageUrl = ImageUrl("https://i.pinimg.com/736x/c6/8b/d1/c68bd1f3393d9ac36238db307cb6b3d8.jpg"),
                 price = Price(2500),
             ),
             Product(
+                id = "4",
                 name = ProductName("케케크롱"),
                 imageUrl = ImageUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLSvYAay0hMhj84g6VY_a7Mvd2GGJZIclM0Q&s"),
                 price = Price(13500),
             ),
             Product(
+                id = "5",
                 name = ProductName("노이즈 캔슬링 크롱"),
                 imageUrl = ImageUrl("https://item.kakaocdn.net/do/36dcf26ca63bcfa73a7b352f01dea1d6f604e7b0e6900f9ac53a43965300eb9a"),
                 price = Price(11300),
             ),
             Product(
+                id = "6",
                 name = ProductName("크롱에게 칭찬받고 싶다"),
                 imageUrl = ImageUrl("https://item.kakaocdn.net/do/36dcf26ca63bcfa73a7b352f01dea1d6ac8e738cb631e72fdb9a96b36413984e"),
                 price = Price(80000),
             ),
             Product(
+                id = "7",
                 name = ProductName("꼬질이 크롱"),
                 imageUrl = ImageUrl("https://i.pinimg.com/564x/cb/64/17/cb641763a557b7b2f55940a1cd4675f7.jpg"),
                 price = Price(5600),
             ),
             Product(
+                id = "8",
                 name = ProductName("애벌레 먹는 크롱"),
                 imageUrl = ImageUrl("https://i.pinimg.com/736x/47/4f/fd/474ffd268f1479de12a2db881bf36e2b.jpg"),
                 price = Price(7000),
             ),
             Product(
+                id = "9",
                 name = ProductName("화난 크롱"),
                 imageUrl =
                     ImageUrl(
@@ -64,11 +72,13 @@ object MockData {
                 price = Price(100),
             ),
             Product(
+                id = "10",
                 name = ProductName("치과에 간 크롱"),
                 imageUrl = ImageUrl("https://image.auction.co.kr/itemimage/28/a9/dd/28a9dd07f1.jpg"),
                 price = Price(5000),
             ),
             Product(
+                id = "11",
                 name = ProductName("식사하는 크롱"),
                 imageUrl =
                     ImageUrl(
@@ -77,36 +87,43 @@ object MockData {
                 price = Price(8100),
             ),
             Product(
+                id = "12",
                 name = ProductName("눈물 흘리는 크롱"),
                 imageUrl = ImageUrl("https://i.pinimg.com/236x/56/80/94/568094ba98564fa6652cb60e22b3674e.jpg"),
                 price = Price(9200),
             ),
             Product(
+                id = "13",
                 name = ProductName("크롱 핸드백"),
                 imageUrl = ImageUrl("https://m.gloomy.co.kr/web/product/big/201902/939cdbc0dfadbdc894f0604ba54adfd1.jpg"),
                 price = Price(25000),
             ),
             Product(
+                id = "14",
                 name = ProductName("나팔부는 크롱"),
                 imageUrl = ImageUrl("https://pbs.twimg.com/media/Dxgd0ryVsAAphNr.jpg"),
                 price = Price(19000),
             ),
             Product(
+                id = "15",
                 name = ProductName("크롱 칫솔"),
                 imageUrl = ImageUrl("https://koreadepart.com/data/item/1392615051_m"),
                 price = Price(8000),
             ),
             Product(
+                id = "16",
                 name = ProductName("캠핑침낭 크롱"),
                 imageUrl = ImageUrl("https://item.elandrs.com/upload/prd/orgimg/061/2203464061_0000001.jpg?w=750&h=&q=100"),
                 price = Price(10900),
             ),
             Product(
+                id = "17",
                 name = ProductName("태어나기 전의 크롱"),
                 imageUrl = ImageUrl("https://i2.ruliweb.com/img/23/05/12/1880d24b14134e847.jpg"),
                 price = Price(3400),
             ),
             Product(
+                id = "18",
                 name = ProductName("인생네컷 크롱"),
                 imageUrl =
                     ImageUrl(
@@ -120,7 +137,7 @@ object MockData {
                     name = ProductName("풍경 ${index + 1}"),
                     imageUrl = ImageUrl("https://picsum.photos/seed/product$index/200/200"),
                     price = Price(10000),
-                    id = index.toString(),
+                    id = (index + 100).toString(),
                 )
             }
 }

@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.data.DataProvider
+import woowacourse.shopping.data.DataProvider.getCartRepository
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,12 +21,14 @@ class ProductDetailActivity : ComponentActivity() {
         val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")!!
 
         setContent {
-            val viewModel: ProductDetailViewModel = viewModel(
-                factory = ProductDetailViewModelFactory(
-                    product = parcelProduct,
-                    cartRepository = DataProvider.cartRepository,
+            val viewModel: ProductDetailViewModel =
+                viewModel(
+                    factory =
+                        ProductDetailViewModelFactory(
+                            product = parcelProduct,
+                            cartRepository = getCartRepository(this),
+                        ),
                 )
-            )
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
