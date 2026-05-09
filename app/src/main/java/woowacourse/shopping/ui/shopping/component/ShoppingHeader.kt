@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,10 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.ui.theme.Gray5
+import woowacourse.shopping.ui.theme.PrimaryColor
 import woowacourse.shopping.ui.theme.Typography
 
 @Composable
 fun ShoppingHeader(
+    cartCount: Int,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
 ) {
@@ -41,17 +45,30 @@ fun ShoppingHeader(
             style = Typography.titleMedium,
         )
 
-        Icon(
-            imageVector = Icons.Default.ShoppingCart,
-            contentDescription = "장바구니",
-            modifier = Modifier.clickable(onClick = onCartClick),
-            tint = Color.White,
-        )
+        BadgedBox(
+            badge = {
+                if (cartCount > 0) {
+                    Badge(
+                        containerColor = PrimaryColor,
+                        contentColor = Color.White,
+                    ) {
+                        Text(text = cartCount.toString())
+                    }
+                }
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = "장바구니",
+                modifier = Modifier.clickable(onClick = onCartClick),
+                tint = Color.White,
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingHeaderPreview() {
-    ShoppingHeader(onCartClick = {})
+    ShoppingHeader(cartCount = 6, onCartClick = {})
 }

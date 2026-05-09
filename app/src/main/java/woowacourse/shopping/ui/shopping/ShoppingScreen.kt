@@ -49,6 +49,7 @@ fun ShoppingScreen(
     Box(modifier = modifier) {
         ShoppingScreen(
             products = state.visibleProducts,
+            cartCount = state.cartCount,
             hasNext = state.hasNext,
             lazyGridState = lazyGridState,
             onCartClick = onCartClick,
@@ -65,6 +66,7 @@ fun ShoppingScreen(
 @Composable
 fun ShoppingScreen(
     products: List<ProductUiModel>,
+    cartCount: Int,
     hasNext: Boolean,
     lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
@@ -78,7 +80,10 @@ fun ShoppingScreen(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ShoppingHeader(onCartClick = onCartClick)
+        ShoppingHeader(
+            cartCount = cartCount,
+            onCartClick = onCartClick
+        )
 
         ShoppingBody(
             products = products,
@@ -121,6 +126,7 @@ private fun ShoppingScreenPreview1() {
 
     ShoppingScreen(
         products = productUiModels,
+        cartCount = 1,
         hasNext = true,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},
@@ -136,6 +142,7 @@ private fun ShoppingScreenPreview1() {
 private fun ShoppingScreenPreview2() {
     ShoppingScreen(
         products = emptyList(),
+        cartCount = 0,
         hasNext = false,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},

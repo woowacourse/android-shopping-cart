@@ -66,7 +66,8 @@ class ShoppingViewModel(
                             uiModel
                         }
                     }
-                    state.copy(visibleProducts = updatedProducts)
+                    val cartCount = state.cartCount + 1
+                    state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
@@ -88,7 +89,8 @@ class ShoppingViewModel(
                             uiModel
                         }
                     }
-                    state.copy(visibleProducts = updatedProducts)
+                    val cartCount = maxOf(0, state.cartCount - 1)
+                    state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
@@ -138,6 +140,7 @@ class ShoppingViewModel(
         viewModelScope.launch {
             val cartItems = cartRepo.getAllCartItems()
             val cartQuantityMap = cartItems.items.associate { it.product.id to it.quantity }
+            val totalCartCount = cartItems.items.sumOf { it.quantity }
 
             _uiState.update { state ->
                 val updatedProducts = state.visibleProducts.map { uiModel ->
@@ -145,7 +148,7 @@ class ShoppingViewModel(
                         cartQuantity = cartQuantityMap[uiModel.product.id] ?: 0
                     )
                 }
-                state.copy(visibleProducts = updatedProducts)
+                state.copy(visibleProducts = updatedProducts, cartCount = totalCartCount)
             }
         }
     }
