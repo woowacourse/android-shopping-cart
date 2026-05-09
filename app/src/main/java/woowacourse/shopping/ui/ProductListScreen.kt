@@ -21,23 +21,60 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.component.MoreButton
 import woowacourse.shopping.ui.component.ProductItem
 import woowacourse.shopping.ui.pagination.ProductListViewModel
+import woowacourse.shopping.ui.pagination.ProductUiModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ProductListScreen(
-    productListViewModel: ProductListViewModel = viewModel(factory = ProductListViewModel.Factory),
     onNavigateToCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    productListViewModel: ProductListViewModel =
+        viewModel(
+            factory =
+                ProductListViewModel.factory(
+                    LocalContext.current.applicationContext as ShoppingApplication,
+                ),
+        ),
+) {
+    val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        productListViewModel.loadProducts()
+    }
+
+    ProductListContent(
+        productUiModels = uiState.productUiModels,
+        enableMoreButton = uiState.enableMoreButton,
+        onNavigateToCartClick = onNavigateToCartClick,
+        onProductClick = onProductClick,
+        loadProducts = productListViewModel::loadProducts,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun ProductListContent(
+    productUiModels: List<ProductUiModel>,
+    enableMoreButton: Boolean,
+    onNavigateToCartClick: () -> Unit,
+    onProductClick: (String) -> Unit,
+    loadProducts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -55,12 +92,12 @@ fun ProductListScreen(
             modifier = Modifier.padding(10.dp),
         ) {
             items(
-                items = productListViewModel.products,
+                items = productUiModels,
                 key = { it.id },
             ) { product ->
                 ProductItem(
-                    title = product.getTitle(),
-                    price = WonMoney(product.getPrice()),
+                    title = product.name,
+                    price = product.price,
                     imageUrl = product.imageUrl,
                     modifier =
                         Modifier
@@ -70,11 +107,11 @@ fun ProductListScreen(
                 )
             }
 
-            if (productListViewModel.showMoreButton) {
+            if (enableMoreButton) {
                 item(
                     span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    MoreButton(onClick = productListViewModel::loadMoreProducts)
+                    MoreButton(onClick = loadProducts)
                 }
             }
         }
@@ -119,11 +156,22 @@ private fun ProductItemPreview() {
 
 @Composable
 @Preview(showBackground = true)
-private fun ProductListScreenPreview() {
+private fun ProductListContentPreview() {
     AndroidShoppingTheme {
-        ProductListScreen(
+        ProductListContent(
             onProductClick = {},
             onNavigateToCartClick = {},
+            productUiModels =
+                listOf(
+                    ProductUiModel(
+                        id = "1",
+                        name = "암까라 메시",
+                        price = WonMoney(1_000000000),
+                        imageUrl = "",
+                    ),
+                ),
+            enableMoreButton = true,
+            loadProducts = { },
         )
     }
 }

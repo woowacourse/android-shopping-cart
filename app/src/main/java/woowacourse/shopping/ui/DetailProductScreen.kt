@@ -25,23 +25,57 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.ui.pagination.DetailProductViewModel
+import woowacourse.shopping.ui.pagination.ProductUiModel
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun DetailProductScreen(
-    productTitle: String,
-    productImageUrl: String,
-    productPrice: DisplayableMoney,
+    productId: String,
+    onAddToCartClick: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    detailProductViewModel: DetailProductViewModel =
+        viewModel(
+            factory =
+                DetailProductViewModel.factory(
+                    LocalContext.current.applicationContext as ShoppingApplication,
+                ),
+        ),
+) {
+    val uiState by detailProductViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        detailProductViewModel.loadProduct(productId)
+    }
+
+    DetailProductContent(
+        productUiModel = uiState,
+        onAddToCartClick = onAddToCartClick,
+        onBackClick = onBackClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun DetailProductContent(
+    productUiModel: ProductUiModel,
     onAddToCartClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -62,8 +96,12 @@ fun DetailProductScreen(
                     .verticalScroll(rememberScrollState()),
         ) {
             AsyncImage(
-                model = productImageUrl,
-                contentDescription = stringResource(R.string.product_image_content_description, productTitle),
+                model = productUiModel.imageUrl,
+                contentDescription =
+                    stringResource(
+                        R.string.product_image_content_description,
+                        productUiModel.name,
+                    ),
                 contentScale = ContentScale.Crop,
                 modifier =
                     Modifier
@@ -72,7 +110,7 @@ fun DetailProductScreen(
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
             Text(
-                text = productTitle,
+                text = productUiModel.name,
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -92,7 +130,7 @@ fun DetailProductScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = productPrice.display(),
+                    text = productUiModel.price.display(),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }
@@ -139,12 +177,16 @@ private fun DetailProductTopBar(
 
 @Composable
 @Preview(showBackground = true)
-private fun DetailProductScreenPreview() {
+private fun DetailProductContentPreview() {
     AndroidShoppingTheme {
-        DetailProductScreen(
-            productTitle = "동원 스위트콘",
-            productImageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
-            productPrice = WonMoney(9_980),
+        DetailProductContent(
+            productUiModel =
+                ProductUiModel(
+                    id = "1",
+                    name = "동원 스위트콘",
+                    price = WonMoney(99_800),
+                    imageUrl = "",
+                ),
             onAddToCartClick = {},
             onBackClick = {},
         )

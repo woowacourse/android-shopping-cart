@@ -3,12 +3,12 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.Product
 
 interface ProductRepository {
-    val totalSize: Int
+    suspend fun totalSize(): Int
 
-    fun getProduct(productId: String): Product?
+    suspend fun getProduct(productId: String): Product?
 
-    fun getProducts(
-        page: Int,
-        pageSize: Int,
+    suspend fun getProducts(
+        lastId: Int,
+        size: Int,
     ): List<Product>
 }
