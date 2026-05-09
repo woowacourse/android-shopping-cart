@@ -2,13 +2,23 @@ package woowacourse.shopping.fake
 
 import woowacourse.shopping.domain.model.AddItemResult
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
 
-class FakeCartRepository : CartRepository {
+class FakeCartRepository(
+    private val products: Map<Long, Product> = emptyMap(),
+) : CartRepository {
     private val items = mutableMapOf<Long, Int>()
 
-    override suspend fun getCart(): Cart = Cart(emptyList())
+    override suspend fun getCart(): Cart {
+        val cartItems =
+            items.mapNotNull { (id, quantity) ->
+                products[id]?.let { CartItem(it, quantity) }
+            }
+        return Cart(cartItems)
+    }
 
     override suspend fun getTotalCartSize(): Int = items.values.size
 
