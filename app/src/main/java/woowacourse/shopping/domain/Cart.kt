@@ -14,15 +14,16 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         return Cart(cartItems + cartItem)
     }
 
-    fun removeCartItems(ids: List<String>): Cart = Cart(
-        cartItems.filter { cartItem ->
-            ids.none {
-                cartItem.hasProductId(it)
-            }
-        },
+    fun removeCartItem(id: String): Cart = Cart(
+        cartItems.filter { it.hasProductId(id).not() },
     )
 
     fun contains(product: Product): Boolean = cartItems.any { it.hasProduct(product) }
+
+    fun findProductById(productId: String): Product? {
+        val findCartItem = cartItems.find { it.hasProductId(productId) } ?: return null
+        return findCartItem.product
+    }
 
     fun getQuantity(product: Product): Quantity? {
         val findItem = cartItems.find { it.hasProduct(product) } ?: return null

@@ -25,18 +25,38 @@ class CartViewModel : ViewModel() {
     }
 
     fun incrementQuantity(productId: String) {
+        val product = cart.findProductById(productId) ?: return
+        cart = cart.plusProduct(product, Quantity(1))
+        syncUiState()
     }
 
     fun decrementQuantity(productId: String) {
+        val product = cart.findProductById(productId) ?: return
+        cart = cart.minusProduct(product, Quantity(1))
+        syncUiState()
     }
 
     fun deleteCartItem(productId: String) {
+        cart = cart.removeCartItem(productId)
+
+        val totalPage = calTotalPage()
+        if (_uiState.value.page > totalPage) {
+            _uiState.update { it.copy(page = totalPage) }
+        }
+
+        syncUiState()
     }
 
     fun onLeftClick() {
+        if (_uiState.value.page == 1) return
+        _uiState.update { it.copy(page = it.page - 1) }
+        syncUiState()
     }
 
     fun onRightClick() {
+        if (_uiState.value.page == calTotalPage()) return
+        _uiState.update { it.copy(page = it.page + 1) }
+        syncUiState()
     }
 
     private fun syncUiState() {

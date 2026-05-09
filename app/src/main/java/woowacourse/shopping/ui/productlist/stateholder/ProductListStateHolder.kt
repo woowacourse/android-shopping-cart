@@ -90,10 +90,6 @@ class ProductListStateHolder(initialPage: Int = 0) {
         return true
     }
 
-    fun removeCartItems(deletedIds: List<String>) {
-        this.cart = cart.removeCartItems(deletedIds)
-    }
-
     private fun toProductUiModel(product: Product): ProductUiModel = ProductUiModel.of(
         name = product.name,
         price = product.price.amount,

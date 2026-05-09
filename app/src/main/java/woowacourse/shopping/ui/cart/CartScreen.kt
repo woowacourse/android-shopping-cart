@@ -211,7 +211,7 @@ private fun CartItemList(
                 onDelete = {
                     onDelete(it.id)
                 },
-                quantity = 1,
+                quantity = it.quantity,
                 onIncrement = { onIncrement(it.id) },
                 onDecrement = { onDecrement(it.id) },
             )
