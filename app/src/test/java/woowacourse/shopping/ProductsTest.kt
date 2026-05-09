@@ -30,7 +30,7 @@ class ProductsTest {
                 price = 10000,
             )
         val products1 = Products(products = listOf(newProduct))
-        val targetId = newProduct.uuid
+        val targetId = newProduct.id
         val cartProducts2 = products1.remove(targetId)
 
         assertTrue(cartProducts2.products.contains(newProduct).not())
@@ -45,7 +45,7 @@ class ProductsTest {
                 price = 10000,
             )
         val products1 = Products(products = listOf(newProduct))
-        val targetId = newProduct.uuid
+        val targetId = newProduct.id
 
         val foundProduct = products1.findWithId(targetId)
 
@@ -67,7 +67,7 @@ class ProductsTest {
                 price = 50,
             )
         val products1 = Products(products = listOf(newProduct))
-        val targetId = newProduct2.uuid
+        val targetId = newProduct2.id
 
         val foundProduct = products1.findWithId(targetId)
 

@@ -7,14 +7,13 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.entity.PurchaseProductEntity
-import java.util.UUID
 @Dao
 interface PurchaseProductsDao {
     @Query("SELECT * FROM purchase_products")
     fun getAll(): Flow<List<PurchaseProductEntity>>
 
-    @Query("SELECT * FROM purchase_products WHERE uuid = :id")
-    fun findWithId(id: UUID): Flow<PurchaseProductEntity>
+    @Query("SELECT * FROM purchase_products WHERE id = :id")
+    fun findWithId(id: String): Flow<PurchaseProductEntity>
 
     @Insert
     suspend fun insertAll(vararg purchaseProductEntity: PurchaseProductEntity)
@@ -28,20 +27,20 @@ interface PurchaseProductsDao {
         if(id == -1L) updateCount(entity.id, entity.count)
     }
 
-    @Query("UPDATE purchase_products SET count = count + :delta WHERE uuid = :id")
-    suspend fun updateCount(id: UUID, delta: Int)
+    @Query("UPDATE purchase_products SET count = count + :delta WHERE id = :id")
+    suspend fun updateCount(id: String, delta: Int)
 
-    @Query("DELETE FROM purchase_products WHERE uuid = :id")
-    suspend fun deleteWithId(id: UUID)
+    @Query("DELETE FROM purchase_products WHERE id = :id")
+    suspend fun deleteWithId(id: String)
 
     @Query("SELECT SUM(count) FROM purchase_products")
     fun getTotalAmount(): Flow<Int>
 
-    @Query("SELECT count FROM purchase_products WHERE uuid = :id")
-    fun getCountOfSpecificPurchaseProduct(id: UUID): Flow<Int>
+    @Query("SELECT count FROM purchase_products WHERE id = :id")
+    fun getCountOfSpecificPurchaseProduct(id: String): Flow<Int>
 
-    @Query("SELECT price * count FROM purchase_products WHERE uuid = :productId")
-    fun getTotalPriceOfSpecificPurchaseProduct(productId: UUID): Flow<Int>
+    @Query("SELECT price * count FROM purchase_products WHERE id = :productId")
+    fun getTotalPriceOfSpecificPurchaseProduct(productId: String): Flow<Int>
 
     @Query("SELECT * FROM purchase_products LIMIT :limit OFFSET :offset")
     fun getPartedPurchaseProducts(limit: Int, offset: Int): Flow<List<PurchaseProductEntity>>
@@ -49,6 +48,6 @@ interface PurchaseProductsDao {
     @Query("SELECT COUNT(*) FROM purchase_products")
     fun getProductCount(): Flow<Int>
 
-    @Query("SELECT EXISTS (SELECT * FROM purchase_products WHERE uuid = :id)")
-    fun isContained(id: UUID): Boolean
+    @Query("SELECT EXISTS (SELECT * FROM purchase_products WHERE id = :id)")
+    fun isContained(id: String): Boolean
 }

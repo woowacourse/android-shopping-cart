@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
 import kotlin.math.min
 
 @Parcelize
@@ -15,7 +14,7 @@ class Products(
 
     fun add(product: Product) = Products(products + product)
 
-    fun remove(id: UUID): Products {
+    fun remove(id: String): Products {
         val product = findWithId(id) ?: return this
         return Products(products - product)
     }
@@ -34,5 +33,5 @@ class Products(
 
     operator fun plus(products: Products) = Products(this.products + products.products)
 
-    fun findWithId(id: UUID) = products.find { it.uuid == id }
+    fun findWithId(id: String) = products.find { it.id == id }
 }

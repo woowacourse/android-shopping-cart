@@ -32,7 +32,6 @@ import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartCountLabel
 import woowacourse.shopping.ui.component.item.RecentlyViewedProducts
 import woowacourse.shopping.ui.component.item.ShoppingItem
-import java.util.UUID
 
 @Composable
 fun CatalogScreen(
@@ -40,15 +39,15 @@ fun CatalogScreen(
     recentlyViewedProducts: Products,
     onRecentlyViewedClick: (Product) -> Unit,
     totalCount: () -> Int,
-    specificProductCount: (UUID) -> Int,
+    specificProductCount: (String) -> Int,
     onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onLoadClick: () -> Unit,
-    onAdd: (UUID, Int) -> Unit,
-    onMinus: (UUID, Int) -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
-    isContainedInCart: (UUID) -> Boolean,
+    isContainedInCart: (String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
@@ -60,11 +59,11 @@ fun CatalogScreen(
                 onRecentlyViewedClick = onRecentlyViewedClick,
                 onItemClick = { onItemClick(it) },
                 onLoadClick = onLoadClick,
-                onAdd = { uuid, updateAmount ->
-                    onAdd(uuid, updateAmount)
+                onAdd = { id, updateAmount ->
+                    onAdd(id, updateAmount)
                 },
-                onMinus = { uuid, updateAmount ->
-                    onMinus(uuid, updateAmount)
+                onMinus = { id, updateAmount ->
+                    onMinus(id, updateAmount)
                 },
                 onDelete = { onDelete(it) },
                 onAddInCart = { onAddInCart(it) },
@@ -117,14 +116,14 @@ private fun CatalogBody(
     catalog: Products,
     recentlyViewedProducts: Products,
     onRecentlyViewedClick: (Product) -> Unit,
-    specificProductCount: (UUID) -> Int,
+    specificProductCount: (String) -> Int,
     onItemClick: (Product) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
-    onAdd: (UUID, Int) -> Unit,
-    onMinus: (UUID, Int) -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     onLoadClick: () -> Unit,
-    isContainedInCart: (UUID) ->  Boolean,
+    isContainedInCart: (String) ->  Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column {
@@ -151,19 +150,19 @@ private fun CatalogBody(
                         onItemClick(catalog.getSingleItem(item))
                     },
                     count = {
-                        specificProductCount(catalog.getSingleItem(item).uuid)
+                        specificProductCount(catalog.getSingleItem(item).id)
                     },
                     isContainedInCart = {
-                        isContainedInCart(catalog.getSingleItem(item).uuid)
+                        isContainedInCart(catalog.getSingleItem(item).id)
                     },
                     onAdd = {
-                        onAdd(catalog.getSingleItem(item).uuid, 1)
+                        onAdd(catalog.getSingleItem(item).id, 1)
                     },
                     onMinus = {
-                        onMinus(catalog.getSingleItem(item).uuid, -1)
+                        onMinus(catalog.getSingleItem(item).id, -1)
                     },
                     onDelete = {
-                        onDelete(catalog.getSingleItem(item).uuid)
+                        onDelete(catalog.getSingleItem(item).id)
                     },
                     onAddInCart = { onAddInCart(it) }
                 )
@@ -275,8 +274,8 @@ private fun CatalogScreenPreview() {
         onItemClick = {  },
         onCartClick = {  },
         onLoadClick = {  },
-        onAdd = { uuid, type -> },
-        onMinus = { uuid, type -> },
+        onAdd = { id, type -> },
+        onMinus = { id, type -> },
         onDelete = {  },
         onAddInCart = {  },
         isContainedInCart = { it -> true },
@@ -361,8 +360,8 @@ private fun CatalogScreenPreview2() {
         onItemClick = {  },
         onCartClick = {  },
         onLoadClick = {  },
-        onAdd = { uuid, type -> },
-        onMinus = { uuid, type -> },
+        onAdd = { id, type -> },
+        onMinus = { id, type -> },
         onDelete = {  },
         onAddInCart = {  },
         isContainedInCart = { it -> true },

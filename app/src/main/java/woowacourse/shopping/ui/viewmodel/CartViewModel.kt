@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.repository.PurchaseProductsRepository
 import woowacourse.shopping.domain.Cart
-import java.util.UUID
 
 class CartViewModel(
     private val purchaseProductsRepository: PurchaseProductsRepository
@@ -77,15 +76,15 @@ class CartViewModel(
             initialValue = false
         )
 
-    fun updateCountWithID(uuid: UUID, updateAmount: Int) {
+    fun updateCountWithID(id: String, updateAmount: Int) {
         viewModelScope.launch {
-            purchaseProductsRepository.updateCount(uuid, updateAmount)
+            purchaseProductsRepository.updateCount(id, updateAmount)
         }
     }
 
-    fun removeWithID(uuid: UUID) {
+    fun removeWithID(id: String) {
         viewModelScope.launch {
-            purchaseProductsRepository.deletePurchaseProduct(uuid)
+            purchaseProductsRepository.deletePurchaseProduct(id)
         }
     }
 

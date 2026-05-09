@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
 @Parcelize
 data class PurchaseProduct(
     val product: Product,
@@ -23,9 +22,9 @@ data class PurchaseProduct(
 
     fun imageUri() = product.imageUri
 
-    fun uuid() = product.uuid
+    fun id() = product.id
 
     fun totalPrice() = product.price * count
 
-    fun isSameUUID(uuid: UUID) = uuid == product.uuid
+    fun isSameID(id: String) = id == product.id
 }

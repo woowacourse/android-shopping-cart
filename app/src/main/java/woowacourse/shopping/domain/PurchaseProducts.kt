@@ -2,40 +2,39 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
 
 @Parcelize
 class PurchaseProducts(
     val purchaseProducts: List<PurchaseProduct> = emptyList()
 ): Parcelable {
     fun add(purchaseProduct: PurchaseProduct) =
-        if(findById(purchaseProduct.uuid()) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
-        else updateCountWithUuid(purchaseProduct.uuid(), purchaseProduct.count)
+        if(findById(purchaseProduct.id()) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
+        else updateCountWithUuid(purchaseProduct.id(), purchaseProduct.count)
 
-    fun updateCountWithUuid(uuid: UUID, updateAmount: Int) = PurchaseProducts (
+    fun updateCountWithUuid(id: String, updateAmount: Int) = PurchaseProducts (
         purchaseProducts.map {
-            if(it.isSameUUID(uuid)) it.updateCount(updateAmount) else it
+            if(it.isSameID(id)) it.updateCount(updateAmount) else it
         }
     )
 
-    fun removeProduct(uuid: UUID): PurchaseProducts {
-        val targetPurchaseProduct = findById(uuid) ?: return this
+    fun removeProduct(id: String): PurchaseProducts {
+        val targetPurchaseProduct = findById(id) ?: return this
         return PurchaseProducts(purchaseProducts - targetPurchaseProduct)
     }
 
-    fun totalPriceOfSpecificPurchaseProduct(uuid: UUID): Int {
-        val targetProduct = findById(uuid) ?: return 0
+    fun totalPriceOfSpecificPurchaseProduct(id: String): Int {
+        val targetProduct = findById(id) ?: return 0
         return targetProduct.totalPrice()
     }
 
-    fun totalCountOfSpecificPurchaseProduct(uuid: UUID): Int {
-        val targetProduct = findById(uuid) ?: return 0
+    fun totalCountOfSpecificPurchaseProduct(id: String): Int {
+        val targetProduct = findById(id) ?: return 0
         return targetProduct.count
     }
 
     fun totalCount() = purchaseProducts.sumOf { it.count }
 
-    fun isContain(id: UUID): Boolean = purchaseProducts.any { it.uuid() == id }
+    fun isContain(id: String): Boolean = purchaseProducts.any { it.id() == id }
 
-    fun findById(uuid: UUID) = purchaseProducts.find { it.isSameUUID(uuid) }
+    fun findById(id: String) = purchaseProducts.find { it.isSameID(id) }
 }

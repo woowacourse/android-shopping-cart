@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.data.repository.PurchaseProductsRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.PurchaseProduct
-import java.util.UUID
 
 class ShoppingViewModel(
     private val purchaseProductsRepository: PurchaseProductsRepository
@@ -35,14 +34,14 @@ class ShoppingViewModel(
             initialValue = 0
         )
 
-    fun isContained(uuid: UUID): Boolean =
-        purchaseProductsRepository.isContained(uuid)
+    fun isContained(id: String): Boolean =
+        purchaseProductsRepository.isContained(id)
 
-    fun getTotalPriceOfSpecificProduct(uuid: UUID): Int =
-        cart.value.totalPriceOfSpecificPurchaseProduct(uuid)
+    fun getTotalPriceOfSpecificProduct(id: String): Int =
+        cart.value.totalPriceOfSpecificPurchaseProduct(id)
 
-    fun getTotalCountOfSpecificProduct(uuid: UUID): Int =
-        cart.value.totalCountOfSpecificPurchaseProduct(uuid)
+    fun getTotalCountOfSpecificProduct(id: String): Int =
+        cart.value.totalCountOfSpecificPurchaseProduct(id)
 
     fun addPurchaseProduct(purchaseProduct: PurchaseProduct) {
         viewModelScope.launch {
@@ -50,15 +49,15 @@ class ShoppingViewModel(
         }
     }
 
-    fun updateCountWithID(uuid: UUID, updateAmount: Int) {
+    fun updateCountWithID(id: String, updateAmount: Int) {
         viewModelScope.launch {
-            purchaseProductsRepository.updateCount(uuid, updateAmount)
+            purchaseProductsRepository.updateCount(id, updateAmount)
         }
     }
 
-    fun removeWithID(uuid: UUID) {
+    fun removeWithID(id: String) {
         viewModelScope.launch {
-            purchaseProductsRepository.deletePurchaseProduct(uuid)
+            purchaseProductsRepository.deletePurchaseProduct(id)
         }
     }
 }

@@ -2,7 +2,6 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
 
 @Parcelize
 class Cart(
@@ -11,19 +10,19 @@ class Cart(
     fun add(purchaseProduct: PurchaseProduct) = Cart(purchaseProducts.add(purchaseProduct))
 
     fun updateCountWithId(
-        uuid: UUID,
+        id: String,
         updateAmount: Int
-    ) = Cart(purchaseProducts.updateCountWithUuid(uuid, updateAmount))
+    ) = Cart(purchaseProducts.updateCountWithUuid(id, updateAmount))
 
-    fun removeWithId(uuid: UUID) = Cart(purchaseProducts.removeProduct(uuid))
+    fun removeWithId(id: String) = Cart(purchaseProducts.removeProduct(id))
 
-    fun totalPriceOfSpecificPurchaseProduct(uuid: UUID) = purchaseProducts.totalPriceOfSpecificPurchaseProduct(uuid)
+    fun totalPriceOfSpecificPurchaseProduct(id: String) = purchaseProducts.totalPriceOfSpecificPurchaseProduct(id)
 
     fun totalCountOfPurchaseProducts() = purchaseProducts.totalCount()
 
-    fun totalCountOfSpecificPurchaseProduct(uuid: UUID) = purchaseProducts.totalCountOfSpecificPurchaseProduct(uuid)
+    fun totalCountOfSpecificPurchaseProduct(id: String) = purchaseProducts.totalCountOfSpecificPurchaseProduct(id)
 
-    fun isContain(id: UUID) = purchaseProducts.isContain(id)
+    fun isContain(id: String) = purchaseProducts.isContain(id)
 
-    fun findById(uuid: UUID) = purchaseProducts.findById(uuid)
+    fun findById(id: String) = purchaseProducts.findById(id)
 }

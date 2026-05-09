@@ -36,7 +36,6 @@ import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
-import java.util.UUID
 
 @Composable
 fun CartScreen(
@@ -45,9 +44,9 @@ fun CartScreen(
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onClose: () -> Unit,
-    onAdd: (UUID, Int) -> Unit,
-    onMinus: (UUID, Int) -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     isPageable: Boolean,
     previousEnable: Boolean,
     nextEnable: Boolean,
@@ -107,9 +106,9 @@ private fun CartHeader(
 private fun CartBody(
     cart: PurchaseProducts,
     currentPage: Int,
-    onAdd: (UUID, Int) -> Unit,
-    onMinus: (UUID, Int) -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     onPrevious: () -> Unit = {},
     onNext: () -> Unit = {},
     isPageable: Boolean,

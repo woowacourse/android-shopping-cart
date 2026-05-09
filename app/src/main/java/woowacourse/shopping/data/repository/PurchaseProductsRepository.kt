@@ -7,7 +7,6 @@ import woowacourse.shopping.data.entity.PurchaseProductEntity
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
-import java.util.UUID
 
 class PurchaseProductsRepository(private val purchaseProductsDao: PurchaseProductsDao) {
     fun getCart(): Flow<Cart> {
@@ -23,19 +22,19 @@ class PurchaseProductsRepository(private val purchaseProductsDao: PurchaseProduc
         purchaseProductsDao.upsert(entityItem)
     }
 
-    fun findWithId(id: UUID): Flow<PurchaseProduct> {
+    fun findWithId(id: String): Flow<PurchaseProduct> {
         return purchaseProductsDao.findWithId(id).map { it.toPurchaseProductObject() }
     }
 
-    fun getTotalPriceOfSpecificPurchaseProduct(id: UUID) =
+    fun getTotalPriceOfSpecificPurchaseProduct(id: String) =
         purchaseProductsDao.getTotalPriceOfSpecificPurchaseProduct(id)
 
     fun getTotalAmount() = purchaseProductsDao.getTotalAmount()
 
-    fun getCountOfSpecificPurchaseProduct(id: UUID) =
+    fun getCountOfSpecificPurchaseProduct(id: String) =
         purchaseProductsDao.getCountOfSpecificPurchaseProduct(id)
 
-    fun isContained(id: UUID) = purchaseProductsDao.isContained(id)
+    fun isContained(id: String) = purchaseProductsDao.isContained(id)
 
     fun getProductCount() =
         purchaseProductsDao.getProductCount()
@@ -48,11 +47,11 @@ class PurchaseProductsRepository(private val purchaseProductsDao: PurchaseProduc
         }
     }
 
-    suspend fun updateCount(id: UUID, delta: Int) {
+    suspend fun updateCount(id: String, delta: Int) {
         purchaseProductsDao.updateCount(id, delta)
     }
 
-    suspend fun deletePurchaseProduct(id: UUID) {
+    suspend fun deletePurchaseProduct(id: String) {
         purchaseProductsDao.deleteWithId(id)
     }
 }
@@ -60,7 +59,7 @@ class PurchaseProductsRepository(private val purchaseProductsDao: PurchaseProduc
 private fun PurchaseProduct.toEntity(): PurchaseProductEntity {
     val product = this.product
     return PurchaseProductEntity(
-        id = product.uuid,
+        id = product.id,
         name = product.name,
         price = product.price,
         imageUri = product.imageUri,

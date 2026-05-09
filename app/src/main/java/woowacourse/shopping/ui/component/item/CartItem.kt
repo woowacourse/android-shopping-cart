@@ -28,14 +28,13 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
-import java.util.UUID
 
 @Composable
 fun CartItem(
     product: PurchaseProduct,
-    onAdd: (UUID, Int) -> Unit,
-    onMinus: (UUID, Int) -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
@@ -81,9 +80,9 @@ fun CartItem(
                 ){
                     QuantitySelector(
                         count = product.count,
-                        onAdd = { onAdd(product.uuid(), 1) },
-                        onMinus = { onMinus(product.uuid(), -1) },
-                        onDelete = { onDelete(product.uuid()) },
+                        onAdd = { onAdd(product.id(), 1) },
+                        onMinus = { onMinus(product.id(), -1) },
+                        onDelete = { onDelete(product.id()) },
                         modifier = Modifier.align(Alignment.CenterEnd)
                     )
                     ProductPrice(
@@ -114,7 +113,7 @@ private fun ProductName(
 @Composable
 private fun CloseBtn(
     product: PurchaseProduct,
-    onClick: (UUID) -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Icon(
@@ -124,7 +123,7 @@ private fun CloseBtn(
             modifier
                 .size(16.dp)
                 .clickable(
-                    onClick = { onClick(product.uuid()) },
+                    onClick = { onClick(product.id()) },
                 ),
     )
 }

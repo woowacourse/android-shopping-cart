@@ -31,18 +31,18 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productsId = newPurchaseProduct.uuid()
+        val productsId = newPurchaseProduct.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
         )
 
         val updatedPurchaseProducts = purchaseProducts.updateCountWithUuid(
-            uuid = productsId,
+            id = productsId,
             updateAmount = 1
         )
 
-        assert(updatedPurchaseProducts.purchaseProducts.find { it.isSameUUID(productsId) }?.count == 2)
+        assert(updatedPurchaseProducts.purchaseProducts.find { it.isSameID(productsId) }?.count == 2)
     }
 
     @Test
@@ -63,7 +63,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val product1Id = purchaseProduct1.uuid()
+        val product1Id = purchaseProduct1.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(purchaseProduct1, purchaseProduct2)
@@ -88,7 +88,7 @@ class PurchaseProductsTest {
             count = 3
         )
 
-        val productsId = newPurchaseProduct.uuid()
+        val productsId = newPurchaseProduct.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -143,7 +143,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid()
+        val productId = newPurchaseProduct.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -164,7 +164,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid()
+        val productId = newPurchaseProduct.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
@@ -183,7 +183,7 @@ class PurchaseProductsTest {
             ),
         )
 
-        val productId = newPurchaseProduct.uuid()
+        val productId = newPurchaseProduct.id()
 
         val purchaseProducts = PurchaseProducts(
             purchaseProducts = listOf(newPurchaseProduct)
