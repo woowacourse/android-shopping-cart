@@ -20,4 +20,7 @@ class Cart(
         val product = cartProducts.remove(id)
         return Cart(product)
     }
+
+    fun calculateTotalPrice(): Long = cartProducts.calculateTotalPrice()
+
 }

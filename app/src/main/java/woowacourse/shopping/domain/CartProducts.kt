@@ -26,6 +26,15 @@ class CartProducts(
         return CartProducts(products - product)
     }
 
+    fun calculateTotalPrice() : Long {
+        var totalPrice = 0
+        for (product in products) {
+            totalPrice += product.calculateTotalPrice()
+        }
+
+        return totalPrice.toLong()
+    }
+
     private fun findOrCreateCartProduct(product: Product): CartProduct =
         findSameProduct(product.productId) ?: CartProduct(product = product, amount = 0)
 

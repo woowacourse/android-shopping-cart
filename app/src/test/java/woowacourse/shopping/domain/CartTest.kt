@@ -48,4 +48,27 @@ class CartTest {
 
         assertEquals(6, newCart.getTotalQuantity())
     }
+
+    @Test
+    fun `장바구니에 담긴 전체 금액을 계산한다`() {
+        val newProduct = CartProduct(
+            product = Product(
+                imageUri = "image",
+                name = "twohander",
+                price = 10000,
+            ),
+            amount = 2
+        )
+        val newProduct2 = CartProduct(
+            product = Product(
+                imageUri = "image",
+                name = "samuel",
+                price = 50,
+            ),
+            amount = 1000
+        )
+        val cartProducts1 = CartProducts(products = listOf(newProduct, newProduct2))
+
+        assertEquals(70000, cartProducts1.calculateTotalPrice())
+    }
 }
