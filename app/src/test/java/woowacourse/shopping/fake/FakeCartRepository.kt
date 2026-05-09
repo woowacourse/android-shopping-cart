@@ -50,5 +50,5 @@ class FakeCartRepository(
 
     override suspend fun getAllQuantities(): Map<Long, Int> = items.toMap()
 
-    override suspend fun getQuantity(id: Long): Int = items[id] ?: 0
+    override suspend fun getQuantity(id: Long): Int = items[id] ?: 1
 }
