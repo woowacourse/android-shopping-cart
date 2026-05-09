@@ -7,7 +7,7 @@ import woowacourse.shopping.data.remote.api.ProductService
 import woowacourse.shopping.data.remote.api.ProductServiceImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.data.repository.cart.MockCartRepository
-import woowacourse.shopping.data.repository.product.MockProductRepository
+import woowacourse.shopping.data.repository.product.RemoteProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 object DataContainer {
@@ -18,12 +18,12 @@ object DataContainer {
         }
     }
     val cartRepository: CartRepository by lazy { MockCartRepository() }
-    val productRepository: ProductRepository by lazy { MockProductRepository() }
+    val productRepository: ProductRepository by lazy { RemoteProductRepository(productService) }
 
     val productService: ProductService by lazy {
         ProductServiceImpl(
             client = HttpClientProvider.okHttpClient,
-            baseUrl = MockWebServerProvider.BASE_URL,
+            baseUrlProvider = { MockWebServerProvider.baseUrl },
         )
     }
 }
