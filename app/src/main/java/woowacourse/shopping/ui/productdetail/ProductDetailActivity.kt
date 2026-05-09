@@ -12,6 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.ui.theme.ShoppingTheme
@@ -27,15 +29,17 @@ class ProductDetailActivity : ComponentActivity() {
 
         val receivedProductId: String = intent.getStringExtra(EXTRA_PRODUCT_ID)
             ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
-
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel: ProductDetailViewModel = viewModel(
                         factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                                val savedStateHandle = extras.createSavedStateHandle()
+
                                 return ProductDetailViewModel(
+                                    savedStateHandle = savedStateHandle,
                                     productRepo = productRepo,
                                     cartRepo = cartRepo,
                                     productId = UUID.fromString(receivedProductId)

@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
 class ProductDetailViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
     private val productId: UUID
@@ -26,12 +28,14 @@ class ProductDetailViewModel(
         _uiState.update {
             it.copy(selectedQuantity = it.selectedQuantity + 1)
         }
+        savedStateHandle[KEY_QUANTITY] = _uiState.value.selectedQuantity
     }
 
     fun decrease() {
         _uiState.update {
             it.copy(selectedQuantity = maxOf(1, it.selectedQuantity - 1))
         }
+        savedStateHandle[KEY_QUANTITY] = _uiState.value.selectedQuantity
     }
 
     fun addToCart() {
@@ -49,6 +53,7 @@ class ProductDetailViewModel(
     }
 
     private fun loadProduct() {
+        val savedQuantity = savedStateHandle.get<Int>(KEY_QUANTITY)
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
@@ -60,12 +65,16 @@ class ProductDetailViewModel(
                 _uiState.update {
                     it.copy(
                         product = product,
-                        selectedQuantity = cartQuantityMap[product.id] ?: 1
+                        selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1)
                     )
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
+    }
+
+    companion object {
+        const val KEY_QUANTITY = "selected_quantity"
     }
 }
