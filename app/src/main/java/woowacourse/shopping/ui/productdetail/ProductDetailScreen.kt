@@ -1,12 +1,15 @@
 package woowacourse.shopping.ui.productdetail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.component.ShoppingLoading
@@ -18,29 +21,30 @@ import java.util.UUID
 @Composable
 fun ProductDetailScreen(
     productId: UUID,
-    state: ProductDetailScreenState,
+    viewModel: ProductDetailViewModel,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(productId) {
-        state.findProduct(productId)
+        viewModel.findProduct(productId)
     }
 
-    if (state.isLoading) {
-        ShoppingLoading()
-    } else {
-        state.productToShow?.let { product ->
+    Box(modifier = modifier) {
+        uiState.product?.let { product ->
             ProductDetailScreen(
                 product = product,
-                modifier = modifier,
                 onCloseClick = onCloseClick,
                 onAddToCartClick = {
-                    state.addToCart(product)
+                    viewModel.addToCart(product)
                     onAddToCartClick()
                 },
             )
         }
+
+        if (uiState.isLoading) ShoppingLoading()
     }
 }
 

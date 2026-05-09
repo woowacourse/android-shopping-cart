@@ -1,12 +1,15 @@
 package woowacourse.shopping.ui.cart
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Money
@@ -17,24 +20,25 @@ import woowacourse.shopping.ui.component.ShoppingLoading
 
 @Composable
 fun CartScreen(
-    state: CartScreenState,
+    viewModel: CartViewModel,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    if (state.isLoading) {
-        ShoppingLoading()
-    } else {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    Box(modifier = modifier.fillMaxSize()) {
         CartScreen(
-            cart = Cart(state.pagedItems),
-            currentPage = state.currentPage,
-            totalPages = state.totalPages,
-            showPagination = state.showPagination,
-            modifier = modifier,
+            cart = Cart(uiState.pagedItems),
+            currentPage = uiState.currentPage,
+            totalPages = uiState.totalPages,
+            showPagination = uiState.showPagination,
             onBackClick = onBackClick,
-            onDeleteClick = { state.delete(it) },
-            onPreviousClick = { state.previousPage() },
-            onNextClick = { state.nextPage() },
+            onDeleteClick = { viewModel.delete(it) },
+            onPreviousClick = { viewModel.previousPage() },
+            onNextClick = { viewModel.nextPage() },
         )
+
+        if (uiState.isLoading) ShoppingLoading()
     }
 }
 

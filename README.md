@@ -7,7 +7,7 @@
 - [x] 하드코딩된 TextStyle과 TextColor를 공통 테마 파일로 분리
 
 ### 아키텍처 및 상태 관리
-- [ ] 기존 StateHolder 방식을 ViewModel + UiState 구조로 전환
+- [x] 기존 StateHolder 방식을 ViewModel + UiState 구조로 전환
 - [ ] 상품 목록(더보기)과 장바구니의 페이징 처리 로직을 전담하는 객체 분리
 - [x] 불필요한 패키지 및 의존성 제거
 

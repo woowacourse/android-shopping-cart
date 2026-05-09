@@ -9,22 +9,38 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.theme.ShoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
+    val productRepo = AppContainer.productRepository
+    val loadSize = 20
+
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val productRepo = AppContainer.productRepository
+                    val viewModel: ShoppingViewModel = viewModel(
+                        factory = object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return ShoppingViewModel(
+                                    productRepo = productRepo,
+                                    loadSize = loadSize
+                                ) as T
+                            }
+                        }
+                    )
 
                     ShoppingScreen(
-                        state = rememberShoppingScreenState(productRepo),
+                        viewModel = viewModel,
                         modifier = Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))
