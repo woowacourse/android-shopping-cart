@@ -25,10 +25,7 @@ import woowacourse.shopping.ui.component.AmountController
 
 @Composable
 fun ProductCard(
-    imageUrl: String,
-    name: String,
-    price: Int,
-    amount: Int,
+    product: ProductUiModel,
     onClickItem: () -> Unit,
     onClickMinus: () -> Unit,
     onClickAdd: () -> Unit,
@@ -44,23 +41,16 @@ fun ProductCard(
                 .aspectRatio(1f),
         ) {
             AsyncImage(
-                model = imageUrl,
-                contentDescription = "$name 이미지 입니다용",
+                model = product.imageUrl,
+                contentDescription = "${product.name} 이미지 입니다용",
                 modifier = Modifier
                     .fillMaxSize(),
                 contentScale = ContentScale.Crop,
             )
 
-            if (amount == 0) {
-                AddCircleButton(
-                    onClickAdd = onClickAdd,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.BottomEnd),
-                )
-            } else {
+            if (product.showAmountController) {
                 AmountController(
-                    amount = amount,
+                    amount = product.cartAmount,
                     onClickMinus = onClickMinus,
                     onClickAdd = onClickAdd,
                     modifier = Modifier
@@ -68,11 +58,18 @@ fun ProductCard(
                         .padding(horizontal = 14.dp, vertical = 4.dp)
                         .fillMaxWidth(),
                 )
+            } else {
+                AddCircleButton(
+                    onClickAdd = onClickAdd,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.BottomEnd),
+                )
             }
         }
         ProductInfoText(
-            name = name,
-            price = price,
+            name = product.name,
+            price = product.price,
             modifier = Modifier.padding(horizontal = 8.dp),
         )
     }
@@ -81,7 +78,7 @@ fun ProductCard(
 @Composable
 private fun ProductInfoText(
     name: String,
-    price: Int,
+    price: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -96,7 +93,7 @@ private fun ProductInfoText(
         )
 
         Text(
-            text = "${"%,d".format(price)}원",
+            text = price,
             color = Color(0xff555555),
             fontSize = 16.sp,
             fontWeight = FontWeight.W400,
@@ -110,15 +107,19 @@ private fun ProductInfoText(
 @Composable
 private fun ProductCardPreview() {
     ProductCard(
-        imageUrl =
-            "https://cdn.eyesmag.com/content/uploads/posts/2024/10/23/shutterstock_250" +
-                "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
-        name = "고양이",
-        price = 999999999,
+        product = ProductUiModel(
+            id = "1",
+            imageUrl =
+                "https://cdn.eyesmag.com/content/uploads/posts/2024/10/23/shutterstock_250" +
+                    "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
+            name = "고양이",
+            price = "999,999,999원",
+            cartAmount = "0",
+            showAmountController = false,
+        ),
         onClickItem = { },
         onClickMinus = { },
         onClickAdd = { },
         modifier = Modifier.padding(5.dp),
-        amount = 0,
     )
 }

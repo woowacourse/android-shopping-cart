@@ -22,7 +22,7 @@ import woowacourse.shopping.R
 
 @Composable
 fun AmountController(
-    amount: Int,
+    amount: String,
     onClickMinus: () -> Unit,
     onClickAdd: () -> Unit,
     modifier: Modifier = Modifier,
@@ -43,7 +43,7 @@ fun AmountController(
                 .padding(10.dp),
             tint = Color(0xff555555),
         )
-        Text(amount.toString(), fontSize = 22.sp, color = Color(0xff555555))
+        Text(amount, fontSize = 22.sp, color = Color(0xff555555))
         Icon(
             painter = painterResource(R.drawable.ic_add),
             contentDescription = "상품 증가",
@@ -59,7 +59,7 @@ fun AmountController(
 @Composable
 private fun AmountControllerPreview() {
     AmountController(
-        amount = 1,
+        amount = "1",
         onClickMinus = { },
         onClickAdd = { },
     )

@@ -26,14 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.data.source.ProductDataSourceImpl.products
 import woowacourse.shopping.ui.component.topbar.MainTopBar
 
 @Composable
 fun ProductScreen(
     onIconClick: () -> Unit,
     onItemClick: (String) -> Unit,
-    viewModel: ProductViewModel = viewModel(),
+    viewModel: ProductViewModel = viewModel(factory = ProductViewModel.Factory),
 ) {
     val uiState: ProductUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
@@ -43,7 +42,7 @@ fun ProductScreen(
             MainTopBar(
                 title = "Shopping",
                 onIconClick = onIconClick,
-                count = 0, // TODO
+                count = uiState.totalCartAmount,
                 modifier = Modifier.statusBarsPadding(),
             )
         },
@@ -63,14 +62,11 @@ fun ProductScreen(
                 key = { it.id },
             ) {
                 ProductCard(
-                    imageUrl = it.imageUrl,
-                    name = it.name,
-                    price = it.price,
+                    product = it,
                     onClickItem = { onItemClick(it.id) },
                     modifier = Modifier,
-                    amount = 1, // TODO
-                    onClickMinus = { /* TODO */ },
-                    onClickAdd = { /* TODO */ },
+                    onClickMinus = { viewModel.minusAmount(it.id) },
+                    onClickAdd = { viewModel.addAmount(it.id) },
                 )
             }
 
