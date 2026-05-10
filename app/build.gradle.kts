@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.3.0"
 }
 
 android {
@@ -56,6 +57,10 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.okhttp)
+    implementation(libs.mockwebserver)
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.androidx.room.testing)
