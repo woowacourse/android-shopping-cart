@@ -13,4 +13,7 @@ interface RecentItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recentItemEntity: RecentItemEntity)
+
+    @Query("DELETE FROM recent_items WHERE productId NOT IN (SELECT productId FROM recent_items ORDER BY viewedAt DESC LIMIT 10)")
+    suspend fun deleteOldItems()
 }

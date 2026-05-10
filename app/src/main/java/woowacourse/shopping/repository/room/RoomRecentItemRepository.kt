@@ -20,5 +20,6 @@ class RoomRecentItemRepository(
 
     override suspend fun add(productId: UUID) {
         recentItemDao.insert(RecentItemEntity(productId = productId, viewedAt = System.currentTimeMillis()))
+        recentItemDao.deleteOldItems()
     }
 }
