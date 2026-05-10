@@ -30,9 +30,10 @@ class ProductDetailStateHolder(
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
     private val productId: String,
+    private val isFromRecent: Boolean,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private val product: Product? = productRepository.getProduct(productId)
+    private var product: Product? = null
 
     var productInfo: ProductInfo? by mutableStateOf(null)
         private set
@@ -40,10 +41,16 @@ class ProductDetailStateHolder(
     var previousProduct: Product? by mutableStateOf(null)
         private set
 
+    val shouldShowRecentSummary: Boolean
+        get() = !isFromRecent && previousProduct != null
+
     init {
-        refreshUiState()
-        saveRecentProduct()
-        observeRecentProducts()
+        scope.launch {
+            product = withContext(Dispatchers.IO) { productRepository.getProduct(productId) }
+            refreshUiState()
+            saveRecentProduct()
+            observeRecentProducts()
+        }
     }
 
     private fun observeRecentProducts() {
@@ -100,7 +107,10 @@ class ProductDetailStateHolder(
 }
 
 @Composable
-fun retainProductDetailStateHolder(productId: String): ProductDetailStateHolder {
+fun retainProductDetailStateHolder(
+    productId: String,
+    isFromRecent: Boolean,
+): ProductDetailStateHolder {
     val context = androidx.compose.ui.platform.LocalContext.current
     return retain(productId) {
         val application = context.applicationContext as woowacourse.shopping.ShoppingApplication
@@ -108,7 +118,8 @@ fun retainProductDetailStateHolder(productId: String): ProductDetailStateHolder 
             ProductRepositoryImpl,
             CartRepositoryImpl(application.database.cartDao()),
             RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl),
-            productId
+            productId,
+            isFromRecent
         )
     }
 }

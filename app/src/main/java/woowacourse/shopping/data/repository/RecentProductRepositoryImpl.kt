@@ -15,9 +15,14 @@ RecentProductRepositoryImpl(
 ) : RecentProductRepository {
     override fun getRecentProducts(): Flow<List<Product>> {
         return recentProductDao.getRecentProducts().map { entities ->
-            entities.mapNotNull { entity ->
-                productRepository.getProduct(entity.id)
+            val result = mutableListOf<Product>()
+            for (entity in entities) {
+                val product = productRepository.getProduct(entity.id)
+                if (product != null) {
+                    result.add(product)
+                }
             }
+            result
         }
     }
 

@@ -31,7 +31,7 @@ class ProductsStateHolder(
     private val recentProductRepository: RecentProductRepository,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private val totalCount = productRepository.getProductCount()
+    private var totalCount = 0
     private var pageCount = 0
 
     var products by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
@@ -47,7 +47,10 @@ class ProductsStateHolder(
         private set
 
     init {
-        getProducts()
+        scope.launch {
+            totalCount = withContext(Dispatchers.IO) { productRepository.getProductCount() }
+            getProducts()
+        }
 
         cartRepository.getCartItems()
             .onEach { items ->
@@ -87,8 +90,8 @@ class ProductsStateHolder(
     }
 
     fun onAddClick(productId: String) {
-        val product = productRepository.getProduct(productId) ?: return
         scope.launch(Dispatchers.IO) {
+            val product = productRepository.getProduct(productId) ?: return@launch
             cartRepository.updateCart(CartItem(product, Quantity(1)))
         }
     }

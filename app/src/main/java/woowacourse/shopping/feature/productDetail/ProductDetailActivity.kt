@@ -18,6 +18,7 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val productId = intent.getStringExtra(PRODUCT_ID)
+        val isFromRecent = intent.getBooleanExtra(IS_FROM_RECENT, false)
         if (productId.isNullOrBlank()) {
             showErrorAndFinish()
             return
@@ -27,15 +28,15 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val stateHolder = retainProductDetailStateHolder(productId)
+                    val stateHolder = retainProductDetailStateHolder(productId, isFromRecent)
 
                     ProductDetailScreen(
                         productInfo = stateHolder.productInfo,
-                        previousProductName = stateHolder.previousProduct?.productTitle?.value,
+                        previousProductName = if (stateHolder.shouldShowRecentSummary) stateHolder.previousProduct?.productTitle?.value else null,
                         onCloseClick = { finish() },
                         onRecentProductClick = {
                             stateHolder.previousProduct?.id?.let { id ->
-                                startActivity(newIntent(this, id))
+                                startActivity(newIntent(this, id, isFromRecent = true))
                                 finish()
                             }
                         },
@@ -56,13 +57,16 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         private const val PRODUCT_ID = "product_id"
+        private const val IS_FROM_RECENT = "is_from_recent"
 
         fun newIntent(
             context: Context,
             productId: String,
+            isFromRecent: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
+                putExtra(IS_FROM_RECENT, isFromRecent)
             }
     }
 }
