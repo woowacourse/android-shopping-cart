@@ -75,8 +75,7 @@ class ProductsStateHolder(
 
     fun onIncreaseClick(productId: String) {
         scope.launch(Dispatchers.IO) {
-            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
-            cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value + 1)))
+            cartRepository.increaseCartItemQuantity(productId)
         }
     }
 
@@ -86,7 +85,7 @@ class ProductsStateHolder(
             if (currentCartItem.quantity.value <= 1) {
                 cartRepository.deleteCartItem(productId)
             } else {
-                cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value - 1)))
+                cartRepository.decreaseCartItemQuantity(productId)
             }
         }
     }
