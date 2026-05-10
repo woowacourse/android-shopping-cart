@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Quantity
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -22,8 +23,10 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
+    private var lastViewedProduct: Product? = null
 
     init {
+        observeLastViewedProduct()
         loadProduct()
     }
 
@@ -35,7 +38,10 @@ class ProductDetailViewModel(
                     _uiState.value =
                         if (product != null) {
                             recentProductRepository.save(product)
-                            ProductDetailUiState.Success(product)
+                            ProductDetailUiState.Success(
+                                product = product,
+                                lastViewedProduct = lastViewedProduct,
+                            )
                         } else {
                             ProductDetailUiState.Error(
                                 NoSuchElementException("상품을 찾을 수 없습니다. id=$productId"),
@@ -47,16 +53,27 @@ class ProductDetailViewModel(
         }
     }
 
-    fun increaseSelected(){
+    private fun observeLastViewedProduct() {
+        viewModelScope.launch {
+            recentProductRepository.getLastViewedProduct(productId).collect { product ->
+                lastViewedProduct = product
+                val current = _uiState.value as? ProductDetailUiState.Success ?: return@collect
+                _uiState.value = current.copy(lastViewedProduct = product)
+            }
+        }
+    }
+
+    fun increaseSelected() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
         _uiState.value = current.copy(selectedQuantity = current.selectedQuantity + 1)
     }
 
-    fun decreaseSelected(){
+    fun decreaseSelected() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
         if (current.selectedQuantity <= 1) return
         _uiState.value = current.copy(selectedQuantity = current.selectedQuantity - 1)
     }
+
     fun addToCart() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
         viewModelScope.launch {
@@ -64,7 +81,7 @@ class ProductDetailViewModel(
         }
     }
 
-        companion object {
+    companion object {
         fun factory(
             productId: String,
             productRepository: ProductRepository,

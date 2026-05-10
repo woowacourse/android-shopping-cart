@@ -8,6 +8,7 @@ sealed interface ProductDetailUiState {
     data class Success(
         val product: Product,
         val selectedQuantity: Int = 1,
+        val lastViewedProduct: Product? = null,
     ) : ProductDetailUiState
 
     data class Error(

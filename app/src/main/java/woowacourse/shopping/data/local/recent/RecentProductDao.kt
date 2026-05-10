@@ -16,6 +16,16 @@ interface RecentProductDao {
     )
     fun getRecentProducts(limit: Int): Flow<List<RecentProductEntity>>
 
+    @Query(
+        """
+        SELECT * FROM recent_products
+        WHERE productId != :currentProductId
+        ORDER BY viewedAt DESC
+        LIMIT 1
+        """,
+    )
+    fun getLastViewedProduct(currentProductId: String): Flow<RecentProductEntity?>
+
     @Upsert
     suspend fun upsert(recentProduct: RecentProductEntity)
 

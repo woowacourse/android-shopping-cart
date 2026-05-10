@@ -6,6 +6,8 @@ import woowacourse.shopping.domain.product.Product
 interface RecentProductRepository {
     fun getRecentProducts(limit: Int = DEFAULT_LIMIT): Flow<List<Product>>
 
+    fun getLastViewedProduct(currentProductId: String): Flow<Product?>
+
     suspend fun save(product: Product)
 
     companion object {
