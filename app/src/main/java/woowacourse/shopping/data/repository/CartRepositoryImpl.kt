@@ -20,10 +20,10 @@ class CartRepositoryImpl(
     override fun isLastPage(page: Int) = page == totalPage
 
     override fun addItem(
-        product: Product,
+        productId: String,
         amount: Int,
     ) {
-        cartDataSource.add(CartItem(product, amount))
+        cartDataSource.add(CartItem(productId, amount))
     }
 
     override fun deleteItem(productId: String) {
@@ -41,15 +41,15 @@ class CartRepositoryImpl(
 
     override fun getItemCount(productId: String): Int =
         cartItems
-            .firstOrNull { it.product.id == productId }
+            .firstOrNull { it.productId == productId }
             ?.quantity
             ?: 0
 
     override fun plusItemCount(product: Product) {
-        val item = cartItems.firstOrNull { it.product == product }
+        val item = cartItems.firstOrNull { it.productId == product.id }
 
         if (item == null) {
-            addItem(product = product, amount = 1)
+            addItem(productId = product.id, amount = 1)
             return
         }
 
@@ -57,7 +57,7 @@ class CartRepositoryImpl(
     }
 
     override fun minusItemCount(productId: String) {
-        val item = cartItems.firstOrNull { it.product.id == productId }
+        val item = cartItems.firstOrNull { it.productId == productId }
 
         requireNotNull(item) { "카트에 아이템이 존재하지 않습니다." }
 

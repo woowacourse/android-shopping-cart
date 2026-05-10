@@ -7,7 +7,7 @@ object CartDataSourceImpl : CartDataSource {
     override val items get() = _items.toList()
 
     override fun add(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.product.id == cartItem.product.id }
+        val idx = _items.indexOfFirst { it.productId == cartItem.productId }
 
         if (idx == -1) {
             _items.add(cartItem)
@@ -18,11 +18,11 @@ object CartDataSourceImpl : CartDataSource {
     }
 
     override fun deleteItem(productId: String) {
-        _items.removeIf { it.product.id == productId }
+        _items.removeIf { it.productId == productId }
     }
 
     override fun updateItem(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.product.id == cartItem.product.id }
+        val idx = _items.indexOfFirst { it.productId == cartItem.productId }
 
         require(idx != -1) { "카트에 존재하지 않는 상품입니다." }
 

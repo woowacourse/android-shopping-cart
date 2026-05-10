@@ -1,7 +1,5 @@
 package woowacourse.shopping.ui.screens.cart
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -14,18 +12,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.ui.model.UiCart
+import woowacourse.shopping.ui.model.toUiModel
 
 data class CartUiState(
     val curPage: Int = 1,
     val isLast: Boolean = true,
-    val cartItems: List<CartItem> = emptyList(),
+    val cartItems: List<UiCart> = emptyList(),
 )
 
 class CartViewModel(
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
@@ -48,7 +49,11 @@ class CartViewModel(
             _uiState.update {
                 it.copy(
                     curPage = _uiState.value.curPage - 1,
-                    cartItems = cartRepository.getCartItemByPage(_uiState.value.curPage - 1),
+                    cartItems = cartRepository
+                        .getCartItemByPage(_uiState.value.curPage - 1)
+                        .map { cartItem ->
+                            cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
+                        },
                     isLast = cartRepository.isLastPage(_uiState.value.curPage),
                 )
             }
@@ -62,7 +67,11 @@ class CartViewModel(
             _uiState.update {
                 it.copy(
                     curPage = _uiState.value.curPage + 1,
-                    cartItems = cartRepository.getCartItemByPage(_uiState.value.curPage + 1),
+                    cartItems = cartRepository
+                        .getCartItemByPage(_uiState.value.curPage + 1)
+                        .map { cartItem ->
+                            cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
+                        },
                     isLast = cartRepository.isLastPage(_uiState.value.curPage),
                 )
             }
@@ -72,7 +81,11 @@ class CartViewModel(
     private suspend fun updateCartItems() {
         _uiState.update {
             it.copy(
-                cartItems = cartRepository.getCartItemByPage(_uiState.value.curPage),
+                cartItems = cartRepository
+                    .getCartItemByPage(_uiState.value.curPage)
+                    .map { cartItem ->
+                        cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
+                    },
                 isLast = cartRepository.isLastPage(_uiState.value.curPage),
             )
         }
@@ -102,7 +115,11 @@ class CartViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    cartItems = cartRepository.getCartItemByPage(_uiState.value.curPage),
+                    cartItems = cartRepository
+                        .getCartItemByPage(_uiState.value.curPage)
+                        .map { cartItem ->
+                            cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
+                        },
                     isLast = cartRepository.isLastPage(_uiState.value.curPage),
                 )
             }
@@ -113,7 +130,10 @@ class CartViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as ShoppingApplication
-                CartViewModel(cartRepository = app.cartRepository)
+                CartViewModel(
+                    cartRepository = app.cartRepository,
+                    productRepository = app.productRepository,
+                )
             }
         }
     }

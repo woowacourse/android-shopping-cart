@@ -7,7 +7,7 @@ interface CartRepository {
     val cartItemCount: Int
 
     fun addItem(
-        product: Product,
+        productId: String,
         amount: Int,
     )
 

@@ -32,9 +32,7 @@ class ProductDetailViewModel(
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     fun addToCart() {
-        val targetProduct = productRepository.getProductById(targetProductId)
-
-        cartRepository.addItem(targetProduct, _uiState.value.quantity)
+        cartRepository.addItem(targetProductId, _uiState.value.quantity)
     }
 
     fun plusCartCount() {

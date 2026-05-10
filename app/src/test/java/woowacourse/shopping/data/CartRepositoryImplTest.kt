@@ -14,7 +14,7 @@ class CartRepositoryImplTest {
     fun `장바구니에 아이템을 추가할 수 있다`() =
         runTest {
             val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
-            cartRepository.addItem(product = ShoppingFixture.getProduct(), amount = 1)
+            cartRepository.addItem(productId = ShoppingFixture.getProduct().id, amount = 1)
 
             cartRepository.getCartItemByPage(1).size shouldEqual 1
         }
@@ -26,12 +26,12 @@ class CartRepositoryImplTest {
 
             val product = ShoppingFixture.getProduct(id = "1")
 
-            cartRepository.addItem(product = product, amount = 1)
-            cartRepository.addItem(product = product, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
 
             cartRepository
                 .getCartItemByPage(1)
-                .first { it.product.id == "1" }
+                .first { it.productId == "1" }
                 .quantity shouldEqual 2
         }
 
@@ -42,10 +42,10 @@ class CartRepositoryImplTest {
 
             val product = ShoppingFixture.getProduct(id = "1")
 
-            cartRepository.addItem(product = product, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
             cartRepository.deleteItem(productId = "1")
 
-            cartRepository.getCartItemByPage(1).firstOrNull { it.product == product } shouldBe null
+            cartRepository.getCartItemByPage(1).firstOrNull { it.productId == product.id } shouldBe null
         }
 
     @Test
@@ -53,7 +53,7 @@ class CartRepositoryImplTest {
         val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
 
         val product = ShoppingFixture.getProduct(id = "1")
-        cartRepository.addItem(product = product, amount = 1)
+        cartRepository.addItem(productId = product.id, amount = 1)
 
         cartRepository.getItemCount(product.id) shouldEqual 1
     }
@@ -63,7 +63,7 @@ class CartRepositoryImplTest {
         val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
 
         val product = ShoppingFixture.getProduct(id = "1")
-        cartRepository.addItem(product = product, amount = 1)
+        cartRepository.addItem(productId = product.id, amount = 1)
         cartRepository.plusItemCount(product = product)
 
         cartRepository.getItemCount(product.id) shouldEqual 2
@@ -74,7 +74,7 @@ class CartRepositoryImplTest {
         val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
 
         val product = ShoppingFixture.getProduct(id = "1")
-        cartRepository.addItem(product = product, amount = 2)
+        cartRepository.addItem(productId = product.id, amount = 2)
         cartRepository.minusItemCount(productId = product.id)
 
         cartRepository.getItemCount(product.id) shouldEqual 1
@@ -85,7 +85,7 @@ class CartRepositoryImplTest {
         val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
 
         val product = ShoppingFixture.getProduct(id = "1")
-        cartRepository.addItem(product = product, amount = 1)
+        cartRepository.addItem(productId = product.id, amount = 1)
         cartRepository.minusItemCount(productId = product.id)
 
         cartRepository.getItemCount(product.id) shouldEqual 0
@@ -96,7 +96,7 @@ class FakeCartDataSource : CartDataSource {
     override val items: MutableList<CartItem> = mutableListOf()
 
     override fun add(cartItem: CartItem) {
-        val idx = items.indexOfFirst { it.product.id == cartItem.product.id }
+        val idx = items.indexOfFirst { it.productId == cartItem.productId }
 
         if (idx == -1) {
             items.add(cartItem)
@@ -107,11 +107,11 @@ class FakeCartDataSource : CartDataSource {
     }
 
     override fun deleteItem(productId: String) {
-        items.removeIf { it.product.id == productId }
+        items.removeIf { it.productId == productId }
     }
 
     override fun updateItem(cartItem: CartItem) {
-        val idx = items.indexOfFirst { it.product.id == cartItem.product.id }
+        val idx = items.indexOfFirst { it.productId == cartItem.productId }
 
         require(idx != -1) { "카트에 존재하지 않는 상품입니다." }
 
