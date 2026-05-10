@@ -5,8 +5,9 @@ import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 
-class InMemoryCartRepository : CartRepository {
+object InMemoryCartRepository : CartRepository {
     override var cart: Cart = Cart(CartProducts(emptyList()))
+        private set
 
     override suspend fun addProduct(
         product: Product,

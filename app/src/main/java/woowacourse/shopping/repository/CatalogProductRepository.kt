@@ -4,9 +4,8 @@ import woowacourse.shopping.MockCatalog
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 
-class CatalogProductRepository(
-    private val catalog: MockCatalog
-): ProductRepository {
+object CatalogProductRepository: ProductRepository {
+    val catalog = MockCatalog
     override suspend fun getProducts(
         page: Int,
         pageSize: Int,
