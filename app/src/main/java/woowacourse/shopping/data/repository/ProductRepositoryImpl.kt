@@ -1,30 +1,73 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.DUMMY_PRODUCTS
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import woowacourse.shopping.data.remote.MockServer
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductItems
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 object ProductRepositoryImpl : ProductRepository {
-    val dataSource = DUMMY_PRODUCTS
-    override fun getProducts(
+    private val client = OkHttpClient()
+    private val json = Json { 
+        ignoreUnknownKeys = true 
+        encodeDefaults = true
+    }
+
+    private suspend fun fetchAllProducts(): List<Product> = withContext(Dispatchers.IO) {
+        val request = Request.Builder()
+            .url("${MockServer.getBaseUrl()}products")
+            .build()
+
+        try {
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    return@withContext emptyList()
+                }
+                val body = response.body?.string() ?: return@withContext emptyList()
+                json.decodeFromString<List<Product>>(body)
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getProducts(
         page: Int,
         pageSize: Int,
     ): ProductItems {
         require(page >= 0) { "페이지 번호는 0보다 크거나 같은 정수여야 합니다." }
         require(pageSize >= 1) { "페이지 사이즈는 1보다 큰 정수여야 합니다." }
+
+        val allProducts = fetchAllProducts()
         val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, dataSource.size)
+        val toIndex = min(fromIndex + pageSize, allProducts.size)
 
-        require(fromIndex <= toIndex) { "끝 인덱스는 시작 인덱스보다 작거나 같아야 합니다." }
+        require(fromIndex <= toIndex) { "페이지 범위가 올바르지 않습니다." }
 
-        val result = dataSource.subList(fromIndex, toIndex)
+        val result = allProducts.subList(fromIndex, toIndex)
         return ProductItems(result)
     }
 
-    override fun getProductCount(): Int = dataSource.size
+    override suspend fun getProductCount(): Int = fetchAllProducts().size
 
-    override fun getProduct(id: String): Product? =
-        dataSource.find { it.id == id }
+    override suspend fun getProduct(id: String): Product? = withContext(Dispatchers.IO) {
+        val request = Request.Builder()
+            .url("${MockServer.getBaseUrl()}products/$id")
+            .build()
+
+        try {
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return@withContext null
+                val body = response.body?.string() ?: return@withContext null
+                json.decodeFromString<Product>(body)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

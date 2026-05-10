@@ -1,10 +1,27 @@
 package woowacourse.shopping.data.repository
 
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.remote.MockServer
 
 class ProductRepositoryImplTest {
     private val repository = ProductRepositoryImpl
+
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun setUp() {
+            MockServer.start(blocking = true)
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun tearDown() {
+            MockServer.stop()
+        }
+    }
 
     @Test
     fun `100개의 리스트에서 0번째 페이지와 20 페이지 사이즈를 호출하면 20개의 응답이 온다`() {
