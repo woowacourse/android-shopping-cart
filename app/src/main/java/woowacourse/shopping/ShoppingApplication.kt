@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import woowacourse.shopping.repository.AndroidShoppingDatabase
 import woowacourse.shopping.repository.DatabaseProductRepository
-import woowacourse.shopping.repository.MemoryShoppingCartRepository
+import woowacourse.shopping.repository.DatabaseShoppingCartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
 
@@ -26,10 +26,7 @@ class ShoppingApplication : Application() {
         DatabaseProductRepository(database.productDao())
     }
 
-    companion object {
-        var shoppingCartRepository: ShoppingCartRepository =
-            MemoryShoppingCartRepository(
-                initinalProducts = emptyList(),
-            )
+    val shoppingCartRepository: ShoppingCartRepository by lazy {
+        DatabaseShoppingCartRepository(productRepository, database.shoppingCartItemDao())
     }
 }

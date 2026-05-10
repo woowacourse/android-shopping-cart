@@ -10,10 +10,12 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.ui.WonMoney
 
 class DetailProductViewModel(
     private val productRepository: ProductRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(
@@ -41,12 +43,21 @@ class DetailProductViewModel(
         }
     }
 
+    fun addToShoppingCart(productId: String) {
+        viewModelScope.launch {
+            val product = productRepository.getProduct(productId) ?: return@launch
+
+            shoppingCartRepository.add(product)
+        }
+    }
+
     companion object {
         fun factory(shoppingApplication: ShoppingApplication) =
             viewModelFactory {
                 initializer {
                     DetailProductViewModel(
                         shoppingApplication.productRepository,
+                        shoppingApplication.shoppingCartRepository,
                     )
                 }
             }

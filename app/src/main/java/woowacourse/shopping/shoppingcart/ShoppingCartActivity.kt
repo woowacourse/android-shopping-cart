@@ -6,53 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.shoppingcart.ShoppingCartPageStateHolder
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ShoppingCartActivity : ComponentActivity() {
-    private val shoppingCartRepository = ShoppingApplication.Companion.shoppingCartRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var shoppingCartItems by remember { mutableStateOf(shoppingCartRepository.getShoppingItems()) }
             AndroidShoppingTheme {
-                var savedPageNumber by rememberSaveable { mutableIntStateOf(0) }
-                val shoppingCartPageStateHolder =
-                    remember(shoppingCartItems) {
-                        ShoppingCartPageStateHolder(
-                            shoppingCartItems,
-                            initialPage = savedPageNumber,
-                            pageSize = 5,
-                        )
-                    }
                 ShoppingCartScreen(
-                    shoppingCartItems = shoppingCartPageStateHolder.getItems(),
                     onBackClick = this::finish,
-                    onRemoveShoppingItemClick = { shoppingCartItem ->
-                        ShoppingApplication.shoppingCartRepository.remove(shoppingCartItem)
-                        shoppingCartItems =
-                            ShoppingApplication.shoppingCartRepository.getShoppingItems()
-                    },
-                    currentPage = shoppingCartPageStateHolder.currentPage,
-                    canMoveToPreviousPage = shoppingCartPageStateHolder.canMoveToPreviousPage(),
-                    canMoveToNextPage = shoppingCartPageStateHolder.canMoveToNextPage(),
-                    onBeforePageClick = {
-                        shoppingCartPageStateHolder.beforePage()
-                        savedPageNumber = shoppingCartPageStateHolder.currentPage
-                    },
-                    onNextPageClick = {
-                        shoppingCartPageStateHolder.nextPage()
-                        savedPageNumber = shoppingCartPageStateHolder.currentPage
-                    },
                 )
             }
         }

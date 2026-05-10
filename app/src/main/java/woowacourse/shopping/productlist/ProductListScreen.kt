@@ -96,7 +96,7 @@ fun ProductListContent(
             ) { product ->
                 ProductItem(
                     title = product.name,
-                    price = product.price,
+                    price = product.price.display(),
                     imageUrl = product.imageUrl,
                     modifier =
                         Modifier
@@ -140,16 +140,6 @@ private fun ProductListTopBar(
                 titleContentColor = MaterialTheme.colorScheme.onSurface,
             ),
         modifier = modifier,
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun ProductItemPreview() {
-    ProductItem(
-        title = "동원 스위트콘",
-        price = WonMoney(99_800),
-        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
     )
 }
 

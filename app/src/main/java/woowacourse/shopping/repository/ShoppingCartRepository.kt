@@ -4,9 +4,16 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun add(product: Product)
+    suspend fun add(product: Product)
 
-    fun remove(shoppingCartItem: ShoppingCartItem)
+    suspend fun getTotalSize(): Int
 
-    fun getShoppingItems(): List<ShoppingCartItem>
+    suspend fun remove(shoppingCartItemId: String)
+
+    suspend fun getShoppingItem(shoppingCartItemId: String): ShoppingCartItem?
+
+    suspend fun getShoppingItems(
+        offset: Int,
+        size: Int,
+    ): List<ShoppingCartItem>
 }

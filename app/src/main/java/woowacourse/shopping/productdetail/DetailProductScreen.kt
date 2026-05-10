@@ -48,7 +48,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 @Composable
 fun DetailProductScreen(
     productId: String,
-    onAddToCartClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     detailProductViewModel: DetailProductViewModel =
@@ -67,7 +66,7 @@ fun DetailProductScreen(
 
     DetailProductContent(
         productUiModel = uiState,
-        onAddToCartClick = onAddToCartClick,
+        onAddToCartClick = { detailProductViewModel.addToShoppingCart(productId) },
         onBackClick = onBackClick,
         modifier = modifier,
     )

@@ -27,9 +27,6 @@ class DetailProductActivity : ComponentActivity() {
 
                 DetailProductScreen(
                     productId = productId,
-                    onAddToCartClick = {
-                        this.finish()
-                    },
                     onBackClick = this::finish,
                 )
             }

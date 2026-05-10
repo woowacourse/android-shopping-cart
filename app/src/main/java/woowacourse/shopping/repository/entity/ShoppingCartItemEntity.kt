@@ -3,6 +3,7 @@ package woowacourse.shopping.repository.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -15,9 +16,12 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE,
         ),
     ],
+    indices = [
+        Index(value = ["product_id"], unique = true),
+    ],
 )
 data class ShoppingCartItemEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val quantity: Int,
     @ColumnInfo("product_id") val productId: String,
 )

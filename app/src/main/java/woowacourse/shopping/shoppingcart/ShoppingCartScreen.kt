@@ -18,34 +18,40 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Price
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductTitle
-import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
-import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ShoppingCartScreen(
-    shoppingCartItems: List<ShoppingCartItem>,
     onBackClick: () -> Unit,
-    onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
-    currentPage: Int,
-    canMoveToPreviousPage: Boolean,
-    canMoveToNextPage: Boolean,
-    onBeforePageClick: () -> Unit,
-    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
+    shoppingCartViewModel: ShoppingCartViewModel =
+        viewModel(
+            factory =
+                ShoppingCartViewModel.factory(
+                    LocalContext.current.applicationContext as ShoppingApplication,
+                ),
+        ),
 ) {
+    val uiState by shoppingCartViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        shoppingCartViewModel.loadShoppingItems()
+    }
+
     Scaffold(
         topBar = {
             ShoppingCartTopBar(
@@ -71,23 +77,23 @@ fun ShoppingCartScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(
-                    items = shoppingCartItems,
+                    items = uiState.shoppingCartItems,
                     key = { it.id },
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
                         title = shoppingCartItem.product.getTitle(),
                         imageUrl = shoppingCartItem.product.imageUrl,
                         displayableMoney = WonMoney(shoppingCartItem.product.getPrice()),
-                        onRemoveShoppingItemClick = { onRemoveShoppingItemClick(shoppingCartItem) },
+                        onRemoveShoppingItemClick = { shoppingCartViewModel.removeShoppingItem(shoppingCartItem.id) },
                     )
                 }
             }
             PageNavigation(
-                currentPage = currentPage,
-                canMoveToPreviousPage = canMoveToPreviousPage,
-                canMoveToNextPage = canMoveToNextPage,
-                onBeforePageClick = onBeforePageClick,
-                onNextPageClick = onNextPageClick,
+                currentPage = uiState.currentPage,
+                canMoveToPreviousPage = uiState.canMoveToPreviousPage,
+                canMoveToNextPage = uiState.canMoveToNextPage,
+                onBeforePageClick = shoppingCartViewModel::movePreviousPage,
+                onNextPageClick = shoppingCartViewModel::moveNextPage,
             )
         }
     }
@@ -122,40 +128,40 @@ private fun ShoppingCartTopBar(
         modifier = modifier,
     )
 }
-
-@Composable
-@Preview(showBackground = true)
-private fun ShoppingCartScreenPreview() {
-    AndroidShoppingTheme {
-        ShoppingCartScreen(
-            shoppingCartItems =
-                listOf(
-                    ShoppingCartItem(
-                        id = "1",
-                        quantity = Quantity(0),
-                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-                    ),
-                    ShoppingCartItem(
-                        id = "2",
-                        quantity = Quantity(1),
-                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-                    ),
-                    ShoppingCartItem(
-                        id = "3",
-                        quantity = Quantity(2),
-                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-                    ),
-                ),
-            onBackClick = { },
-            onRemoveShoppingItemClick = { },
-            currentPage = 0,
-            canMoveToPreviousPage = false,
-            canMoveToNextPage = true,
-            onBeforePageClick = {},
-            onNextPageClick = {},
-        )
-    }
-}
+//
+// @Composable
+// @Preview(showBackground = true)
+// private fun ShoppingCartScreenPreview() {
+//    AndroidShoppingTheme {
+//        ShoppingCartScreen(
+//            shoppingCartItems =
+//                listOf(
+//                    ShoppingCartItem(
+//                        id = "1",
+//                        quantity = Quantity(0),
+//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
+//                    ),
+//                    ShoppingCartItem(
+//                        id = "2",
+//                        quantity = Quantity(1),
+//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
+//                    ),
+//                    ShoppingCartItem(
+//                        id = "3",
+//                        quantity = Quantity(2),
+//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
+//                    ),
+//                ),
+//            onBackClick = { },
+//            onRemoveShoppingItemClick = { },
+//            currentPage = 0,
+//            canMoveToPreviousPage = false,
+//            canMoveToNextPage = true,
+//            onBeforePageClick = {},
+//            onNextPageClick = {},
+//        )
+//    }
+// }
 
 @Composable
 @Preview(showBackground = true)
