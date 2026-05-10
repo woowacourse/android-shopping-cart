@@ -93,7 +93,7 @@ fun ProductScreen(
 
 @Preview
 @Composable
-fun ProductScreenPreview() {
+private fun ProductScreenPreview() {
     ProductScreen(
         onCartClick = { },
         onProductCardClick = { },

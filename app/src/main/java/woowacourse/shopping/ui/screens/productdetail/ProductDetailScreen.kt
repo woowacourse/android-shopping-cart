@@ -161,7 +161,7 @@ private fun AddCartButton(
 
 @Preview
 @Composable
-fun ProductDetailScreenPreview() {
+private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productId = "",
         onDismiss = { },
