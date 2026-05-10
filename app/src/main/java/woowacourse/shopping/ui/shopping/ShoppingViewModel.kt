@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.network.NetworkManager
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
@@ -19,6 +20,7 @@ class ShoppingViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentItemRepository: RecentItemRepository,
+    private val networkManager: NetworkManager,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -27,9 +29,22 @@ class ShoppingViewModel(
     private val pageSize = 20
 
     init {
-        loadMore()
+        observeNetwork()
         observeCart()
         loadRecentItems()
+    }
+
+    private fun observeNetwork() {
+        viewModelScope.launch {
+            networkManager.observe().collect { isAvailable ->
+                _uiState.value =
+                    _uiState.value.copy(isNetworkAvailable = isAvailable)
+
+                if (isAvailable && _uiState.value.products.isEmpty()) {
+                    loadMore()
+                }
+            }
+        }
     }
 
     private fun observeCart() {
@@ -55,7 +70,7 @@ class ShoppingViewModel(
 
     fun loadMore() {
         val currentState = _uiState.value
-        if (!currentState.canLoadMore || currentState.isLoading) return
+        if (!currentState.isNetworkAvailable || !currentState.canLoadMore || currentState.isLoading) return
 
         viewModelScope.launch {
             _uiState.value = currentState.copy(isLoading = true)
@@ -98,6 +113,7 @@ class ShoppingViewModel(
             productRepository: ProductRepository,
             cartRepository: CartRepository,
             recentItemRepository: RecentItemRepository,
+            networkManager: NetworkManager,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
@@ -105,6 +121,7 @@ class ShoppingViewModel(
                         productRepository = productRepository,
                         cartRepository = cartRepository,
                         recentItemRepository = recentItemRepository,
+                        networkManager = networkManager,
                     )
                 }
             }

@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.data.localdb.ShoppingDB
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.HttpProductRepository
-import woowacourse.shopping.data.repository.HttpProductServer
+import woowacourse.shopping.data.network.HttpProductServer
 import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
