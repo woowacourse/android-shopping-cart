@@ -25,9 +25,7 @@ class ShoppingApplication : Application() {
     }
 
     override fun onCreate() {
+        MockWebServer.start()
         super.onCreate()
-        Thread {
-            MockWebServer.start()
-        }
     }
 }

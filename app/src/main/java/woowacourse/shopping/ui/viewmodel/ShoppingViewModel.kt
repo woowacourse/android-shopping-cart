@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +17,6 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.PurchaseProduct
-import kotlin.time.Duration.Companion.seconds
 
 class ShoppingViewModel(
     private val purchaseProductsRepository: PurchaseProductsRepository,
@@ -47,7 +45,6 @@ class ShoppingViewModel(
     fun fetchProducts(page: Int = 0) {
         viewModelScope.launch {
             _isLoading.value = true
-            delay(2.seconds)
             try {
                 val response = webServerRepository.getProducts(page, PAGE_SIZE)
                 _products.value += Products(response)
