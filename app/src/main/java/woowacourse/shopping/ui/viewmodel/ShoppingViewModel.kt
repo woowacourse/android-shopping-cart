@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.PurchaseProductsRepository
-import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.local.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products

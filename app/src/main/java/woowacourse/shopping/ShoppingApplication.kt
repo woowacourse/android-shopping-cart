@@ -1,9 +1,9 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.database.DataBase
-import woowacourse.shopping.data.repository.PurchaseProductsRepository
-import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.data.local.database.DataBase
+import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.local.repository.RecentlyViewedProductRepository
 
 class ShoppingApplication: Application() {
     val database by lazy { DataBase.getDatabase(this) }

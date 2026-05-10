@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.database
+package woowacourse.shopping.data.local.database
 
 import android.content.Context
 import androidx.room.Database
@@ -6,10 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import woowacourse.shopping.data.dao.PurchaseProductsDao
-import woowacourse.shopping.data.dao.RecentlyViewedProductDao
-import woowacourse.shopping.data.entity.PurchaseProductEntity
-import woowacourse.shopping.data.entity.RecentlyViewedProductEntity
+import woowacourse.shopping.data.local.dao.PurchaseProductsDao
+import woowacourse.shopping.data.local.dao.RecentlyViewedProductDao
+import woowacourse.shopping.data.local.entity.PurchaseProductEntity
+import woowacourse.shopping.data.local.entity.RecentlyViewedProductEntity
 
 val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {

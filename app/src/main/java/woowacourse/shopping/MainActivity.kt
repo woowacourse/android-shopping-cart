@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.data.database.MockCatalog
+import woowacourse.shopping.data.local.database.MockCatalog
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme

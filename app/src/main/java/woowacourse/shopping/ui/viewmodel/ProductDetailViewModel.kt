@@ -4,15 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.ProductDetailActivity
-import woowacourse.shopping.data.repository.PurchaseProductsRepository
-import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.local.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
 

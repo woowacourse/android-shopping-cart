@@ -1,7 +1,5 @@
 package woowacourse.shopping.ui.viewmodel
 
-import androidx.compose.ui.graphics.Path.Companion.combine
-import androidx.compose.ui.text.style.TextDecoration.Companion.combine
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.PurchaseProductsRepository
+import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
 import woowacourse.shopping.domain.Cart
 
 class CartViewModel(

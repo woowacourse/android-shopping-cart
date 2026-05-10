@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.dao
+package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import woowacourse.shopping.data.entity.PurchaseProductEntity
+import woowacourse.shopping.data.local.entity.PurchaseProductEntity
 @Dao
 interface PurchaseProductsDao {
     @Query("SELECT * FROM purchase_products")

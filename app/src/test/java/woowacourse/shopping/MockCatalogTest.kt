@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.database.MockCatalog
+import woowacourse.shopping.data.local.database.MockCatalog
 
 class MockCatalogTest {
     @Test

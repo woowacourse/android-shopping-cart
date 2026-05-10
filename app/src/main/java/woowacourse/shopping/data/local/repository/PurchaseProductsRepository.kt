@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.local.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import woowacourse.shopping.data.dao.PurchaseProductsDao
-import woowacourse.shopping.data.entity.PurchaseProductEntity
+import woowacourse.shopping.data.local.dao.PurchaseProductsDao
+import woowacourse.shopping.data.local.entity.PurchaseProductEntity
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.PurchaseProduct
 import woowacourse.shopping.domain.PurchaseProducts
