@@ -1,50 +1,66 @@
 package woowacourse.shopping.ui.cart.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import woowacourse.shopping.constants.MockData
+import kotlinx.coroutines.launch
+import woowacourse.shopping.data.local.AppDatabase
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ui.cart.state.CartUiState
 import woowacourse.shopping.ui.model.DetailProductUiModel
 
-class CartViewModel : ViewModel() {
+class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState = _uiState.asStateFlow()
 
     private var cart = Cart()
 
     init {
-        MockData.MOCK_PRODUCTS.take(12).forEach { product ->
-            cart = cart.plusProduct(product, Quantity(1))
-        }
-        syncUiState()
+        observeCart()
+    }
+
+    private fun observeCart() {
+        cartRepository.getCart()
+            .onEach { cartItems ->
+                cart = Cart(cartItems)
+
+                val totalPage = calTotalPage()
+                if (_uiState.value.page > totalPage) {
+                    _uiState.update { it.copy(page = maxOf(1, totalPage)) }
+                }
+                syncUiState()
+            }.launchIn(viewModelScope)
     }
 
     fun incrementQuantity(productId: String) {
         val product = cart.findProductById(productId) ?: return
-        cart = cart.plusProduct(product, Quantity(1))
-        syncUiState()
+        viewModelScope.launch {
+            cartRepository.addCartItem(product, Quantity(1))
+        }
     }
 
     fun decrementQuantity(productId: String) {
         val product = cart.findProductById(productId) ?: return
-        cart = cart.minusProduct(product, Quantity(1))
-        syncUiState()
+        viewModelScope.launch {
+            cartRepository.decreaseCartItem(product, Quantity(1))
+        }
     }
 
     fun deleteCartItem(productId: String) {
-        cart = cart.removeCartItem(productId)
-
-        val totalPage = calTotalPage()
-        if (_uiState.value.page > totalPage) {
-            _uiState.update { it.copy(page = totalPage) }
+        viewModelScope.launch {
+            cartRepository.deleteCartItem(productId)
         }
-
-        syncUiState()
     }
 
     fun onLeftClick() {
@@ -96,5 +112,15 @@ class CartViewModel : ViewModel() {
 
     companion object {
         private const val PAGE_SIZE = 5
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
+                val database = AppDatabase.getDatabase(context)
+
+                val cartRepository = CartRepositoryImpl(database.cartDao())
+                CartViewModel(cartRepository)
+            }
+        }
     }
 }

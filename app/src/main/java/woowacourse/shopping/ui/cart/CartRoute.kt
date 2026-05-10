@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 @Composable
 fun CartRoute(
-    cartViewModel: CartViewModel = viewModel(),
+    cartViewModel: CartViewModel = viewModel(factory = CartViewModel.Factory),
     onNavigateToHome: () -> Unit,
 ) {
     val uiState by cartViewModel.uiState.collectAsStateWithLifecycle()
