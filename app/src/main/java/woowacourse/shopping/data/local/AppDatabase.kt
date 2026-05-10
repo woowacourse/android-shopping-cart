@@ -5,15 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import woowacourse.shopping.data.local.dao.CartDao
+import woowacourse.shopping.data.local.dao.RecentProductDao
 import woowacourse.shopping.data.local.entity.CartItemEntity
+import woowacourse.shopping.data.local.entity.RecentProductEntity
 
 @Database(
-    entities = [CartItemEntity::class],
+    entities = [CartItemEntity::class, RecentProductEntity::class],
     version = 1,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
+    abstract fun recentProductDao(): RecentProductDao
 
     companion object {
         @Volatile
