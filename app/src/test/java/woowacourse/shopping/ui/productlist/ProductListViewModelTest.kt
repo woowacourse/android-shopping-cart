@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productlist
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -86,6 +87,33 @@ class ProductListViewModelTest {
     fun `잘못된 PAGE SIZE 0가 입력되면 애러가 발생한다`() {
         assertThrows<IllegalArgumentException> { viewModel.fetchProducts(0) }
     }
+
+    @Test
+    fun `장바구니에 상품을 추가하면 상품이 추가된다`() = runTest {
+        advanceUntilIdle()
+
+        viewModel.addCartItem("1")
+        advanceUntilIdle()
+
+        val cartItems = cartRepository.getCart().first()
+        assertEquals(1, cartItems.size)
+        assertEquals("1", cartItems[0].product.id)
+    }
+
+    @Test
+    fun `장바구니 상품을 제거하면 상품이 감소된다`() = runTest {
+        advanceUntilIdle()
+
+        val product = productRepository.getProduct("1")!!
+        cartRepository.addCartItem(product, Quantity(2))
+        advanceUntilIdle()
+
+        viewModel.removeCartItem("1")
+        advanceUntilIdle()
+
+        val cartItems = cartRepository.getCart().first()
+        assertEquals(1, cartItems[0].quantity.count)
+    }
 }
 
 class MockProductRepository : ProductRepository {
@@ -111,15 +139,22 @@ class MockCartRepository : CartRepository {
         product: Product,
         quantity: Quantity,
     ) {
+        cartItems.value += CartItem(product, quantity)
     }
 
     override suspend fun decreaseCartItem(
         product: Product,
         quantity: Quantity,
     ) {
+        cartItems.value = cartItems.value.map {
+            if (it.product == product) it.decrease(quantity) else it
+        }
     }
 
     override suspend fun deleteCartItem(productId: String) {
+        cartItems.value = cartItems.value.filter {
+            it.hasProductId(productId)
+        }
     }
 }
 
@@ -128,5 +163,6 @@ class MockRecentProductRepository : RecentProductRepository {
     override fun getRecentProducts(): Flow<List<Product>> = recentProducts
 
     override suspend fun addRecentProduct(product: Product) {
+        recentProducts.value += product
     }
 }
