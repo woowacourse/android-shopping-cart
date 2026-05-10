@@ -25,6 +25,7 @@ import woowacourse.shopping.core.designsystem.component.AppImage
 import woowacourse.shopping.core.designsystem.component.QuantityStepper
 import woowacourse.shopping.feature.productDetail.component.AddCartButton
 import woowacourse.shopping.feature.productDetail.component.ProductDetailTopAppBar
+import woowacourse.shopping.feature.productDetail.component.RecentProductSummary
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
 
 @Composable
@@ -97,6 +98,12 @@ fun ProductDetailScreen(
                 quantity = productInfo?.formattedQuantity ?: "0",
             )
         }
+
+        RecentProductSummary(
+            productName = productInfo?.productName ?: "",
+            onClick = {},
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        )
 
         Spacer(Modifier.weight(1f))
 
