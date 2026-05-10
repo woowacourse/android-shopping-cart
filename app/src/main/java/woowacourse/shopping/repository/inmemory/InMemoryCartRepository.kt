@@ -16,7 +16,7 @@ object InMemoryCartRepository : CartRepository {
     private var cart = Cart(emptyList())
 
     fun initialize(context: Context) {
-        if(::preferences.isInitialized) return
+        if (::preferences.isInitialized) return
 
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         cart = restoreCart()
@@ -59,22 +59,24 @@ object InMemoryCartRepository : CartRepository {
 
     private fun persistCart() {
         val encoded =
-            cart.items.joinToString(",") { item->
+            cart.items.joinToString(",") { item ->
                 "${item.productId.value}:${item.quantity}"
             }
 
-        preferences.edit()
+        preferences
+            .edit()
             .putString(KEY_CART_ITEMS, encoded)
             .commit()
     }
 
     private fun restoreCart(): Cart {
-        val saved = preferences.getString(KEY_CART_ITEMS,null) ?: return Cart(emptyList())
-        if(saved.isBlank()) return Cart(emptyList())
+        val saved = preferences.getString(KEY_CART_ITEMS, null) ?: return Cart(emptyList())
+        if (saved.isBlank()) return Cart(emptyList())
 
         return runCatching {
             val items =
-                saved.split(",")
+                saved
+                    .split(",")
                     .filter { it.isNotBlank() }
                     .map { token ->
                         val parts = token.split(":")

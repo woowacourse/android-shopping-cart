@@ -12,9 +12,7 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 
 @Composable
-fun NetworkStatusBanner(
-    modifier: Modifier = Modifier,
-) {
+fun NetworkStatusBanner(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.errorContainer,

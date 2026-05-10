@@ -26,11 +26,12 @@ abstract class ShoppingDatabase : RoomDatabase() {
         fun getInstance(context: Context): ShoppingDatabase =
             instance ?: synchronized(this) {
                 instance
-                    ?: Room.databaseBuilder(
-                        context.applicationContext,
-                        ShoppingDatabase::class.java,
-                        "shopping.db",
-                    ).build()
+                    ?: Room
+                        .databaseBuilder(
+                            context.applicationContext,
+                            ShoppingDatabase::class.java,
+                            "shopping.db",
+                        ).build()
                         .also { instance = it }
             }
     }

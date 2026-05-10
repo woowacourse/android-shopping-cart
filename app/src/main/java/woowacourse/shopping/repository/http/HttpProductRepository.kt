@@ -59,9 +59,10 @@ class HttpProductRepository(
                 }
             }
 
-            ids.mapNotNull { productId ->
-                cachedProductsById[productId]?.let { productId to it }
-            }.toMap()
+            ids
+                .mapNotNull { productId ->
+                    cachedProductsById[productId]?.let { productId to it }
+                }.toMap()
         }
 
     private fun fetchAllProducts(): List<Product> {

@@ -34,13 +34,11 @@ fun LastViewedProductCard(
                 .background(
                     color = Color.White,
                     shape = RoundedCornerShape(5.dp),
-                )
-                .border(
+                ).border(
                     width = 1.dp,
                     color = Color(0xFFAAAAAA),
                     shape = RoundedCornerShape(5.dp),
-                )
-                .clickable(onClick = onClick)
+                ).clickable(onClick = onClick)
                 .padding(horizontal = 18.dp, vertical = 16.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -57,7 +55,6 @@ fun LastViewedProductCard(
                 color = Color(0xFF555555),
                 fontSize = 18.sp,
             )
-
         }
     }
 }
