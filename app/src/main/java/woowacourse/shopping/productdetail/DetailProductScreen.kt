@@ -4,6 +4,8 @@ package woowacourse.shopping.productdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,11 +32,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +55,8 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 @Composable
 fun DetailProductScreen(
     productId: String,
+    hideLastViewedProduct: Boolean,
+    onNavigateToLastViewedProduct: (String) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     detailProductViewModel: DetailProductViewModel =
@@ -63,12 +69,18 @@ fun DetailProductScreen(
 ) {
     val uiState by detailProductViewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        detailProductViewModel.loadProduct(productId)
+    LaunchedEffect(productId, hideLastViewedProduct) {
+        detailProductViewModel.loadProduct(
+            productId = productId,
+            hideLastViewedProduct = hideLastViewedProduct,
+        )
     }
 
     DetailProductContent(
-        productUiModel = uiState,
+        uiState = uiState,
+        onLastViewedProductClick = { lastViewedProductId ->
+            onNavigateToLastViewedProduct(lastViewedProductId)
+        },
         onAddToCartClick = { detailProductViewModel.increaseQuantity(1) },
         onIncrementQuantity = detailProductViewModel::increaseQuantity,
         onDecrementQuantity = detailProductViewModel::decreaseQuantity,
@@ -79,13 +91,16 @@ fun DetailProductScreen(
 
 @Composable
 fun DetailProductContent(
-    productUiModel: ProductUiModel,
+    uiState: DetailProductUiState,
+    onLastViewedProductClick: (String) -> Unit,
     onAddToCartClick: () -> Unit,
     onIncrementQuantity: (Int) -> Unit,
     onDecrementQuantity: (Int) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val productUiModel = uiState.productUiModel
+
     Scaffold(
         topBar = {
             DetailProductTopBar(
@@ -147,6 +162,16 @@ fun DetailProductContent(
                             .width(140.dp)
                 )
             }
+            uiState.lastViewedProductUiModel?.let { lastViewedProduct ->
+                LastViewedProduct(
+                    productUiModel = lastViewedProduct,
+                    onClick = { onLastViewedProductClick(lastViewedProduct.id) },
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = onAddToCartClick,
@@ -159,6 +184,39 @@ fun DetailProductContent(
                 Text(stringResource(R.string.add_to_cart_button_text))
             }
         }
+    }
+}
+
+@Composable
+private fun LastViewedProduct(
+    productUiModel: ProductUiModel,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier =
+            modifier
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFFBDBDBD),
+                    shape = MaterialTheme.shapes.small,
+                )
+                .clickable { onClick() }
+                .padding(horizontal = 22.dp, vertical = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(
+            text = "마지막으로 본 상품",
+            color = Color(0xFF00C78C),
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            text = productUiModel.name,
+            color = Color(0xFF555555),
+            style = MaterialTheme.typography.titleLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
@@ -193,15 +251,27 @@ private fun DetailProductTopBar(
 private fun DetailProductContentPreview() {
     AndroidShoppingTheme {
         DetailProductContent(
-            productUiModel =
-                ProductUiModel(
-                    id = "1",
-                    name = "동원 스위트콘",
-                    price = WonMoney(99_800),
-                    imageUrl = "",
-                    quantity = 0
+            uiState =
+                DetailProductUiState(
+                    productUiModel =
+                        ProductUiModel(
+                            id = "1",
+                            name = "동원 스위트콘",
+                            price = WonMoney(99_800),
+                            imageUrl = "",
+                            quantity = 0,
+                        ),
+                    lastViewedProductUiModel =
+                        ProductUiModel(
+                            id = "2",
+                            name = "PET보틀-정사각형(500ml)",
+                            price = WonMoney(1_000),
+                            imageUrl = "",
+                            quantity = 0,
+                        ),
                 ),
             onAddToCartClick = {},
+            onLastViewedProductClick = {},
             onBackClick = {},
             onIncrementQuantity = { },
             onDecrementQuantity = { },

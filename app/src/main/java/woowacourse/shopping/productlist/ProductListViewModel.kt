@@ -80,6 +80,19 @@ class ProductListViewModel(
         }
     }
 
+    fun refreshDisplayedProducts() {
+        viewModelScope.launch {
+            val productIds =
+                (
+                    _uiState.value.productUiModels.map { it.id } +
+                        _uiState.value.viewedProductUiModels.map { it.productUiModel.id }
+                ).distinct()
+            val changedProductQuantities = getProductQuantities(productIds)
+
+            updateProductQuantities(changedProductQuantities)
+        }
+    }
+
     fun loadProducts() {
         viewModelScope.launch {
             val currentProductSize = _uiState.value.productUiModels.size
@@ -99,30 +112,9 @@ class ProductListViewModel(
 
     fun refreshProducts(productIds: List<String>) {
         viewModelScope.launch {
-            val changedProductQuantities =
-                productIds.distinct().associateWith { productId ->
-                    shoppingCartRepository.getItemByProductId(productId)?.quantity?.value ?: 0
-                }
+            val changedProductQuantities = getProductQuantities(productIds.distinct())
 
-            _uiState.update { currentState ->
-                currentState.copy(
-                    productUiModels =
-                        currentState.productUiModels.map { item ->
-                            changedProductQuantities[item.id]?.let { quantity ->
-                                item.copy(quantity = quantity)
-                            } ?: item
-                        },
-                    viewedProductUiModels =
-                        currentState.viewedProductUiModels.map { item ->
-                            changedProductQuantities[item.productUiModel.id]?.let { quantity ->
-                                item.copy(
-                                    productUiModel = item.productUiModel.copy(quantity = quantity),
-                                )
-                            } ?: item
-                        },
-                    cartItemCount = shoppingCartRepository.getTotalQuantity(),
-                )
-            }
+            updateProductQuantities(changedProductQuantities)
         }
     }
 
@@ -167,6 +159,33 @@ class ProductListViewModel(
                         } else {
                             item
                         }
+                    },
+                cartItemCount = shoppingCartRepository.getTotalQuantity(),
+            )
+        }
+    }
+
+    private suspend fun getProductQuantities(productIds: List<String>): Map<String, Int> =
+        productIds.associateWith { productId ->
+            shoppingCartRepository.getItemByProductId(productId)?.quantity?.value ?: 0
+        }
+
+    private suspend fun updateProductQuantities(changedProductQuantities: Map<String, Int>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                productUiModels =
+                    currentState.productUiModels.map { item ->
+                        changedProductQuantities[item.id]?.let { quantity ->
+                            item.copy(quantity = quantity)
+                        } ?: item
+                    },
+                viewedProductUiModels =
+                    currentState.viewedProductUiModels.map { item ->
+                        changedProductQuantities[item.productUiModel.id]?.let { quantity ->
+                            item.copy(
+                                productUiModel = item.productUiModel.copy(quantity = quantity),
+                            )
+                        } ?: item
                     },
                 cartItemCount = shoppingCartRepository.getTotalQuantity(),
             )

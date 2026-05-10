@@ -61,6 +61,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productdetail.DetailProductActivity
+import woowacourse.shopping.productdetail.DetailProductActivity.Companion.EXTRA_HIDE_LAST_VIEWED_PRODUCT
 import woowacourse.shopping.productlist.ProductListActivity.Companion.CHANGED_PRODUCT_IDS
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.ui.WonMoney
@@ -89,6 +90,7 @@ fun ProductListScreen(
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         productListViewModel.loadViewedProducts()
+        productListViewModel.refreshDisplayedProducts()
     }
 
     val refreshChangedProducts: (Intent?) -> Unit = { data ->
@@ -123,9 +125,20 @@ fun ProductListScreen(
             shoppingCartLauncher.launch(Intent(context, ShoppingCartActivity::class.java))
         },
         onProductClick = {
+            val isLatestViewedProduct =
+                uiState.viewedProductUiModels.firstOrNull()?.productUiModel?.id == it
+
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
-                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it),
+                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
+                    .putExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, isLatestViewedProduct),
+            )
+        },
+        onViewedProductClick = {
+            productDetailLauncher.launch(
+                Intent(context, DetailProductActivity::class.java)
+                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
+                    .putExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, true),
             )
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,
@@ -143,6 +156,7 @@ fun ProductListContent(
     enableMoreButton: Boolean,
     onNavigateToCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
+    onViewedProductClick: (String) -> Unit,
     onIncrementQuantity: (String) -> Unit,
     onDecrementQuantity: (String) -> Unit,
     loadProducts: () -> Unit,
@@ -168,7 +182,7 @@ fun ProductListContent(
                 ) {
                     RecentViewedProducts(
                         products = viewedProductUiModels,
-                        onProductClick = onProductClick,
+                        onProductClick = onViewedProductClick,
                         modifier =
                             Modifier
                                 .fillMaxWidth()
@@ -383,6 +397,7 @@ private fun ProductListContentPreview() {
     AndroidShoppingTheme {
         ProductListContent(
             onProductClick = {},
+            onViewedProductClick = {},
             onNavigateToCartClick = {},
             onIncrementQuantity = {},
             onDecrementQuantity = {},
