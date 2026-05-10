@@ -12,11 +12,13 @@ import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
+import woowacourse.shopping.repository.ViewedProductRepository
 import woowacourse.shopping.ui.WonMoney
 
 class DetailProductViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val viewedProductRepository: ViewedProductRepository,
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(
@@ -34,6 +36,7 @@ class DetailProductViewModel(
     fun loadProduct(productId: String) {
         viewModelScope.launch {
             val product = productRepository.getProduct(productId) ?: return@launch
+            viewedProductRepository.addViewedProductByProductId(product.id)
 
             val shoppingCartItem =
                 shoppingCartRepository.getItemByProductId(productId)
@@ -85,6 +88,7 @@ class DetailProductViewModel(
                     DetailProductViewModel(
                         shoppingApplication.productRepository,
                         shoppingApplication.shoppingCartRepository,
+                        shoppingApplication.viewedProductRepository,
                     )
                 }
             }

@@ -8,15 +8,21 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items as lazyRowItems
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,6 +30,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,15 +44,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productdetail.DetailProductActivity
@@ -72,7 +84,11 @@ fun ProductListScreen(
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        productListViewModel.loadProducts()
+        productListViewModel.loadInitialProducts()
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        productListViewModel.loadViewedProducts()
     }
 
     val refreshChangedProducts: (Intent?) -> Unit = { data ->
@@ -86,6 +102,7 @@ fun ProductListScreen(
     val productDetailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
+        productListViewModel.loadViewedProducts()
         if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
         refreshChangedProducts(result.data)
     }
@@ -99,6 +116,7 @@ fun ProductListScreen(
 
     ProductListContent(
         productUiModels = uiState.productUiModels,
+        viewedProductUiModels = uiState.viewedProductUiModels,
         cartItemCount = uiState.cartItemCount,
         enableMoreButton = uiState.enableMoreButton,
         onNavigateToCartClick = {
@@ -120,6 +138,7 @@ fun ProductListScreen(
 @Composable
 fun ProductListContent(
     productUiModels: List<ProductUiModel>,
+    viewedProductUiModels: List<ViewedProductUiModel>,
     cartItemCount: Int,
     enableMoreButton: Boolean,
     onNavigateToCartClick: () -> Unit,
@@ -142,8 +161,22 @@ fun ProductListContent(
             columns = GridCells.Fixed(2),
             contentPadding = innerPadding,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(10.dp),
         ) {
+            if (viewedProductUiModels.isNotEmpty()) {
+                item(
+                    span = { GridItemSpan(maxLineSpan) },
+                ) {
+                    RecentViewedProducts(
+                        products = viewedProductUiModels,
+                        onProductClick = onProductClick,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
+                    )
+                }
+            }
+
             items(
                 items = productUiModels,
                 key = { it.id },
@@ -203,6 +236,94 @@ fun ProductListContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RecentViewedProducts(
+    products: List<ViewedProductUiModel>,
+    onProductClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val lazyListState = rememberLazyListState()
+    val lastViewedAt = products.firstOrNull()?.viewedAt
+
+    LaunchedEffect(lastViewedAt) {
+        if (lastViewedAt != null) {
+            lazyListState.scrollToItem(0)
+        }
+    }
+
+    Column(modifier = modifier) {
+        Text(
+            text = "최근 본 상품",
+            color = Color.Black,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier =
+                Modifier
+                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+        )
+
+        LazyRow(
+            state = lazyListState,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 10.dp),
+        ) {
+            lazyRowItems(
+                items = products,
+                key = { "${it.productUiModel.id}-${it.viewedAt}" },
+            ) { viewedProduct ->
+                RecentViewedProductItem(
+                    product = viewedProduct.productUiModel,
+                    onClick = { onProductClick(viewedProduct.productUiModel.id) },
+                )
+            }
+        }
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+            thickness = 12.dp,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp)
+        )
+    }
+}
+
+@Composable
+private fun RecentViewedProductItem(
+    product: ProductUiModel,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier =
+            modifier
+                .width(104.dp)
+                .clickable { onClick() },
+    ) {
+        AsyncImage(
+            model = product.imageUrl,
+            contentDescription = stringResource(R.string.product_image_content_description, product.name),
+            contentScale = ContentScale.Crop,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(104.dp)
+                    .background(MaterialTheme.colorScheme.surfaceContainer),
+        )
+        Text(
+            text = product.name,
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 6.dp),
+        )
     }
 }
 
@@ -273,6 +394,31 @@ private fun ProductListContentPreview() {
                         price = WonMoney(1_000000000),
                         imageUrl = "",
                         quantity = 0,
+                    ),
+                ),
+            viewedProductUiModels =
+                listOf(
+                    ViewedProductUiModel(
+                        productUiModel =
+                            ProductUiModel(
+                                id = "1",
+                                name = "PET보틀-정사각",
+                                price = WonMoney(1_000),
+                                imageUrl = "",
+                                quantity = 0,
+                            ),
+                        viewedAt = 1L,
+                    ),
+                    ViewedProductUiModel(
+                        productUiModel =
+                            ProductUiModel(
+                                id = "2",
+                                name = "PET보틀-납작",
+                                price = WonMoney(1_000),
+                                imageUrl = "",
+                                quantity = 0,
+                            ),
+                        viewedAt = 2L,
                     ),
                 ),
             enableMoreButton = true,

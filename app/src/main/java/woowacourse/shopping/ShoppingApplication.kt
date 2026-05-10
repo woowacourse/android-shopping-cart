@@ -9,9 +9,11 @@ import mockwebserver3.RecordedRequest
 import woowacourse.shopping.repository.AndroidShoppingDatabase
 import woowacourse.shopping.repository.DatabaseProductRepository
 import woowacourse.shopping.repository.DatabaseShoppingCartRepository
+import woowacourse.shopping.repository.DatabaseViewedProductRepository
 import woowacourse.shopping.repository.ProductRemoteDataSource
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
+import woowacourse.shopping.repository.ViewedProductRepository
 
 class ShoppingApplication : Application() {
     private val mockWebServer by lazy { startMockWebServer() }
@@ -21,7 +23,8 @@ class ShoppingApplication : Application() {
                 applicationContext,
                 AndroidShoppingDatabase::class.java,
                 "shopping-db",
-            ).build()
+            ).addMigrations(AndroidShoppingDatabase.MIGRATION_1_2)
+            .build()
     }
 
     val productRepository: ProductRepository by lazy {
@@ -32,6 +35,10 @@ class ShoppingApplication : Application() {
 
     val shoppingCartRepository: ShoppingCartRepository by lazy {
         DatabaseShoppingCartRepository(productRepository, database.shoppingCartItemDao())
+    }
+
+    val viewedProductRepository: ViewedProductRepository by lazy {
+        DatabaseViewedProductRepository(productRepository, database.viewedProductDao())
     }
 
     override fun onCreate() {
