@@ -40,9 +40,10 @@ class CartViewModel(
             if (currentPage >= totalPages && currentPage != 0) {
                 currentPage = totalPages - 1
             }
-            pageCartItems = cart.getPage(currentPage, PAGE_SIZE).map { cartItem ->
-                cartItem.toCartUiModel()
-            }
+            pageCartItems =
+                cart.getPage(currentPage, PAGE_SIZE).map { cartItem ->
+                    cartItem.toCartUiModel()
+                }
             isFirstPage = currentPage == 0
             isLastPage = currentPage == totalPages - 1 || totalPages == 0
 

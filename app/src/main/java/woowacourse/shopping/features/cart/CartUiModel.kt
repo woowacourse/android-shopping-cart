@@ -26,12 +26,13 @@ fun CartItem.toCartUiModel(): CartItemUiModel =
 
 fun CartItemUiModel.toCartItem(): CartItem =
     CartItem(
-        product = Product(
-            id = id,
-            name = ProductName(name),
-            imageUrl = ImageUrl(imageUrl),
-            price = Price(price),
-        ),
+        product =
+            Product(
+                id = id,
+                name = ProductName(name),
+                imageUrl = ImageUrl(imageUrl),
+                price = Price(price),
+            ),
         quantity = CartItemQuantity(quantity),
     )
 

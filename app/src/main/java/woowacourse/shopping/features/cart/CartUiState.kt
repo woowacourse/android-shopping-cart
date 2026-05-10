@@ -1,7 +1,5 @@
 package woowacourse.shopping.features.cart
 
-import woowacourse.shopping.domain.cart.model.CartItem
-
 data class CartUiState(
     val pageCartItems: List<CartItemUiModel> = emptyList(),
     val totalPageCount: Int = 0,

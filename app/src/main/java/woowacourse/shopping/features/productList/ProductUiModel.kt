@@ -14,11 +14,10 @@ data class ProductUiModel(
     val isExistProductToCart: Boolean,
 )
 
-fun ProductUiModel.toProduct(): Product {
-    return Product(
+fun ProductUiModel.toProduct(): Product =
+    Product(
         id = id,
         name = ProductName(name),
         price = Price(price),
         imageUrl = ImageUrl(imageUrl),
     )
-}

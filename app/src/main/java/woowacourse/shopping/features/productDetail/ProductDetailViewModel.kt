@@ -12,10 +12,7 @@ import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
-import woowacourse.shopping.domain.product.model.ImageUrl
-import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
-import woowacourse.shopping.domain.product.model.ProductName
 
 class ProductDetailViewModel(
     parcelProduct: ParcelProduct,

@@ -14,6 +14,7 @@ data class ParcelProduct(
     val price: Int,
     val imageUrl: String,
 ) : Parcelable
+
 fun Product.toParcelProduct(): ParcelProduct =
     ParcelProduct(
         id = id,
