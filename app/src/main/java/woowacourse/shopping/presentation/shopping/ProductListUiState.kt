@@ -16,8 +16,7 @@ data class ProductListUiState(
     val totalQuantity: Int
         get() = cart.getTotalQuantity()
 
-    @OptIn(ExperimentalUuidApi::class)
-    val productQuantities: Map<Uuid, Int>
+    val productQuantities: Map<Int, Int>
         get() =
             cart.cartItems.associate {
                 it.product.productId to it.quantity

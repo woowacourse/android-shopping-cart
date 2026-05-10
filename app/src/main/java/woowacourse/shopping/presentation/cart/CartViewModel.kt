@@ -12,10 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
@@ -41,7 +39,7 @@ class CartViewModel(
         refresh()
     }
 
-    fun deleteProduct(productId: Uuid) {
+    fun deleteProduct(productId: Int) {
         viewModelScope.launch {
             cartRepository.deleteProduct(productId)
             refresh()
@@ -57,7 +55,7 @@ class CartViewModel(
         }
     }
 
-    fun decreaseQuantity(productId: Uuid) {
+    fun decreaseQuantity(productId: Int) {
         val item =
             _uiState.value.cart.cartItems
                 .find { it.product.productId == productId }
@@ -96,7 +94,7 @@ class CartViewModel(
         refresh()
     }
 
-    fun showDeleteDialog(productId: Uuid) {
+    fun showDeleteDialog(productId: Int) {
         _uiState.update { it.copy(deleteProductId = productId) }
     }
 

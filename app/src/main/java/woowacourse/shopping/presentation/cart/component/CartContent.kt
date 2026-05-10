@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartContent(
     cart: Cart,
@@ -21,9 +20,9 @@ fun CartContent(
     onNextPageClick: () -> Unit,
     hasPreviousPage: Boolean,
     hasNextPage: Boolean,
-    onDelete: (Uuid) -> Unit,
+    onDelete: (Int) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
+    onQuantityDecrease: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -56,7 +55,6 @@ fun CartContent(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun CartContentPreview() {

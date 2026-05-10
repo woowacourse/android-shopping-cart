@@ -63,8 +63,7 @@ class ProductListViewModel(
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun decreaseQuantity(productId: Uuid) {
+    fun decreaseQuantity(productId: Int) {
         viewModelScope.launch {
             cartRepository.decreaseQuantity(productId)
             refreshCart()

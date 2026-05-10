@@ -13,7 +13,7 @@ import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     viewModel: ProductListViewModel,
@@ -41,7 +41,6 @@ fun ProductListScreen(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductListScreenPreview() {

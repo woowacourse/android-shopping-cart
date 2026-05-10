@@ -22,7 +22,6 @@ class ProductListActivity : ComponentActivity() {
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -55,14 +55,13 @@ fun ProductDetail(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductDetailPreview() {
     ProductDetail(
         product =
             ProductUiModel(
-                productId = Uuid.random(),
+                productId = 1,
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                 productName = "[든든] 동원 스위트콘",
                 price = 99800,

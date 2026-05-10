@@ -37,7 +37,6 @@ fun ProductDetailErrorScreen(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductDetailErrorScreenPreview() {

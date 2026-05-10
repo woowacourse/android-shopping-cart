@@ -28,7 +28,6 @@ class ProductDetailActivity : ComponentActivity() {
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -71,7 +70,6 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     companion object {
-        @OptIn(ExperimentalUuidApi::class)
         fun newIntent(
             context: Context,
             product: ProductUiModel,

@@ -15,8 +15,10 @@ import woowacourse.shopping.data.ProductFixture
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.navigation.IntentKeys
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.productdetail.mapper.toUiModel
 import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalTestApi::class)
 class ProductListActivityTest {
     @get:Rule
     val intentsRule = IntentsRule()
@@ -24,7 +26,6 @@ class ProductListActivityTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ProductListActivity>()
 
-    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
     @Test
     fun openProductDetailWhenProductClicked() {
         val product = ProductFixture.productList.first()
@@ -37,12 +38,11 @@ class ProductListActivityTest {
         Intents.intended(
             IntentMatchers.hasExtra(
                 IntentKeys.PRODUCT,
-                product.productId.toString(),
+                product.toUiModel(),
             ),
         )
     }
 
-    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
     @Test
     fun openCartWhenCartIconClicked() {
         composeRule
@@ -52,7 +52,6 @@ class ProductListActivityTest {
         Intents.intended(IntentMatchers.hasComponent(CartActivity::class.java.name))
     }
 
-    @OptIn(ExperimentalTestApi::class, ExperimentalUuidApi::class)
     @Test
     fun returnToProductListWhenLeftArrowClickedInCart() {
         composeRule

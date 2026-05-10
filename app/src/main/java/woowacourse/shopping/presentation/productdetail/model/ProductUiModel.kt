@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 @Parcelize
 @OptIn(ExperimentalUuidApi::class)
 data class ProductUiModel(
-    val productId: Uuid,
+    val productId: Int,
     val imageUrl: String,
     val productName: String,
     val price: Int,

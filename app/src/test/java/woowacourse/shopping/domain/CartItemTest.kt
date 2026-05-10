@@ -8,7 +8,6 @@ import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class CartItemTest {
     @Test
     fun `선택한 상품의 수량을 늘릴 수 있다`() {
@@ -40,7 +39,7 @@ class CartItemTest {
     @OptIn(ExperimentalUuidApi::class)
     private fun createProduct(): Product =
         Product(
-            productId = Uuid.random(),
+            productId = 1,
             imageUrl = "",
             productName = "동원 스위트콘",
             price = Price(99800),

@@ -37,6 +37,5 @@ class ProductRepositoryImpl(
         return nextPageStartIndex < products.productItems.size
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    override fun findProductById(productId: Uuid): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
+    override fun findProductById(productId: Int): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
 }

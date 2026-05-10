@@ -4,7 +4,6 @@ import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Cart(
     val cartItems: List<CartItem> = emptyList(),
 ) {
@@ -32,7 +31,7 @@ data class Cart(
         )
     }
 
-    fun decreaseQuantity(productId: Uuid): Cart {
+    fun decreaseQuantity(productId: Int): Cart {
         val cartItem = cartItems.find { it.product.productId == productId } ?: return this
 
         if (cartItem.quantity == 1) {
@@ -56,7 +55,7 @@ data class Cart(
         )
     }
 
-    fun deleteProduct(productId: Uuid): Cart =
+    fun deleteProduct(productId: Int): Cart =
         copy(
             cartItems =
                 cartItems.filterNot {

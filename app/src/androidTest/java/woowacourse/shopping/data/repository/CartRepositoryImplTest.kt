@@ -14,7 +14,6 @@ import woowacourse.shopping.data.local.database.ShoppingDatabase
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 class CartRepositoryImplTest {
     private lateinit var database: ShoppingDatabase
     private lateinit var cartDao: CartDao

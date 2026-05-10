@@ -28,7 +28,6 @@ import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductItem(
     product: Product,
@@ -138,13 +137,13 @@ private fun ProductItemPrice(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductItemPreview() {
     ProductItem(
         product =
             Product(
+                productId = 1,
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
                 productName = "PET보틀-정사각형(370ml)",
                 price = Price(10000),

@@ -16,7 +16,6 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun RecentlyViewedProductsSection(
     products: RecentlyViewedProducts,

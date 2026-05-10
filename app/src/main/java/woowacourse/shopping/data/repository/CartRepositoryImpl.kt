@@ -36,12 +36,11 @@ class CartRepositoryImpl(
 
     override suspend fun getTotalQuantity(): Int = cartDao.sumQuantity()
 
-    @OptIn(ExperimentalUuidApi::class)
     override suspend fun increaseQuantity(
         product: Product,
         quantity: Int,
     ) {
-        val savedItem = cartDao.findByProductId(product.productId.toString())
+        val savedItem = cartDao.findByProductId(product.productId)
 
         val newQuantity =
             if (savedItem == null) {
@@ -54,12 +53,11 @@ class CartRepositoryImpl(
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    override suspend fun decreaseQuantity(productId: Uuid) {
-        val savedItem = cartDao.findByProductId(productId.toString()) ?: return
+    override suspend fun decreaseQuantity(productId: Int) {
+        val savedItem = cartDao.findByProductId(productId) ?: return
 
         if (savedItem.quantity == 1) {
-            cartDao.deleteByProductId(productId.toString())
+            cartDao.deleteByProductId(productId)
             return
         }
 
@@ -68,8 +66,7 @@ class CartRepositoryImpl(
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    override suspend fun deleteProduct(productId: Uuid) {
-        cartDao.deleteByProductId(productId.toString())
+    override suspend fun deleteProduct(productId: Int) {
+        cartDao.deleteByProductId(productId)
     }
 }

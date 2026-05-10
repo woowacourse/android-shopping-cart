@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.cart.component.CartScaffold
 import woowacourse.shopping.presentation.cart.component.DeleteProductDialog
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
     viewModel: CartViewModel,
@@ -65,7 +65,6 @@ fun CartScreen(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun CartScreenPreview() {

@@ -12,7 +12,7 @@ class CartTest {
     @OptIn(ExperimentalUuidApi::class)
     val product =
         Product(
-            productId = Uuid.random(),
+            productId = 1,
             imageUrl = "",
             productName = "동원 스위트콘",
             price = Price(99800),

@@ -45,7 +45,6 @@ class ProductListViewModelTest {
                 .containsExactlyElementsOf(ProductFixture.productList)
         }
 
-    @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품 수량을 증가시키면 장바구니에 상품이 추가된다`() =
         runTest {
@@ -64,7 +63,6 @@ class ProductListViewModelTest {
             assertThat(cartItem.quantity).isEqualTo(1)
         }
 
-    @OptIn(ExperimentalUuidApi::class)
     @Test
     fun `상품 수량을 감소시키면 장바구니 수량이 감소한다`() =
         runTest {

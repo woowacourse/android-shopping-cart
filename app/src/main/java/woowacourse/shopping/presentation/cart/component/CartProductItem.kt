@@ -38,11 +38,10 @@ import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartProductItem(
     cartItem: CartItem,
-    onDelete: (Uuid) -> Unit,
+    onDelete: (Int) -> Unit,
     onQuantityIncrease: () -> Unit,
     onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,11 +82,10 @@ fun CartProductItem(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 private fun CartProductHeader(
     product: Product,
-    onDelete: (Uuid) -> Unit,
+    onDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -180,6 +178,7 @@ private fun CartProductItemPreview() {
         cartItem =
             CartItem(
                 Product(
+                    productId = 1,
                     imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                     productName = "[든든] 동원 스위트콘",
                     price = Price(99800),

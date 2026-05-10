@@ -16,7 +16,7 @@ import woowacourse.shopping.presentation.cart.FakeCartRepository
 import woowacourse.shopping.presentation.shopping.FakeRecentlyViewedProductRepository
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class ProductDetailViewModelTest {
     @JvmField
     @RegisterExtension

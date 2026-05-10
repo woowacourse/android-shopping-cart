@@ -6,7 +6,6 @@ import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class FakeCartRepository(
     private var cart: Cart = Cart(),
 ) : CartRepository {
@@ -36,11 +35,11 @@ class FakeCartRepository(
         cart = cart.increaseQuantity(product, quantity)
     }
 
-    override suspend fun decreaseQuantity(productId: Uuid) {
+    override suspend fun decreaseQuantity(productId: Int) {
         cart = cart.decreaseQuantity(productId)
     }
 
-    override suspend fun deleteProduct(productId: Uuid) {
+    override suspend fun deleteProduct(productId: Int) {
         cart = cart.deleteProduct(productId)
     }
 }

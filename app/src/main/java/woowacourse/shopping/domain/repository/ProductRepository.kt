@@ -18,6 +18,5 @@ interface ProductRepository {
         pageSize: Int,
     ): Boolean
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun findProductById(productId: Uuid): Product?
+    fun findProductById(productId: Int): Product?
 }

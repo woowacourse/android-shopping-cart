@@ -23,9 +23,7 @@ import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun RecentlyViewedProductItem(
     product: Product,
@@ -89,13 +87,13 @@ private fun ProductItemTitle(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun RecentlyViewedProductItemPreview() {
     RecentlyViewedProductItem(
         product =
             Product(
+                productId = 1,
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image1}",
                 productName = "PET보틀-정사각형(370ml)",
                 price = Price(10000),

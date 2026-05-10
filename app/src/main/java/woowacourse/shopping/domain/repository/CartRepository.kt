@@ -22,9 +22,7 @@ interface CartRepository {
         quantity: Int,
     )
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun decreaseQuantity(productId: Uuid)
+    suspend fun decreaseQuantity(productId: Int)
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun deleteProduct(productId: Uuid)
+    suspend fun deleteProduct(productId: Int)
 }

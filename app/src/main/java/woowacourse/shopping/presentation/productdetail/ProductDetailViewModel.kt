@@ -45,8 +45,7 @@ class ProductDetailViewModel(
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun addToCart(productId: Uuid) {
+    fun addToCart(productId: Int) {
         viewModelScope.launch {
             val product = productRepository.findProductById(productId) ?: return@launch
             cartRepository.increaseQuantity(
@@ -57,9 +56,8 @@ class ProductDetailViewModel(
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun viewProduct(
-        productId: Uuid,
+        productId: Int,
         shouldShowLastViewedProduct: Boolean,
     ) {
         viewModelScope.launch {

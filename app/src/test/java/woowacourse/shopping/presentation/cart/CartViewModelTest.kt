@@ -11,13 +11,12 @@ import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.presentation.MainDispatcherRule
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class CartViewModelTest {
     @JvmField
     @RegisterExtension
     val mainDispatcherRule = MainDispatcherRule()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `초기화 시 장바구니 첫 페이지를 불러온다`() =
         runTest {
@@ -31,7 +30,6 @@ class CartViewModelTest {
             assertThat(viewModel.uiState.value.currentPageIndex).isEqualTo(0)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `다음 페이지로 이동하면 다음 장바구니 상품을 불러온다`() =
         runTest {
@@ -47,7 +45,6 @@ class CartViewModelTest {
             assertThat(viewModel.uiState.value.cart.cartItems).hasSize(2)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `이전 페이지로 이동하면 이전 장바구니 상품을 불러온다`() =
         runTest {
@@ -66,7 +63,6 @@ class CartViewModelTest {
             assertThat(viewModel.uiState.value.cart.cartItems).hasSize(5)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `상품 수량을 증가시키면 장바구니 수량이 증가한다`() =
         runTest {
@@ -86,7 +82,6 @@ class CartViewModelTest {
             assertThat(updateItem.quantity).isEqualTo(2)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `수량이 1인 상품을 감소시키면 삭제 확인 다이얼로그 상태가 설정된다`() =
         runTest {
@@ -104,7 +99,6 @@ class CartViewModelTest {
             assertThat(viewModel.uiState.value.deleteProductId).isEqualTo(productId)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `상품을 삭제하면 장바구니에서 제거되고 메시지 이벤트를 발행한다`() =
         runTest {

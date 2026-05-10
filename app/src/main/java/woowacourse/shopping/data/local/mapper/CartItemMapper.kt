@@ -4,15 +4,12 @@ import woowacourse.shopping.data.local.entity.CartItemEntity
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 fun CartItemEntity.toDomain(): CartItem =
     CartItem(
         product =
             Product(
-                productId = Uuid.parse(productId),
+                productId = productId,
                 productName = productName,
                 price = Price(price),
                 imageUrl = imageUrl,
@@ -20,10 +17,9 @@ fun CartItemEntity.toDomain(): CartItem =
         quantity = quantity,
     )
 
-@OptIn(ExperimentalUuidApi::class)
 fun Product.toCartItemEntity(quantity: Int): CartItemEntity =
     CartItemEntity(
-        productId = productId.toString(),
+        productId = productId,
         productName = productName,
         price = price.value,
         imageUrl = imageUrl,

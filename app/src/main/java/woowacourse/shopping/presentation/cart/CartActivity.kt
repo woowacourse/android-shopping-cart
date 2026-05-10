@@ -19,12 +19,10 @@ class CartActivity : ComponentActivity() {
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        @OptIn(ExperimentalUuidApi::class)
         setContent {
             androidshoppingTheme {
                 CartScreen(
@@ -36,7 +34,6 @@ class CartActivity : ComponentActivity() {
     }
 
     companion object {
-        @OptIn(ExperimentalUuidApi::class)
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

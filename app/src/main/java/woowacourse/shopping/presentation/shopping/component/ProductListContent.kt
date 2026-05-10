@@ -20,20 +20,17 @@ import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
 import woowacourse.shopping.presentation.productdetail.component.ActionButton
 import woowacourse.shopping.presentation.theme.homeDividerColor
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductListContent(
     products: Products,
     recentlyViewedProducts: RecentlyViewedProducts,
-    productQuantities: Map<Uuid, Int>,
+    productQuantities: Map<Int, Int>,
     hasNextPage: Boolean,
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
+    onQuantityDecrease: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -81,13 +78,12 @@ private fun LazyGridScope.recentlyViewedProductSection(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 private fun LazyGridScope.productItems(
     products: Products,
-    productQuantities: Map<Uuid, Int>,
+    productQuantities: Map<Int, Int>,
     onItemClick: (Product) -> Unit,
     onQuantityIncrease: (Product) -> Unit,
-    onQuantityDecrease: (Uuid) -> Unit,
+    onQuantityDecrease: (Int) -> Unit,
 ) {
     item(span = { GridItemSpan(maxLineSpan) }) {
         Spacer(modifier = Modifier.height(8.dp))
@@ -131,7 +127,6 @@ private fun LazyGridScope.loadMoreButton(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun ProductListContentPreview() {

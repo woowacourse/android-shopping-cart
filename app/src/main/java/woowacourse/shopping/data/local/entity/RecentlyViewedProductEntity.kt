@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "recently_viewed_products")
 class RecentlyViewedProductEntity(
-    @PrimaryKey val productId: String,
+    @PrimaryKey val productId: Int,
     val viewedAt: Long,
 )

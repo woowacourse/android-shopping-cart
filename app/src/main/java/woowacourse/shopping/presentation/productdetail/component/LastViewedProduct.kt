@@ -54,13 +54,13 @@ fun LastViewedProduct(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun LastViewedProductPreview() {
     LastViewedProduct(
         product =
             Product(
+                productId = 1,
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                 productName = "[든든] 동원 스위트콘",
                 price = Price(99800),

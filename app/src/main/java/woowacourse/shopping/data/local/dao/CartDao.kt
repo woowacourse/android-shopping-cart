@@ -18,13 +18,13 @@ interface CartDao {
     ): List<CartItemEntity>
 
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
-    suspend fun findByProductId(productId: String): CartItemEntity?
+    suspend fun findByProductId(productId: Int): CartItemEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(cartItem: CartItemEntity)
 
     @Query("DELETE FROM cart_items WHERE productId = :productId")
-    suspend fun deleteByProductId(productId: String)
+    suspend fun deleteByProductId(productId: Int)
 
     @Query("SELECT COUNT(*) FROM cart_items")
     suspend fun countItems(): Int

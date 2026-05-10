@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class RecentlyViewedProductRepositoryImpl(
     private val dao: RecentlyViewedProductDao,
     private val productRepository: ProductRepository,
@@ -17,7 +16,7 @@ class RecentlyViewedProductRepositoryImpl(
     override suspend fun viewProduct(product: Product) {
         dao.save(
             RecentlyViewedProductEntity(
-                productId = product.productId.toString(),
+                productId = product.productId,
                 viewedAt = System.currentTimeMillis(),
             ),
         )
@@ -27,7 +26,7 @@ class RecentlyViewedProductRepositoryImpl(
     override suspend fun getRecentlyViewedProducts(): RecentlyViewedProducts {
         val products =
             dao.findAll().mapNotNull { entity ->
-                productRepository.findProductById(Uuid.parse(entity.productId))
+                productRepository.findProductById(entity.productId)
             }
 
         return RecentlyViewedProducts(products)
