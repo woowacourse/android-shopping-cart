@@ -21,6 +21,7 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
+    private val isFromBanner: Boolean = savedStateHandle[ProductDetailActivity.EXTRA_IS_FROM_BANNER] ?: false
 
     init {
         loadProduct()
@@ -64,17 +65,18 @@ class ProductDetailViewModel(
                 val cartQuantityMap = cartItems.items.associate {
                     it.product.id to it.quantity
                 }
-                var lastViewedProduct = recentProductRepo.getLastViewedProduct()
-                if (lastViewedProduct?.id == productId) lastViewedProduct = null
+                val bannerProduct = recentProductRepo.getLastViewedProduct()
+                    ?.takeIf { !isFromBanner && it.id != productId }
 
                 _uiState.update {
                     it.copy(
                         product = product,
                         selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1),
-                        lastViewedProduct = lastViewedProduct
+                        lastViewedProduct = bannerProduct
                     )
                 }
                 recentProductRepo.add(productId)
+
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

@@ -35,7 +35,7 @@ fun ProductDetailBody(
     modifier: Modifier = Modifier,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
-    onLastViewedProductClick: () -> Unit
+    onLastViewedProductClick: (Product) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -49,7 +49,7 @@ fun ProductDetailBody(
                 ) {
                     LastViewedProductBanner(
                         lastViewedProduct = lastViewedProduct,
-                        onClick = onLastViewedProductClick,
+                        onClick = { onLastViewedProductClick(lastViewedProduct) },
                     )
                 }
             }

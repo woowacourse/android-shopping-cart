@@ -22,7 +22,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
-    onLastViewedProductClick: () -> Unit
+    onLastViewedProductClick: (Product) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -59,7 +59,7 @@ fun ProductDetailScreen(
     onAddToCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
-    onLastViewedProductClick: () -> Unit,
+    onLastViewedProductClick: (Product) -> Unit,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),

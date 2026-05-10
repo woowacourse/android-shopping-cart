@@ -36,7 +36,10 @@ class ProductDetailActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel: ProductDetailViewModel = viewModel(
                         factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                            override fun <T : ViewModel> create(
+                                modelClass: Class<T>,
+                                extras: CreationExtras
+                            ): T {
                                 val savedStateHandle = extras.createSavedStateHandle()
 
                                 return ProductDetailViewModel(
@@ -53,9 +56,15 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         viewModel = viewModel,
                         modifier = Modifier.padding(innerPadding),
-                        onCloseClick = ::finish,
+                        onCloseClick = {
+                            finish()
+                        },
                         onAddToCartClick = ::finish,
-                        onLastViewedProductClick = ::finish,
+                        onLastViewedProductClick = {
+                            val intent = newIntent(context = this, productId = it.id, isFromBanner = true)
+                            startActivity(intent)
+                            finish()
+                        },
                     )
                 }
             }
@@ -63,13 +72,16 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT_ID = "com.woowacourse.shopping.PRODUCT.ID"
+        const val EXTRA_PRODUCT_ID = "com.woowacourse.shopping.PRODUCT_ID"
+        const val EXTRA_IS_FROM_BANNER = "com.woowacourse.shopping.IS_FROM_BANNER"
 
         fun newIntent(
             context: Context,
             productId: UUID,
+            isFromBanner: Boolean = false
         ): Intent = Intent(context, ProductDetailActivity::class.java).apply {
             putExtra(EXTRA_PRODUCT_ID, productId.toString())
+            putExtra(EXTRA_IS_FROM_BANNER, isFromBanner)
         }
     }
 }
