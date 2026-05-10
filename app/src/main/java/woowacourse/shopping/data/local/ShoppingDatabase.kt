@@ -22,7 +22,8 @@ abstract class ShoppingDatabase : RoomDatabase() {
                         context.applicationContext,
                         ShoppingDatabase::class.java,
                         "shopping_database",
-                    ).build()
+                    ).fallbackToDestructiveMigration(true)
+                    .build()
 
                 instance = newInstance
                 newInstance
