@@ -3,29 +3,39 @@ package woowacourse.shopping.ui.screens.product
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.topbar.MainTopBar
+import woowacourse.shopping.ui.model.UiProduct
 
 @Composable
 fun ProductScreen(
@@ -48,23 +58,48 @@ fun ProductScreen(
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(20.dp),
             modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                RecentProductGroup(
+                    products = products,
+                    onClick = { },
+                    modifier = Modifier.padding(
+                        start = 20.dp,
+                        end = 20.dp,
+                        top = 20.dp,
+                        bottom = 28.dp,
+                    ),
+                )
+            }
+
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                HorizontalDivider(
+                    thickness = 7.dp,
+                    color = Color(0xFFEBEBEB),
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
+
+            itemsIndexed(
                 items = products,
-                key = { it.id },
-            ) {
+                key = { _, product -> product.id },
+            ) { index, product ->
+                val isEven = index % 2 == 0
                 ProductCard(
-                    imageUrl = it.imageUrl,
-                    name = it.name,
-                    price = it.price,
-                    onClick = { onProductCardClick(it.id) },
-                    cartQuantity = it.cartQuantity,
-                    onPlusClick = { viewModel.plusCartCount(it.id) },
-                    onMinusClick = { viewModel.minusCartCount(it.id) },
+                    imageUrl = product.imageUrl,
+                    name = product.name,
+                    price = product.price,
+                    onClick = { onProductCardClick(product.id) },
+                    cartQuantity = product.cartQuantity,
+                    onPlusClick = { viewModel.plusCartCount(product.id) },
+                    onMinusClick = { viewModel.minusCartCount(product.id) },
+                    modifier = Modifier.padding(
+                        start = if (isEven) 20.dp else 0.dp,
+                        end = if (isEven) 0.dp else 20.dp,
+                    ),
                 )
             }
 
@@ -86,6 +121,41 @@ fun ProductScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecentProductGroup(
+    products: List<UiProduct>, // 임시로 테스트 용 타입 알맞게 변경하기
+    onClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Text(
+            text = "최근 본 상품",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(
+                items = products, // 임시로 테스트 용 알맞게 갈아끼우기
+                key = { it.id },
+            ) {
+                RecentProductCard(
+                    imageUrl = it.imageUrl,
+                    title = it.name,
+                    onClick = { onClick(it.id) },
+                    modifier = Modifier.width(98.dp),
+                )
             }
         }
     }
