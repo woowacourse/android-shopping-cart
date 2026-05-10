@@ -1,15 +1,16 @@
 package woowacourse.shopping.ui.shopping
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.CloudSync
@@ -46,13 +47,11 @@ fun RecentItemsSection(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        LazyRow(
+        Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState())
         ) {
-            items(
-                items = recentItems,
-                key = { it.id },
-            ) { product ->
+            recentItems.forEach { product ->
                 RecentItemCard(
                     product = product,
                     onClick = { onProductClick(product.id) },
