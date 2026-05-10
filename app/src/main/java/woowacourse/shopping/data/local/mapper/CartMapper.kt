@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.mapper
+package woowacourse.shopping.data.local.mapper
 
 import woowacourse.shopping.data.local.entity.CartItemEntity
 import woowacourse.shopping.domain.model.cart.CartItem
@@ -17,16 +17,6 @@ fun CartItemEntity.toDomain(): CartItem =
                 price = Price(price),
                 imageUrl = imageUrl,
             ),
-        quantity = quantity,
-    )
-
-@OptIn(ExperimentalUuidApi::class)
-fun CartItem.toEntity(): CartItemEntity =
-    CartItemEntity(
-        productId = product.productId.toString(),
-        productName = product.productName,
-        price = product.price.value,
-        imageUrl = product.imageUrl,
         quantity = quantity,
     )
 

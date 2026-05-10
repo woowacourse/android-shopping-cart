@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.local.dao.CartDao
-import woowacourse.shopping.data.mapper.toCartItemEntity
-import woowacourse.shopping.data.mapper.toDomain
+import woowacourse.shopping.data.local.mapper.toCartItemEntity
+import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
