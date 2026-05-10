@@ -1,31 +1,24 @@
-package woowacourse.shopping.features.productDetail
+package woowacourse.shopping.features.productList
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.model.ProductName
 
-@Parcelize
-data class ParcelProduct(
+data class ProductUiModel(
     val id: String,
     val name: String,
     val price: Int,
     val imageUrl: String,
-) : Parcelable
-fun Product.toParcelProduct(): ParcelProduct =
-    ParcelProduct(
-        id = id,
-        name = name.value,
-        price = price.value,
-        imageUrl = imageUrl.value,
-    )
+    val quantity: Int,
+    val isExistProductToCart: Boolean,
+)
 
-fun ParcelProduct.toProduct(): Product =
-    Product(
+fun ProductUiModel.toProduct(): Product {
+    return Product(
         id = id,
         name = ProductName(name),
         price = Price(price),
         imageUrl = ImageUrl(imageUrl),
     )
+}

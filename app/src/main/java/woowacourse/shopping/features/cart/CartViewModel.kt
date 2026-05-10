@@ -19,18 +19,18 @@ class CartViewModel(
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState = _uiState.asStateFlow()
 
-    var cart = Cart(CartItems(emptyList<CartItem>()))
-    var pageCartItems = emptyList<CartItem>()
-    var isFirstPage = true
-    var isLastPage = true
-    var currentPage = 0
-    var totalPages = 0
+    private var cart = Cart(CartItems(emptyList<CartItem>()))
+    private var pageCartItems = emptyList<CartItemUiModel>()
+    private var isFirstPage = true
+    private var isLastPage = true
+    private var currentPage = 0
+    private var totalPages = 0
 
     init {
         loadCartPage()
     }
 
-    fun isMinusEnabled(cartItem: CartItem): Boolean = cartItem.quantity.value > 1
+    fun isMinusEnabled(cartItemUiModel: CartItemUiModel): Boolean = cartItemUiModel.quantity > 1
 
     fun loadCartPage() {
         viewModelScope.launch {
@@ -40,9 +40,12 @@ class CartViewModel(
             if (currentPage >= totalPages && currentPage != 0) {
                 currentPage = totalPages - 1
             }
-            pageCartItems = cart.getPage(currentPage, PAGE_SIZE)
+            pageCartItems = cart.getPage(currentPage, PAGE_SIZE).map { cartItem ->
+                cartItem.toCartUiModel()
+            }
             isFirstPage = currentPage == 0
             isLastPage = currentPage == totalPages - 1 || totalPages == 0
+
             _uiState.update {
                 it.copy(
                     pageCartItems = pageCartItems,
@@ -55,23 +58,23 @@ class CartViewModel(
         }
     }
 
-    fun removeCartItem(cartItem: CartItem) {
+    fun removeCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.removeCartItem(cartItem)
+            cartRepository.removeCartItem(cartItemUiModel.toCartItem())
             loadCartPage()
         }
     }
 
-    fun increaseCartItem(cartItem: CartItem) {
+    fun increaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.addCartItem(cartItem, 1)
+            cartRepository.addCartItem(cartItemUiModel.toCartItem(), 1)
             loadCartPage()
         }
     }
 
-    fun decreaseCartItem(cartItem: CartItem) {
+    fun decreaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.minusCartItem(cartItem, 1)
+            cartRepository.minusCartItem(cartItemUiModel.toCartItem(), 1)
             loadCartPage()
         }
     }
@@ -79,6 +82,7 @@ class CartViewModel(
     fun goToNextPage() {
         if (isLastPage) return
         currentPage += 1
+
         _uiState.update {
             it.copy(
                 currentPage = currentPage,
@@ -90,6 +94,7 @@ class CartViewModel(
     fun goToPreviousPage() {
         if (isFirstPage) return
         currentPage -= 1
+
         _uiState.update {
             it.copy(
                 currentPage = currentPage,

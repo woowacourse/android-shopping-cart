@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,12 +49,12 @@ import woowacourse.shopping.features.generalComponent.QuantityControlRow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    viewModel: ProductDetailViewModel = viewModel(),
     onAddToCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
     onLatestProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ProductDetailViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
@@ -222,8 +223,7 @@ private fun ProductImageSection(
             imageUrl = imageUrl,
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(40.dp),
+                    .fillMaxSize(),
         )
     }
 }
@@ -280,6 +280,7 @@ private fun ProductImage(
         modifier = modifier,
         model = imageUrl,
         contentDescription = "상품 이미지",
+        contentScale = ContentScale.Crop,
     )
 }
 

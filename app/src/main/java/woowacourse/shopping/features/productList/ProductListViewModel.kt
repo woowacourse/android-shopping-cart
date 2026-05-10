@@ -12,12 +12,7 @@ import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
-import woowacourse.shopping.domain.product.model.ImageUrl
-import woowacourse.shopping.domain.product.model.Price
-import woowacourse.shopping.domain.product.model.Product
-import woowacourse.shopping.domain.product.model.ProductName
 import woowacourse.shopping.domain.product.repository.ProductRepository
-import woowacourse.shopping.features.productList.uiModel.ProductUiModel
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -27,12 +22,11 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
-    var totalProductCount = 0
-
-    var productUiList = emptyList<ProductUiModel>()
-    var isLastPage = false
-    var pageCount = 0
-    var totalCartItemCount = 0
+    private var totalProductCount = 0
+    private var productUiList = emptyList<ProductUiModel>()
+    private var isLastPage = false
+    private var pageCount = 0
+    private var totalCartItemCount = 0
     var isHasProductId = false
 
     init {
@@ -43,12 +37,12 @@ class ProductListViewModel(
         viewModelScope.launch {
             totalProductCount = productRepository.getProductsSize()
             val recentProductUiList =
-                recentProductRepository.getAllRecentProducts().map {
+                recentProductRepository.getAllRecentProducts().map { product ->
                     ProductUiModel(
-                        id = it.id,
-                        name = it.name.value,
-                        imageUrl = it.imageUrl.value,
-                        price = it.price.value,
+                        id = product.id,
+                        name = product.name.value,
+                        imageUrl = product.imageUrl.value,
+                        price = product.price.value,
                         quantity = 0,
                         isExistProductToCart = false,
                     )
@@ -64,28 +58,29 @@ class ProductListViewModel(
     fun moreProducts() {
         viewModelScope.launch {
             val moreProducts =
-                productRepository.getPagedProducts(page = pageCount, pageSize = PAGE_SIZE).map {
-                    ProductUiModel(
-                        id = it.id,
-                        name = it.name.value,
-                        price = it.price.value,
-                        imageUrl = it.imageUrl.value,
-                        quantity =
-                            cartRepository.getQuantity(
-                                CartItem(
-                                    it,
-                                    quantity = CartItemQuantity(1),
+                productRepository.getPagedProducts(page = pageCount, pageSize = PAGE_SIZE)
+                    .map { product ->
+                        ProductUiModel(
+                            id = product.id,
+                            name = product.name.value,
+                            price = product.price.value,
+                            imageUrl = product.imageUrl.value,
+                            quantity =
+                                cartRepository.getQuantity(
+                                    CartItem(
+                                        product = product,
+                                        quantity = CartItemQuantity(1),
+                                    ),
                                 ),
-                            ),
-                        isExistProductToCart =
-                            cartRepository.isCartItemExist(
-                                CartItem(
-                                    it,
-                                    quantity = CartItemQuantity(1),
+                            isExistProductToCart =
+                                cartRepository.isCartItemExist(
+                                    CartItem(
+                                        product = product,
+                                        quantity = CartItemQuantity(1),
+                                    ),
                                 ),
-                            ),
-                    )
-                }
+                        )
+                    }
             productUiList += moreProducts
             isLastPage = productUiList.size >= totalProductCount
             pageCount += 1
@@ -103,21 +98,20 @@ class ProductListViewModel(
             totalCartItemCount = cartRepository.getTotalCartItemCount()
 
             val updatedList =
-                productUiList.map { productUi ->
-                    productUi.copy(
+                productUiList.map { productUiModel ->
+                    productUiModel.copy(
                         quantity =
                             cartRepository.getQuantity(
                                 CartItem(
-                                    toProductUi(productUi),
+                                    product = productUiModel.toProduct(),
                                     quantity = CartItemQuantity(1),
                                 ),
                             ),
                         isExistProductToCart =
                             cartRepository.isCartItemExist(
                                 CartItem(
-                                    toProductUi(productUi),
-                                    quantity =
-                                        CartItemQuantity(1),
+                                    product = productUiModel.toProduct(),
+                                    quantity = CartItemQuantity(1),
                                 ),
                             ),
                     )
@@ -134,22 +128,14 @@ class ProductListViewModel(
         }
     }
 
-    fun toProductUi(productUiModel: ProductUiModel): Product =
-        Product(
-            id = productUiModel.id,
-            name = ProductName(productUiModel.name),
-            price = Price(productUiModel.price),
-            imageUrl = ImageUrl(productUiModel.imageUrl),
-        )
-
     fun addCartItem(productUiModel: ProductUiModel) {
         viewModelScope.launch {
             cartRepository.addCartItem(
-                CartItem(
-                    toProductUi(productUiModel),
+                cartItem = CartItem(
+                    product = productUiModel.toProduct(),
                     quantity = CartItemQuantity(1),
                 ),
-                1,
+                targetQuantity = 1
             )
             loadProductUiList()
         }
@@ -157,17 +143,17 @@ class ProductListViewModel(
 
     fun minusCartItem(productUiModel: ProductUiModel) {
         viewModelScope.launch {
-            val cartItem = CartItem(toProductUi(productUiModel), quantity = CartItemQuantity(0))
+            val cartItem = CartItem(productUiModel.toProduct(), quantity = CartItemQuantity(0))
             val quantity = cartRepository.getQuantity(cartItem)
             if (quantity == 1) {
                 cartRepository.removeCartItem(cartItem)
             } else {
                 cartRepository.minusCartItem(
-                    CartItem(
-                        toProductUi(productUiModel),
+                    cartItem = CartItem(
+                        product = productUiModel.toProduct(),
                         quantity = CartItemQuantity(1),
                     ),
-                    1,
+                    targetQuantity = 1,
                 )
             }
             loadProductUiList()
@@ -178,7 +164,7 @@ class ProductListViewModel(
         viewModelScope.launch {
             cartRepository.removeCartItem(
                 CartItem(
-                    toProductUi(productUiModel),
+                    product = productUiModel.toProduct(),
                     quantity = CartItemQuantity(1),
                 ),
             )

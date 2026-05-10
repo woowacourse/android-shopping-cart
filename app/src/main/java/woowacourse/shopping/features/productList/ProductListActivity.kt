@@ -19,7 +19,7 @@ import woowacourse.shopping.data.DataProvider.getRecentProductRepository
 import woowacourse.shopping.data.DataProvider.productRepository
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
-import woowacourse.shopping.features.productDetail.ProductDetailViewModel
+import woowacourse.shopping.features.productDetail.toParcelProduct
 
 class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +69,7 @@ class ProductListActivity : ComponentActivity() {
                         val detailIntent =
                             ProductDetailActivity.newIntent(
                                 this,
-                                ProductDetailViewModel.from(viewModel.toProductUi(productUi)),
+                                productUi.toProduct().toParcelProduct(),
                             )
                         startActivity(detailIntent)
                     },
