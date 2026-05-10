@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.NetworkMonitor
 import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
@@ -15,10 +18,17 @@ import woowacourse.shopping.domain.cart.repository.CartRepository
 import woowacourse.shopping.domain.product.repository.ProductRepository
 
 class ProductListViewModel(
+    networkMonitor: NetworkMonitor,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
+    val isOnline: StateFlow<Boolean> =
+        networkMonitor.isConnected.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            true,
+        )
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
@@ -58,7 +68,8 @@ class ProductListViewModel(
     fun moreProducts() {
         viewModelScope.launch {
             val moreProducts =
-                productRepository.getPagedProducts(page = pageCount, pageSize = PAGE_SIZE)
+                productRepository
+                    .getPagedProducts(page = pageCount, pageSize = PAGE_SIZE)
                     .map { product ->
                         ProductUiModel(
                             id = product.id,
@@ -131,11 +142,12 @@ class ProductListViewModel(
     fun addCartItem(productUiModel: ProductUiModel) {
         viewModelScope.launch {
             cartRepository.addCartItem(
-                cartItem = CartItem(
-                    product = productUiModel.toProduct(),
-                    quantity = CartItemQuantity(1),
-                ),
-                targetQuantity = 1
+                cartItem =
+                    CartItem(
+                        product = productUiModel.toProduct(),
+                        quantity = CartItemQuantity(1),
+                    ),
+                targetQuantity = 1,
             )
             loadProductUiList()
         }
@@ -149,10 +161,11 @@ class ProductListViewModel(
                 cartRepository.removeCartItem(cartItem)
             } else {
                 cartRepository.minusCartItem(
-                    cartItem = CartItem(
-                        product = productUiModel.toProduct(),
-                        quantity = CartItemQuantity(1),
-                    ),
+                    cartItem =
+                        CartItem(
+                            product = productUiModel.toProduct(),
+                            quantity = CartItemQuantity(1),
+                        ),
                     targetQuantity = 1,
                 )
             }
@@ -186,6 +199,7 @@ class ProductListViewModel(
 }
 
 class ProductListViewModelFactory(
+    private val networkMonitor: NetworkMonitor,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
@@ -194,6 +208,7 @@ class ProductListViewModelFactory(
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ProductListViewModel(
+                networkMonitor,
                 productRepository,
                 cartRepository,
                 recentProductRepository,

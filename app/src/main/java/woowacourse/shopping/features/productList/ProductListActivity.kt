@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.data.DataProvider.getCartRepository
+import woowacourse.shopping.data.DataProvider.getNetworkMonitor
 import woowacourse.shopping.data.DataProvider.getRecentProductRepository
 import woowacourse.shopping.data.DataProvider.productRepository
 import woowacourse.shopping.features.cart.CartActivity
@@ -30,6 +31,7 @@ class ProductListActivity : ComponentActivity() {
                 viewModel(
                     factory =
                         ProductListViewModelFactory(
+                            networkMonitor = getNetworkMonitor(this),
                             productRepository = productRepository,
                             cartRepository = getCartRepository(this),
                             recentProductRepository = getRecentProductRepository(this),

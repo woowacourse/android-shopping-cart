@@ -1,5 +1,6 @@
 package woowacourse.shopping.features.productList
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,12 +37,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -68,6 +71,8 @@ fun ProductListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val recentListState = rememberLazyListState()
+    val isOnline by viewModel.isOnline.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(uiState.recentProductList.firstOrNull()?.id) {
         if (uiState.recentProductList.isNotEmpty()) {
@@ -75,13 +80,20 @@ fun ProductListScreen(
         }
     }
 
+    LaunchedEffect(isOnline) {
+        if (!isOnline) {
+            Toast.makeText(context, "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Column(
         modifier = modifier,
     ) {
         ProductListTopAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
             totalCartItemsCount = uiState.totalCartItemsCount,
             onClick = onCartClick,
         )
@@ -89,9 +101,10 @@ fun ProductListScreen(
         ProductCardGrid(
             products = uiState.productList,
             recentProducts = uiState.recentProductList,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.White),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = Color.White),
             onProductClick = { onProductClick(it) },
             isExistProductToCart = { isExistProductToCart(it) },
             onDecrementClick = { onDecrementClick(it) },
@@ -102,7 +115,7 @@ fun ProductListScreen(
                 onAddCartClick(it)
             },
             isLastPage = uiState.isLastPage,
-            recentListState = recentListState
+            recentListState = recentListState,
         )
     }
 }
@@ -135,24 +148,26 @@ private fun ProductListTopAppBar(
                     )
                 }
                 Box(
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .clip(CircleShape)
-                        .size(24.dp)
-                        .background(Color.Green, CircleShape),
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp)
+                            .clip(CircleShape)
+                            .size(24.dp)
+                            .background(Color.Green, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(totalCartItemsCount.toString())
                 }
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(APP_BAR_COLOR),
-            scrolledContainerColor = Color.Unspecified,
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White,
-            actionIconContentColor = Color.White,
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(APP_BAR_COLOR),
+                scrolledContainerColor = Color.Unspecified,
+                navigationIconContentColor = Color.White,
+                titleContentColor = Color.White,
+                actionIconContentColor = Color.White,
+            ),
         windowInsets = WindowInsets(0, 0, 0, 0),
     )
 }
@@ -179,14 +194,15 @@ private fun ProductCardGrid(
             span = { GridItemSpan(2) },
         ) {
             RecentlyProductLazyRow(
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(vertical = 20.dp)
+                        .fillMaxWidth(),
                 recentProducts = recentProducts,
                 onProductClick = {
                     onProductClick(it)
                 },
-                recentListState = recentListState
+                recentListState = recentListState,
             )
         }
 
@@ -195,9 +211,10 @@ private fun ProductCardGrid(
             key = { item -> item.id },
         ) { item ->
             ProductCard(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 10.dp)
+                        .fillMaxWidth(),
                 imageUrl = item.imageUrl,
                 productName = item.name,
                 price = item.price,
@@ -220,13 +237,14 @@ private fun ProductCardGrid(
             ) {
                 MoreButton(
                     onClick = { onMoreClick() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp, horizontal = 20.dp)
-                        .background(
-                            color = Color(APP_BAR_COLOR),
-                            shape = RoundedCornerShape(size = 45.dp),
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp, horizontal = 20.dp)
+                            .background(
+                                color = Color(APP_BAR_COLOR),
+                                shape = RoundedCornerShape(size = 45.dp),
+                            ),
                 )
             }
         }
@@ -245,12 +263,13 @@ private fun RecentlyProductCard(
         AsyncImage(
             model = productUiModel.imageUrl,
             contentDescription = "상품 이미지",
-            modifier = Modifier
-                .padding(bottom = 7.dp)
-                .size(100.dp)
-                .clickable {
-                    onProductClick(productUiModel)
-                },
+            modifier =
+                Modifier
+                    .padding(bottom = 7.dp)
+                    .size(100.dp)
+                    .clickable {
+                        onProductClick(productUiModel)
+                    },
         )
         Text(
             text = productUiModel.name,
@@ -288,7 +307,7 @@ private fun RecentlyProductLazyRow(
         } else {
             LazyRow(
                 modifier = Modifier.padding(vertical = 20.dp),
-                state = recentListState
+                state = recentListState,
             ) {
                 items(
                     items = recentProducts,
@@ -324,9 +343,10 @@ private fun ProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable {
-            onProductClick()
-        },
+        modifier =
+            modifier.clickable {
+                onProductClick()
+            },
     ) {
         Box(
             contentAlignment = Alignment.BottomEnd,
@@ -334,23 +354,24 @@ private fun ProductCard(
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "상품 이미지",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(154.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(154.dp),
                 contentScale = ContentScale.Crop,
             )
             if (isExistProductToCart) {
                 Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(10.dp),
-                        )
-                        .background(color = Color.White),
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .fillMaxWidth()
+                            .border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = RoundedCornerShape(10.dp),
+                            ).background(color = Color.White),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
@@ -377,11 +398,12 @@ private fun ProductCard(
                 }
             } else {
                 Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clip(CircleShape)
-                        .background(color = Color.White)
-                        .size(48.dp),
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                            .background(color = Color.White)
+                            .size(48.dp),
                 ) {
                     IconButton(
                         onClick = onAddCartClick,
@@ -395,8 +417,9 @@ private fun ProductCard(
             }
         }
         ProductInfoColumn(
-            modifier = Modifier
-                .padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
+            modifier =
+                Modifier
+                    .padding(start = 6.dp, end = 9.dp, top = 8.dp, bottom = 12.dp),
             productName = productName,
             price = price,
         )

@@ -11,6 +11,10 @@ import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.cart.repository.CartRepository
 
 object DataProvider {
+    private var networkMonitor: NetworkMonitor? = null
+
+    fun getNetworkMonitor(context: Context): NetworkMonitor = networkMonitor ?: NetworkMonitor(context).also { networkMonitor = it }
+
     private val httpClient by lazy { okhttp3.OkHttpClient() }
     private val remoteDataSource by lazy {
         ProductRemoteDataSource(httpClient, ShoppingMockServer.baseUrl)
