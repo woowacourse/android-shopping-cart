@@ -21,11 +21,10 @@ class CartRepositoryTest {
             imageUrl = "image-url",
         )
 
-    private val dao = TestCartItemDao()
-
     @Test
     fun `상품과 수량을 장바구니에 저장한다`() =
         runTest {
+            val dao = TestCartItemDao()
             val repository = CartRepository(dao)
 
             repository.addItem(product = product, quantity = 3)
@@ -41,6 +40,7 @@ class CartRepositoryTest {
     @Test
     fun `장바구니에 담긴 상품 수량을 증가시킨다`() =
         runTest {
+            val dao = TestCartItemDao()
             val repository = CartRepository(dao)
             repository.addItem(product = product, quantity = 1)
 
@@ -52,6 +52,7 @@ class CartRepositoryTest {
     @Test
     fun `장바구니에 담긴 상품 수량을 감소시킨다`() =
         runTest {
+            val dao = TestCartItemDao()
             val repository = CartRepository(dao)
             repository.addItem(product = product, quantity = 2)
 
@@ -63,10 +64,23 @@ class CartRepositoryTest {
     @Test
     fun `장바구니 상품 수량이 1이면 감소할 때 삭제한다`() =
         runTest {
+            val dao = TestCartItemDao()
             val repository = CartRepository(dao)
             repository.addItem(product = product, quantity = 1)
 
             repository.decreaseQuantity(product.id)
+
+            assertThat(dao.findById(product.id)).isNull()
+        }
+
+    @Test
+    fun `장바구니 상품을 삭제한다`() =
+        runTest {
+            val dao = TestCartItemDao()
+            val repository = CartRepository(dao)
+            repository.addItem(product = product, quantity = 1)
+
+            repository.deleteItem(product.id)
 
             assertThat(dao.findById(product.id)).isNull()
         }
@@ -79,6 +93,28 @@ class CartRepositoryTest {
             val quantity = repository.getCartItemQuantity(product.id)
 
             assertThat(quantity).isEqualTo(1)
+        }
+
+    @Test
+    fun `장바구니에 담긴 상품 수량을 반환한다`() =
+        runTest {
+            val repository = CartRepository(TestCartItemDao())
+            repository.addItem(product = product, quantity = 4)
+
+            val quantity = repository.getCartItemQuantity(product.id)
+
+            assertThat(quantity).isEqualTo(4)
+        }
+
+    @Test
+    fun `장바구니 상품 개수를 반환한다`() =
+        runTest {
+            val repository = CartRepository(TestCartItemDao())
+            repository.addItem(product = product, quantity = 3)
+
+            val cartSize = repository.getCartSize()
+
+            assertThat(cartSize).isEqualTo(1)
         }
 
     @Test
@@ -101,8 +137,7 @@ class CartRepositoryTest {
             items.value = items.value.filterNot { it.id == item.id } + item
         }
 
-        override suspend fun findById(id: String): CartItemEntity? =
-            items.value.firstOrNull { it.id == id }
+        override suspend fun findById(id: String): CartItemEntity? = items.value.firstOrNull { it.id == id }
 
         override suspend fun deleteById(id: String) {
             items.value = items.value.filterNot { it.id == id }
