@@ -176,5 +176,5 @@
 
 ## MockWebServer
 
-- [ ] `/products` url을 통해 일정 범위의 데이터를 조화할 수 있다
-- [ ] `/products/id`를 통해 특정 item을 조회할 수 있다
+- [x] `/products` url을 통해 일정 범위의 데이터를 조화할 수 있다
+- [x] `/products/id`를 통해 특정 item을 조회할 수 있다

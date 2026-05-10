@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.data.local.database.MockCatalog
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -34,19 +33,15 @@ class MainActivity : ComponentActivity() {
             val viewModel: ShoppingViewModel = viewModel<ShoppingViewModel>(
                 factory = ShoppingViewModelFactory(
                     (application as ShoppingApplication).purchaseProductsRepository,
-                    (application as ShoppingApplication).recentlyViewedProductRepository
+                    (application as ShoppingApplication).recentlyViewedProductRepository,
+                    (application as ShoppingApplication).webServerRepository
                 )
             )
             val cartState by viewModel.cart.collectAsStateWithLifecycle()
             val viewHistory by viewModel.viewingHistory.collectAsStateWithLifecycle()
             val lastViewedProduct by viewModel.lastViewedProduct.collectAsStateWithLifecycle()
-
-            var currentIndex by rememberSaveable { mutableIntStateOf(0) }
-            var currentProducts by rememberSaveable { mutableStateOf(Products()) }
-
-            LaunchedEffect(currentIndex) {
-                currentProducts += loadProducts(currentIndex, MAX_PRODUCT)
-            }
+            val currentProducts by viewModel.products.collectAsStateWithLifecycle()
+            val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -75,7 +70,7 @@ class MainActivity : ComponentActivity() {
                             startActivity(intent)
                         },
                         onLoadClick = {
-                            currentIndex++
+                            viewModel.loadMore()
                         },
                         modifier = Modifier.padding(innerPadding),
                         onAdd = { id, updateAmount ->
@@ -89,20 +84,10 @@ class MainActivity : ComponentActivity() {
                         isContainedInCart = { cartState.isContain(it) },
                         specificProductCount = { cartState.totalCountOfSpecificPurchaseProduct(it) },
                         totalCount = { cartState.totalCountOfPurchaseProducts() },
+                        isLoading = isLoading
                     )
                 }
             }
         }
-    }
-
-    suspend fun loadProducts(
-        currentIndex: Int,
-        size: Int,
-    ): Products {
-        return MockCatalog.loadMoreProducts(currentIndex, size)
-    }
-
-    companion object {
-        const val MAX_PRODUCT = 20
     }
 }

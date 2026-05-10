@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ fun CatalogScreen(
     onMinus: (String, Int) -> Unit,
     onDelete: (String) -> Unit,
     onAddInCart: (PurchaseProduct) -> Unit,
+    isLoading: Boolean,
     isContainedInCart: (String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -67,10 +70,11 @@ fun CatalogScreen(
                 },
                 onDelete = { onDelete(it) },
                 onAddInCart = { onAddInCart(it) },
-                isContainedInCart = isContainedInCart,
-                specificProductCount = { 
+                specificProductCount = {
                     specificProductCount(it)
-                }
+                },
+                isContainedInCart = isContainedInCart,
+                isLoading = isLoading,
             )
         },
         modifier = modifier,
@@ -123,6 +127,7 @@ private fun CatalogBody(
     onMinus: (String, Int) -> Unit,
     onDelete: (String) -> Unit,
     onLoadClick: () -> Unit,
+    isLoading: Boolean,
     isContainedInCart: (String) ->  Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -171,7 +176,10 @@ private fun CatalogBody(
             item(
                 span = { GridItemSpan(maxLineSpan) },
             ) {
-                LoadBtn(onLoadClick)
+                LoadBtn(
+                    isLoading = isLoading,
+                    onLoad = onLoadClick,
+                )
             }
         }
     }
@@ -179,21 +187,36 @@ private fun CatalogBody(
 
 @Composable
 private fun LoadBtn(
+    isLoading: Boolean,
     onLoad: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Icon(
-        painter = painterResource(R.drawable.ic_add),
-        contentDescription = "더보기 버튼",
-        tint = Color.White,
-        modifier =
-            modifier
+    if (isLoading) {
+        Row(
+            modifier = Modifier
                 .padding(25.dp)
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(color = Color.LightGray)
-                .clickable(onClick = onLoad),
-    )
+                .background(color = Color.LightGray),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        Icon(
+            painter = painterResource(R.drawable.ic_add),
+            contentDescription = "더보기 버튼",
+            tint = Color.White,
+            modifier =
+                modifier
+                    .padding(25.dp)
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(color = Color.LightGray)
+                    .clickable(onClick = onLoad),
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -279,6 +302,7 @@ private fun CatalogScreenPreview() {
         onDelete = {  },
         onAddInCart = {  },
         isContainedInCart = { it -> true },
+        isLoading = false
     )
 }
 
@@ -357,13 +381,14 @@ private fun CatalogScreenPreview2() {
         onRecentlyViewedClick = {},
         totalCount = { 10 },
         specificProductCount = { it -> 0 },
-        onItemClick = {  },
-        onCartClick = {  },
-        onLoadClick = {  },
+        onItemClick = { },
+        onCartClick = { },
+        onLoadClick = { },
         onAdd = { id, type -> },
         onMinus = { id, type -> },
-        onDelete = {  },
-        onAddInCart = {  },
+        onDelete = { },
+        onAddInCart = { },
         isContainedInCart = { it -> true },
+        isLoading = true
     )
 }
