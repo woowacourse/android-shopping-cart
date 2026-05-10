@@ -6,8 +6,6 @@ import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class CartRepositoryImpl(
     private var cartDao: CartDao,

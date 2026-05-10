@@ -7,13 +7,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.data.ProductFixture
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
 import woowacourse.shopping.presentation.MainDispatcherRule
 import woowacourse.shopping.presentation.cart.FakeCartRepository
-import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductListViewModelTest {
@@ -39,6 +37,7 @@ class ProductListViewModelTest {
 
             advanceUntilIdle()
             viewModel.loadMore()
+            advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.currentPageIndex).isEqualTo(1)
             assertThat(viewModel.uiState.value.products.productItems)
@@ -126,7 +125,7 @@ class ProductListViewModelTest {
     ): ProductListViewModel =
         ProductListViewModel(
             productRepository =
-                ProductRepositoryImpl(
+                FakeProductRepository(
                     products = Products(ProductFixture.productList),
                 ),
             cartRepository = cartRepository,

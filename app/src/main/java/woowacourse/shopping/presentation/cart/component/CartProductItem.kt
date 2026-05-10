@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +37,6 @@ import woowacourse.shopping.presentation.shopping.component.QuantitySelector
 import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun CartProductItem(
@@ -129,6 +129,7 @@ private fun CartProductInfo(
         AsyncImage(
             model = product.imageUrl,
             contentDescription = product.productName,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.size(136.dp, 72.dp),
         )
         CartProductPriceAndQuantity(

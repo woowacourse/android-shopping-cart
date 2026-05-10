@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +27,6 @@ import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.theme.topAppBarColor
 import woowacourse.shopping.util.intFormatter
-import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ProductItem(
@@ -83,6 +83,7 @@ private fun ProductItemImage(
         AsyncImage(
             model = product.imageUrl,
             contentDescription = product.productName,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth(),
         )
         if (quantity == 0) {

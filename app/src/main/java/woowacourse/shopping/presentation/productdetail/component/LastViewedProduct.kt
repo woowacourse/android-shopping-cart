@@ -20,7 +20,6 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.theme.cartPageButtonColor
 import woowacourse.shopping.presentation.theme.dividerColor
 import woowacourse.shopping.presentation.theme.topAppBarColor
-import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun LastViewedProduct(

@@ -13,8 +13,6 @@ import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -25,34 +23,36 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
-    val hasNextPage: Boolean
-        get() =
-            productRepository.hasNextPage(
-                currentPage = _uiState.value.currentPageIndex,
-                pageSize = pageSize,
-            )
-
     init {
         loadPages()
         refreshCart()
     }
 
     fun loadMore() {
-        if (!hasNextPage) return
+        viewModelScope.launch {
+            if (!_uiState.value.hasNextPage) return@launch
 
-        val nextPageIndex = _uiState.value.currentPageIndex + 1
+            val nextPageIndex = _uiState.value.currentPageIndex + 1
 
-        val nextProducts =
-            productRepository.getPagingProducts(
-                page = nextPageIndex,
-                pageSize = pageSize,
-            )
+            val nextProducts =
+                productRepository.getPagingProducts(
+                    page = nextPageIndex,
+                    pageSize = pageSize,
+                )
 
-        _uiState.update {
-            it.copy(
-                currentPageIndex = nextPageIndex,
-                products = it.products + nextProducts,
-            )
+            val hasNextPage =
+                productRepository.hasNextPage(
+                    currentPage = nextPageIndex,
+                    pageSize = pageSize,
+                )
+
+            _uiState.update {
+                it.copy(
+                    currentPageIndex = nextPageIndex,
+                    products = it.products + nextProducts,
+                    hasNextPage = hasNextPage,
+                )
+            }
         }
     }
 
@@ -91,20 +91,29 @@ class ProductListViewModel(
     }
 
     private fun loadPages() {
-        var products = Products()
+        viewModelScope.launch {
+            var products = Products()
 
-        for (page in 0.._uiState.value.currentPageIndex) {
-            products +=
-                productRepository.getPagingProducts(
-                    page = page,
+            for (page in 0.._uiState.value.currentPageIndex) {
+                products +=
+                    productRepository.getPagingProducts(
+                        page = page,
+                        pageSize = pageSize,
+                    )
+            }
+
+            val hasNextPage =
+                productRepository.hasNextPage(
+                    currentPage = _uiState.value.currentPageIndex,
                     pageSize = pageSize,
                 )
-        }
 
-        _uiState.update {
-            it.copy(
-                products = products,
-            )
+            _uiState.update {
+                it.copy(
+                    products = products,
+                    hasNextPage = hasNextPage,
+                )
+            }
         }
     }
 

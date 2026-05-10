@@ -2,8 +2,6 @@ package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface CartRepository {
     suspend fun getItems(): Cart

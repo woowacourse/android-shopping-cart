@@ -6,8 +6,6 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class RecentlyViewedProductRepositoryImpl(
     private val dao: RecentlyViewedProductDao,

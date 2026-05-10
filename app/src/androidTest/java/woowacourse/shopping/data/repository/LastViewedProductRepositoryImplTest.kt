@@ -75,7 +75,7 @@ class LastViewedProductRepositoryImplTest {
         return LastViewedProductRepositoryImpl(
             dataStore = dataStore,
             productRepository =
-                ProductRepositoryImpl(
+                FakeProductRepository(
                     products = Products(ProductFixture.productList),
                 ),
         )

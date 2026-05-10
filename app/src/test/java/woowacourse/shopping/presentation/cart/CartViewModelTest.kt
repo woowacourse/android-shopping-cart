@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.presentation.MainDispatcherRule
-import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CartViewModelTest {

@@ -36,7 +36,7 @@ class RecentlyViewedProductRepositoryImplTest {
 
         dao = database.recentlyViewedProductDao()
         productRepository =
-            ProductRepositoryImpl(
+            FakeProductRepository(
                 products =
                     Products(
                         ProductFixture.productList,

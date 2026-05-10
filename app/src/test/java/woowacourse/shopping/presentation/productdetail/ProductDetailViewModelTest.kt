@@ -8,13 +8,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.data.ProductFixture
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.MainDispatcherRule
 import woowacourse.shopping.presentation.cart.FakeCartRepository
+import woowacourse.shopping.presentation.shopping.FakeProductRepository
 import woowacourse.shopping.presentation.shopping.FakeRecentlyViewedProductRepository
-import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductDetailViewModelTest {
@@ -183,7 +182,7 @@ class ProductDetailViewModelTest {
     ): ProductDetailViewModel =
         ProductDetailViewModel(
             productRepository =
-                ProductRepositoryImpl(
+                FakeProductRepository(
                     products = Products(ProductFixture.productList),
                 ),
             cartRepository = cartRepository,

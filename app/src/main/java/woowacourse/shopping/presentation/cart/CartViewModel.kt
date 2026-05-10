@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.uuid.Uuid
 
 class CartViewModel(
     private val cartRepository: CartRepository,

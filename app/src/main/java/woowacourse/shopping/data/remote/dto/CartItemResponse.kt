@@ -7,5 +7,4 @@ class CartItemResponse(
     val id: Int,
     val quantity: Int,
     val product: ProductResponse,
-) {
-}
+)

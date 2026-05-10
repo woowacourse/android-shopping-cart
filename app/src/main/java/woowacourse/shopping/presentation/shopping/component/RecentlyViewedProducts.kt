@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
-import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun RecentlyViewedProductsSection(

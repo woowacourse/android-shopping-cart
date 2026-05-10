@@ -2,21 +2,19 @@ package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface ProductRepository {
-    fun getProducts(): Products
+    suspend fun getProducts(): Products
 
-    fun getPagingProducts(
+    suspend fun getPagingProducts(
         page: Int,
         pageSize: Int,
     ): Products
 
-    fun hasNextPage(
+    suspend fun hasNextPage(
         currentPage: Int,
         pageSize: Int,
     ): Boolean
 
-    fun findProductById(productId: Int): Product?
+    suspend fun findProductById(productId: Int): Product?
 }

@@ -1,8 +1,6 @@
 package woowacourse.shopping.domain.model.cart
 
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 data class Cart(
     val cartItems: List<CartItem> = emptyList(),

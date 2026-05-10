@@ -63,7 +63,7 @@ private fun LazyGridScope.recentlyViewedProductSection(
 ) {
     if (products.productItems.isEmpty()) return
 
-    item(span = { GridItemSpan(2) }) {
+    item(span = { GridItemSpan(maxLineSpan) }) {
         RecentlyViewedProductsSection(
             products = products,
             onClick = onItemClick,

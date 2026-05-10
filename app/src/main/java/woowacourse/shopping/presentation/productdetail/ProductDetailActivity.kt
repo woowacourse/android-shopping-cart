@@ -16,7 +16,6 @@ import woowacourse.shopping.presentation.productdetail.screen.ProductDetailError
 import woowacourse.shopping.presentation.productdetail.screen.ProductDetailScreen
 import woowacourse.shopping.presentation.shopping.ProductListActivity
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
-import kotlin.uuid.ExperimentalUuidApi
 
 class ProductDetailActivity : ComponentActivity() {
     val viewModel: ProductDetailViewModel by viewModels {

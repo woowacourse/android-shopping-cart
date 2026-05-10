@@ -17,8 +17,6 @@ import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
 import woowacourse.shopping.presentation.theme.dividerColor
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun ProductDetail(

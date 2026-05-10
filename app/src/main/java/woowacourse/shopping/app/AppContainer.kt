@@ -2,14 +2,19 @@ package woowacourse.shopping.app
 
 import android.content.Context
 import androidx.room.Room
-import woowacourse.shopping.data.ProductFixture
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
 import woowacourse.shopping.data.local.database.ShoppingDatabase
 import woowacourse.shopping.data.local.datastore.dataStore
+import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
+import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
+import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
+import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpProductRemoteDataSource
+import woowacourse.shopping.data.remote.mock.MockWebServerProvider
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.LastViewedProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
-import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.LastViewedProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -17,6 +22,25 @@ import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 
 object AppContainer {
     private lateinit var database: ShoppingDatabase
+
+    private val okHttpClient: OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .build()
+
+    private val json: Json =
+        Json {
+            ignoreUnknownKeys = true
+        }
+
+    lateinit var productRemoteDataSource: ProductRemoteDataSource
+        private set
+
+    lateinit var cartRemoteDataSource: CartRemoteDataSource
+        private set
+
+    lateinit var productRepository: ProductRepository
+        private set
 
     lateinit var cartRepository: CartRepository
         private set
@@ -27,6 +51,10 @@ object AppContainer {
     lateinit var lastViewedProductRepository: LastViewedProductRepository
         private set
 
+    private val baseUrl: String by lazy {
+        MockWebServerProvider.start()
+    }
+
     fun initialize(context: Context) {
         database =
             Room
@@ -36,6 +64,25 @@ object AppContainer {
                     "shopping-db",
                 ).fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
+
+        productRemoteDataSource =
+            OkHttpProductRemoteDataSource(
+                client = okHttpClient,
+                baseUrl = baseUrl,
+                json = json,
+            )
+
+        cartRemoteDataSource =
+            OkHttpCartRemoteDataSource(
+                client = okHttpClient,
+                baseUrl = baseUrl,
+                json = json,
+            )
+
+        productRepository =
+            ProductRepositoryImpl(
+                productRemoteDataSource = productRemoteDataSource,
+            )
 
         cartRepository =
             CartRepositoryImpl(
@@ -54,9 +101,4 @@ object AppContainer {
                 productRepository = productRepository,
             )
     }
-
-    val productRepository: ProductRepository =
-        ProductRepositoryImpl(
-            products = Products(ProductFixture.productList),
-        )
 }

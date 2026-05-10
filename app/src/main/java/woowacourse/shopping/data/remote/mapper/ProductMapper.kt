@@ -11,3 +11,11 @@ fun ProductResponse.toDomain(): Product =
         price = Price(price),
         imageUrl = imageUrl,
     )
+
+fun Product.toResponse(): ProductResponse =
+    ProductResponse(
+        id = productId,
+        name = productName,
+        price = price.value,
+        imageUrl = imageUrl,
+    )

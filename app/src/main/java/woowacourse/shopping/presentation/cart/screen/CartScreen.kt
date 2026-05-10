@@ -15,7 +15,6 @@ import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.presentation.cart.component.CartContent
 import woowacourse.shopping.presentation.cart.component.CartScaffold
 import woowacourse.shopping.presentation.cart.component.DeleteProductDialog
-import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

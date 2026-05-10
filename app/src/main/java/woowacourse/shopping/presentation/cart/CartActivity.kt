@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.screen.CartScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
-import kotlin.uuid.ExperimentalUuidApi
 
 class CartActivity : ComponentActivity() {
     private val viewModel: CartViewModel by viewModels {

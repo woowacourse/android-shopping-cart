@@ -33,8 +33,6 @@ import woowacourse.shopping.presentation.productdetail.component.LastViewedProdu
 import woowacourse.shopping.presentation.productdetail.component.ProductDetail
 import woowacourse.shopping.presentation.productdetail.component.ProductDetailTopAppBar
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

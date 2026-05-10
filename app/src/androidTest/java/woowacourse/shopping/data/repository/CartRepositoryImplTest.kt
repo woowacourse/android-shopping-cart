@@ -12,7 +12,6 @@ import woowacourse.shopping.data.ProductFixture
 import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.database.ShoppingDatabase
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.uuid.ExperimentalUuidApi
 
 class CartRepositoryImplTest {
     private lateinit var database: ShoppingDatabase

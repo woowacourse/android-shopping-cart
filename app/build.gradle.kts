@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.3.20"
 }
 
 android {
@@ -71,4 +72,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.26.3")
     androidTestImplementation("org.assertj:assertj-core:3.26.3")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("com.squareup.okhttp3:okhttp:5.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("com.squareup.okhttp3:mockwebserver:5.3.0")
 }

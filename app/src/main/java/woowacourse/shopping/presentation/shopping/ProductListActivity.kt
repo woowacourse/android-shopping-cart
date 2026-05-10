@@ -11,7 +11,6 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productdetail.mapper.toUiModel
 import woowacourse.shopping.presentation.shopping.screen.ProductListScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
-import kotlin.uuid.ExperimentalUuidApi
 
 class ProductListActivity : ComponentActivity() {
     private val viewModel: ProductListViewModel by viewModels {

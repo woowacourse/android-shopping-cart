@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.shopping.ProductListViewModel
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
-import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +31,7 @@ fun ProductListScreen(
             products = uiState.products,
             recentlyViewedProducts = uiState.recentlyViewedProducts,
             productQuantities = uiState.productQuantities,
-            hasNextPage = viewModel.hasNextPage,
+            hasNextPage = uiState.hasNextPage,
             onLoadMore = viewModel::loadMore,
             onItemClick = onItemClick,
             onQuantityIncrease = viewModel::increaseQuantity,
