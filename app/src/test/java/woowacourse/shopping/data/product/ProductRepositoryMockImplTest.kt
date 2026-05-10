@@ -4,6 +4,7 @@ import io.kotest.matchers.equals.shouldBeEqual
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.MockData
+import woowacourse.shopping.data.source.local.repositoryImpl.product.ProductRepositoryMockImpl
 
 class ProductRepositoryMockImplTest {
     @Test

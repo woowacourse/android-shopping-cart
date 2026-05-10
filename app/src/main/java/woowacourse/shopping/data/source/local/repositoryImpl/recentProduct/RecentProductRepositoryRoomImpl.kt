@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.recentProduct
+package woowacourse.shopping.data.source.local.repositoryImpl.recentProduct
 
-import woowacourse.shopping.data.dao.RecentProductDao
+import woowacourse.shopping.data.source.local.dao.RecentProductDao
 import woowacourse.shopping.domain.RecentProductRepository
 import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.domain.product.repository.ProductRepository

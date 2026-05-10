@@ -27,12 +27,13 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
-    val totalProductCount = productRepository.getProductsSize()
+    var totalProductCount = 0
 
     var productUiList = emptyList<ProductUiModel>()
     var isLastPage = false
     var pageCount = 0
     var totalCartItemCount = 0
+    var isHasProductId = false
 
     init {
         moreProducts()
@@ -40,6 +41,7 @@ class ProductListViewModel(
 
     fun loadRecentProducts() {
         viewModelScope.launch {
+            totalProductCount = productRepository.getProductsSize()
             val recentProductUiList =
                 recentProductRepository.getAllRecentProducts().map {
                     ProductUiModel(
@@ -186,7 +188,11 @@ class ProductListViewModel(
 
     fun isExistProduct(productUiModel: ProductUiModel): Boolean = productUiModel.quantity > 0
 
-    fun isHasProductId(productId: String): Boolean = productRepository.isProductExist(productId)
+    fun isHasProductId(productId: String) {
+        viewModelScope.launch {
+            isHasProductId = productRepository.isProductExist(productId)
+        }
+    }
 
     companion object {
         const val PAGE_SIZE = 20

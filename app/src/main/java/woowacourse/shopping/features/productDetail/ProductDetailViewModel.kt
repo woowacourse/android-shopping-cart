@@ -24,14 +24,14 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
-    val product: Product = toProduct(parcelProduct)
+    var product: Product = toProduct(parcelProduct)
 
     var name = ""
     var imageUrl = ""
     var price = 0
     var quantity = 0
     var minusEnabled = false
-    var isLatestProduct = false
+    var isLatestProduct = true
 
     init {
         viewModelScope.launch {
@@ -42,7 +42,7 @@ class ProductDetailViewModel(
             quantity = 1
             minusEnabled = false
             val latestProduct = recentProductRepository.getMostRecentProduct()
-            isLatestProduct = latestProduct?.id == product.id
+            isLatestProduct = (latestProduct?.id ?: product.id) == product.id
             _uiState.update {
                 ProductDetailUiState(
                     productName = name,
@@ -62,14 +62,17 @@ class ProductDetailViewModel(
         isLatestProduct = true
         minusEnabled = false
         quantity = 1
+        product = _uiState.value.latestProduct!!
+        name = product.name.value
+        imageUrl = product.imageUrl.value
+        price = product.price.value
         _uiState.update {
             it.copy(
-                productName = it.latestProduct?.name?.value ?: "",
-                productImageUrl = it.latestProduct?.imageUrl?.value ?: "",
-                productPrice = it.latestProduct?.price?.value ?: 0,
+                productName = name,
+                productImageUrl = imageUrl,
+                productPrice = price,
                 quantity = quantity,
                 minusEnabled = minusEnabled,
-                latestProduct = it.latestProduct,
                 isLastProduct = isLatestProduct,
             )
         }
@@ -84,7 +87,7 @@ class ProductDetailViewModel(
     fun addToCart() {
         viewModelScope.launch {
             val cartItem =
-                CartItem(product = if (isLatestProduct) uiState.value.latestProduct!! else product, quantity = CartItemQuantity(1))
+                CartItem(product = product, quantity = CartItemQuantity(1))
             cartRepository.addCartItem(cartItem, quantity)
         }
     }

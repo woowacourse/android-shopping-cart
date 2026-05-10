@@ -3,13 +3,13 @@ package woowacourse.shopping.domain.product.repository
 import woowacourse.shopping.domain.product.model.Product
 
 interface ProductRepository {
-    fun getProductsSize(): Int
+    suspend fun getProductsSize(): Int
 
-    fun getProduct(id: String): Product
+    suspend fun getProduct(id: String): Product
 
-    fun isProductExist(productId: String): Boolean
+    suspend fun isProductExist(productId: String): Boolean
 
-    fun getPagedProducts(
+    suspend fun getPagedProducts(
         page: Int,
         pageSize: Int,
     ): List<Product>

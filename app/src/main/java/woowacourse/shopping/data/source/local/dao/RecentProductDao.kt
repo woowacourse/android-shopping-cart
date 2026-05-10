@@ -1,15 +1,15 @@
-package woowacourse.shopping.data.dao
+package woowacourse.shopping.data.source.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import woowacourse.shopping.data.entity.RecentProductEntity
+import woowacourse.shopping.data.source.local.entity.RecentProductEntity
 
 @Dao
 interface RecentProductDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(recentProduct: RecentProductEntity)
 
     @Query(

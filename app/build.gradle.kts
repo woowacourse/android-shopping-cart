@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.1.0"
     id("kotlin-parcelize")
 }
 
@@ -60,6 +61,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.room.runtime)
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.3.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)

@@ -1,7 +1,7 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.data.source.local.repositoryImpl.cart
 
-import woowacourse.shopping.data.dao.CartDao
-import woowacourse.shopping.data.entity.CartEntity
+import woowacourse.shopping.data.source.local.dao.CartDao
+import woowacourse.shopping.data.source.local.entity.CartEntity
 import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
