@@ -25,8 +25,31 @@ class CartProductTest {
         val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 5)
         val cartProduct2 = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 0)
 
-        assertEquals(50000, cartProduct.calculateTotalPrice())
-        assertEquals(0, cartProduct2.calculateTotalPrice())
+        assertEquals(50000L, cartProduct.calculateTotalPrice())
+        assertEquals(0L, cartProduct2.calculateTotalPrice())
+    }
 
+    @Test
+    fun `수량을 줄일 수 있다`() {
+        val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 5)
+        val updatedCartProduct = cartProduct.decreaseQuantity(2)
+
+        assertEquals(3, updatedCartProduct.amount)
+    }
+
+    @Test
+    fun `수량을 줄여도 0보다 작아지지 않는다`() {
+        val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 1)
+        val updatedCartProduct = cartProduct.decreaseQuantity(2)
+
+        assertEquals(0, updatedCartProduct.amount)
+    }
+
+    @Test
+    fun `수량을 늘릴 수 있다`() {
+        val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 1)
+        val updatedCartProduct = cartProduct.addQuantity(2)
+
+        assertEquals(3, updatedCartProduct.amount)
     }
 }

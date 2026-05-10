@@ -15,11 +15,33 @@ class CartProducts(
     val totalQuantity = products.sumOf { it.amount }
 
     fun addQuantityOfCartProduct(product: Product, plusAmount: Int = 1): CartProducts {
-        val targetCartProduct = findOrCreateCartProduct(product)
-        val newCarProduct = targetCartProduct.addQuantity(plusAmount)
+        val existingCartProduct = findSameProduct(product.productId)
 
-        return CartProducts(products + newCarProduct)
+        val updatedProducts = if (existingCartProduct != null) {
+            products.map {
+                if (it.product.productId == product.productId) it.addQuantity(plusAmount) else it
+            }
+        } else {
+            products + CartProduct(product = product, amount = plusAmount)
+        }
+
+        return CartProducts(updatedProducts)
     }
+
+    fun decreaseQuantityOfCartProduct(productId: UUID, minusAmount: Int = 1): CartProducts {
+        if (findSameProduct(productId) == null) return this
+
+        val updatedProducts = products.map { cartProduct ->
+            if (cartProduct.product.productId == productId) {
+                cartProduct.decreaseQuantity(minusAmount)
+            } else {
+                cartProduct
+            }
+        }
+
+        return CartProducts(updatedProducts)
+    }
+
 
     fun remove(productId: UUID): CartProducts {
         val product = findSameProduct(productId) ?: return this
@@ -27,12 +49,12 @@ class CartProducts(
     }
 
     fun calculateTotalPrice() : Long {
-        var totalPrice = 0
+        var totalPrice = 0L
         for (product in products) {
             totalPrice += product.calculateTotalPrice()
         }
 
-        return totalPrice.toLong()
+        return totalPrice
     }
 
     private fun findOrCreateCartProduct(product: Product): CartProduct =

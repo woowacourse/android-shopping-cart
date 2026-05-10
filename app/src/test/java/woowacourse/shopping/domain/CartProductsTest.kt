@@ -178,6 +178,34 @@ class CartProductsTest {
     }
 
     @Test
+    fun `이미 존재하는 상품을 추가하면 수량이 합쳐진다`() {
+        val product = Product(imageUri = "uri", name = "name", price = 1000)
+        val cartProducts = CartProducts().addQuantityOfCartProduct(product, 1)
+        val updatedCartProducts = cartProducts.addQuantityOfCartProduct(product, 2)
+
+        assertEquals(1, updatedCartProducts.uniqueItemCount)
+        assertEquals(3, updatedCartProducts.totalQuantity)
+    }
+
+    @Test
+    fun `상품의 수량을 줄일 수 있다`() {
+        val product = Product(imageUri = "uri", name = "name", price = 1000)
+        val cartProducts = CartProducts().addQuantityOfCartProduct(product, 5)
+        val updatedCartProducts = cartProducts.decreaseQuantityOfCartProduct(product.productId, 2)
+
+        assertEquals(3, updatedCartProducts.findSameProduct(product.productId)?.amount)
+    }
+
+    @Test
+    fun `상품의 수량을 줄여도 0보다 작아지지 않는다`() {
+        val product = Product(imageUri = "uri", name = "name", price = 1000)
+        val cartProducts = CartProducts().addQuantityOfCartProduct(product, 1)
+        val updatedCartProducts = cartProducts.decreaseQuantityOfCartProduct(product.productId, 2)
+
+        assertEquals(0, updatedCartProducts.findSameProduct(product.productId)?.amount)
+    }
+
+    @Test
     fun `장바구니에 담긴 전체 금액을 계산한다`() {
         val newProduct = CartProduct(
             product = Product(
@@ -197,6 +225,32 @@ class CartProductsTest {
         )
         val cartProducts1 = CartProducts(products = listOf(newProduct, newProduct2))
 
-        assertEquals(25000, cartProducts1.calculateTotalPrice())
+        assertEquals(25000L, cartProducts1.calculateTotalPrice())
+    }
+
+    @Test
+    fun `빈 장바구니의 전체 금액은 0이다`() {
+        val cartProducts = CartProducts()
+        assertEquals(0L, cartProducts.calculateTotalPrice())
+    }
+
+    @Test
+    fun `장바구니 금액의 합이 Int 범위를 넘어가도 정상적으로 계산한다`() {
+        val product = Product(imageUri = "uri", name = "name", price = 100_000_000)
+        val cartProducts = CartProducts(
+            products = listOf(
+                CartProduct(product = product, amount = 22)
+            )
+        )
+        assertEquals(2_200_000_000L, cartProducts.calculateTotalPrice())
+    }
+
+    @Test
+    fun `수량을 줄일 대상 상품이 포함되어 있지 않다면 스스로를 반환한다`() {
+        val product = Product(imageUri = "uri", name = "name", price = 1000)
+        val cartProducts = CartProducts()
+        val newCartProducts = cartProducts.decreaseQuantityOfCartProduct(product.productId, 1)
+
+        assertEquals(cartProducts, newCartProducts)
     }
 }

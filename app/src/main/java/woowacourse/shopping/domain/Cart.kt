@@ -16,6 +16,11 @@ class Cart(
         return Cart(newCartProducts)
     }
 
+    fun decreaseProduct(id: UUID, minusAmount: Int = 1): Cart {
+        val newCartProducts = cartProducts.decreaseQuantityOfCartProduct(id, minusAmount)
+        return Cart(newCartProducts)
+    }
+
     fun removeProduct(id: UUID): Cart {
         val product = cartProducts.remove(id)
         return Cart(product)
