@@ -36,4 +36,17 @@ class ProductRecentRepositoryImpl(
             ),
         )
     }
+
+    override suspend fun getLatestViewedProduct(): RecentProduct? {
+        val latestProduct = recentProductDao.getLatestViewedProduct() ?: return null
+        val product =
+            productDataSource.products.find { it.id == latestProduct.productId } ?: return null
+
+        return RecentProduct(
+            productId = latestProduct.productId,
+            name = product.name,
+            imageUrl = product.imageUrl,
+            viewedAt = latestProduct.viewedAt,
+        )
+    }
 }

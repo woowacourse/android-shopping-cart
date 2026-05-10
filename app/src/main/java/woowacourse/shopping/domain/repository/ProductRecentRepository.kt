@@ -7,4 +7,6 @@ interface ProductRecentRepository {
     fun getRecentProducts(limit: Int): Flow<List<RecentProduct>>
 
     suspend fun insertRecentProduct(productId: String)
+
+    suspend fun getLatestViewedProduct(): RecentProduct?
 }
