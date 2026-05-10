@@ -237,37 +237,43 @@ private fun CartScreenPreview() {
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",
                             price = 10000000,
                         ),
-                    ),PurchaseProduct(
+                    ),
+                    PurchaseProduct(
                         Product(
                             imageUri = "uri",
                             name = "무엘사",

@@ -19,22 +19,24 @@ import woowacourse.shopping.R
 @Composable
 fun CirclePlusBtn(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(42.dp)
-            .clip(CircleShape)
-            .background(color = Color.White)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .background(color = Color.White)
+                .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_add),
             contentDescription = "plus Button",
             tint = Color(0xFF555555),
-            modifier = Modifier
-                .size(40.dp)
+            modifier =
+                Modifier
+                    .size(40.dp),
         )
     }
 }

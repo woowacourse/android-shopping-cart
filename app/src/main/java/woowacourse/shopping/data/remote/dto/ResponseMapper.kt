@@ -7,5 +7,5 @@ fun WebServerResponse.toObject() =
         id = id,
         imageUri = imageUri,
         name = name,
-        price = price
+        price = price,
     )

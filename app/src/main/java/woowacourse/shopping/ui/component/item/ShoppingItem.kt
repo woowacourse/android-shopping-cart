@@ -47,23 +47,25 @@ fun ShoppingItem(
                 ),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Box{
+        Box {
             ProductImage(product.imageUri, Modifier.size(154.dp))
             CirclePlusBtn(
                 onClick = { onAddInCart(PurchaseProduct(product = product)) },
-                modifier = Modifier
-                    .padding(end = 15.dp)
-                    .align(Alignment.BottomEnd)
-                    .visible(!isContainedInCart())
+                modifier =
+                    Modifier
+                        .padding(end = 15.dp)
+                        .align(Alignment.BottomEnd)
+                        .visible(!isContainedInCart()),
             )
             QuantitySelector(
                 count = count(),
                 onAdd = onAdd,
                 onMinus = onMinus,
                 onDelete = onDelete,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .visible(isContainedInCart())
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .visible(isContainedInCart()),
             )
         }
 
@@ -121,7 +123,7 @@ private fun ShoppingItemPreview1() {
         onMinus = {},
         onDelete = {},
         onAddInCart = {},
-        isContainedInCart = { false }
+        isContainedInCart = { false },
     )
 }
 
@@ -140,6 +142,6 @@ private fun ShoppingItemPreview2() {
         onMinus = {},
         onDelete = {},
         onAddInCart = {},
-        isContainedInCart = { true }
+        isContainedInCart = { true },
     )
 }

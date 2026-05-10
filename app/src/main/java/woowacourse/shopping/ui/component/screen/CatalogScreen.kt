@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -100,7 +99,7 @@ private fun CatalogHeader(
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
         )
-        Row{
+        Row {
             Icon(
                 painter = painterResource(R.drawable.ic_cart),
                 contentDescription = "장바구니 아이콘",
@@ -128,7 +127,7 @@ private fun CatalogBody(
     onDelete: (String) -> Unit,
     onLoadClick: () -> Unit,
     isLoading: Boolean,
-    isContainedInCart: (String) ->  Boolean,
+    isContainedInCart: (String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column {
@@ -138,12 +137,12 @@ private fun CatalogBody(
             contentPadding = PaddingValues(12.dp),
         ) {
             item(
-                span = { GridItemSpan(maxLineSpan) }
+                span = { GridItemSpan(maxLineSpan) },
             ) {
-                if(!recentlyViewedProducts.isEmpty()) {
+                if (!recentlyViewedProducts.isEmpty()) {
                     RecentlyViewedProducts(
                         recentlyViewedProducts,
-                        onClick = onRecentlyViewedClick
+                        onClick = onRecentlyViewedClick,
                     )
                 }
             }
@@ -169,7 +168,7 @@ private fun CatalogBody(
                     onDelete = {
                         onDelete(catalog.getSingleItem(item).id)
                     },
-                    onAddInCart = { onAddInCart(it) }
+                    onAddInCart = { onAddInCart(it) },
                 )
             }
 
@@ -193,13 +192,14 @@ private fun LoadBtn(
 ) {
     if (isLoading) {
         Row(
-            modifier = Modifier
-                .padding(25.dp)
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(color = Color.LightGray),
+            modifier =
+                Modifier
+                    .padding(25.dp)
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(color = Color.LightGray),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
         ) {
             CircularProgressIndicator()
         }
@@ -294,15 +294,15 @@ private fun CatalogScreenPreview() {
         onRecentlyViewedClick = {},
         totalCount = { 10 },
         specificProductCount = { it -> 0 },
-        onItemClick = {  },
-        onCartClick = {  },
-        onLoadClick = {  },
+        onItemClick = { },
+        onCartClick = { },
+        onLoadClick = { },
         onAdd = { id, type -> },
         onMinus = { id, type -> },
-        onDelete = {  },
-        onAddInCart = {  },
+        onDelete = { },
+        onAddInCart = { },
         isContainedInCart = { it -> true },
-        isLoading = false
+        isLoading = false,
     )
 }
 
@@ -389,6 +389,6 @@ private fun CatalogScreenPreview2() {
         onDelete = { },
         onAddInCart = { },
         isContainedInCart = { it -> true },
-        isLoading = true
+        isLoading = true,
     )
 }

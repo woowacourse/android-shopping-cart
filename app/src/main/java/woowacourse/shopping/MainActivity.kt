@@ -8,16 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.domain.Products
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.viewmodel.ShoppingViewModel
@@ -30,13 +25,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val viewModel: ShoppingViewModel = viewModel<ShoppingViewModel>(
-                factory = ShoppingViewModelFactory(
-                    (application as ShoppingApplication).purchaseProductsRepository,
-                    (application as ShoppingApplication).recentlyViewedProductRepository,
-                    (application as ShoppingApplication).webServerRepository
+            val viewModel: ShoppingViewModel =
+                viewModel<ShoppingViewModel>(
+                    factory =
+                        ShoppingViewModelFactory(
+                            (application as ShoppingApplication).purchaseProductsRepository,
+                            (application as ShoppingApplication).recentlyViewedProductRepository,
+                            (application as ShoppingApplication).webServerRepository,
+                        ),
                 )
-            )
             val cartState by viewModel.cart.collectAsStateWithLifecycle()
             val viewHistory by viewModel.viewingHistory.collectAsStateWithLifecycle()
             val lastViewedProduct by viewModel.lastViewedProduct.collectAsStateWithLifecycle()
@@ -50,10 +47,11 @@ class MainActivity : ComponentActivity() {
                         recentlyViewedProducts = viewHistory,
                         onRecentlyViewedClick = { product ->
                             viewModel.updateHistory(product)
-                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
-                                putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
-                            }
+                            val intent =
+                                Intent(this, ProductDetailActivity::class.java).apply {
+                                    putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
+                                    putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
+                                }
                             startActivity(intent)
                         },
                         onItemClick = { product ->
@@ -84,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         isContainedInCart = { cartState.isContain(it) },
                         specificProductCount = { cartState.totalCountOfSpecificPurchaseProduct(it) },
                         totalCount = { cartState.totalCountOfPurchaseProducts() },
-                        isLoading = isLoading
+                        isLoading = isLoading,
                     )
                 }
             }

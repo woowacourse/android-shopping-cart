@@ -9,5 +9,5 @@ class WebServerResponse(
     val name: String,
     val price: Int,
     @SerialName("imageUrl")
-    val imageUri: String
+    val imageUri: String,
 )

@@ -18,20 +18,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CartCountLabel(
     count: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(24.dp)
-            .clip(CircleShape)
-            .background(Color(0xFF04C09E)),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .size(24.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF04C09E)),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = count.toString(),
             color = Color.White,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }
@@ -40,6 +41,6 @@ fun CartCountLabel(
 @Composable
 private fun CircleAndTextPreview1() {
     CartCountLabel(
-        count = 0
+        count = 0,
     )
 }

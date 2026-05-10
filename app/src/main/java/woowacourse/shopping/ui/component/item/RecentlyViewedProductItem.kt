@@ -24,20 +24,23 @@ fun RecentlyViewedProductItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .width(100.dp)
-            .height(120.dp)
-            .clickable(onClick = {
-                onClick(product)
-            }
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .width(100.dp)
+                .height(120.dp)
+                .clickable(
+                    onClick = {
+                        onClick(product)
+                    },
+                ),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ProductImage(
             imageUri = product.imageUri,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
         )
         Text(
             text = product.name,
@@ -45,11 +48,10 @@ fun RecentlyViewedProductItem(
             fontSize = 12.sp,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            modifier = Modifier.padding(start = 4.dp, end = 4.dp)
+            modifier = Modifier.padding(start = 4.dp, end = 4.dp),
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -61,6 +63,6 @@ private fun RecentlyViewedProductItemPreview() {
             name = "너무너무너무너무너무너무너무너무 긴 이름",
             price = 1000,
         ),
-        onClick = {}
+        onClick = {},
     )
 }

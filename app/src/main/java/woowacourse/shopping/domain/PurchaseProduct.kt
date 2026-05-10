@@ -2,11 +2,12 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 data class PurchaseProduct(
     val product: Product,
-    val count: Int = 1
-): Parcelable {
+    val count: Int = 1,
+) : Parcelable {
     init {
         require(count > 0) { "구매할 상품의 개수는 1개 이상이어야 합니다." }
     }

@@ -5,16 +5,22 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class PurchaseProducts(
-    val purchaseProducts: List<PurchaseProduct> = emptyList()
-): Parcelable {
+    val purchaseProducts: List<PurchaseProduct> = emptyList(),
+) : Parcelable {
     fun add(purchaseProduct: PurchaseProduct) =
-        if(findById(purchaseProduct.id()) == null) PurchaseProducts(purchaseProducts + purchaseProduct)
-        else updateCountWithUuid(purchaseProduct.id(), purchaseProduct.count)
-
-    fun updateCountWithUuid(id: String, updateAmount: Int) = PurchaseProducts (
-        purchaseProducts.map {
-            if(it.isSameID(id)) it.updateCount(updateAmount) else it
+        if (findById(purchaseProduct.id()) == null) {
+            PurchaseProducts(purchaseProducts + purchaseProduct)
+        } else {
+            updateCountWithUuid(purchaseProduct.id(), purchaseProduct.count)
         }
+
+    fun updateCountWithUuid(
+        id: String,
+        updateAmount: Int,
+    ) = PurchaseProducts(
+        purchaseProducts.map {
+            if (it.isSameID(id)) it.updateCount(updateAmount) else it
+        },
     )
 
     fun removeProduct(id: String): PurchaseProducts {

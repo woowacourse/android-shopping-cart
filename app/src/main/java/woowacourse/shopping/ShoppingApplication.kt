@@ -8,7 +8,7 @@ import woowacourse.shopping.data.local.repository.RecentlyViewedProductRepositor
 import woowacourse.shopping.data.remote.mock.MockWebServer
 import woowacourse.shopping.data.remote.repository.WebServerRepository
 
-class ShoppingApplication: Application() {
+class ShoppingApplication : Application() {
     val database by lazy { DataBase.getDatabase(this) }
 
     val purchaseProductsRepository by lazy {

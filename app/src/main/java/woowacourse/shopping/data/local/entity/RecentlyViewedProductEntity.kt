@@ -11,14 +11,13 @@ data class RecentlyViewedProductEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "imageUri") val imageUri: String,
-    @ColumnInfo(name = "time_stamp") val timeStamp: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "time_stamp") val timeStamp: Long = System.currentTimeMillis(),
 ) {
-    fun toObject(): Product {
-        return Product(
+    fun toObject(): Product =
+        Product(
             id = id,
             imageUri = imageUri,
             name = name,
-            price = price
+            price = price,
         )
-    }
 }

@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Cart(
     val purchaseProducts: PurchaseProducts = PurchaseProducts(),
-): Parcelable {
+) : Parcelable {
     fun add(purchaseProduct: PurchaseProduct) = Cart(purchaseProducts.add(purchaseProduct))
 
     fun updateCountWithId(
         id: String,
-        updateAmount: Int
+        updateAmount: Int,
     ) = Cart(purchaseProducts.updateCountWithUuid(id, updateAmount))
 
     fun removeWithId(id: String) = Cart(purchaseProducts.removeProduct(id))

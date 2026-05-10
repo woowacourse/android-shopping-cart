@@ -23,14 +23,16 @@ import kotlin.time.Duration.Companion.seconds
 class ShoppingViewModel(
     private val purchaseProductsRepository: PurchaseProductsRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
-    private val webServerRepository: WebServerRepository
-): ViewModel() {
-    val cart: StateFlow<Cart> = purchaseProductsRepository.getCart()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Cart()
-        )
+    private val webServerRepository: WebServerRepository,
+) : ViewModel() {
+    val cart: StateFlow<Cart> =
+        purchaseProductsRepository
+            .getCart()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Cart(),
+            )
 
     private val _products = MutableStateFlow<Products>(Products())
     val products: StateFlow<Products> = _products.asStateFlow()
@@ -42,14 +44,14 @@ class ShoppingViewModel(
         fetchProducts()
     }
 
-    fun fetchProducts(page: Int = 0){
+    fun fetchProducts(page: Int = 0) {
         viewModelScope.launch {
             _isLoading.value = true
             delay(2.seconds)
             try {
                 val response = webServerRepository.getProducts(page, PAGE_SIZE)
                 _products.value += Products(response)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("Web Server Error", "${e.message}")
             } finally {
                 _isLoading.value = false
@@ -63,7 +65,10 @@ class ShoppingViewModel(
         }
     }
 
-    fun updateCountWithID(id: String, updateAmount: Int) {
+    fun updateCountWithID(
+        id: String,
+        updateAmount: Int,
+    ) {
         viewModelScope.launch {
             purchaseProductsRepository.updateCount(id, updateAmount)
         }
@@ -75,19 +80,23 @@ class ShoppingViewModel(
         }
     }
 
-    val viewingHistory: StateFlow<Products> = recentlyViewedProductRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Products()
-        )
+    val viewingHistory: StateFlow<Products> =
+        recentlyViewedProductRepository
+            .getAll()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Products(),
+            )
 
-    val lastViewedProduct: StateFlow<Product?> = recentlyViewedProductRepository.getLatestItem()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    val lastViewedProduct: StateFlow<Product?> =
+        recentlyViewedProductRepository
+            .getLatestItem()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null,
+            )
 
     fun updateHistory(product: Product) {
         viewModelScope.launch {
@@ -103,7 +112,7 @@ class ShoppingViewModel(
         fetchProducts(currentIndex.value)
     }
 
-    companion object{
+    companion object {
         private val PAGE_SIZE = 20
     }
 }
@@ -111,10 +120,10 @@ class ShoppingViewModel(
 class ShoppingViewModelFactory(
     private val purchaseProductsRepository: PurchaseProductsRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
-    private val webServerRepository: WebServerRepository
-): ViewModelProvider.Factory {
+    private val webServerRepository: WebServerRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(ShoppingViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ShoppingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ShoppingViewModel(purchaseProductsRepository, recentlyViewedProductRepository, webServerRepository) as T
         }

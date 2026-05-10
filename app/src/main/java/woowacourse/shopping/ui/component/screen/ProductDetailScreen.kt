@@ -181,7 +181,7 @@ private fun ProductDetailInfo(
             LastViewedProduct(
                 product = lastViewedProduct,
                 onClick = onLastViewedClick,
-                modifier = Modifier.padding(18.dp)
+                modifier = Modifier.padding(18.dp),
             )
         }
     }
@@ -191,33 +191,36 @@ private fun ProductDetailInfo(
 @Composable
 private fun ProductDetailScreenPreview1() {
     ProductDetailScreen(
-        product = Product(
+        product =
+            Product(
                 imageUri = "emptyUri",
                 name = "우유",
                 price = 100,
-        ),
+            ),
         count = 0,
-        lastViewedProduct = Product(
-            imageUri = "emptyUri",
-            name = "우유",
-            price = 100,
-        ),
+        lastViewedProduct =
+            Product(
+                imageUri = "emptyUri",
+                name = "우유",
+                price = 100,
+            ),
         onLastViewedClick = {},
         onAddRequest = {},
         onClose = {},
-        onAdd = {  },
-        onMinus = {  },
+        onAdd = { },
+        onMinus = { },
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ProductDetailScreenPreview2() {
-    val product = Product(
-        imageUri = "emptyUri",
-        name = "우유",
-        price = 100,
-    )
+    val product =
+        Product(
+            imageUri = "emptyUri",
+            name = "우유",
+            price = 100,
+        )
 
     ProductDetailScreen(
         product = product,
@@ -226,7 +229,7 @@ private fun ProductDetailScreenPreview2() {
         onLastViewedClick = {},
         onAddRequest = {},
         onClose = {},
-        onAdd = {  },
-        onMinus = {  },
+        onAdd = { },
+        onMinus = { },
     )
 }

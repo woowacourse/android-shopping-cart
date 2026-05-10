@@ -7,23 +7,23 @@ import woowacourse.shopping.data.local.entity.RecentlyViewedProductEntity
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 
-class RecentlyViewedProductRepository(private val recentlyViewedProductDao: RecentlyViewedProductDao) {
-    fun getAll(): Flow<Products> {
-        return recentlyViewedProductDao.getAll().map {
+class RecentlyViewedProductRepository(
+    private val recentlyViewedProductDao: RecentlyViewedProductDao,
+) {
+    fun getAll(): Flow<Products> =
+        recentlyViewedProductDao.getAll().map {
             val items = it?.map { it.toObject() } ?: emptyList()
             Products(items)
         }
-    }
 
     suspend fun updateList(product: Product) {
         recentlyViewedProductDao.enqueueAndLimit10(product.toEntity())
     }
 
-    fun getLatestItem(): Flow<Product?> {
-        return recentlyViewedProductDao.getLatestItem().map {
+    fun getLatestItem(): Flow<Product?> =
+        recentlyViewedProductDao.getLatestItem().map {
             it?.toObject()
         }
-    }
 }
 
 private fun Product.toEntity() =

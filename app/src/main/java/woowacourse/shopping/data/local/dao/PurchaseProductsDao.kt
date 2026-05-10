@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.local.entity.PurchaseProductEntity
+
 @Dao
 interface PurchaseProductsDao {
     @Query("SELECT * FROM purchase_products")
@@ -24,11 +25,14 @@ interface PurchaseProductsDao {
     @Transaction
     suspend fun upsert(entity: PurchaseProductEntity) {
         val id = insertIgnore(entity)
-        if(id == -1L) updateCount(entity.id, entity.count)
+        if (id == -1L) updateCount(entity.id, entity.count)
     }
 
     @Query("UPDATE purchase_products SET count = count + :delta WHERE id = :id")
-    suspend fun updateCount(id: String, delta: Int)
+    suspend fun updateCount(
+        id: String,
+        delta: Int,
+    )
 
     @Query("DELETE FROM purchase_products WHERE id = :id")
     suspend fun deleteWithId(id: String)
@@ -43,7 +47,10 @@ interface PurchaseProductsDao {
     fun getTotalPriceOfSpecificPurchaseProduct(productId: String): Flow<Int>
 
     @Query("SELECT * FROM purchase_products LIMIT :limit OFFSET :offset")
-    fun getPartedPurchaseProducts(limit: Int, offset: Int): Flow<List<PurchaseProductEntity>>
+    fun getPartedPurchaseProducts(
+        limit: Int,
+        offset: Int,
+    ): Flow<List<PurchaseProductEntity>>
 
     @Query("SELECT COUNT(*) FROM purchase_products")
     fun getProductCount(): Flow<Int>

@@ -25,57 +25,60 @@ fun QuantitySelector(
     onMinus: () -> Unit,
     modifier: Modifier = Modifier,
     onDelete: () -> Unit = { },
-
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .width(126.dp)
-            .height(42.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color.White)
+        modifier =
+            modifier
+                .width(126.dp)
+                .height(42.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White),
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(42.dp)
-                .align(Alignment.CenterStart)
-                .clickable(
-                    onClick = if (count == 1) onDelete else onMinus
-                )
+            modifier =
+                Modifier
+                    .size(42.dp)
+                    .align(Alignment.CenterStart)
+                    .clickable(
+                        onClick = if (count == 1) onDelete else onMinus,
+                    ),
         ) {
             Text(
                 text = "-",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.W500,
-                color = Color(0xFF555555)
+                color = Color(0xFF555555),
             )
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(42.dp)
-                .align(Alignment.Center)
+            modifier =
+                Modifier
+                    .size(42.dp)
+                    .align(Alignment.Center),
         ) {
             Text(
                 text = count.toString(),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.W500,
-                color = Color(0xFF555555)
+                color = Color(0xFF555555),
             )
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(42.dp)
-                .align(Alignment.CenterEnd)
-                .clickable(onClick = onAdd)
+            modifier =
+                Modifier
+                    .size(42.dp)
+                    .align(Alignment.CenterEnd)
+                    .clickable(onClick = onAdd),
         ) {
             Text(
                 text = "+",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.W500,
-                color = Color(0xFF555555)
+                color = Color(0xFF555555),
             )
         }
     }
@@ -86,8 +89,8 @@ fun QuantitySelector(
 fun QuantitySelectorPreview() {
     QuantitySelector(
         count = 3,
-        onAdd = {  },
-        onMinus = {  },
-        onDelete = {  }
+        onAdd = { },
+        onMinus = { },
+        onDelete = { },
     )
 }

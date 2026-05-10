@@ -1,7 +1,8 @@
 package woowacourse.shopping.data.remote.mock
 
 object MockProducts {
-    val products: String = """
+    val products: String =
+        """
         [
           {
             "id": "1",
@@ -184,5 +185,5 @@ object MockProducts {
             "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSU2K0RaXfa_b6OADBdza1nfAjbY4Yr5QePd7y9HjHNsUzW57R_Hx4FA08LcLfcnZN6uxGqa61UM8WmmfNfzUX9xYdisBiGi_X7LL3KEErP6rYADKkD3s6HLNLT4k_5wbmjbN5xbA&usqp=CAc"
           }
         ]
-    """.trimIndent()
+        """.trimIndent()
 }

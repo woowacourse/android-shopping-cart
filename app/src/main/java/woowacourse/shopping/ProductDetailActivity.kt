@@ -32,12 +32,14 @@ class ProductDetailActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val viewModel: ProductDetailViewModel = viewModel<ProductDetailViewModel>(
-                factory = ProductDetailViewModelFactory(
-                    (application as ShoppingApplication).purchaseProductsRepository,
-                    (application as ShoppingApplication).recentlyViewedProductRepository
+            val viewModel: ProductDetailViewModel =
+                viewModel<ProductDetailViewModel>(
+                    factory =
+                        ProductDetailViewModelFactory(
+                            (application as ShoppingApplication).purchaseProductsRepository,
+                            (application as ShoppingApplication).recentlyViewedProductRepository,
+                        ),
                 )
-            )
 
             val count = viewModel.countState.collectAsStateWithLifecycle()
 
@@ -49,10 +51,11 @@ class ProductDetailActivity : ComponentActivity() {
                         lastViewedProduct = lastViewedProduct,
                         onLastViewedClick = {
                             viewModel.updateHistory(lastViewedProduct!!)
-                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra(IntentKeys.SELECTED_PRODUCT_KEY, lastViewedProduct)
-                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            }
+                            val intent =
+                                Intent(this, ProductDetailActivity::class.java).apply {
+                                    putExtra(IntentKeys.SELECTED_PRODUCT_KEY, lastViewedProduct)
+                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                }
                             startActivity(intent)
                         },
                         onAdd = { viewModel.addCount() },

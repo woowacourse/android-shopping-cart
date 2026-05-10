@@ -76,18 +76,18 @@ fun CartItem(
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
                 Box(
-                    modifier = Modifier.fillMaxSize()
-                ){
+                    modifier = Modifier.fillMaxSize(),
+                ) {
                     QuantitySelector(
                         count = product.count,
                         onAdd = { onAdd(product.id(), 1) },
                         onMinus = { onMinus(product.id(), -1) },
                         onDelete = { onDelete(product.id()) },
-                        modifier = Modifier.align(Alignment.CenterEnd)
+                        modifier = Modifier.align(Alignment.CenterEnd),
                     )
                     ProductPrice(
                         product.price(),
-                        modifier = Modifier.align(Alignment.BottomEnd)
+                        modifier = Modifier.align(Alignment.BottomEnd),
                     )
                 }
             }
@@ -150,10 +150,10 @@ private fun CartItemPreview() {
                 imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
                 name = "진짜진짜정말정말매우매우긴상품명입니다",
                 price = 30000,
-            )
+            ),
         ),
         onAdd = { id, type -> },
         onMinus = { id, type -> },
-        onDelete = {  },
+        onDelete = { },
     )
 }

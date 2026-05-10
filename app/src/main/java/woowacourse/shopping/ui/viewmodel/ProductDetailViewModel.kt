@@ -14,8 +14,8 @@ import woowacourse.shopping.domain.PurchaseProduct
 
 class ProductDetailViewModel(
     private val purchaseProductsRepository: PurchaseProductsRepository,
-    private val recentlyViewedProductRepository: RecentlyViewedProductRepository
-): ViewModel() {
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
+) : ViewModel() {
     private val _count = MutableStateFlow(1)
 
     val countState = _count.asStateFlow()
@@ -43,10 +43,10 @@ class ProductDetailViewModel(
 
 class ProductDetailViewModelFactory(
     private val purchaseProductsRepository: PurchaseProductsRepository,
-    private val recentlyViewedProductRepository: RecentlyViewedProductRepository
-): ViewModelProvider.Factory {
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ProductDetailViewModel(purchaseProductsRepository, recentlyViewedProductRepository) as T
         }

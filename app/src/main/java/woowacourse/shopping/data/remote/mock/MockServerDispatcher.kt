@@ -12,7 +12,7 @@ import mockwebserver3.RecordedRequest
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import woowacourse.shopping.data.remote.mock.MockProducts.products
 
-class MockServerDispatcher: Dispatcher() {
+class MockServerDispatcher : Dispatcher() {
     private val mockProducts = Json.parseToJsonElement(products).jsonArray
 
     override fun dispatch(request: RecordedRequest): MockResponse {
@@ -25,20 +25,27 @@ class MockServerDispatcher: Dispatcher() {
                 val offset = httpUrl.queryParameter("offset")?.toIntOrNull() ?: 0
                 val limit = httpUrl.queryParameter("limit")?.toIntOrNull() ?: 0
                 val body =
-                    if (offset >= mockProducts.size) "[]"
-                    else JsonArray(mockProducts.drop(offset).take(limit)).toString()
+                    if (offset >= mockProducts.size) {
+                        "[]"
+                    } else {
+                        JsonArray(mockProducts.drop(offset).take(limit)).toString()
+                    }
 
                 success(body)
             }
 
             path.startsWith("/products/") -> {
                 val id = path.removePrefix("/products/")
-                val product = mockProducts.firstOrNull {
-                    it.jsonObject["id"]?.jsonPrimitive?.content == id
-                }
+                val product =
+                    mockProducts.firstOrNull {
+                        it.jsonObject["id"]?.jsonPrimitive?.content == id
+                    }
 
-                if (product != null) success(Json.encodeToString(product))
-                else notFount()
+                if (product != null) {
+                    success(Json.encodeToString(product))
+                } else {
+                    notFount()
+                }
             }
 
             else -> {
@@ -48,14 +55,16 @@ class MockServerDispatcher: Dispatcher() {
     }
 
     private fun success(body: String): MockResponse =
-        MockResponse.Builder()
+        MockResponse
+            .Builder()
             .addHeader("Content-Type", "application/json")
             .code(200)
             .body(body)
             .build()
 
     private fun notFount(): MockResponse =
-        MockResponse.Builder()
+        MockResponse
+            .Builder()
             .code(404)
             .build()
 }

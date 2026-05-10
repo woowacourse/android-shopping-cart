@@ -19,28 +19,31 @@ import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
 import woowacourse.shopping.domain.Cart
 
 class CartViewModel(
-    private val purchaseProductsRepository: PurchaseProductsRepository
-): ViewModel() {
+    private val purchaseProductsRepository: PurchaseProductsRepository,
+) : ViewModel() {
     private val _currentPage: MutableStateFlow<Int> = MutableStateFlow(0)
 
-    val currentPage :StateFlow<Int> = _currentPage.asStateFlow()
+    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagedCart: StateFlow<Cart> = _currentPage.flatMapLatest { page ->
-        purchaseProductsRepository.partedProducts(page, PAGE_SIZE)
-    }.onEach {
-        println("페이지 변경됨")
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Cart()
-    )
+    val pagedCart: StateFlow<Cart> =
+        _currentPage
+            .flatMapLatest { page ->
+                purchaseProductsRepository.partedProducts(page, PAGE_SIZE)
+            }.onEach {
+                println("페이지 변경됨")
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Cart(),
+            )
 
-    val productCount: StateFlow<Int> = purchaseProductsRepository.getProductCount().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = 0
-    )
+    val productCount: StateFlow<Int> =
+        purchaseProductsRepository.getProductCount().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0,
+        )
 
     fun next() {
         _currentPage.update {
@@ -48,33 +51,41 @@ class CartViewModel(
         }
     }
 
-    fun prev() { _currentPage.update { if(it > 0) it - 1 else 0 } }
+    fun prev() {
+        _currentPage.update { if (it > 0) it - 1 else 0 }
+    }
 
-    val nextEnable: StateFlow<Boolean> = combine(currentPage, productCount) { page, count ->
-        page < (count - 1) / PAGE_SIZE
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = false
-    )
-
-    val prevEnable: StateFlow<Boolean> = currentPage
-        .map { it > 0 }
-        .stateIn(
+    val nextEnable: StateFlow<Boolean> =
+        combine(currentPage, productCount) { page, count ->
+            page < (count - 1) / PAGE_SIZE
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
+            initialValue = false,
         )
 
-    val isPageable: StateFlow<Boolean> = productCount
-        .map { it > PAGE_SIZE }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    val prevEnable: StateFlow<Boolean> =
+        currentPage
+            .map { it > 0 }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = false,
+            )
 
-    fun updateCountWithID(id: String, updateAmount: Int) {
+    val isPageable: StateFlow<Boolean> =
+        productCount
+            .map { it > PAGE_SIZE }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = false,
+            )
+
+    fun updateCountWithID(
+        id: String,
+        updateAmount: Int,
+    ) {
         viewModelScope.launch {
             purchaseProductsRepository.updateCount(id, updateAmount)
         }
@@ -92,10 +103,10 @@ class CartViewModel(
 }
 
 class CartViewModelFactory(
-    private val purchaseProductsRepository: PurchaseProductsRepository
-): ViewModelProvider.Factory {
+    private val purchaseProductsRepository: PurchaseProductsRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(CartViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return CartViewModel(purchaseProductsRepository) as T
         }

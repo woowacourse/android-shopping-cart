@@ -21,11 +21,13 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val viewModel: CartViewModel = viewModel<CartViewModel>(
-                factory = CartViewModelFactory(
-                    (application as ShoppingApplication).purchaseProductsRepository
+            val viewModel: CartViewModel =
+                viewModel<CartViewModel>(
+                    factory =
+                        CartViewModelFactory(
+                            (application as ShoppingApplication).purchaseProductsRepository,
+                        ),
                 )
-            )
 
             val pagedCart by viewModel.pagedCart.collectAsStateWithLifecycle()
             val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()

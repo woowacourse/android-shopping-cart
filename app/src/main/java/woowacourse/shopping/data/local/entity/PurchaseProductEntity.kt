@@ -12,17 +12,17 @@ data class PurchaseProductEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "imageUri") val imageUri: String,
-    @ColumnInfo(name = "count") val count: Int
+    @ColumnInfo(name = "count") val count: Int,
 ) {
-    fun toPurchaseProductObject(): PurchaseProduct {
-        return PurchaseProduct(
-            product = Product(
-                id = id,
-                imageUri = imageUri,
-                name = name,
-                price = price
-            ),
-            count = count
+    fun toPurchaseProductObject(): PurchaseProduct =
+        PurchaseProduct(
+            product =
+                Product(
+                    id = id,
+                    imageUri = imageUri,
+                    name = name,
+                    price = price,
+                ),
+            count = count,
         )
-    }
 }
