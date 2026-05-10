@@ -7,31 +7,60 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.local.AppDatabase
 import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.SimpleProductUiModel
 import woowacourse.shopping.ui.productlist.state.ProductListUiState
 
-class ProductListViewModel(private val productRepository: ProductRepository) : ViewModel() {
+class ProductListViewModel(
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState = _uiState.asStateFlow()
 
     private var allProducts = listOf<Product>()
 
     private val _products = mutableListOf<Product>()
-    private val _recentProducts = mutableListOf<Product>()
     private var cart = Cart()
-    private var currentPage = 0
 
     init {
+        observeDatabase()
         loadInitData()
+    }
+
+    private fun observeDatabase() {
+        combine(
+            cartRepository.getCart(),
+            recentProductRepository.getRecentProducts(),
+        ) { cartItems, recentProducts ->
+            cart = Cart(cartItems)
+
+            _uiState.update { state ->
+                state.copy(
+                    products = _products.map { product ->
+                        toDetailProductUiModel(product, cart.getQuantity(product) ?: Quantity(0))
+                    },
+                    recentProducts = recentProducts.map { toSimpleProductUiModel(it) },
+                    cartCount = cart.totalQuantity.count,
+                )
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun loadInitData() {
@@ -49,34 +78,27 @@ class ProductListViewModel(private val productRepository: ProductRepository) : V
         require(pageSize > 0) { "PAGE_SIZE의 크기는 0보다 커야한다" }
         if (isEndList()) return
 
-        val fromIndex = currentPage * pageSize
+        val fromIndex = _products.size
         val toIndex = minOf(fromIndex + pageSize, allProducts.size)
 
         _products.addAll(
             allProducts.subList(fromIndex, toIndex),
         )
-        currentPage++
         syncUiState()
     }
 
     fun addCartItem(productId: String) {
         val product = _products.find { it.hasId(productId) } ?: return
-        cart = cart.plusProduct(product, Quantity(1))
-        syncUiState()
+        viewModelScope.launch {
+            cartRepository.addCartItem(product, Quantity(1))
+        }
     }
 
     fun removeCartItem(productId: String) {
         val product = _products.find { it.hasId(productId) } ?: return
-        if (!cart.contains(product)) return
-        cart = cart.minusProduct(product, Quantity(1))
-        syncUiState()
-    }
-
-    fun onClickProduct(productId: String) {
-        val product = _products.find { it.hasId(productId) } ?: return
-        _recentProducts.remove(product)
-        _recentProducts.add(0, product)
-        syncUiState()
+        viewModelScope.launch {
+            cartRepository.decreaseCartItem(product, Quantity(1))
+        }
     }
 
     private fun syncUiState() {
@@ -85,10 +107,6 @@ class ProductListViewModel(private val productRepository: ProductRepository) : V
                 products = _products.map { product ->
                     toDetailProductUiModel(product, cart.getQuantity(product) ?: Quantity(0))
                 },
-                recentProducts = _recentProducts.map { product ->
-                    toSimpleProductUiModel(product)
-                },
-                cartCount = cart.totalQuantity.count,
                 isEnd = isEndList(),
             )
         }
@@ -118,9 +136,18 @@ class ProductListViewModel(private val productRepository: ProductRepository) : V
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
+                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
+                val database = AppDatabase.getDatabase(context)
+
                 val dataSource = ProductRemoteDataSource()
-                val repository = ProductRepositoryImpl(dataSource)
-                ProductListViewModel(repository)
+                val productRepository = ProductRepositoryImpl(dataSource)
+                val cartRepository = CartRepositoryImpl(database.cartDao())
+                val recentProductRepository = RecentProductRepositoryImpl(database.recentProductDao())
+                ProductListViewModel(
+                    productRepository = productRepository,
+                    cartRepository = cartRepository,
+                    recentProductRepository = recentProductRepository,
+                )
             }
         }
     }

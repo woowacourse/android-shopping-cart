@@ -20,7 +20,6 @@ fun ProductListRoute(
         cartCount = uiState.cartCount,
         isEnd = uiState.isEnd,
         onProductClick = { id ->
-            productListViewModel.onClickProduct(id)
             onNavigateToDetail(id)
         },
         onIncrement = { id ->
