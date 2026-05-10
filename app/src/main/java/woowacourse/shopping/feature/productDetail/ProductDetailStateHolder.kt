@@ -5,6 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.model.Quantity
@@ -20,6 +26,7 @@ class ProductDetailStateHolder(
     private val cartRepository: CartRepository,
     private val productId: String,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val product: Product? = productRepository.getProduct(productId)
 
     var productInfo: ProductInfo? by mutableStateOf(null)
@@ -31,34 +38,52 @@ class ProductDetailStateHolder(
 
     fun onAddClick() {
         val product = product ?: return
-        cartRepository.updateCart(CartItem(product, Quantity(1)))
-        refreshUiState()
+        scope.launch(Dispatchers.IO) {
+            cartRepository.updateCart(CartItem(product, Quantity(1)))
+            refreshUiState()
+        }
     }
 
     fun onIncreaseClick() {
-        val currentCartItem = cartRepository.getCartItem(productId) ?: return
-        cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value + 1)))
-        refreshUiState()
+        scope.launch(Dispatchers.IO) {
+            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
+            cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value + 1)))
+            refreshUiState()
+        }
     }
 
     fun onDecreaseClick() {
-        val currentCartItem = cartRepository.getCartItem(productId) ?: return
-        if (currentCartItem.quantity.value <= 1) {
-            cartRepository.deleteCartItem(productId)
-        } else {
-            cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value - 1)))
+        scope.launch(Dispatchers.IO) {
+            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
+            if (currentCartItem.quantity.value <= 1) {
+                cartRepository.deleteCartItem(productId)
+            } else {
+                cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value - 1)))
+            }
+            refreshUiState()
         }
-        refreshUiState()
     }
 
     private fun refreshUiState() {
-        val quantity = cartRepository.getCartItem(productId)?.quantity?.value ?: 0
-        productInfo = product?.toUiModel()?.copy(formattedQuantity = quantity.toString())
+        scope.launch {
+            val quantity = withContext(Dispatchers.IO) {
+                cartRepository.getCartItem(productId).first()?.quantity?.value ?: 0
+            }
+            productInfo = product?.toUiModel()?.copy(formattedQuantity = quantity.toString())
+        }
     }
 }
 
 @Composable
-fun retainProductDetailStateHolder(productId: String): ProductDetailStateHolder =
-    retain(productId) {
-        ProductDetailStateHolder(ProductRepositoryImpl, CartRepositoryImpl, productId)
+fun retainProductDetailStateHolder(productId: String): ProductDetailStateHolder {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    return retain(productId) {
+        val application = context.applicationContext as woowacourse.shopping.ShoppingApplication
+        ProductDetailStateHolder(
+            ProductRepositoryImpl,
+            CartRepositoryImpl(application.database.cartDao()),
+            productId
+        )
     }
+}
+

@@ -1,60 +1,78 @@
 package woowacourse.shopping.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import woowacourse.shopping.data.local.CartDao
+import woowacourse.shopping.data.local.CartEntity
+import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Quantity
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.cart.CartItems
+import woowacourse.shopping.domain.model.product.Product
+import woowacourse.shopping.domain.model.product.ProductTitle
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.math.min
 
-object CartRepositoryImpl : CartRepository {
-    private var currentCart = CartItems()
+class CartRepositoryImpl(
+    private val cartDao: CartDao,
+) : CartRepository {
 
-    override fun getCartItems(): CartItems = currentCart
+    override fun getCartItems(): Flow<CartItems> = cartDao.getAllCartItems().map { items ->
+        CartItems(items.map { it.toDomain() })
+    }
 
-    override fun getCartItem(productId: String): CartItem? =
-        currentCart.items.find { it.product.id == productId }
+    override fun getCartItem(productId: String): Flow<CartItem?> =
+        cartDao.getCartItem(productId).map { it?.toDomain() }
 
     override fun updateCart(cartItem: CartItem) {
-        currentCart = currentCart.updateItems(cartItem)
+        cartDao.upsert(cartItem.toEntity())
     }
 
     override fun deleteCartItem(productId: String) {
-        currentCart = currentCart.remove(productId)
+        cartDao.deleteCartItem(productId)
     }
 
     override fun increaseCartItemQuantity(productId: String) {
-        val cartItem = getCartItem(productId) ?: return
-        val newQuantity = Quantity(cartItem.quantity.value + 1)
-        updateCart(cartItem.copy(quantity = newQuantity))
+        val cartItem = runBlocking { getCartItem(productId).first() } ?: return
+        updateCart(cartItem.copy(quantity = Quantity(cartItem.quantity.value + 1)))
     }
 
     override fun decreaseCartItemQuantity(productId: String) {
-        val cartItem = getCartItem(productId) ?: return
+        val cartItem = runBlocking { getCartItem(productId).first() } ?: return
         if (cartItem.quantity.value > 1) {
-            val newQuantity = Quantity(cartItem.quantity.value - 1)
-            updateCart(cartItem.copy(quantity = newQuantity))
+            updateCart(cartItem.copy(quantity = Quantity(cartItem.quantity.value - 1)))
         }
     }
 
-    override fun getCartItemCount(): Int = currentCart.items.size
+    override fun getCartItemCount(): Int = cartDao.getCartItemCount()
 
-    override fun getPagingCartItems(
-        page: Int,
-        pageSize: Int,
-    ): CartItems {
-        require(page >= 0) { "페이지 번호는 0보다 크거나 같은 정수여야 합니다." }
-        require(pageSize >= 1) { "페이지 사이즈는 1보다 큰 정수여야 합니다." }
-        val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, currentCart.items.size)
-
-        require(fromIndex <= toIndex) { "끝 인덱스는 시작 인덱스보다 작거나 같아야합니다." }
-
-        val result = currentCart.items.subList(fromIndex, toIndex)
-
-        return CartItems(result)
+    override fun getPagingCartItems(page: Int, pageSize: Int): CartItems {
+        val offset = page * pageSize
+        return CartItems(
+            cartDao.getPagingCartItems(pageSize, offset).map { it.toDomain() }
+        )
     }
 
     override fun saveCartItems(cartItems: CartItems) {
-        currentCart = cartItems
+        cartItems.items.forEach { updateCart(it) }
     }
+
+    private fun CartEntity.toDomain(): CartItem = CartItem(
+        product = Product(
+            id = productId,
+            productTitle = ProductTitle(productName),
+            imageUrl = productImageUrl,
+            price = Price(price)
+        ),
+        quantity = Quantity(quantity)
+    )
+
+    private fun CartItem.toEntity(): CartEntity = CartEntity(
+        productId = product.id,
+        productName = product.productTitle.value,
+        productImageUrl = product.imageUrl,
+        price = product.price.value,
+        quantity = quantity.value
+    )
 }
