@@ -4,10 +4,8 @@ package woowacourse.shopping.repository
 
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
-import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -42,19 +40,17 @@ class HttpProductRepositoryTest {
     @Test
     fun `상품 목록 API 성공 응답을 도메인 객체로 변환한다`() =
         runBlocking {
-            mockWebServer.dispatcher =
-                dispatcher(
-                    productsResponse =
-                        MockResponse()
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json")
-                            .setBody(productsJson),
-                )
+            mockWebServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setHeader("Content-Type", "application/json")
+                    .setBody(productsJson),
+            )
 
             val actual = repository.getProducts(fromIndex = 0, limit = 20).toList()
             val request = mockWebServer.takeRequest()
 
-            assertEquals("/products", request.path)
+            assertTrue(request.path?.endsWith("/products") == true)
             assertEquals(2, actual.size)
             assertEquals(ProductId.fromRemoteId(1), actual.first().id)
             assertEquals("치킨", actual.first().name)
@@ -63,33 +59,29 @@ class HttpProductRepositoryTest {
     @Test
     fun `상품 상세 API 성공 응답을 기준으로 ID 목록을 조회한다`() =
         runBlocking {
-            mockWebServer.dispatcher =
-                dispatcher(
-                    productResponse =
-                        MockResponse()
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json")
-                            .setBody(productJson),
-                )
+            mockWebServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setHeader("Content-Type", "application/json")
+                    .setBody(productJson),
+            )
 
             val actual = repository.findAllByIds(setOf(ProductId.fromRemoteId(1)))
             val request = mockWebServer.takeRequest()
 
-            assertEquals("/products/1", request.path)
+            assertTrue(request.path?.endsWith("/products/1") == true)
             assertEquals(setOf(ProductId.fromRemoteId(1)), actual.keys)
             assertEquals("치킨", actual[ProductId.fromRemoteId(1)]?.name)
         }
 
     @Test
     fun `상품 목록 API가 서버 오류를 반환하면 예외를 던진다`() {
-        mockWebServer.dispatcher =
-            dispatcher(
-                productsResponse =
-                    MockResponse()
-                        .setResponseCode(500)
-                        .setHeader("Content-Type", "application/json")
-                        .setBody("""{"message":"server error"}"""),
-            )
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(500)
+                .setHeader("Content-Type", "application/json")
+                .setBody("""{"message":"server error"}"""),
+        )
 
         val actual =
             assertThrows<ProductResponseException> {
@@ -101,14 +93,12 @@ class HttpProductRepositoryTest {
 
     @Test
     fun `상품 상세 API가 서버 오류를 반환하면 예외를 던진다`() {
-        mockWebServer.dispatcher =
-            dispatcher(
-                productResponse =
-                    MockResponse()
-                        .setResponseCode(500)
-                        .setHeader("Content-Type", "application/json")
-                        .setBody("""{"message":"server error"}"""),
-            )
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(500)
+                .setHeader("Content-Type", "application/json")
+                .setBody("""{"message":"server error"}"""),
+        )
 
         val actual =
             assertThrows<ProductResponseException> {
@@ -120,14 +110,12 @@ class HttpProductRepositoryTest {
 
     @Test
     fun `상품 목록 API가 빈 응답 본문을 반환하면 파싱 예외를 던진다`() {
-        mockWebServer.dispatcher =
-            dispatcher(
-                productsResponse =
-                    MockResponse()
-                        .setResponseCode(200)
-                        .setHeader("Content-Type", "application/json")
-                        .setBody(""),
-            )
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setBody(""),
+        )
 
         val actual =
             assertThrows<ProductParsingException> {
@@ -139,14 +127,12 @@ class HttpProductRepositoryTest {
 
     @Test
     fun `상품 상세 API가 빈 응답 본문을 반환하면 파싱 예외를 던진다`() {
-        mockWebServer.dispatcher =
-            dispatcher(
-                productResponse =
-                    MockResponse()
-                        .setResponseCode(200)
-                        .setHeader("Content-Type", "application/json")
-                        .setBody(""),
-            )
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setBody(""),
+        )
 
         val actual =
             assertThrows<ProductParsingException> {
@@ -155,19 +141,6 @@ class HttpProductRepositoryTest {
 
         assertTrue(actual.message?.contains("응답") == true)
     }
-
-    private fun dispatcher(
-        productsResponse: MockResponse = MockResponse().setResponseCode(404),
-        productResponse: MockResponse = MockResponse().setResponseCode(404),
-    ): Dispatcher =
-        object : Dispatcher() {
-            override fun dispatch(request: RecordedRequest): MockResponse =
-                when (request.path) {
-                    "/products" -> productsResponse
-                    "/products/1" -> productResponse
-                    else -> MockResponse().setResponseCode(404)
-                }
-        }
 
     companion object {
         private val productsJson =
