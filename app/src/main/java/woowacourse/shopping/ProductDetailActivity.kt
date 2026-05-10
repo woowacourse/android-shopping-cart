@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -36,14 +40,16 @@ class ProductDetailActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            var amount by rememberSaveable { mutableIntStateOf(1) }
             AndroidshoppingTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
+                        amount = amount,
                         onAddRequest = {
-                            cart = cart?.addProduct(product)
+                            cart = cart?.addProduct(product, amount)
                             val resultIntent = Intent().apply {
                                 putExtra("extra_cart", cart)
                             }
@@ -52,6 +58,8 @@ class ProductDetailActivity : ComponentActivity() {
                             finish()
                         },
                         onClose = { finish() },
+                        onIncrease = { amount++ },
+                        onDecrease = { if (amount > 1) amount-- },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

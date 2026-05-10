@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
+import woowacourse.shopping.ui.component.item.AmountModifyButton
 import woowacourse.shopping.ui.component.item.ProductImage
 import woowacourse.shopping.ui.component.item.toPriceString
 
@@ -34,12 +35,21 @@ import woowacourse.shopping.ui.component.item.toPriceString
 fun ProductDetailScreen(
     onAddRequest: () -> Unit,
     onClose: () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     product: Product,
+    amount: Int,
     modifier: Modifier = Modifier,
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
-        bodyContent = { ProductDetailBody(onAddRequest, product) },
+        bodyContent = { ProductDetailBody(
+            onAddRequest = onAddRequest,
+            product = product,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+            amount = amount,
+        ) },
         modifier = modifier,
     )
 }
@@ -70,8 +80,11 @@ private fun ProductDetailHeader(
 
 @Composable
 private fun ProductDetailBody(
-    onAddRequest: () -> Unit,
     product: Product,
+    onAddRequest: () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    amount: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,7 +93,12 @@ private fun ProductDetailBody(
                 .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        ProductDetailInfo(product)
+        ProductDetailInfo(
+            product = product,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
+            amount = amount,
+        )
 
         TextButton(
             onClick = onAddRequest,
@@ -103,6 +121,9 @@ private fun ProductDetailBody(
 @Composable
 private fun ProductDetailInfo(
     product: Product,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    amount: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -133,12 +154,13 @@ private fun ProductDetailInfo(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "가격",
-                fontSize = 20.sp,
-            )
-            Text(
                 text = product.price.toPriceString(),
                 fontSize = 20.sp,
+            )
+            AmountModifyButton(
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
+                amount = amount
             )
         }
     }
@@ -156,5 +178,8 @@ private fun ProductDetailScreenPreview() {
                 name = "우유",
                 price = 100,
             ),
+        onIncrease = {  },
+        onDecrease = { },
+        amount = 1
     )
 }

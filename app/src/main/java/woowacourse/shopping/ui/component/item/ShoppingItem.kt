@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.component.item
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +25,9 @@ import java.util.UUID
 @Composable
 fun ShoppingItem(
     product: Product,
+    quantity: Int,
+    onIncrease: (UUID) -> Unit,
+    onDecrease: (UUID) -> Unit,
     onClick: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -38,7 +43,27 @@ fun ShoppingItem(
                 ),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        ProductImage(product.imageUri, Modifier.size(154.dp))
+        Box(
+            modifier = Modifier.size(154.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            ProductImage(product.imageUri, Modifier.size(154.dp))
+            Box(
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                if(quantity == 0) {
+                    AddCircleButton(
+                        onAdd = { onClick(product.productId) },
+                    )
+                } else {
+                    AmountModifyButton(
+                        onIncrease = { onIncrease(product.productId) },
+                        onDecrease = { onDecrease(product.productId) },
+                        amount = quantity
+                    )
+                }
+            }
+        }
         ProductInfo(product.name, product.price)
     }
 }
@@ -88,5 +113,8 @@ private fun ShoppingItemPreview() {
             price = 1000000000,
         ),
         onClick = {},
+        quantity = 1,
+        onIncrease = {  },
+        onDecrease = {  },
     )
 }

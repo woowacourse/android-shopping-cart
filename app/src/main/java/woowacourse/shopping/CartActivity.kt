@@ -54,6 +54,8 @@ class CartActivity : ComponentActivity() {
                     onDelete = { cartStateHolder.onDeleteProduct(it) },
                     onNext = { cartStateHolder.onNext() },
                     onPrevious = { cartStateHolder.onPrevious() },
+                    onIncrease = { cartStateHolder.onIncreaseProduct(it) },
+                    onDecrease = { cartStateHolder.onDecreaseProduct(it) },
                     previousEnable = cartStateHolder.hasPreviousPage(),
                     nextEnable = cartStateHolder.hasNextPage(),
                     currentPage = cartStateHolder.currentPage,

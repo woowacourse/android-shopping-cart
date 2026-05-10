@@ -69,6 +69,25 @@ class MainActivity : ComponentActivity() {
                             activityLauncher.launch(intent)
                         },
                         onLoadClick = { stateHolder.onLoadClick() },
+                        onIncrease = { id ->
+                            val product = stateHolder.catalog.find { it.productId == id }
+                            if (product != null) {
+                                cart = cart.addProduct(product)
+                            }
+                        },
+                        onDecrease = { id ->
+                            val cartProduct = cart.cartProducts.findSameProduct(id)
+                            if (cartProduct != null) {
+                                if (cartProduct.amount > 1) {
+                                    cart = cart.decreaseProduct(id)
+                                } else {
+                                    cart = cart.removeProduct(id)
+                                }
+                            }
+                        },
+                        getQuantity = { id ->
+                            cart.cartProducts.findSameProduct(id)?.amount ?: 0
+                        },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

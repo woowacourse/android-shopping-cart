@@ -25,6 +25,20 @@ class CartStateHolder(
         if (hasNextPage()) currentPage++
     }
 
+    fun onIncreaseProduct(id: UUID) {
+        val cartProduct = cart.cartProducts.findSameProduct(id) ?: return
+        cart = cart.addProduct(cartProduct.product, 1)
+    }
+
+    fun onDecreaseProduct(id: UUID) {
+        val cartProduct = cart.cartProducts.findSameProduct(id) ?: return
+        if (cartProduct.amount > 1) {
+            cart = cart.decreaseProduct(id, 1)
+        } else {
+            onDeleteProduct(id)
+        }
+    }
+
     fun onDeleteProduct(id: UUID) {
         cart = cart.removeProduct(id)
 

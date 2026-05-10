@@ -42,6 +42,8 @@ fun CartScreen(
     onDelete: (UUID) -> Unit,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
+    onIncrease: (UUID) -> Unit,
+    onDecrease: (UUID) -> Unit,
     previousEnable: Boolean,
     nextEnable: Boolean,
     currentPage: Int,
@@ -56,6 +58,8 @@ fun CartScreen(
             CartBody(
                 onDelete = { onDelete(it) },
                 onNext = { onNext() },
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
                 currentPage = currentPage,
                 onPrevious = { onPrevious() },
                 previousEnable = previousEnable,
@@ -103,6 +107,8 @@ private fun CartBody(
     currentPage: Int,
     onDelete: (UUID) -> Unit,
     onPrevious: () -> Unit,
+    onIncrease: (UUID) -> Unit,
+    onDecrease: (UUID) -> Unit,
     onNext: () -> Unit,
     previousEnable: Boolean,
     getPartedItem: (Int) -> List<CartProduct>,
@@ -124,6 +130,8 @@ private fun CartBody(
                 it.forEach { product ->
                     CartItem(
                         cartProduct = product,
+                        onIncrease = { onIncrease(product.product.productId) },
+                        onDecrease = { onDecrease(product.product.productId) },
                         onDelete = onDelete,
                         modifier = Modifier.padding(top = 24.dp),
                     )
@@ -216,8 +224,10 @@ private fun btnAvailable(btnFlag: Boolean): Color =
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        onDelete = {},
+        onDelete = {  },
         onNext = {  },
+        onDecrease = {  },
+        onIncrease = {  },
         onPrevious = {  },
         previousEnable = true,
         nextEnable = true,

@@ -30,6 +30,8 @@ import java.util.UUID
 @Composable
 fun CartItem(
     cartProduct: CartProduct,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     onDelete: (UUID) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -71,7 +73,14 @@ fun CartItem(
                     cartProduct.product.imageUri,
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
-                ProductPrice(cartProduct.product.price)
+                Column() {
+                    AmountModifyButton(
+                        onIncrease = onIncrease,
+                        onDecrease = onDecrease,
+                        amount = cartProduct.amount
+                    )
+                    ProductPrice(cartProduct.product.price)
+                }
             }
         }
     }
@@ -133,5 +142,7 @@ private fun CartItemPreview() {
             ),
         ),
         {},
+        {},
+        {}
     )
 }

@@ -32,8 +32,11 @@ import java.util.UUID
 @Composable
 fun CatalogScreen(
     catalog: List<Product>,
+    getQuantity: (UUID) -> Int,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
+    onIncrease: (UUID) -> Unit,
+    onDecrease: (UUID) -> Unit,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -44,6 +47,9 @@ fun CatalogScreen(
                 catalog,
                 onItemClick,
                 onLoadClick = onLoadClick,
+                onDecrease = onDecrease,
+                onIncrease = onIncrease,
+                getQuantity = getQuantity,
             )
         },
         modifier = modifier,
@@ -84,6 +90,9 @@ private fun CatalogHeader(
 private fun CatalogBody(
     catalog: List<Product>,
     onItemClick: (UUID) -> Unit,
+    onIncrease: (UUID) -> Unit,
+    onDecrease: (UUID) -> Unit,
+    getQuantity: (UUID) -> Int,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -95,10 +104,14 @@ private fun CatalogBody(
         items(
             count = catalog.size,
             key = { index -> catalog[index].productId },
-        ) { item ->
+        ) { index ->
+            val product = catalog[index]
             ShoppingItem(
-                product = catalog[item],
+                product = product,
                 onClick = onItemClick,
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
+                quantity = getQuantity(product.productId),
             )
         }
 
@@ -156,5 +169,5 @@ private fun CatalogScreenPreview() {
             ),
         )
 
-    CatalogScreen(catalog, {}, {}, {})
+    CatalogScreen(catalog, { 0 }, {}, {}, {}, {}, {})
 }
