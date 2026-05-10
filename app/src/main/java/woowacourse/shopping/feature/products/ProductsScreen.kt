@@ -39,7 +39,10 @@ fun ProductsScreen(
                 .fillMaxSize()
                 .background(Color.White),
     ) {
-        ProductsTopAppBar(onClick = onCartClick)
+        ProductsTopAppBar(
+            onClick = onCartClick,
+            formattedCartItemCount = formattedCartItemCount
+        )
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -87,6 +90,7 @@ private fun ProductsScreenPreview() {
     ProductsScreen(
         products = products,
         isLastPage = false,
+        formattedCartItemCount = "1",
         onCartClick = {},
         onProductClick = {},
         onAddClick = {},

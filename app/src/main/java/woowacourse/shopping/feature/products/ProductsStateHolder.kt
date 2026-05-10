@@ -32,17 +32,23 @@ class ProductsStateHolder(
 
     var products by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
         private set
+var isLastPage by mutableStateOf(false)
+    private set
 
-    var isLastPage by mutableStateOf(false)
-        private set
+var formattedCartItemCount by mutableStateOf("0")
+    private set
 
-    init {
-        getProducts()
-        
-        cartRepository.getCartItems()
-            .onEach { refreshAllQuantities() }
-            .launchIn(scope)
-    }
+init {
+    getProducts()
+
+    cartRepository.getCartItems()
+        .onEach { items -> 
+            refreshAllQuantities()
+            formattedCartItemCount = items.size.toString()
+        }
+        .launchIn(scope)
+}
+
 
     fun getProducts(pageSize: Int = 20) {
         scope.launch {

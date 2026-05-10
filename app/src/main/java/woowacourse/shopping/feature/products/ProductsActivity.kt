@@ -24,6 +24,7 @@ class ProductsActivity : ComponentActivity() {
                     ProductsScreen(
                         products = stateHolder.products,
                         isLastPage = stateHolder.isLastPage,
+                        formattedCartItemCount = stateHolder.formattedCartItemCount,
                         onCartClick = { startActivity(CartActivity.newIntent(this)) },
                         onProductClick = { startActivity(ProductDetailActivity.newIntent(this, it)) },
                         onLoadClick = stateHolder::getProducts,
