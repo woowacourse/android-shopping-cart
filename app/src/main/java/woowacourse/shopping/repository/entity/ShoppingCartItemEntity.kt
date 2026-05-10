@@ -8,14 +8,6 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "shopping_cart_items",
-    foreignKeys = [
-        ForeignKey(
-            entity = ProductEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["product_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ],
     indices = [
         Index(value = ["product_id"], unique = true),
     ],
