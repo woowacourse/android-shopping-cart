@@ -174,6 +174,7 @@
 - [x] 가장 마지막에 저장된 상품을 조회할 수 있다
 - [x] 동일한 상품이 입력되면 조회 시간을 업데이트 한다
 
-## WebClient
+## MockWebServer
 
-- [ ] url을 통해 상품 목록을 WebServer에 요청해 상품 목록을 조회할 수 있다
+- [ ] `/products` url을 통해 일정 범위의 데이터를 조화할 수 있다
+- [ ] `/products/id`를 통해 특정 item을 조회할 수 있다
