@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productlist
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,8 +19,7 @@ fun PreviewableAsyncImage(
         model = imageUrl,
         contentDescription = description,
         contentScale = ContentScale.Crop,
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         placeholder =
         painterResource(R.drawable.ic_launcher_background),
         error =
