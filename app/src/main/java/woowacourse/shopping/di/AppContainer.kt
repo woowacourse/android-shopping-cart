@@ -21,9 +21,9 @@ object AppContainer {
 
     fun init(context: Context) {
         database = Room.databaseBuilder(
-            context.applicationContext,
-            ShoppingDatabase::class.java,
-            "shopping-db"
-        ).build()
+                context.applicationContext,
+                ShoppingDatabase::class.java,
+                "shopping-db"
+            ).fallbackToDestructiveMigration(false).build()
     }
 }
