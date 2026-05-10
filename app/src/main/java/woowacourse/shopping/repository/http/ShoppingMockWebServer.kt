@@ -1,10 +1,10 @@
 package woowacourse.shopping.repository.http
 
+import okhttp3.HttpUrl
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.json.JSONObject
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
