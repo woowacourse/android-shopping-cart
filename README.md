@@ -59,10 +59,10 @@
 ### 도메인 및 데이터 계층
 - [ ] 최근 본 상품(Recent Viewed Products) 데이터 모델 정의
 - [ ] 최근 본 상품 데이터를 저장/조회할 수 있는 `RecentProductRepository` 구현
-- [x] 장바구니 및 최근 본 상품 데이터를 로컬 DB(Room)에 저장하도록 구조 변경
+- [ ] 장바구니 및 최근 본 상품 데이터를 로컬 DB(Room)에 저장하도록 구조 변경
 - [x] Room Entity / DAO / Database 구성
 - [x] Room 기반 `CartRepository` 구현
-- [x] Room 기반 `RecentProductRepository` 구현
+- [ ] Room 기반 `RecentProductRepository` 구현
 - [ ] 상품 목록 데이터를 HTTP Client를 통해 가져오도록 `ProductRepository` 구현
 - [ ] 네트워크 연결 상태를 감지할 수 있는 구조 설계
 - [ ] MockWebServer 기반 테스트 환경 구성
