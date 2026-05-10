@@ -1,11 +1,8 @@
 package woowacourse.shopping.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,20 +13,8 @@ interface CartDao {
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     fun getCartItem(productId: String): Flow<CartEntity?>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(cartEntity: CartEntity): Long
-
-    @Update
-    fun update(cartEntity: CartEntity)
-
-    @Transaction
-    fun insertOrUpdate(cartEntity: CartEntity) {
-        val id = insert(cartEntity)
-        if (id == -1L) {
-            update(cartEntity)
-        }
-    }
-
+    @Upsert
+    fun upsert(cartEntity: CartEntity)
     @Query("DELETE FROM cart_items WHERE productId = :productId")
     fun deleteCartItem(productId: String)
 
