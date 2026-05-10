@@ -19,6 +19,7 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val productId = intent.getStringExtra(EXTRA_PRODUCT_ID)
+        val openedFromLastViewed = intent.getBooleanExtra(EXTRA_OPENED_FROM_LAST_VIEWED, false)
         if (productId == null) {
             finish()
             return
@@ -29,6 +30,7 @@ class ProductDetailActivity : ComponentActivity() {
                     factory =
                         ProductDetailViewModel.factory(
                             productId = productId,
+                            openedFromLastViewed = openedFromLastViewed,
                             productRepository = DataContainer.productRepository,
                             cartRepository = DataContainer.cartRepository,
                             recentProductRepository = DataContainer.recentProductRepository,
@@ -43,6 +45,15 @@ class ProductDetailActivity : ComponentActivity() {
                         val cartIntent = Intent(this, CartActivity::class.java)
                         startActivity(cartIntent)
                     },
+                    onLastViewedProductClick = { product ->
+                        startActivity(
+                            newIntent(
+                                context = this,
+                                productId = product.id,
+                                openedFromLastViewed = true,
+                            ),
+                        )
+                    },
                 )
             }
         }
@@ -50,13 +61,16 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT_ID = "PRODUCT_ID"
+        private const val EXTRA_OPENED_FROM_LAST_VIEWED = "OPENED_FROM_LAST_VIEWED"
 
         fun newIntent(
             context: Context,
             productId: String,
+            openedFromLastViewed: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
+                putExtra(EXTRA_OPENED_FROM_LAST_VIEWED, openedFromLastViewed)
             }
     }
 }

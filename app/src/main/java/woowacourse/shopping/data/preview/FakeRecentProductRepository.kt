@@ -12,10 +12,7 @@ class FakeRecentProductRepository : RecentProductRepository {
     override fun getRecentProducts(limit: Int): Flow<List<Product>> =
         recentProducts.map { products -> products.take(limit) }
 
-    override fun getLastViewedProduct(currentProductId: String): Flow<Product?> =
-        recentProducts.map { products ->
-            products.firstOrNull { it.id != currentProductId }
-        }
+    override suspend fun getMostRecentProduct(): Product? = recentProducts.value.firstOrNull()
 
     override suspend fun save(product: Product) {
         val updated = listOf(product) + recentProducts.value.filterNot { it.id == product.id }

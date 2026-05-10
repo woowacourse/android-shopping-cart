@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +49,7 @@ import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COL
 import woowacourse.shopping.data.preview.FakeProductRepository
 import woowacourse.shopping.data.preview.FakeRecentProductRepository
 import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.domain.product.Product
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +58,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: ProductDetailViewModel,
     onAddToCartClick: () -> Unit = {},
+    onLastViewedProductClick: (Product) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current
@@ -88,8 +91,10 @@ fun ProductDetailScreen(
                     productName = state.product.name.value,
                     price = state.product.price.value,
                     selectedQuantity = state.selectedQuantity,
+                    lastViewedProduct = state.lastViewedProduct,
                     onIncrease = viewModel::increaseSelected,
                     onDecrease = viewModel::decreaseSelected,
+                    onLastViewedProductClick = onLastViewedProductClick,
                 )
 
                 CardAddButton(
@@ -179,8 +184,10 @@ private fun ProductDetailContent(
     productName: String,
     price: Int,
     selectedQuantity: Int,
+    lastViewedProduct: Product?,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
+    onLastViewedProductClick: (Product) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -209,6 +216,12 @@ private fun ProductDetailContent(
             onIncrease = onIncrease,
             onDecrease = onDecrease,
         )
+        if (lastViewedProduct != null) {
+            LastViewedProductSection(
+                product = lastViewedProduct,
+                onClick = { onLastViewedProductClick(lastViewedProduct) },
+            )
+        }
     }
 }
 
@@ -297,6 +310,43 @@ private fun ProductQuantitySection(
             onIncrease = onIncrease,
             onDecrease = onDecrease,
         )
+    }
+}
+
+@Composable
+private fun LastViewedProductSection(
+    product: Product,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+    ) {
+        Text(
+            text = "마지막으로 본 상품",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF12B89A),
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color.White)
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+        ) {
+            Text(
+                text = product.name.value,
+                fontSize = 18.sp,
+                color = Color(0xFF4A4A4A),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
@@ -391,10 +441,12 @@ fun ProductDetailScreenPreview() {
         viewModel =
             ProductDetailViewModel(
                 productId = "1",
+                openedFromLastViewed = false,
                 productRepository = FakeProductRepository(),
                 cartRepository = MockCartRepository(),
                 recentProductRepository = FakeRecentProductRepository(),
             ),
         onAddToCartClick = {},
+        onLastViewedProductClick = {},
     )
 }

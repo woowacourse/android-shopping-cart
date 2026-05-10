@@ -17,16 +17,15 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModel(
     val productId: String,
+    private val openedFromLastViewed: Boolean,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
-    private var lastViewedProduct: Product? = null
 
     init {
-        observeLastViewedProduct()
         loadProduct()
     }
 
@@ -37,6 +36,13 @@ class ProductDetailViewModel(
                 .onSuccess { product ->
                     _uiState.value =
                         if (product != null) {
+                            val mostRecentProduct = recentProductRepository.getMostRecentProduct()
+                            val lastViewedProduct =
+                                if (openedFromLastViewed || mostRecentProduct?.id == product.id) {
+                                    null
+                                } else {
+                                    mostRecentProduct
+                                }
                             recentProductRepository.save(product)
                             ProductDetailUiState.Success(
                                 product = product,
@@ -50,16 +56,6 @@ class ProductDetailViewModel(
                 }.onFailure { throwable ->
                     _uiState.value = ProductDetailUiState.Error(throwable)
                 }
-        }
-    }
-
-    private fun observeLastViewedProduct() {
-        viewModelScope.launch {
-            recentProductRepository.getLastViewedProduct(productId).collect { product ->
-                lastViewedProduct = product
-                val current = _uiState.value as? ProductDetailUiState.Success ?: return@collect
-                _uiState.value = current.copy(lastViewedProduct = product)
-            }
         }
     }
 
@@ -84,6 +80,7 @@ class ProductDetailViewModel(
     companion object {
         fun factory(
             productId: String,
+            openedFromLastViewed: Boolean,
             productRepository: ProductRepository,
             cartRepository: CartRepository,
             recentProductRepository: RecentProductRepository,
@@ -92,6 +89,7 @@ class ProductDetailViewModel(
                 initializer {
                     ProductDetailViewModel(
                         productId = productId,
+                        openedFromLastViewed = openedFromLastViewed,
                         productRepository = productRepository,
                         cartRepository = cartRepository,
                         recentProductRepository = recentProductRepository,

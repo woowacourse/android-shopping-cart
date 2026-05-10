@@ -17,10 +17,8 @@ class RoomRecentProductRepository(
             recentProducts.map { it.toDomain() }
         }
 
-    override fun getLastViewedProduct(currentProductId: String): Flow<Product?> =
-        recentProductDao.getLastViewedProduct(currentProductId).map { recentProduct ->
-            recentProduct?.toDomain()
-        }
+    override suspend fun getMostRecentProduct(): Product? =
+        recentProductDao.getMostRecentProduct()?.toDomain()
 
     override suspend fun save(product: Product) {
         recentProductDao.upsert(product.toRecentProductEntity(currentTimeMillis()))
