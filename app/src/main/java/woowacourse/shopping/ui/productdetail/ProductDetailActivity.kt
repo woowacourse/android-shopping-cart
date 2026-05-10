@@ -30,6 +30,7 @@ class ProductDetailActivity : ComponentActivity() {
         ) {
             val intent =
                 Intent(context, ProductDetailActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     putExtra(PUT_EXTRA_KEY_PRODUCT_ID, productId.value.toString())
                 }
             context.startActivity(intent)
