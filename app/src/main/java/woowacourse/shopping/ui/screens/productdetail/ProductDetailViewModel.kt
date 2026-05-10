@@ -2,20 +2,23 @@ package woowacourse.shopping.ui.screens.productdetail
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductDetailViewModel(
-    private val productRepository: ProductRepository = ProductRepositoryImpl(),
-    private val cartRepository: CartRepository = CartRepositoryImpl(),
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -49,7 +52,7 @@ class ProductDetailViewModel(
                 return@launchWithLoading
             }
 
-            cartRepository.addItem(targetProduct, uiState.value.amount)
+            cartRepository.addItem(targetProduct.id, uiState.value.amount)
         }
 
     private fun launchWithLoading(action: suspend () -> Unit) {
@@ -64,6 +67,19 @@ class ProductDetailViewModel(
                 Log.e("ProductDetailViewModel", e.message.toString())
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as ShoppingApplication)
+
+                ProductDetailViewModel(
+                    productRepository = application.productRepository,
+                    cartRepository = application.cartRepository,
+                )
             }
         }
     }

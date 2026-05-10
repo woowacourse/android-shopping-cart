@@ -36,7 +36,7 @@ import woowacourse.shopping.ui.component.topbar.DismissTopBar
 fun ProductDetailScreen(
     productId: String,
     onDismiss: () -> Unit,
-    viewModel: ProductDetailViewModel = viewModel(),
+    viewModel: ProductDetailViewModel = viewModel(factory = ProductDetailViewModel.Factory),
 ) {
     val uiState: ProductDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -151,7 +151,7 @@ private fun ProductInfoText(
             )
 
             AmountController(
-                amount = amount,
+                amount = amount.toString(),
                 onClickMinus = onClickMinus,
                 onClickAdd = onClickAdd,
                 modifier = Modifier.width(126.dp),
