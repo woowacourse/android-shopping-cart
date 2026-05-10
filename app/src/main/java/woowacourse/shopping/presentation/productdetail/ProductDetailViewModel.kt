@@ -12,12 +12,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -52,11 +54,20 @@ class ProductDetailViewModel(
             _uiEvent.send(ProductDetailUiEvent.ShowMessage("장바구니에 상품을 담았습니다"))
         }
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun viewProduct(productId: Uuid) {
+        viewModelScope.launch {
+            val product = productRepository.findProductById(productId) ?: return@launch
+            recentlyViewedProductRepository.viewProduct(product)
+        }
+    }
 }
 
 class ProductDetailViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
@@ -64,6 +75,7 @@ class ProductDetailViewModelFactory(
             return ProductDetailViewModel(
                 productRepository = productRepository,
                 cartRepository = cartRepository,
+                recentlyViewedProductRepository = recentlyViewedProductRepository,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

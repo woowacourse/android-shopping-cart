@@ -18,6 +18,7 @@ class ProductListActivity : ComponentActivity() {
         ProductListViewModelFactory(
             productRepository = AppContainer.productRepository,
             cartRepository = AppContainer.cartRepository,
+            recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
         )
     }
 
@@ -43,5 +44,6 @@ class ProductListActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshCart()
+        viewModel.refreshRecentlyViewedProducts()
     }
 }

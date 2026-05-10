@@ -91,6 +91,7 @@ private fun ProductDetailScreenPreview() {
             ProductDetailViewModel(
                 productRepository = AppContainer.productRepository,
                 cartRepository = AppContainer.cartRepository,
+                recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
             ),
         product =
             ProductUiModel(

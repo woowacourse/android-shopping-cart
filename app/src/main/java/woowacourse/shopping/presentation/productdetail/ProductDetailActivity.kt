@@ -21,6 +21,7 @@ class ProductDetailActivity : ComponentActivity() {
         ProductDetailViewModelFactory(
             productRepository = AppContainer.productRepository,
             cartRepository = AppContainer.cartRepository,
+            recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
         )
     }
 
@@ -29,6 +30,10 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val product = intent.getProduct()
+
+        if (product != null) {
+            viewModel.viewProduct(product.productId)
+        }
 
         setContent {
             androidshoppingTheme {

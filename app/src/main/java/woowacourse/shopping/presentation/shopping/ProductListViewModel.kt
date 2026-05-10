@@ -12,12 +12,14 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
@@ -69,6 +71,26 @@ class ProductListViewModel(
         }
     }
 
+    fun refreshCart() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    cart = cartRepository.getItems(),
+                )
+            }
+        }
+    }
+
+    fun refreshRecentlyViewedProducts() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    recentlyViewedProducts = recentlyViewedProductRepository.getRecentlyViewedProducts(),
+                )
+            }
+        }
+    }
+
     private fun loadPages() {
         var products = Products()
 
@@ -87,16 +109,6 @@ class ProductListViewModel(
         }
     }
 
-    fun refreshCart() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    cart = cartRepository.getItems(),
-                )
-            }
-        }
-    }
-
     companion object {
         private const val DEFAULT_PAGE_SIZE = 20
     }
@@ -105,6 +117,7 @@ class ProductListViewModel(
 class ProductListViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
@@ -112,6 +125,7 @@ class ProductListViewModelFactory(
             return ProductListViewModel(
                 productRepository = productRepository,
                 cartRepository = cartRepository,
+                recentlyViewedProductRepository = recentlyViewedProductRepository,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

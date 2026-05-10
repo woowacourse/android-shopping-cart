@@ -17,7 +17,7 @@ data class Cart(
         val exists = cartItems.any { product.productId == it.product.productId }
 
         if (!exists) {
-            return copy(cartItems = cartItems + CartItem(product, 1))
+            return copy(cartItems = cartItems + CartItem(product, quantity))
         }
 
         return copy(

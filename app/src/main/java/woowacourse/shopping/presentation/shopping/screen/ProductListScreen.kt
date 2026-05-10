@@ -30,6 +30,7 @@ fun ProductListScreen(
     ) {
         ProductListContent(
             products = uiState.products,
+            recentlyViewedProducts = uiState.recentlyViewedProducts,
             productQuantities = uiState.productQuantities,
             hasNextPage = viewModel.hasNextPage,
             onLoadMore = viewModel::loadMore,
@@ -49,6 +50,7 @@ private fun ProductListScreenPreview() {
             ProductListViewModel(
                 productRepository = AppContainer.productRepository,
                 cartRepository = AppContainer.cartRepository,
+                recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
             ),
         onCartIconClick = {},
         onItemClick = {},
