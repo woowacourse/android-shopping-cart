@@ -110,8 +110,8 @@ class CartRepositoryImplTest {
         val result = repository.getPagingCartItems(page, pageSize)
 
         // then
-        assertThat(result.items).hasSize(pageSize)
-        assertThat(result.items[0].product.id).isEqualTo(products[0].id)
+        assertThat(result).hasSize(pageSize)
+        assertThat(result[0].product.id).isEqualTo(products[0].id)
         coVerify { cartDao.getPagingCartItems(pageSize, 0) }
     }
 }

@@ -3,7 +3,7 @@ package woowacourse.shopping.feature.cart.model
 import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import woowacourse.shopping.domain.model.cart.CartItems
+import woowacourse.shopping.domain.model.cart.CartItem
 
 @Stable
 data class CartInfo(
@@ -25,8 +25,8 @@ data class CartInfo(
     }
 }
 
-fun CartItems.toUiModel(): ImmutableList<CartInfo> =
-    items
+fun List<CartItem>.toUiModel(): ImmutableList<CartInfo> =
+    this
         .map { cartItem ->
             CartInfo(
                 id = cartItem.product.id,

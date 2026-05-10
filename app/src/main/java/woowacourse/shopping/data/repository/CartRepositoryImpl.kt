@@ -8,7 +8,6 @@ import woowacourse.shopping.data.local.CartEntity
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Quantity
 import woowacourse.shopping.domain.model.cart.CartItem
-import woowacourse.shopping.domain.model.cart.CartItems
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductTitle
 import woowacourse.shopping.domain.repository.CartRepository
@@ -17,8 +16,8 @@ class CartRepositoryImpl(
     private val cartDao: CartDao,
 ) : CartRepository {
 
-    override fun getCartItems(): Flow<CartItems> = cartDao.getAllCartItems().map { items ->
-        CartItems(items.map { it.toDomain() })
+    override fun getCartItems(): Flow<List<CartItem>> = cartDao.getAllCartItems().map { items ->
+        items.map { it.toDomain() }
     }
 
     override fun getCartItem(productId: String): Flow<CartItem?> =
@@ -46,11 +45,9 @@ class CartRepositoryImpl(
 
     override suspend fun getCartItemCount(): Int = cartDao.getCartItemCount()
 
-    override suspend fun getPagingCartItems(page: Int, pageSize: Int): CartItems {
+    override suspend fun getPagingCartItems(page: Int, pageSize: Int): List<CartItem> {
         val offset = page * pageSize
-        return CartItems(
-            cartDao.getPagingCartItems(pageSize, offset).map { it.toDomain() }
-        )
+        return cartDao.getPagingCartItems(pageSize, offset).map { it.toDomain() }
     }
 
     private fun CartEntity.toDomain(): CartItem = CartItem(

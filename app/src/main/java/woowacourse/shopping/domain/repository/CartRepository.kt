@@ -2,10 +2,9 @@ package woowacourse.shopping.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.domain.model.cart.CartItem
-import woowacourse.shopping.domain.model.cart.CartItems
 
 interface CartRepository {
-    fun getCartItems(): Flow<CartItems>
+    fun getCartItems(): Flow<List<CartItem>>
 
     fun getCartItem(productId: String): Flow<CartItem?>
 
@@ -22,5 +21,5 @@ interface CartRepository {
     suspend fun getPagingCartItems(
         page: Int,
         pageSize: Int = 5,
-    ): CartItems
+    ): List<CartItem>
 }
