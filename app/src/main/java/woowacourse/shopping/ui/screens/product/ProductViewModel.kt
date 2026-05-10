@@ -16,13 +16,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.CartItems
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRecentRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ui.screens.util.toUiModel
 
 class ProductViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val productRecentRepository: ProductRecentRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
@@ -36,8 +39,17 @@ class ProductViewModel(
             initialValue = CartItems(emptyList(), true),
         )
 
+    private val recentProductState: StateFlow<List<RecentProduct>> = productRecentRepository
+        .getRecentProducts(RECENT_PRODUCT_LIMIT)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList(),
+        )
+
     init {
         observeCartChanged()
+        observeRecentProductsChanged()
         loadProducts()
     }
 
@@ -67,6 +79,19 @@ class ProductViewModel(
                             )
                         },
                         totalCartAmount = updatedCart.getTotalAmount(),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeRecentProductsChanged() {
+        viewModelScope.launch {
+            recentProductState.collect { updatedRecentProducts ->
+                _uiState.update { state ->
+                    state.copy(
+                        recentProducts = updatedRecentProducts,
+                        showRecentProducts = updatedRecentProducts.isNotEmpty(),
                     )
                 }
             }
@@ -116,12 +141,14 @@ class ProductViewModel(
     }
 
     companion object {
+        private const val RECENT_PRODUCT_LIMIT = 10
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as ShoppingApplication)
                 ProductViewModel(
                     productRepository = application.productRepository,
                     cartRepository = application.cartRepository,
+                    productRecentRepository = application.productRecentRepository,
                 )
             }
         }
