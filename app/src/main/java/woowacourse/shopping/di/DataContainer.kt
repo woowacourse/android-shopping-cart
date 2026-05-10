@@ -8,7 +8,7 @@ import woowacourse.shopping.data.remote.MockWebServerProvider
 import woowacourse.shopping.data.remote.api.ProductService
 import woowacourse.shopping.data.remote.api.ProductServiceImpl
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.repository.cart.RoomCartRepository
 import woowacourse.shopping.data.repository.product.RemoteProductRepository
 import woowacourse.shopping.data.repository.recent.RoomRecentProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -27,10 +27,10 @@ object DataContainer {
             requireNotNull(appContext) { "DataContainer.init(context) must be called first." },
             ShoppingDatabase::class.java,
             "shopping.db",
-        ).build()
+        ).fallbackToDestructiveMigration(dropAllTables = true).build()
     }
 
-    val cartRepository: CartRepository by lazy { MockCartRepository() }
+    val cartRepository: CartRepository by lazy { RoomCartRepository(database.cartItemDao()) }
     val productRepository: ProductRepository by lazy { RemoteProductRepository(productService) }
     val recentProductRepository: RecentProductRepository by lazy {
         RoomRecentProductRepository(database.recentProductDao())
