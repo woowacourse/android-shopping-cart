@@ -31,7 +31,9 @@ import woowacourse.shopping.feature.productDetail.model.ProductInfo
 @Composable
 fun ProductDetailScreen(
     productInfo: ProductInfo?,
+    previousProductName: String?,
     onCloseClick: () -> Unit,
+    onRecentProductClick: () -> Unit,
     onAddCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
@@ -99,11 +101,15 @@ fun ProductDetailScreen(
             )
         }
 
-        RecentProductSummary(
-            productName = productInfo?.productName ?: "",
-            onClick = {},
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        )
+        if (previousProductName != null) {
+            RecentProductSummary(
+                productName = previousProductName,
+                onClick = onRecentProductClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
 
         Spacer(Modifier.weight(1f))
 
@@ -116,7 +122,9 @@ fun ProductDetailScreen(
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productInfo = ProductInfo.PREVIEW,
+        previousProductName = "이전 상품",
         onCloseClick = {},
+        onRecentProductClick = {},
         onAddCartClick = {},
         onIncreaseClick = {},
         onDecreaseClick = {},

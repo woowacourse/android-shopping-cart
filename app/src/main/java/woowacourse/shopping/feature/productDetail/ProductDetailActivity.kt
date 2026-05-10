@@ -31,7 +31,14 @@ class ProductDetailActivity : ComponentActivity() {
 
                     ProductDetailScreen(
                         productInfo = stateHolder.productInfo,
+                        previousProductName = stateHolder.previousProduct?.productTitle?.value,
                         onCloseClick = { finish() },
+                        onRecentProductClick = {
+                            stateHolder.previousProduct?.id?.let { id ->
+                                startActivity(newIntent(this, id))
+                                finish()
+                            }
+                        },
                         onAddCartClick = stateHolder::onAddClick,
                         onIncreaseClick = stateHolder::onIncreaseClick,
                         onDecreaseClick = stateHolder::onDecreaseClick,

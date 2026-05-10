@@ -23,6 +23,7 @@ class ProductsActivity : ComponentActivity() {
 
                     ProductsScreen(
                         products = stateHolder.products,
+                        recentProducts = stateHolder.recentProducts,
                         isLastPage = stateHolder.isLastPage,
                         formattedCartItemCount = stateHolder.formattedCartItemCount,
                         onCartClick = { startActivity(CartActivity.newIntent(this)) },

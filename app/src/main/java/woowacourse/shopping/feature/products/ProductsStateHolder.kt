@@ -22,9 +22,13 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.feature.products.model.ShoppingProductInfo
 import woowacourse.shopping.feature.products.model.toUiModel
 
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.domain.repository.RecentProductRepository
+
 class ProductsStateHolder(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val totalCount = productRepository.getProductCount()
@@ -32,22 +36,32 @@ class ProductsStateHolder(
 
     var products by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
         private set
-var isLastPage by mutableStateOf(false)
-    private set
 
-var formattedCartItemCount by mutableStateOf("0")
-    private set
+    var recentProducts by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
+        private set
 
-init {
-    getProducts()
+    var isLastPage by mutableStateOf(false)
+        private set
 
-    cartRepository.getCartItems()
-        .onEach { items -> 
-            refreshAllQuantities()
-            formattedCartItemCount = items.size.toString()
-        }
-        .launchIn(scope)
-}
+    var formattedCartItemCount by mutableStateOf("0")
+        private set
+
+    init {
+        getProducts()
+
+        cartRepository.getCartItems()
+            .onEach { items ->
+                refreshAllQuantities()
+                formattedCartItemCount = items.size.toString()
+            }
+            .launchIn(scope)
+
+        recentProductRepository.getRecentProducts()
+            .onEach { items ->
+                recentProducts = items.map { it.toUiModel() }.toImmutableList()
+            }
+            .launchIn(scope)
+    }
 
 
     fun getProducts(pageSize: Int = 20) {
@@ -115,7 +129,8 @@ fun retainProductsStateHolder(): ProductsStateHolder {
         val application = context.applicationContext as woowacourse.shopping.ShoppingApplication
         ProductsStateHolder(
             ProductRepositoryImpl,
-            woowacourse.shopping.data.repository.CartRepositoryImpl(application.database.cartDao())
+            woowacourse.shopping.data.repository.CartRepositoryImpl(application.database.cartDao()),
+            RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl)
         )
     }
 }

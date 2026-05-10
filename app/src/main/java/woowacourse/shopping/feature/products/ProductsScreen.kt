@@ -38,6 +38,7 @@ import woowacourse.shopping.feature.products.model.ShoppingProductInfo
 @Composable
 fun ProductsScreen(
     products: ImmutableList<ShoppingProductInfo>,
+    recentProducts: ImmutableList<ShoppingProductInfo>,
     isLastPage: Boolean,
     formattedCartItemCount: String,
     onCartClick: () -> Unit,
@@ -64,37 +65,39 @@ fun ProductsScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item(span = { GridItemSpan(2) }) {
-                Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)) {
-                    Text(
-                        text = "최근 본 상품",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W700
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        products.forEach {
-                            RecentProductItem(
-                                productImageUrl = it.productImageUrl,
-                                productName = it.productName,
-                                onClick = { onProductClick(it.id) },
-                                modifier = Modifier.size(80.dp)
-                            )
+            if (recentProducts.isNotEmpty()) {
+                item(span = { GridItemSpan(2) }) {
+                    Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)) {
+                        Text(
+                            text = "최근 본 상품",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W700
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            recentProducts.forEach {
+                                RecentProductItem(
+                                    productImageUrl = it.productImageUrl,
+                                    productName = it.productName,
+                                    onClick = { onProductClick(it.id) },
+                                    modifier = Modifier.size(80.dp)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            item(span = { GridItemSpan(2) }) {
-                HorizontalDivider(
-                    thickness = 7.dp,
-                    color = Color.ExtraLightGray
-                )
+                item(span = { GridItemSpan(2) }) {
+                    HorizontalDivider(
+                        thickness = 7.dp,
+                        color = Color.ExtraLightGray
+                    )
+                }
             }
 
             items(
@@ -145,6 +148,7 @@ private fun ProductsScreenPreview() {
 
     ProductsScreen(
         products = products,
+        recentProducts = products.take(10).toImmutableList(),
         isLastPage = false,
         formattedCartItemCount = "1",
         onCartClick = {},

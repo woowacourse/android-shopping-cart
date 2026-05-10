@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -20,10 +22,13 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
 import woowacourse.shopping.feature.productDetail.model.toUiModel
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailStateHolder(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val productId: String,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -32,8 +37,28 @@ class ProductDetailStateHolder(
     var productInfo: ProductInfo? by mutableStateOf(null)
         private set
 
+    var previousProduct: Product? by mutableStateOf(null)
+        private set
+
     init {
         refreshUiState()
+        saveRecentProduct()
+        observeRecentProducts()
+    }
+
+    private fun observeRecentProducts() {
+        recentProductRepository.getRecentProducts()
+            .onEach { items ->
+                previousProduct = items.firstOrNull { it.id != productId }
+            }
+            .launchIn(scope)
+    }
+
+    private fun saveRecentProduct() {
+        val product = product ?: return
+        scope.launch(Dispatchers.IO) {
+            recentProductRepository.saveRecentProduct(product)
+        }
     }
 
     fun onAddClick() {
@@ -82,6 +107,7 @@ fun retainProductDetailStateHolder(productId: String): ProductDetailStateHolder 
         ProductDetailStateHolder(
             ProductRepositoryImpl,
             CartRepositoryImpl(application.database.cartDao()),
+            RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl),
             productId
         )
     }
