@@ -26,16 +26,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ShoppingItem
+import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
 
 @Composable
 fun CatalogScreen(
-    catalog: List<Product>,
+    catalog: List<CatalogItemUiState>,
     cartTotalAmount: Int,
-    getQuantity: (UUID) -> Int,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
     onIncrease: (UUID) -> Unit,
@@ -56,7 +55,6 @@ fun CatalogScreen(
                 onLoadClick = onLoadClick,
                 onDecrease = onDecrease,
                 onIncrease = onIncrease,
-                getQuantity = getQuantity,
             )
         },
         modifier = modifier,
@@ -121,11 +119,10 @@ private fun CatalogHeader(
 
 @Composable
 private fun CatalogBody(
-    catalog: List<Product>,
+    catalog: List<CatalogItemUiState>,
     onItemClick: (UUID) -> Unit,
     onIncrease: (UUID) -> Unit,
     onDecrease: (UUID) -> Unit,
-    getQuantity: (UUID) -> Int,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -136,15 +133,15 @@ private fun CatalogBody(
     ) {
         items(
             count = catalog.size,
-            key = { index -> catalog[index].productId },
+            key = { index -> catalog[index].product.productId },
         ) { index ->
-            val product = catalog[index]
+            val itemUiState = catalog[index]
             ShoppingItem(
-                product = product,
+                product = itemUiState.product,
                 onClick = onItemClick,
                 onIncrease = onIncrease,
                 onDecrease = onDecrease,
-                quantity = getQuantity(product.productId),
+                quantity = itemUiState.quantity,
             )
         }
 
@@ -178,29 +175,5 @@ private fun LoadBtn(
 @Preview(showBackground = true)
 @Composable
 private fun CatalogScreenPreview() {
-    val catalog =
-        listOf(
-            Product(
-                imageUri = "hello",
-                name = "너무너무너무긴아이템이름",
-                price = 100000,
-            ),
-            Product(
-                imageUri = "디디",
-                name = "당근주스",
-                price = 1000,
-            ),
-            Product(
-                imageUri = "hello",
-                name = "우유",
-                price = 100,
-            ),
-            Product(
-                imageUri = "hello",
-                name = "투핸더",
-                price = 100000000,
-            ),
-        )
-
-    CatalogScreen(catalog, 1, { 0 }, {}, {}, {}, {}, {})
+    CatalogScreen(emptyList(), 0, {}, {}, {}, {}, {})
 }

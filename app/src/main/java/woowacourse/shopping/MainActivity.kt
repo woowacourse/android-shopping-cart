@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,11 +18,10 @@ import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.ui.component.screen.CatalogScreen
-import woowacourse.shopping.ui.stateholder.retainCartStateHolder
+import woowacourse.shopping.ui.stateholder.retainCatalogScreenStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
-    private var cart by mutableStateOf(Cart(CartProducts(emptyList())))
 
     private val activityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -31,9 +31,13 @@ class MainActivity : ComponentActivity() {
                 } else {
                     result.data?.getParcelableExtra("extra_cart")
                 }
-                updatedCart?.let { cart = it }
+                updatedCart?.let { 
+                    cart = it
+                }
             }
         }
+
+    private var cart by mutableStateOf(Cart(CartProducts(emptyList())))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,43 +56,35 @@ class MainActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val stateHolder = retainCartStateHolder()
+                    val stateHolder = retainCatalogScreenStateHolder(cart)
+
+                    LaunchedEffect(cart) {
+                        stateHolder.updateCart(cart)
+                    }
+
+                    LaunchedEffect(stateHolder.cart) {
+                        cart = stateHolder.cart
+                    }
+
                     CatalogScreen(
-                        catalog = stateHolder.catalog,
-                        cartTotalAmount = cart.getTotalQuantity(),
+                        catalog = stateHolder.uiStates,
+                        cartTotalAmount = stateHolder.cart.getTotalQuantity(),
                         onItemClick = { id ->
                             val intent = Intent(this, ProductDetailActivity::class.java).apply {
                                 putExtra("id", id.toString())
-                                putExtra("extra_cart", cart)
+                                putExtra("extra_cart", stateHolder.cart)
                             }
                             activityLauncher.launch(intent)
                         },
                         onCartClick = {
                             val intent = Intent(this, CartActivity::class.java).apply {
-                                putExtra("extra_cart", cart)
+                                putExtra("extra_cart", stateHolder.cart)
                             }
                             activityLauncher.launch(intent)
                         },
                         onLoadClick = { stateHolder.onLoadClick() },
-                        onIncrease = { id ->
-                            val product = stateHolder.catalog.find { it.productId == id }
-                            if (product != null) {
-                                cart = cart.addProduct(product)
-                            }
-                        },
-                        onDecrease = { id ->
-                            val cartProduct = cart.cartProducts.findSameProduct(id)
-                            if (cartProduct != null) {
-                                if (cartProduct.amount > 1) {
-                                    cart = cart.decreaseProduct(id)
-                                } else {
-                                    cart = cart.removeProduct(id)
-                                }
-                            }
-                        },
-                        getQuantity = { id ->
-                            cart.cartProducts.findSameProduct(id)?.amount ?: 0
-                        },
+                        onIncrease = { id -> stateHolder.onIncrease(id) },
+                        onDecrease = { id -> stateHolder.onDecrease(id) },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

@@ -49,11 +49,12 @@ fun ShoppingItem(
         ) {
             ProductImage(product.imageUri, Modifier.size(154.dp))
             Box(
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
             ) {
                 if(quantity == 0) {
                     AddCircleButton(
-                        onAdd = { onClick(product.productId) },
+                        onAdd = { onIncrease(product.productId) },
                     )
                 } else {
                     AmountModifyButton(
