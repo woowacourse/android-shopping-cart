@@ -78,6 +78,16 @@ fun ProductDetailScreen(
                 onMinusClick = { viewModel.minusCartCount() },
             )
 
+            Spacer(modifier = Modifier.height(29.dp))
+
+            LastViewProductCard(
+                name = "마지막으로 본 친구", // 임시
+                onClick = { },
+                modifier = Modifier
+                    .padding(horizontal = 18.dp)
+                    .fillMaxWidth(),
+            )
+
             Spacer(modifier = Modifier.weight(1f))
 
             AddCartButton(
