@@ -5,15 +5,6 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         total + item.quantity
     }
 
-    fun plusCartItem(cartItem: CartItem): Cart {
-        val isSameCartItem = cartItems.any { it == cartItem }
-
-        if (isSameCartItem) {
-            return this
-        }
-        return Cart(cartItems + cartItem)
-    }
-
     fun removeCartItem(id: String): Cart = Cart(
         cartItems.filter { it.hasProductId(id).not() },
     )
@@ -63,6 +54,4 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
             }
         }
     }
-
-    fun getProductList(): List<Product> = cartItems.map { it.product }
 }
