@@ -51,18 +51,18 @@ class CartActivity : ComponentActivity() {
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) {
                 CartScreen(
-                    onDelete = { cartStateHolder.onDeleteProduct(it) },
+                    onDelete = { uuid -> cartStateHolder.onDeleteProduct(uuid) },
                     onNext = { cartStateHolder.onNext() },
                     onPrevious = { cartStateHolder.onPrevious() },
-                    onIncrease = { cartStateHolder.onIncreaseProduct(it) },
-                    onDecrease = { cartStateHolder.onDecreaseProduct(it) },
+                    onIncrease = { uuid -> cartStateHolder.onIncreaseProduct(uuid) },
+                    onDecrease = { uuid -> cartStateHolder.onDecreaseProduct(uuid) },
                     previousEnable = cartStateHolder.hasPreviousPage(),
                     nextEnable = cartStateHolder.hasNextPage(),
                     currentPage = cartStateHolder.currentPage,
                     onClose = {
                         returnResultAndFinish()
                     },
-                    getPartedItem = { cartStateHolder.getPartedItem(it) },
+                    getPartedItem = { uuid -> cartStateHolder.getPartedItem(uuid) },
                     isPageable = { cartStateHolder.isPageable() },
                     modifier =
                         Modifier
