@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     val stateHolder = retainCartStateHolder()
                     CatalogScreen(
                         catalog = stateHolder.catalog,
+                        cartTotalAmount = cart.getTotalQuantity(),
                         onItemClick = { id ->
                             val intent = Intent(this, ProductDetailActivity::class.java).apply {
                                 putExtra("id", id.toString())
