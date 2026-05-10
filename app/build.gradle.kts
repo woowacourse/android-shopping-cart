@@ -59,6 +59,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
     implementation(libs.androidx.room.runtime)
+    implementation("com.squareup.okhttp3:mockwebserver:5.3.0")
+//    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.3.0"))
+//    implementation("com.squareup.okhttp3:okhttp")
+//    implementation("com.squareup.okhttp3:logging-interceptor")
+//    testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
+
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
