@@ -39,7 +39,7 @@
 
 ### Network
 - [x] 상품 목록 HTTP Client 구현
-- [ ] MockWebServer 테스트 환경 구축
+- [x] MockWebServer 테스트 환경 구축
 - [ ] 네트워크 상태 감지 및 UI 반영 로직 작성
 
 ## 1/2단계 리팩토링

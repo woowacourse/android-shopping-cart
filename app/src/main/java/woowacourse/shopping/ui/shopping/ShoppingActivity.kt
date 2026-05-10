@@ -7,10 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.data.repository.MockProductRepository
-import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.data.localdb.ShoppingDB
+import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.HttpProductRepository
+import woowacourse.shopping.data.repository.HttpProductServer
+import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.DetailActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -19,7 +20,7 @@ class ShoppingActivity : ComponentActivity() {
     private val viewModel: ShoppingViewModel by viewModels {
         val database = ShoppingDB.getInstance(applicationContext)
         ShoppingViewModel.provideFactory(
-            productRepository = MockProductRepository(),
+            productRepository = HttpProductRepository(HttpProductServer.baseUrl),
             cartRepository = CartRepository(database.cartItemDao()),
             recentItemRepository = RecentItemRepository(database.recentItemDao()),
         )
