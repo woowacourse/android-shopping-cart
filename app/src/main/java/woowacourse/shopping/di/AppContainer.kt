@@ -5,8 +5,10 @@ import androidx.room.Room
 import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.repository.room.RoomCartRepository
+import woowacourse.shopping.repository.room.RoomRecentProductRepository
 
 object AppContainer {
     private lateinit var database: ShoppingDatabase
@@ -18,12 +20,18 @@ object AppContainer {
             productRepository = productRepository
         )
     }
+    val recentProductRepository: RecentProductRepository by lazy {
+        RoomRecentProductRepository(
+            recentProductDao = database.recentProductDao(),
+            productRepository = productRepository
+        )
+    }
 
     fun init(context: Context) {
         database = Room.databaseBuilder(
-                context.applicationContext,
-                ShoppingDatabase::class.java,
-                "shopping-db"
-            ).fallbackToDestructiveMigration(false).build()
+            context.applicationContext,
+            ShoppingDatabase::class.java,
+            "shopping-db"
+        ).fallbackToDestructiveMigration(false).build()
     }
 }
