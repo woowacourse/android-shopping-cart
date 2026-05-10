@@ -94,7 +94,7 @@
 # 이전 단계의 피드백 반영 목록
 
 - [x] 장바구니에서 도메인 스스로를 지킬 수 있는가?
-- [] @Parcelize가 알려주는 무언가?
+- [x] @Parcelize가 알려주는 무언가?
 - [] DetailActivity에서 Product를 받았을 때 무조건 언박싱해도 되는가?
 - [] LazyColumn이 리컴포지션을 줄이는 방법
 - [] StateHolder에 있는 상태를 외부에서 변경하지 못하도록 수정하기
