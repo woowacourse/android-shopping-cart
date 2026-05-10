@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -70,4 +71,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test.v173)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
 }
