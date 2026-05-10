@@ -16,10 +16,17 @@ import java.io.IOException
 
 class HttpProductRepository(
     private val client: OkHttpClient,
-    baseUrl: String,
+    private val baseUrlProvider: () -> HttpUrl,
 ) : ProductRepository {
-    private val baseUrl: HttpUrl =
-        requireNotNull(baseUrl.toHttpUrlOrNull()) { "유효한 상품 API baseUrl이 필요합니다." }
+    constructor(
+        client: OkHttpClient,
+        baseUrl: String,
+    ) : this(
+        client = client,
+        baseUrlProvider = {
+            requireNotNull(baseUrl.toHttpUrlOrNull()) { "유효한 상품 API baseUrl이 필요합니다." }
+        },
+    )
 
     @Volatile
     private var cachedProducts: List<Product> = emptyList()
@@ -99,7 +106,7 @@ class HttpProductRepository(
 
     private fun executeRequest(pathSegments: List<String>): String {
         val url =
-            baseUrl
+            baseUrlProvider()
                 .newBuilder()
                 .apply {
                     pathSegments.forEach { addPathSegment(it) }

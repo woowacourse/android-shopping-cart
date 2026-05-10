@@ -2,9 +2,9 @@ package woowacourse.shopping.repository
 
 import android.content.Context
 import okhttp3.OkHttpClient
-import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.repository.http.HttpProductRepository
+import woowacourse.shopping.repository.http.ShoppingMockWebServer
 import woowacourse.shopping.repository.network.ConnectivityManagerNetworkMonitor
 import woowacourse.shopping.repository.network.NetworkMonitor
 import woowacourse.shopping.repository.room.RoomCartRepository
@@ -13,11 +13,8 @@ import woowacourse.shopping.repository.room.RoomRecentProductRepository
 object ShoppingRepositoryProvider {
     private val httpClient: OkHttpClient = OkHttpClient()
 
-    val productRepository: ProductRepository =
-        HttpProductRepository(
-            client = httpClient,
-            baseUrl = BuildConfig.PRODUCT_API_BASE_URL,
-        )
+    lateinit var productRepository: ProductRepository
+        private set
 
     lateinit var cartRepository: CartRepository
         private set
@@ -29,9 +26,21 @@ object ShoppingRepositoryProvider {
         private set
 
     fun initialize(context: Context) {
-        if (::cartRepository.isInitialized && ::recentProductRepository.isInitialized && ::networkMonitor.isInitialized) return
+        if (
+            ::productRepository.isInitialized &&
+            ::cartRepository.isInitialized &&
+            ::recentProductRepository.isInitialized &&
+            ::networkMonitor.isInitialized
+        ) {
+            return
+        }
 
         val database = ShoppingDatabase.getInstance(context)
+        productRepository =
+            HttpProductRepository(
+                client = httpClient,
+                baseUrlProvider = ShoppingMockWebServer::baseUrl,
+            )
         cartRepository = RoomCartRepository(database.cartItemDao())
         recentProductRepository = RoomRecentProductRepository(database.recentProductDao())
         networkMonitor = ConnectivityManagerNetworkMonitor(context)

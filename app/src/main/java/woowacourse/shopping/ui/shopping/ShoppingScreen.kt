@@ -22,6 +22,7 @@ fun ShoppingScreen(
     hasNext: Boolean,
     isLoading: Boolean,
     isNetworkConnected: Boolean,
+    errorMessage: String?,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
@@ -48,6 +49,7 @@ fun ShoppingScreen(
             recentProducts = recentProducts,
             showMoreButton = hasNext,
             isLoading = isLoading,
+            errorMessage = errorMessage,
             modifier =
                 Modifier
                     .padding(20.dp)
@@ -77,6 +79,7 @@ private fun ShoppingScreenPreview() {
         hasNext = true,
         isLoading = false,
         isNetworkConnected = true,
+        errorMessage = null,
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},

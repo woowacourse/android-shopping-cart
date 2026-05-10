@@ -6,11 +6,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +33,7 @@ fun ShoppingBody(
     recentProducts: List<Product>,
     showMoreButton: Boolean,
     isLoading: Boolean,
+    errorMessage: String?,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
@@ -81,6 +86,23 @@ fun ShoppingBody(
             }
         }
 
+        if (!isLoading && products.isEmpty() && errorMessage != null) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.medium,
+                ) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                }
+            }
+        }
+
         if (!isLoading && showMoreButton) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -108,6 +130,7 @@ private fun ShoppingBodyPreview() {
         recentProducts = InMemoryProductRepository.products.take(4),
         showMoreButton = true,
         isLoading = false,
+        errorMessage = null,
         onProductClick = {},
         onMoreClick = {},
         onAddToCart = {},
