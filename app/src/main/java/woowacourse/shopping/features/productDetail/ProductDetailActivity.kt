@@ -19,9 +19,13 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")!!
+        val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")
 
         setContent {
+            if (parcelProduct == null) {
+                finish()
+                return@setContent
+            }
             val viewModel: ProductDetailViewModel =
                 viewModel(
                     factory =
