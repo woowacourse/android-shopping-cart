@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.CartItems
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.ui.screens.util.toUiModel
 
 class ProductViewModel(
     private val productRepository: ProductRepository,
@@ -115,18 +115,6 @@ class ProductViewModel(
         }
     }
 
-    private fun Product.toUiModel(cartItems: CartItems): ProductUiModel {
-        val amount = cartItems.getCartItemAmount(this.id)
-        return ProductUiModel(
-            id = id,
-            name = name,
-            price = price.toPriceFormat(),
-            imageUrl = imageUrl,
-            cartAmount = amount.toString(),
-            showAmountController = amount > 0,
-        )
-    }
-
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -139,5 +127,3 @@ class ProductViewModel(
         }
     }
 }
-
-fun Int.toPriceFormat(): String = "${"%,d".format(this)}원"

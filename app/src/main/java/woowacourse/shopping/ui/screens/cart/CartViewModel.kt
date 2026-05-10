@@ -13,11 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.ui.screens.product.toPriceFormat
+import woowacourse.shopping.ui.screens.util.toUiModel
 
 class CartViewModel(
     private val productRepository: ProductRepository,
@@ -103,15 +101,6 @@ class CartViewModel(
             }
         }
     }
-
-    private fun CartItem.toUiModel(product: Product): CartUiModel =
-        CartUiModel(
-            id = product.id,
-            name = product.name,
-            price = product.price.toPriceFormat(),
-            imageUrl = product.imageUrl,
-            cartAmount = amount.toString(),
-        )
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

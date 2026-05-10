@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.CartDao
 import woowacourse.shopping.data.local.CartEntity
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.data.util.toDomain
 import woowacourse.shopping.domain.CartItems
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -61,15 +61,3 @@ class CartRepositoryImpl(
         private const val PAGE_SIZE = 5
     }
 }
-
-fun CartEntity.toDomain(): CartItem =
-    CartItem(
-        productId = productId,
-        amount = amount,
-    )
-
-fun List<CartEntity>.toDomain(isLast: Boolean): CartItems =
-    CartItems(
-        items = map { it.toDomain() },
-        isLast = isLast,
-    )
