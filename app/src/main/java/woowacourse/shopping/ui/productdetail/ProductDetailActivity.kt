@@ -22,6 +22,7 @@ import java.util.UUID
 class ProductDetailActivity : ComponentActivity() {
     val productRepo = AppContainer.productRepository
     val cartRepo = AppContainer.cartRepository
+    val recentProductRepo = AppContainer.recentProductRepository
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,7 @@ class ProductDetailActivity : ComponentActivity() {
                                     savedStateHandle = savedStateHandle,
                                     productRepo = productRepo,
                                     cartRepo = cartRepo,
+                                    recentProductRepo = recentProductRepo,
                                     productId = UUID.fromString(receivedProductId)
                                 ) as T
                             }

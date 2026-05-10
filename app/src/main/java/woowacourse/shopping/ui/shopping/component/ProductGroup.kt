@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.shopping.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -19,7 +20,7 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.shopping.ProductUiModel
 
 @Composable
-fun ShoppingBody(
+fun ProductGroup(
     products: List<ProductUiModel>,
     showMoreButton: Boolean,
     lazyGridState: LazyGridState,
@@ -37,12 +38,17 @@ fun ShoppingBody(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(items = products, key = { it.product.id }) { productModel ->
-            ProductUnit(
-                model = productModel,
-                onClick = { onProductClick(productModel.product) },
-                onIncreaseClick = onIncreaseClick,
-                onDecreaseClick = onDecreaseClick
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ProductUnit(
+                    model = productModel,
+                    onClick = { onProductClick(productModel.product) },
+                    onIncreaseClick = onIncreaseClick,
+                    onDecreaseClick = onDecreaseClick
+                )
+            }
         }
 
         if (showMoreButton) {
@@ -60,7 +66,7 @@ fun ShoppingBody(
 
 @Composable
 @Preview(showBackground = true)
-private fun ShoppingBodyPreview() {
+private fun ProductGroupPreview() {
     val product1 =
         Product(
             name = "스피또",
@@ -80,7 +86,7 @@ private fun ShoppingBodyPreview() {
             imageUrl = "",
         )
 
-    ShoppingBody(
+    ProductGroup(
         products = listOf(product1, product2, product3).map { ProductUiModel(it) },
         showMoreButton = true,
         lazyGridState = rememberLazyGridState(),

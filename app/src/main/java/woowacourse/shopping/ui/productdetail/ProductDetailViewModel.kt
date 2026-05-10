@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 import java.util.UUID
 
 class ProductDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
+    private val recentProductRepo: RecentProductRepository,
     private val productId: UUID
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
@@ -68,6 +70,7 @@ class ProductDetailViewModel(
                         selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1)
                     )
                 }
+                recentProductRepo.add(productId)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

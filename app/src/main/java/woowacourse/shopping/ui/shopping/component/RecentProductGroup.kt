@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.shopping.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,23 +20,24 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 
 @Composable
-fun RecentProducts(
+fun RecentProductGroup(
     products: Products,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(start = 20.dp, top = 20.dp, bottom = 40.dp),
+        modifier = modifier.padding(top = 20.dp, bottom = 40.dp),
     ) {
         Text(
             text = "최근 본 상품",
             fontWeight = FontWeight.W700,
             fontSize = 16.sp,
-            lineHeight = 26.67.sp,
+            modifier = Modifier.padding(start = 20.dp)
         )
 
         Spacer(modifier = Modifier.size(8.dp))
 
         LazyRow(
+            contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(items = products.toList(), key = { it.id }) { product ->
@@ -49,7 +51,7 @@ fun RecentProducts(
 
 @Preview(showBackground = true)
 @Composable
-private fun RecentProductsPreview() {
+private fun RecentProductGroupPreview() {
     val product1 = Product(
         name = "소고기",
         price = Money(10000),
@@ -71,7 +73,7 @@ private fun RecentProductsPreview() {
         imageUrl = ""
     )
     val products = Products(listOf(product1, product2, product3, product4))
-    RecentProducts(
+    RecentProductGroup(
         products = products
     )
 }

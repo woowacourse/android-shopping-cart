@@ -23,8 +23,8 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.ui.component.ShoppingLoading
-import woowacourse.shopping.ui.shopping.component.RecentProducts
-import woowacourse.shopping.ui.shopping.component.ShoppingBody
+import woowacourse.shopping.ui.shopping.component.RecentProductGroup
+import woowacourse.shopping.ui.shopping.component.ProductGroup
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
 @Composable
@@ -93,7 +93,7 @@ fun ShoppingScreen(
         )
 
         if (recentProducts.any()) {
-            RecentProducts(
+            RecentProductGroup(
                 products = recentProducts,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -101,7 +101,7 @@ fun ShoppingScreen(
             HorizontalDivider(thickness = 7.dp, color = Color(0xFFEBEBEB))
         }
 
-        ShoppingBody(
+        ProductGroup(
             products = products,
             showMoreButton = hasNext,
             lazyGridState = lazyGridState,
