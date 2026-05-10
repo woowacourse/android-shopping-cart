@@ -2,18 +2,26 @@ package woowacourse.shopping.ui.screens.cart
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.ui.screens.product.toPriceFormat
 
 class CartViewModel(
-    private val cartRepository: CartRepository = CartRepositoryImpl(),
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
@@ -27,9 +35,9 @@ class CartViewModel(
             refreshPage(_uiState.value.curPage)
         }
 
-    fun plusAmount(product: Product) =
+    fun plusAmount(id: String) =
         launchWithLoading {
-            cartRepository.addItem(product, 1)
+            cartRepository.addItem(id, 1)
             refreshPage(_uiState.value.curPage)
         }
 
@@ -41,11 +49,13 @@ class CartViewModel(
 
     fun deleteCartItem(id: String) =
         launchWithLoading {
+            val isLastPage = _uiState.value.isLast
+            val curItemSize = _uiState.value.items.size
             cartRepository.deleteItem(id)
 
             val curPage = _uiState.value.curPage
 
-            if (curPage > 1 && cartRepository.isLastPage(curPage - 1)) {
+            if (curPage > 1 && isLastPage && curItemSize == 1) {
                 refreshPage(curPage - 1)
             } else {
                 refreshPage(curPage)
@@ -69,10 +79,13 @@ class CartViewModel(
         }
 
     private suspend fun refreshPage(page: Int) {
-        val items = cartRepository.getCartItemByPage(page)
-        val isLast = cartRepository.isLastPage(page)
+        val cart = cartRepository.getCartItemByPage(page)
+        val products = productRepository.getProductsByIds(cart.items.map { it.productId })
 
-        _uiState.update { it.copy(curPage = page, cartItems = items, isLast = isLast) }
+        val uiModels = cart.items.map { item ->
+            item.toUiModel(products.first { it.id == item.productId })
+        }
+        _uiState.update { it.copy(curPage = page, items = uiModels, isLast = cart.isLast) }
     }
 
     private fun launchWithLoading(action: suspend () -> Unit) {
@@ -87,6 +100,27 @@ class CartViewModel(
                 Log.e("CartViewModel", e.message.toString())
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    private fun CartItem.toUiModel(product: Product): CartUiModel =
+        CartUiModel(
+            id = product.id,
+            name = product.name,
+            price = product.price.toPriceFormat(),
+            imageUrl = product.imageUrl,
+            cartAmount = amount.toString(),
+        )
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as ShoppingApplication)
+                CartViewModel(
+                    productRepository = application.productRepository,
+                    cartRepository = application.cartRepository,
+                )
             }
         }
     }
