@@ -38,7 +38,7 @@
 - [x] 마지막으로 본 상품 페이지 뒤로가기 처리
 
 ### Network
-- [ ] 상품 목록 HTTP Client 구현
+- [x] 상품 목록 HTTP Client 구현
 - [ ] MockWebServer 테스트 환경 구축
 - [ ] 네트워크 상태 감지 및 UI 반영 로직 작성
 
