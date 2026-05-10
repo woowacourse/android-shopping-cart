@@ -4,22 +4,22 @@ import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 
 interface CartRepository {
-    val cartItemCount: Int
-
-    fun addItem(
+    suspend fun addItem(
         productId: String,
         amount: Int,
     )
 
-    fun deleteItem(productId: String)
+    suspend fun deleteItem(productId: String)
 
     suspend fun getCartItemByPage(page: Int): List<CartItem>
 
-    fun isLastPage(page: Int): Boolean
+    suspend fun isLastPage(page: Int): Boolean
 
-    fun getItemCount(productId: String): Int
+    suspend fun getItemCount(productId: String): Int
 
-    fun plusItemCount(product: Product)
+    suspend fun plusItemCount(product: Product)
 
-    fun minusItemCount(productId: String)
+    suspend fun minusItemCount(productId: String)
+
+    suspend fun getCartItemCount(): Int
 }

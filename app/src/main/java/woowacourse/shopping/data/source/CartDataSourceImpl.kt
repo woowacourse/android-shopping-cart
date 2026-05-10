@@ -1,31 +1,26 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.data.source.local.CartItemDao
+import woowacourse.shopping.data.source.local.CartItemEntity
 
-object CartDataSourceImpl : CartDataSource {
-    private val _items: MutableList<CartItem> = mutableListOf()
-    override val items get() = _items.toList()
+class CartDataSourceImpl(
+    private val dao: CartItemDao,
+) : CartDataSource {
+    override suspend fun getCartItems(): List<CartItemEntity> = dao.getCartItems()
 
-    override fun add(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.productId == cartItem.productId }
-
-        if (idx == -1) {
-            _items.add(cartItem)
-            return
-        }
-
-        _items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
+    override suspend fun add(cartItem: CartItemEntity) {
+        dao.insert(cartItem = cartItem)
     }
 
-    override fun deleteItem(productId: String) {
-        _items.removeIf { it.productId == productId }
+    override suspend fun deleteItem(productId: String) {
+        dao.delete(productId = productId)
     }
 
-    override fun updateItem(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.productId == cartItem.productId }
-
-        require(idx != -1) { "카트에 존재하지 않는 상품입니다." }
-
-        _items[idx] = cartItem
+    override suspend fun updateItem(cartItem: CartItemEntity) {
+        dao.update(cartItem = cartItem)
     }
+
+    override suspend fun getCartItemById(productId: String): CartItemEntity? = dao.getCartItemById(productId = productId)
+
+    override suspend fun getTotalCount(): Int = dao.getTotalCount()
 }

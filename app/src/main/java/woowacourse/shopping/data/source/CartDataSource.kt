@@ -1,13 +1,17 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.data.source.local.CartItemEntity
 
 interface CartDataSource {
-    val items: List<CartItem>
+    suspend fun getCartItems(): List<CartItemEntity>
 
-    fun add(cartItem: CartItem)
+    suspend fun add(cartItem: CartItemEntity)
 
-    fun deleteItem(productId: String)
+    suspend fun deleteItem(productId: String)
 
-    fun updateItem(cartItem: CartItem)
+    suspend fun updateItem(cartItem: CartItemEntity)
+
+    suspend fun getCartItemById(productId: String): CartItemEntity?
+
+    suspend fun getTotalCount(): Int
 }

@@ -47,14 +47,16 @@ class ProductViewModel(
     }
 
     fun updateProducts() {
-        _uiState.update {
-            it.copy(
-                products = products.map { product ->
-                    product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
-                },
-                hasNext = productRepository.productSize > products.size,
-                totalCartCount = cartRepository.cartItemCount,
-            )
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    products = products.map { product ->
+                        product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
+                    },
+                    hasNext = productRepository.productSize > products.size,
+                    totalCartCount = cartRepository.getCartItemCount(),
+                )
+            }
         }
     }
 
@@ -76,20 +78,22 @@ class ProductViewModel(
         }
     }
 
-    fun getCartItemCount(productId: String): Int = cartRepository.getItemCount(productId = productId)
-
     fun plusCartCount(productId: String) {
         val product = productRepository.getProductById(productId)
 
-        cartRepository.plusItemCount(product)
+        viewModelScope.launch {
+            cartRepository.plusItemCount(product)
 
-        updateProducts()
+            updateProducts()
+        }
     }
 
     fun minusCartCount(productId: String) {
-        cartRepository.minusItemCount(productId)
+        viewModelScope.launch {
+            cartRepository.minusItemCount(productId)
 
-        updateProducts()
+            updateProducts()
+        }
     }
 
     companion object {
