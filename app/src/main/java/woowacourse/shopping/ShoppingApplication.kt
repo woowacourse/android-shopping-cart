@@ -3,6 +3,7 @@ package woowacourse.shopping
 import android.app.Application
 import androidx.room.Room
 import woowacourse.shopping.data.local.AppDatabase
+import woowacourse.shopping.data.remote.MockServer
 
 class ShoppingApplication : Application() {
     lateinit var database: AppDatabase
@@ -10,6 +11,7 @@ class ShoppingApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        MockServer.start()
         database = Room.databaseBuilder(
                 context = this,
                 klass = AppDatabase::class.java,
