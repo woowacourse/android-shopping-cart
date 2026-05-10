@@ -69,4 +69,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.kotlinx.coroutines.test)
+    implementation(libs.okhttp)
+    implementation(libs.mockwebserver3)
 }
