@@ -24,4 +24,15 @@ class RecentProductRepositoryRoomImpl(
             }
         }
     }
+
+    override suspend fun getMostRecentProduct(): Product? {
+        val recentEntity = recentProductDao.getMostRecentProduct()
+        return recentEntity?.let { entity ->
+            try {
+                productRepository.getProduct(entity.productId)
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
 }

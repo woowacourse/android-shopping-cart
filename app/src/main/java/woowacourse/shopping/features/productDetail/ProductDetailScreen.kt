@@ -2,6 +2,8 @@ package woowacourse.shopping.features.productDetail
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
@@ -45,11 +49,10 @@ import woowacourse.shopping.features.generalComponent.QuantityControlRow
 @Composable
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = viewModel(),
-    productName: String,
-    productImageUrl: String,
     onAddToCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
+    onLatestProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -73,8 +76,11 @@ fun ProductDetailScreen(
                 Modifier
                     .background(Color.White)
                     .weight(1f),
-            imageUrl = productImageUrl,
-            productName = productName,
+            imageUrl = uiState.productImageUrl,
+            productName = uiState.productName,
+            latestProductName = uiState.latestProduct?.name?.value ?: "",
+            isLatestProduct = uiState.isLastProduct,
+            onLatestProductClick = { onLatestProductClick(uiState.latestProduct!!) },
             price = uiState.productPrice,
             minusEnabled = uiState.minusEnabled,
             productQuantity = uiState.quantity,
@@ -129,10 +135,13 @@ private fun ProductDetailContent(
     imageUrl: String,
     productName: String,
     price: Int,
+    latestProductName: String,
+    isLatestProduct: Boolean,
     productQuantity: Int,
     minusEnabled: Boolean,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
+    onLatestProductClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -167,6 +176,36 @@ private fun ProductDetailContent(
                     .padding(horizontal = 16.dp, vertical = 14.dp)
                     .fillMaxWidth(),
         )
+        if (!isLatestProduct) {
+            Column(
+                modifier =
+                    Modifier
+                        .clip(shape = RoundedCornerShape(10.dp))
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
+                        .clickable {
+                            onLatestProductClick()
+                        },
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    "마지막으로 본 상품",
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color.Green,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    latestProductName,
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color.LightGray,
+                    fontSize = 18.sp,
+                )
+            }
+        }
     }
 }
 
@@ -271,14 +310,9 @@ private fun CardAddButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        productName = "케로로",
-        productImageUrl =
-            """
-            https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=
-            http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
-            """.trimIndent(),
         onAddToCartClick = {},
         onIncreaseClick = {},
         onDecreaseClick = {},
+        onLatestProductClick = {},
     )
 }

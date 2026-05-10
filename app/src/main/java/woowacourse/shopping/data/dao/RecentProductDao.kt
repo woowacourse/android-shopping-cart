@@ -32,4 +32,7 @@ interface RecentProductDao {
 
     @Query("SELECT * FROM recent_product_table ORDER BY timestamp DESC")
     suspend fun getAllRecentProducts(): List<RecentProductEntity>
+
+    @Query("SELECT * FROM recent_product_table ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getMostRecentProduct(): RecentProductEntity?
 }

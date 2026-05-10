@@ -24,24 +24,55 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
-
     val product: Product = toProduct(parcelProduct)
+
+    var name = ""
+    var imageUrl = ""
     var price = 0
     var quantity = 0
     var minusEnabled = false
+    var isLatestProduct = false
 
     init {
-        price = product.price.value
-        quantity = 1
+        viewModelScope.launch {
+            addRecentProducts(product.id)
+            name = product.name.value
+            imageUrl = product.imageUrl.value
+            price = product.price.value
+            quantity = 1
+            minusEnabled = false
+            val latestProduct = recentProductRepository.getMostRecentProduct()
+            isLatestProduct = latestProduct?.id == product.id
+            _uiState.update {
+                ProductDetailUiState(
+                    productName = name,
+                    productImageUrl = imageUrl,
+                    productPrice = price,
+                    quantity = quantity,
+                    minusEnabled = minusEnabled,
+                    latestProduct = latestProduct,
+                    isLastProduct = isLatestProduct,
+                )
+            }
+        }
+    }
+
+    fun changeProduct() {
+        addRecentProducts(_uiState.value.latestProduct!!.id)
+        isLatestProduct = true
         minusEnabled = false
+        quantity = 1
         _uiState.update {
-            ProductDetailUiState(
-                productPrice = price,
+            it.copy(
+                productName = it.latestProduct?.name?.value ?: "",
+                productImageUrl = it.latestProduct?.imageUrl?.value ?: "",
+                productPrice = it.latestProduct?.price?.value ?: 0,
                 quantity = quantity,
                 minusEnabled = minusEnabled,
+                latestProduct = it.latestProduct,
+                isLastProduct = isLatestProduct,
             )
         }
-        addRecentProducts(product.id)
     }
 
     fun addRecentProducts(productId: String) {
@@ -52,7 +83,8 @@ class ProductDetailViewModel(
 
     fun addToCart() {
         viewModelScope.launch {
-            val cartItem = CartItem(product = product, quantity = CartItemQuantity(1))
+            val cartItem =
+                CartItem(product = if (isLatestProduct) uiState.value.latestProduct!! else product, quantity = CartItemQuantity(1))
             cartRepository.addCartItem(cartItem, quantity)
         }
     }
@@ -62,7 +94,7 @@ class ProductDetailViewModel(
         quantity += 1
         minusEnabled = quantity > 1
         _uiState.update {
-            ProductDetailUiState(
+            it.copy(
                 productPrice = price,
                 quantity = quantity,
                 minusEnabled = minusEnabled,
@@ -75,7 +107,7 @@ class ProductDetailViewModel(
         quantity -= 1
         minusEnabled = quantity > 1
         _uiState.update {
-            ProductDetailUiState(
+            it.copy(
                 productPrice = price,
                 quantity = quantity,
                 minusEnabled = minusEnabled,

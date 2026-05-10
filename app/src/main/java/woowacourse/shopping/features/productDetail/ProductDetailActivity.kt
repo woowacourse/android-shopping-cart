@@ -35,8 +35,6 @@ class ProductDetailActivity : ComponentActivity() {
                 ProductDetailScreen(
                     modifier = Modifier.padding(innerPadding),
                     viewModel = viewModel,
-                    productName = parcelProduct.name,
-                    productImageUrl = parcelProduct.imageUrl,
                     onAddToCartClick = {
                         viewModel.addToCart()
                         Toast.makeText(this, "장바구니에 추가되었습니다.", Toast.LENGTH_SHORT).show()
@@ -46,6 +44,9 @@ class ProductDetailActivity : ComponentActivity() {
                     },
                     onDecreaseClick = {
                         viewModel.decreaseCartItem()
+                    },
+                    onLatestProductClick = {
+                        viewModel.changeProduct()
                     },
                 )
             }

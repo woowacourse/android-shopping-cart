@@ -6,4 +6,6 @@ interface RecentProductRepository {
     suspend fun addRecentProduct(productId: String)
 
     suspend fun getAllRecentProducts(): List<Product>
+
+    suspend fun getMostRecentProduct(): Product?
 }
