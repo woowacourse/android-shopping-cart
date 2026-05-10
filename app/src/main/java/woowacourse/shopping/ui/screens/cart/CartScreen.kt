@@ -29,7 +29,7 @@ import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 @Composable
 fun CartScreen(
     onNavigateUp: () -> Unit,
-    viewModel: CartViewModel = viewModel(),
+    viewModel: CartViewModel = viewModel(factory = CartViewModel.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -50,22 +50,19 @@ fun CartScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             items(
-                items = uiState.cartItems,
-                key = { it.product.id },
+                items = uiState.items,
+                key = { it.id },
             ) {
                 CartItemCard(
-                    imageUrl = it.product.imageUrl,
-                    name = it.product.name,
-                    price = it.product.price,
-                    amount = it.amount,
+                    item = it,
                     onClickMinus = {
-                        viewModel.minusAmount(it.product.id)
+                        viewModel.minusAmount(it.id)
                     },
                     onClickPlus = {
-                        viewModel.plusAmount(it.product)
+                        viewModel.plusAmount(it.id)
                     },
                     onDelete = {
-                        viewModel.deleteCartItem(it.product.id)
+                        viewModel.deleteCartItem(it.id)
                     },
                 )
             }
