@@ -1,9 +1,7 @@
 package woowacourse.shopping.model
 
-import java.util.UUID
-
 class Product(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
     val name: ProductName,
     val price: Money,
     val imageUrl: String,
