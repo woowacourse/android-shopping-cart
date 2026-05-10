@@ -11,9 +11,10 @@ class ShoppingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         database = Room.databaseBuilder(
-            context = this,
-            klass = AppDatabase::class.java,
-            name = "shopping-database"
-        ).build()
+                context = this,
+                klass = AppDatabase::class.java,
+                name = "shopping-database"
+            ).fallbackToDestructiveMigration(false)
+            .build()
     }
 }
