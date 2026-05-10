@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.screens.product
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -35,7 +37,6 @@ fun ProductScreen(
     viewModel: ProductViewModel = viewModel(factory = ProductViewModel.Factory),
 ) {
     val uiState: ProductUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val listState = rememberLazyGridState()
 
     Scaffold(
         topBar = {
@@ -48,58 +49,100 @@ fun ProductScreen(
         },
         modifier = Modifier.statusBarsPadding(),
     ) { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(20.dp),
-            modifier = Modifier
-                .padding(innerPadding),
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(
-                items = uiState.products,
-                key = { it.id },
-            ) {
-                ProductCard(
-                    product = it,
-                    onClickItem = { onItemClick(it.id) },
-                    modifier = Modifier,
-                    onClickMinus = { viewModel.minusAmount(it.id) },
-                    onClickAdd = { viewModel.addAmount(it.id) },
-                )
-            }
+        ProductScreenContent(
+            uiState = uiState,
+            innerPadding = innerPadding,
+            onItemClick = onItemClick,
+            onMinusClick = viewModel::minusAmount,
+            onAddClick = viewModel::addAmount,
+            onMoreClick = viewModel::getMoreProducts,
+        )
+    }
+}
 
-            if (uiState.hasNext) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(
+@Composable
+private fun ProductScreenContent(
+    uiState: ProductUiState,
+    innerPadding: PaddingValues,
+    onItemClick: (String) -> Unit,
+    onMinusClick: (String) -> Unit,
+    onAddClick: (String) -> Unit,
+    onMoreClick: () -> Unit,
+) {
+    val listState = rememberLazyGridState()
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(20.dp),
+        modifier = Modifier
+            .padding(innerPadding),
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        if (uiState.showRecentProducts) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                ) {
+                    RecentProducts(
+                        items = uiState.recentProducts,
+                        onClickItem = { onItemClick(it) },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                viewModel.getMoreProducts()
-                            },
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_down),
-                            contentDescription = "상품 더보기",
-                            modifier = Modifier
-                                .padding(12.dp)
-                                .size(24.dp)
-                                .align(Alignment.Center),
-                            tint = Color(0xFF555555),
-                        )
-                    }
+                            .fillMaxWidth(),
+                    )
+                    HorizontalDivider(thickness = 7.dp)
+                }
+            }
+        }
+        items(
+            items = uiState.products,
+            key = { it.id },
+        ) {
+            ProductCard(
+                product = it,
+                onClickItem = { onItemClick(it.id) },
+                modifier = Modifier,
+                onClickMinus = { onMinusClick(it.id) },
+                onClickAdd = { onAddClick(it.id) },
+            )
+        }
+
+        if (uiState.hasNext) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onMoreClick()
+                        },
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_arrow_down),
+                        contentDescription = "상품 더보기",
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(24.dp)
+                            .align(Alignment.Center),
+                        tint = Color(0xFF555555),
+                    )
                 }
             }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ProductScreenPreview() {
-    ProductScreen(
-        onIconClick = { },
-        onItemClick = { },
+    ProductScreenContent(
+        uiState = ProductUiState(),
+        innerPadding = PaddingValues(),
+        onItemClick = {},
+        onMinusClick = {},
+        onAddClick = {},
+        onMoreClick = {},
     )
 }
