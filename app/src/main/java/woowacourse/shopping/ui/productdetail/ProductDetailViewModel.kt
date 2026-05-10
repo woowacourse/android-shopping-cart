@@ -22,9 +22,17 @@ class ProductDetailViewModel(
 
     fun loadProduct(productId: ProductId) {
         viewModelScope.launch {
-            val product = productRepository.findAllByIds(setOf(productId))[productId] ?: return@launch
-            recentProductRepository.recordView(product.id)
-            refreshProductDetail(product.id)
+            runCatching {
+                val product = productRepository.findAllByIds(setOf(productId))[productId] ?: return@runCatching
+                recentProductRepository.recordView(product.id)
+                refreshProductDetail(product.id)
+            }.onFailure { throwable ->
+                _uiState.value =
+                    _uiState.value.copy(
+                        isAdding = false,
+                        errorMessage = throwable.message,
+                    )
+            }
         }
     }
 
@@ -37,10 +45,18 @@ class ProductDetailViewModel(
         if (_uiState.value.isAdding) return
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isAdding = true)
+            _uiState.value = _uiState.value.copy(isAdding = true, errorMessage = null)
 
-            cartRepository.add(product.id)
-            refreshProductDetail(product.id)
+            runCatching {
+                cartRepository.add(product.id)
+                refreshProductDetail(product.id)
+            }.onFailure { throwable ->
+                _uiState.value =
+                    _uiState.value.copy(
+                        isAdding = false,
+                        errorMessage = throwable.message,
+                    )
+            }
         }
     }
 
@@ -49,10 +65,18 @@ class ProductDetailViewModel(
         if (_uiState.value.isAdding || _uiState.value.quantity == 0) return
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isAdding = true)
+            _uiState.value = _uiState.value.copy(isAdding = true, errorMessage = null)
 
-            cartRepository.delete(product.id)
-            refreshProductDetail(product.id)
+            runCatching {
+                cartRepository.delete(product.id)
+                refreshProductDetail(product.id)
+            }.onFailure { throwable ->
+                _uiState.value =
+                    _uiState.value.copy(
+                        isAdding = false,
+                        errorMessage = throwable.message,
+                    )
+            }
         }
     }
 
@@ -75,6 +99,7 @@ class ProductDetailViewModel(
                 lastViewedProduct = lastViewedProduct,
                 quantity = quantity,
                 isAdding = false,
+                errorMessage = null,
             )
     }
 }

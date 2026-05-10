@@ -15,6 +15,7 @@ ktlint = "14.2.0"
 foundation = "1.11.0"
 playServicesAnalyticsImpl = "18.2.0"
 room = "2.8.4"
+okhttp = "5.3.2"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
@@ -39,6 +40,7 @@ play-services-analytics-impl = { group = "com.google.android.gms", name = "play-
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 
 [plugins]

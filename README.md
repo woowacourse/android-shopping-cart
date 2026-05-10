@@ -63,7 +63,7 @@
 - [x] Room Entity / DAO / Database 구성
 - [x] Room 기반 `CartRepository` 구현
 - [ ] Room 기반 `RecentProductRepository` 구현
-- [ ] 상품 목록 데이터를 HTTP Client를 통해 가져오도록 `ProductRepository` 구현
+- [x] 상품 목록 데이터를 HTTP Client를 통해 가져오도록 `ProductRepository` 구현
 - [ ] 네트워크 연결 상태를 감지할 수 있는 구조 설계
 - [ ] MockWebServer 기반 테스트 환경 구성
 
@@ -108,9 +108,9 @@
 
 ### 네트워크 및 API 테스트
 - **HTTP Client**:
-  - [ ] 상품 목록 API 호출이 정상적으로 동작하는가?
-  - [ ] 서버 응답 데이터를 올바르게 파싱하는가?
-  - [ ] 네트워크 오류 발생 시 적절한 예외 처리가 이루어지는가?
+  - [x] 상품 목록 API 호출이 정상적으로 동작하는가?
+  - [x] 서버 응답 데이터를 올바르게 파싱하는가?
+  - [x] 네트워크 오류 발생 시 적절한 예외 처리가 이루어지는가?
 - **MockWebServer**:
   - [ ] MockWebServer를 활용하여 API 응답 테스트가 가능한가?
   - [ ] 성공 / 실패 / 빈 응답 상황을 정상적으로 테스트할 수 있는가?

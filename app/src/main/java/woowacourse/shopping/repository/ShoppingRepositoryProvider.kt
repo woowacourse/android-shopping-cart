@@ -1,13 +1,21 @@
 package woowacourse.shopping.repository
 
 import android.content.Context
+import okhttp3.OkHttpClient
+import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.local.ShoppingDatabase
+import woowacourse.shopping.repository.http.HttpProductRepository
 import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.repository.room.RoomCartRepository
 
 object ShoppingRepositoryProvider {
-    val productRepository: ProductRepository = InMemoryProductRepository
+    private val httpClient: OkHttpClient = OkHttpClient()
+
+    val productRepository: ProductRepository =
+        HttpProductRepository(
+            client = httpClient,
+            baseUrl = BuildConfig.PRODUCT_API_BASE_URL,
+        )
 
     lateinit var cartRepository: CartRepository
         private set

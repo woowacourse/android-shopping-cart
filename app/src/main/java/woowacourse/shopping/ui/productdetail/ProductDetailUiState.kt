@@ -7,4 +7,5 @@ data class ProductDetailUiState(
     val lastViewedProduct: Product? = null,
     val quantity: Int = 0,
     val isAdding: Boolean = false,
+    val errorMessage: String? = null,
 )

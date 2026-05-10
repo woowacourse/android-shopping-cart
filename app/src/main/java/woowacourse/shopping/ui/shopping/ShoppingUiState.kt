@@ -8,4 +8,5 @@ data class ShoppingUiState(
     val cartQuantity: Int = 0,
     val hasNext: Boolean = false,
     val isLoading: Boolean = false,
+    val errorMessage: String? = null,
 )
