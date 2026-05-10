@@ -4,48 +4,81 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import woowacourse.shopping.constants.MockData
+import kotlinx.coroutines.launch
+import woowacourse.shopping.data.local.AppDatabase
+import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.LatestProductUiModel
 import woowacourse.shopping.ui.productdetail.state.ProductDetailUiState
 
-class ProductDetailViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+class ProductDetailViewModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
+) : ViewModel() {
     private val productId: String = savedStateHandle["product_id"] ?: ""
 
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var product: Product? = null
+    private var currentProduct: Product? = null
 
     init {
         loadProduct()
     }
 
     private fun loadProduct() {
-        product = MockData.MOCK_PRODUCTS.find { it.hasId(productId) }
+        viewModelScope.launch {
+            val product = productRepository.getProduct(productId)
 
-        if (product == null) {
-            _uiState.update {
-                it.copy(isError = true)
+            if (product == null) {
+                _uiState.update { it.copy(isError = true) }
+                return@launch
             }
-            return
+
+            currentProduct = product
+
+            val recentProduct = recentProductRepository.getRecentProducts().first()
+            val latestProduct = recentProduct.firstOrNull()
+
+            val latestProductUiModel = if (latestProduct != null && latestProduct.id != productId) {
+                toLatestProductUiModel(latestProduct)
+            } else null
+
+            recentProductRepository.addRecentProduct(product)
+
+            _uiState.update { state ->
+                state.copy(
+                    product = toDetailProductUiModel(product, Quantity(state.selectedQuantity)),
+                    latestProduct = latestProductUiModel,
+                    isError = false,
+                )
+            }
         }
+    }
 
-        val lastProduct = MockData.MOCK_PRODUCTS.first()
+    fun addCartItem() {
+        val product = currentProduct ?: return
+        val quantity = Quantity(_uiState.value.selectedQuantity)
 
-        _uiState.update { state ->
-            state.copy(
-                product = toDetailProductUiModel(product!!, Quantity(1)),
-                selectedQuantity = 1,
-                latestProduct = toLatestProductUiModel(lastProduct),
-            )
+        viewModelScope.launch {
+            cartRepository.addCartItem(product, quantity)
         }
     }
 
@@ -54,7 +87,7 @@ class ProductDetailViewModel(private val savedStateHandle: SavedStateHandle) : V
             val count = state.selectedQuantity + 1
             state.copy(
                 selectedQuantity = count,
-                product = toDetailProductUiModel(product!!, Quantity(count)),
+                product = toDetailProductUiModel(currentProduct!!, Quantity(count)),
             )
         }
     }
@@ -67,7 +100,7 @@ class ProductDetailViewModel(private val savedStateHandle: SavedStateHandle) : V
                 val count = state.selectedQuantity - 1
                 state.copy(
                     selectedQuantity = count,
-                    product = toDetailProductUiModel(product!!, Quantity(count)),
+                    product = toDetailProductUiModel(currentProduct!!, Quantity(count)),
                 )
             }
         }
@@ -95,8 +128,21 @@ class ProductDetailViewModel(private val savedStateHandle: SavedStateHandle) : V
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
+                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
+                val database = AppDatabase.getDatabase(context)
+                val dataSource = ProductRemoteDataSource()
+
+                val productRepository = ProductRepositoryImpl(dataSource)
+                val cartRepository = CartRepositoryImpl(database.cartDao())
+                val recentProductRepository = RecentProductRepositoryImpl(database.recentProductDao())
+
                 val savedStateHandle = createSavedStateHandle()
-                ProductDetailViewModel(savedStateHandle)
+                ProductDetailViewModel(
+                    savedStateHandle = savedStateHandle,
+                    productRepository = productRepository,
+                    cartRepository = cartRepository,
+                    recentProductRepository = recentProductRepository,
+                )
             }
         }
     }

@@ -13,6 +13,7 @@ import woowacourse.shopping.ui.productdetail.viewmodel.ProductDetailViewModel
 fun ProductDetailRoute(
     productDetailViewModel: ProductDetailViewModel = viewModel(factory = ProductDetailViewModel.Factory),
     onNavigateToHome: () -> Unit,
+    onNavigateLatestProduct: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val uiState by productDetailViewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +34,14 @@ fun ProductDetailRoute(
             onIncrement = { productDetailViewModel.increment() },
             onDecrement = { productDetailViewModel.decrement() },
             onCloseClick = onNavigateToHome,
-            onAddToCartClick = onNavigateToHome,
+            onAddToCartClick = {
+                productDetailViewModel.addCartItem()
+                onNavigateToHome()
+            },
+
+            isLatestProduct = uiState.latestProduct == null,
+            latestProductTitle = uiState.latestProduct?.title ?: "",
+            onNavigateLatestProduct = { onNavigateLatestProduct(uiState.latestProduct?.id ?: "") },
         )
     }
 }

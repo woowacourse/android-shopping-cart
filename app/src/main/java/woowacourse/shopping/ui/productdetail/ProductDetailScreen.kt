@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W400
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,10 +39,13 @@ fun ProductDetailScreen(
     title: String,
     price: String,
     quantity: Int,
+    latestProductTitle: String,
+    isLatestProduct: Boolean,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
+    onNavigateLatestProduct: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -70,7 +72,7 @@ fun ProductDetailScreen(
                 )
                 Text(
                     text = title,
-                    fontWeight = FontWeight.W700,
+                    fontWeight = W700,
                     fontSize = 24.sp,
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 18.dp),
                 )
@@ -83,7 +85,7 @@ fun ProductDetailScreen(
                 ) {
                     Text(
                         text = price,
-                        fontWeight = FontWeight.W400,
+                        fontWeight = W400,
                         fontSize = 20.sp,
                     )
                     QuantityCounter(
@@ -95,14 +97,16 @@ fun ProductDetailScreen(
                             .height(42.dp),
                     )
                 }
-
-                LatestProductItem(
-                    title = title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 18.dp)
-                        .align(Alignment.CenterHorizontally),
-                )
+                if (isLatestProduct.not()) {
+                    LatestProductItem(
+                        title = latestProductTitle,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onNavigateLatestProduct)
+                            .padding(vertical = 16.dp, horizontal = 18.dp)
+                            .align(Alignment.CenterHorizontally),
+                    )
+                }
             }
             CartPutButton(
                 onClick = onAddToCartClick,
@@ -160,7 +164,7 @@ private fun CartPutButton(
     ) {
         Text(
             stringResource(R.string.product_detail_select),
-            fontWeight = FontWeight.W700,
+            fontWeight = W700,
             fontSize = 24.sp,
             color = Color.White,
         )
@@ -179,5 +183,8 @@ private fun ProductScreenPreview() {
         quantity = 1,
         onIncrement = {},
         onDecrement = {},
+        isLatestProduct = false,
+        latestProductTitle = "마지막 상품",
+        onNavigateLatestProduct = {},
     )
 }

@@ -1,25 +1,40 @@
 package woowacourse.shopping.ui.productlist
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Money
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
 
 class ProductListViewModelTest {
 
     private lateinit var viewModel: ProductListViewModel
-    private lateinit var repository: MockProductRepository
+    private lateinit var productRepository: ProductRepository
+    private lateinit var cartRepository: CartRepository
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @BeforeEach
     fun setUp() {
-        repository = MockProductRepository()
-        viewModel = ProductListViewModel(repository)
+        productRepository = MockProductRepository()
+        cartRepository = MockCartRepository()
+        recentProductRepository = MockRecentProductRepository()
+
+        viewModel = ProductListViewModel(
+            productRepository = productRepository,
+            cartRepository = cartRepository,
+            recentProductRepository = recentProductRepository,
+        )
     }
 
     @Test
@@ -85,4 +100,33 @@ class MockProductRepository : ProductRepository {
     override suspend fun getProducts(): List<Product> = products
 
     override suspend fun getProduct(id: String): Product? = products.find { it.hasId(id) }
+}
+
+class MockCartRepository : CartRepository {
+    private val cartItems = MutableStateFlow<List<CartItem>>(emptyList())
+
+    override fun getCart(): Flow<List<CartItem>> = cartItems
+
+    override suspend fun addCartItem(
+        product: Product,
+        quantity: Quantity,
+    ) {
+    }
+
+    override suspend fun decreaseCartItem(
+        product: Product,
+        quantity: Quantity,
+    ) {
+    }
+
+    override suspend fun deleteCartItem(productId: String) {
+    }
+}
+
+class MockRecentProductRepository : RecentProductRepository {
+    private val recentProducts = MutableStateFlow<List<Product>>(emptyList())
+    override fun getRecentProducts(): Flow<List<Product>> = recentProducts
+
+    override suspend fun addRecentProduct(product: Product) {
+    }
 }

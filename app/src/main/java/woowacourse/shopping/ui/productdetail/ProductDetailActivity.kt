@@ -28,6 +28,11 @@ class ProductDetailActivity : ComponentActivity() {
                     onNavigateToHome = {
                         finish()
                     },
+                    onNavigateLatestProduct = { id ->
+                        val intent = newIntent(this, id)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(intent)
+                    },
                 )
             }
         }
