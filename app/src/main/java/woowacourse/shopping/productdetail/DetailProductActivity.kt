@@ -1,5 +1,7 @@
 package woowacourse.shopping.productdetail
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,7 +29,13 @@ class DetailProductActivity : ComponentActivity() {
 
                 DetailProductScreen(
                     productId = productId,
-                    onBackClick = this::finish,
+                    onBackClick = {
+                        setResult(
+                            RESULT_OK,
+                            Intent().putStringArrayListExtra(ProductListActivity.CHANGED_PRODUCT_IDS, arrayListOf(productId)),
+                        )
+                        this.finish()
+                    },
                 )
             }
         }

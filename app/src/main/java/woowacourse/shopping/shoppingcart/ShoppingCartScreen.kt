@@ -31,12 +31,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.WonMoney
+import woowacourse.shopping.ui.component.NumberCounter
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
 
 @Composable
 fun ShoppingCartScreen(
     onBackClick: () -> Unit,
+    onProductChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     shoppingCartViewModel: ShoppingCartViewModel =
         viewModel(
@@ -81,10 +83,24 @@ fun ShoppingCartScreen(
                     key = { it.id },
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
-                        title = shoppingCartItem.product.getTitle(),
-                        imageUrl = shoppingCartItem.product.imageUrl,
-                        displayableMoney = WonMoney(shoppingCartItem.product.getPrice()),
-                        onRemoveShoppingItemClick = { shoppingCartViewModel.removeShoppingItem(shoppingCartItem.id) },
+                        title = shoppingCartItem.title,
+                        imageUrl = shoppingCartItem.imageUrl,
+                        displayableMoney = shoppingCartItem.price,
+                        onRemoveShoppingItemClick = {
+                            shoppingCartViewModel.removeShoppingItem(
+                                shoppingCartItem.productId,
+                            )
+                            onProductChanged(shoppingCartItem.productId)
+                        },
+                        quantity = shoppingCartItem.quantity,
+                        onIncrementQuantity = {
+                            shoppingCartViewModel.increaseItemQuantity(shoppingCartItem.productId, 1)
+                            onProductChanged(shoppingCartItem.productId)
+                        },
+                        onnDecrementQuantity = {
+                            shoppingCartViewModel.decreaseItemQuantity(shoppingCartItem.productId, 1)
+                            onProductChanged(shoppingCartItem.productId)
+                        },
                     )
                 }
             }
@@ -162,14 +178,3 @@ private fun ShoppingCartTopBar(
 //        )
 //    }
 // }
-
-@Composable
-@Preview(showBackground = true)
-private fun ShoppingCartItemsPreview() {
-    ShoppingCartItems(
-        title = "동원 스위트콘",
-        imageUrl = "",
-        displayableMoney = WonMoney(99_800),
-        onRemoveShoppingItemClick = {},
-    )
-}

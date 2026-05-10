@@ -8,16 +8,39 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.repository.ShoppingCartRepository
+import woowacourse.shopping.ui.DisplayText
+import woowacourse.shopping.ui.WonMoney
 import kotlin.math.max
 
 data class ShoppingCartUiState(
-    val shoppingCartItems: List<ShoppingCartItem>,
+    val shoppingCartItems: List<CartItemUiModel>,
     val currentPage: Int,
     val canMoveToPreviousPage: Boolean,
     val canMoveToNextPage: Boolean,
 )
+
+data class CartItemUiModel(
+    val id: String,
+    val productId: String,
+    val title: String,
+    val imageUrl: String,
+    val price: DisplayText,
+    val quantity: Int,
+)
+
+fun ShoppingCartItem.toUiModel(): CartItemUiModel {
+    return CartItemUiModel(
+        id = id,
+        productId = product.id,
+        title = product.getTitle(),
+        imageUrl = product.imageUrl,
+        price = WonMoney(product.getPrice()),
+        quantity = quantity.value,
+    )
+}
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -53,9 +76,23 @@ class ShoppingCartViewModel(
         }
     }
 
-    fun removeShoppingItem(shoppingCartItemId: String) {
+    fun removeShoppingItem(productId: String) {
         viewModelScope.launch {
-            shoppingCartRepository.remove(shoppingCartItemId)
+            shoppingCartRepository.removeItem(productId)
+            loadShoppingItems(currentPage)
+        }
+    }
+
+    fun increaseItemQuantity(productId: String, quantity: Int) {
+        viewModelScope.launch {
+            shoppingCartRepository.increaseItemQuantityByProductId(productId, Quantity(quantity))
+            loadShoppingItems(currentPage)
+        }
+    }
+
+    fun decreaseItemQuantity(productId: String, quantity: Int) {
+        viewModelScope.launch {
+            shoppingCartRepository.decreaseItemQuantityByProductId(productId, Quantity(quantity))
             loadShoppingItems(currentPage)
         }
     }
@@ -66,11 +103,13 @@ class ShoppingCartViewModel(
         currentPage = page.coerceIn(0, lastPage)
 
         val offset = currentPage * PAGE_SIZE
-        val shoppingItems = shoppingCartRepository.getShoppingItems(offset, PAGE_SIZE)
+        val shoppingItems = shoppingCartRepository.getItems(offset, PAGE_SIZE)
 
         _uiState.value =
             _uiState.value.copy(
-                shoppingCartItems = shoppingItems,
+                shoppingCartItems = shoppingItems.map {
+                    it.toUiModel()
+                },
                 currentPage = currentPage,
                 canMoveToPreviousPage = currentPage > 0,
                 canMoveToNextPage = (currentPage + 1) * PAGE_SIZE < totalSize,

@@ -3,6 +3,7 @@
 package woowacourse.shopping.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -21,18 +23,16 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
-fun ProductItem(
-    title: String,
-    price: String,
+fun ProductImage(
     imageUrl: String,
+    contentDescription: String,
     modifier: Modifier = Modifier,
+    bottomHoverContent: @Composable () -> Unit = {},
 ) {
-    Column(
-        modifier = modifier,
-    ) {
+    Box(modifier = modifier) {
         AsyncImage(
             model = imageUrl,
-            contentDescription = stringResource(R.string.product_image_content_description, title),
+            contentDescription = stringResource(R.string.product_image_content_description, contentDescription),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -41,6 +41,28 @@ fun ProductItem(
                     .padding(bottom = 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceContainer),
         )
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 20.dp)
+        ) {
+            bottomHoverContent()
+        }
+    }
+
+}
+
+@Composable
+fun ProductItem(
+    title: String,
+    price: String,
+    productImage: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        productImage()
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
@@ -70,7 +92,13 @@ private fun ProductItemPreview() {
         ProductItem(
             title = "동원 스위트콘",
             price = "엄청 비싼 가격",
-            imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+            productImage = {
+                ProductImage(
+                    imageUrl = "",
+                    contentDescription = "동원 스위트콘",
+                    bottomHoverContent = { Text("Hello") },
+                )
+            }
         )
     }
 }

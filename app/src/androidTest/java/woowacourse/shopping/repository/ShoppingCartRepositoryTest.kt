@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.repository.dao.ProductDao
 import woowacourse.shopping.repository.entity.toModel
@@ -52,8 +53,8 @@ class ShoppingCartRepositoryTest {
     @Test
     fun add_item_to_shopping_cart_correctly() =
         runTest {
-            shoppingCartRepository.add(product)
-            val shoppingCartItems = shoppingCartRepository.getShoppingItems(0, 5)
+            shoppingCartRepository.increaseItemQuantityByProductId(product.id, Quantity(1))
+            val shoppingCartItems = shoppingCartRepository.getItems(0, 5)
 
             assertEquals(shoppingCartItems.size, 1)
             assertEquals(shoppingCartItems.single().product, product)
@@ -63,10 +64,10 @@ class ShoppingCartRepositoryTest {
     @Test
     fun remove_item_from_shopping_cart_about_already_added() =
         runTest {
-            shoppingCartRepository.add(product)
-            val addedShoppingCartItem = shoppingCartRepository.getShoppingItems(0, 5).single()
+            shoppingCartRepository.increaseItemQuantityByProductId(product.id, Quantity(1))
+            val addedShoppingCartItem = shoppingCartRepository.getItems(0, 5).single()
 
-            shoppingCartRepository.remove(addedShoppingCartItem.id)
-            assertEquals(shoppingCartRepository.getShoppingItems(0, 5), emptyList<ShoppingCartItem>())
+            shoppingCartRepository.removeItem(addedShoppingCartItem.product.id)
+            assertEquals(shoppingCartRepository.getItems(0, 5), emptyList<ShoppingCartItem>())
         }
 }

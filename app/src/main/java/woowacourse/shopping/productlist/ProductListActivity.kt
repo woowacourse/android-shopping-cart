@@ -1,13 +1,10 @@
 package woowacourse.shopping.productlist
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import woowacourse.shopping.productdetail.DetailProductActivity
-import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,21 +14,13 @@ class ProductListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                ProductListScreen(
-                    onProductClick = { productId ->
-                        val intent = Intent(this, DetailProductActivity::class.java)
-                        intent.putExtra(EXTRA_PRODUCT_ID, productId)
-                        startActivity(intent)
-                    },
-                    onNavigateToCartClick = {
-                        startActivity(Intent(this, ShoppingCartActivity::class.java))
-                    },
-                )
+                ProductListScreen()
             }
         }
     }
 
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
+        const val CHANGED_PRODUCT_IDS = "changedProductIds"
     }
 }

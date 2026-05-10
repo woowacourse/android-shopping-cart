@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -27,6 +28,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -43,6 +45,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.ui.WonMoney
+import woowacourse.shopping.ui.component.NumberCounter
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
@@ -66,7 +69,9 @@ fun DetailProductScreen(
 
     DetailProductContent(
         productUiModel = uiState,
-        onAddToCartClick = { detailProductViewModel.addToShoppingCart(productId) },
+        onAddToCartClick = { detailProductViewModel.increaseQuantity(1) },
+        onIncrementQuantity = detailProductViewModel::increaseQuantity,
+        onDecrementQuantity = detailProductViewModel::decreaseQuantity,
         onBackClick = onBackClick,
         modifier = modifier,
     )
@@ -76,6 +81,8 @@ fun DetailProductScreen(
 fun DetailProductContent(
     productUiModel: ProductUiModel,
     onAddToCartClick: () -> Unit,
+    onIncrementQuantity: (Int) -> Unit,
+    onDecrementQuantity: (Int) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -121,16 +128,23 @@ fun DetailProductContent(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(horizontal = 10.dp, vertical = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = stringResource(R.string.price_label),
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
                 Text(
                     text = productUiModel.price.display(),
                     color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(start = 6.dp)
+                )
+
+                NumberCounter(
+                    count = productUiModel.quantity,
+                    onIncrement = { onIncrementQuantity(1) },
+                    onDecrement = { onDecrementQuantity(1) },
+                    modifier =
+                        Modifier
+                            .width(140.dp)
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -185,9 +199,12 @@ private fun DetailProductContentPreview() {
                     name = "동원 스위트콘",
                     price = WonMoney(99_800),
                     imageUrl = "",
+                    quantity = 0
                 ),
             onAddToCartClick = {},
             onBackClick = {},
+            onIncrementQuantity = { },
+            onDecrementQuantity = { },
         )
     }
 }

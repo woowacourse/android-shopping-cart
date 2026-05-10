@@ -1,19 +1,27 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    suspend fun add(product: Product)
+    suspend fun increaseItemQuantityByProductId(productId: String, quantity: Quantity)
 
-    suspend fun getTotalSize(): Int
+    suspend fun decreaseItemQuantityByProductId(
+        productId: String,
+        quantity: Quantity,
+    )
 
-    suspend fun remove(shoppingCartItemId: String)
+    suspend fun removeItem(productId: String)
 
-    suspend fun getShoppingItem(shoppingCartItemId: String): ShoppingCartItem?
+    suspend fun getItemByProductId(productId: String): ShoppingCartItem?
 
-    suspend fun getShoppingItems(
+    suspend fun getItems(
         offset: Int,
         size: Int,
     ): List<ShoppingCartItem>
+
+    suspend fun getTotalQuantity(): Int
+
+
+    suspend fun getTotalSize(): Int
 }
