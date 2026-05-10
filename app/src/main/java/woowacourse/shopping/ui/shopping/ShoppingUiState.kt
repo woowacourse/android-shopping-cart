@@ -11,4 +11,5 @@ data class ShoppingUiState(
     val cartQuantities: Map<String, Int> = emptyMap(),
     val canLoadMore: Boolean = true,
     val isLoading: Boolean = false,
+    val isNetworkAvailable: Boolean = true,
 )

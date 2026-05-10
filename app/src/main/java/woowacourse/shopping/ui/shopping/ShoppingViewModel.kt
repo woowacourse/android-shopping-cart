@@ -36,7 +36,7 @@ class ShoppingViewModel(
 
     private fun observeNetwork() {
         viewModelScope.launch {
-            networkManager.observe().collect { isAvailable ->
+            networkManager.observeNetwork().collect { isAvailable ->
                 _uiState.value =
                     _uiState.value.copy(isNetworkAvailable = isAvailable)
 

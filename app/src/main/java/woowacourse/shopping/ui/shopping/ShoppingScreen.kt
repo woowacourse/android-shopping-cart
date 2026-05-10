@@ -88,17 +88,23 @@ fun ShoppingScreen(
         },
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
-        ShoppingContents(
-            products = uiState.products,
-            recentItems = uiState.recentItems,
-            cartQuantities = uiState.cartQuantities,
-            modifier = Modifier.padding(innerPadding),
-            onLoad = onLoad,
-            onProductClick = onProductClick,
-            onIncreaseQuantity = onIncreaseQuantity,
-            onDecreaseQuantity = onDecreaseQuantity,
-            isCanLoadMore = uiState.canLoadMore,
-        )
+        if (uiState.isNetworkAvailable) {
+            ShoppingContents(
+                products = uiState.products,
+                recentItems = uiState.recentItems,
+                cartQuantities = uiState.cartQuantities,
+                modifier = Modifier.padding(innerPadding),
+                onLoad = onLoad,
+                onProductClick = onProductClick,
+                onIncreaseQuantity = onIncreaseQuantity,
+                onDecreaseQuantity = onDecreaseQuantity,
+                isCanLoadMore = uiState.canLoadMore,
+            )
+        } else {
+            NetworkErrorContent(modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding))
+        }
     }
 }
 
