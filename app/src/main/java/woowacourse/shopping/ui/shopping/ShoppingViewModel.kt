@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.network.NetworkManager
+import woowacourse.shopping.data.network.NetworkObserver
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
@@ -20,7 +21,7 @@ class ShoppingViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentItemRepository: RecentItemRepository,
-    private val networkManager: NetworkManager,
+    private val networkObserver: NetworkObserver,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -36,7 +37,7 @@ class ShoppingViewModel(
 
     private fun observeNetwork() {
         viewModelScope.launch {
-            networkManager.observeNetwork().collect { isAvailable ->
+            networkObserver.observeNetwork().collect { isAvailable ->
                 _uiState.value =
                     _uiState.value.copy(isNetworkAvailable = isAvailable)
 
@@ -113,7 +114,7 @@ class ShoppingViewModel(
             productRepository: ProductRepository,
             cartRepository: CartRepository,
             recentItemRepository: RecentItemRepository,
-            networkManager: NetworkManager,
+            networkObserver: NetworkObserver,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
@@ -121,7 +122,7 @@ class ShoppingViewModel(
                         productRepository = productRepository,
                         cartRepository = cartRepository,
                         recentItemRepository = recentItemRepository,
-                        networkManager = networkManager,
+                        networkObserver = networkObserver,
                     )
                 }
             }

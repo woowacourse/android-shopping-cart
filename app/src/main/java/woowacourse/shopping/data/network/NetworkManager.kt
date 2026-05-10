@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 class NetworkManager(
     context: Context,
-) {
+) : NetworkObserver {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    fun observeNetwork(): Flow<Boolean> =
+    override fun observeNetwork(): Flow<Boolean> =
         callbackFlow {
             val callback =
                 object : ConnectivityManager.NetworkCallback() {

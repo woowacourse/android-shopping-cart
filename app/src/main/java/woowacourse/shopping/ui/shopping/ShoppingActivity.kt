@@ -24,7 +24,7 @@ class ShoppingActivity : ComponentActivity() {
             productRepository = HttpProductRepository(HttpProductServer.baseUrl),
             cartRepository = CartRepository(database.cartItemDao()),
             recentItemRepository = RecentItemRepository(database.recentItemDao()),
-            networkManager = NetworkManager(applicationContext),
+            networkObserver = NetworkManager(applicationContext),
         )
     }
 
