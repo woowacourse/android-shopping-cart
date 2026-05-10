@@ -49,7 +49,7 @@ fun RecentItemsSection(
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.horizontalScroll(rememberScrollState())
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
         ) {
             recentItems.forEach { product ->
                 RecentItemCard(

@@ -101,9 +101,12 @@ fun ShoppingScreen(
                 isCanLoadMore = uiState.canLoadMore,
             )
         } else {
-            NetworkErrorContent(modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding))
+            NetworkErrorContent(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+            )
         }
     }
 }

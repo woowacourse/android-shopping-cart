@@ -16,7 +16,10 @@ class HttpProductRepository(
     private val baseUrl: String,
     private val client: OkHttpClient = OkHttpClient(),
 ) : ProductRepository {
-    override suspend fun getProducts(offset: Int, limit: Int): ImmutableList<Product> {
+    override suspend fun getProducts(
+        offset: Int,
+        limit: Int,
+    ): ImmutableList<Product> {
         val request =
             Request
                 .Builder()

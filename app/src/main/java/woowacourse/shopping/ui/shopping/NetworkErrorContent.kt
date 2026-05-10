@@ -20,9 +20,7 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.ui.theme.Gray50
 
 @Composable
-fun NetworkErrorContent(
-    modifier: Modifier = Modifier,
-) {
+fun NetworkErrorContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

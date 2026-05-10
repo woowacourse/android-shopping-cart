@@ -4,9 +4,10 @@ import okhttp3.mockwebserver.MockWebServer
 
 object HttpProductServer {
     private val server: MockWebServer by lazy {
-        val mockWebServer = MockWebServer().apply {
-            dispatcher = ProductMockDispatcher()
-        }
+        val mockWebServer =
+            MockWebServer().apply {
+                dispatcher = ProductMockDispatcher()
+            }
 
         Thread {
             mockWebServer.start(12345)

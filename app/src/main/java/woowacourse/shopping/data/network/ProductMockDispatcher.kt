@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.network
 
-
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
@@ -11,6 +10,7 @@ import woowacourse.shopping.model.Product
 
 class ProductMockDispatcher : Dispatcher() {
     private val products = productData()
+
     override fun dispatch(request: RecordedRequest): MockResponse {
         val path = request.requestUrl?.encodedPath
         return when {
