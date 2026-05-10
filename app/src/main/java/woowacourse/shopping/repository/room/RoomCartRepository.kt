@@ -18,16 +18,21 @@ class RoomCartRepository(
     }
 
     override suspend fun add(item: Product, quantity: Int) {
-        cartDao.insertOrUpdate(CartEntity(item.id, quantity))
+        val currentEntity = cartDao.getCartItemById(item.id)
+        if (currentEntity != null) {
+            cartDao.updateQuantity(item.id, currentEntity.quantity + quantity)
+        } else {
+            cartDao.insert(CartEntity(item.id, quantity))
+        }
     }
 
     override suspend fun increase(item: Product) {
         val currentEntity = cartDao.getCartItemById(item.id)
 
         if (currentEntity != null) {
-            cartDao.insertOrUpdate(CartEntity(item.id, currentEntity.quantity + 1))
+            cartDao.updateQuantity(productId = item.id, currentEntity.quantity + 1)
         } else {
-            cartDao.insertOrUpdate(CartEntity(item.id, 1))
+            cartDao.insert(CartEntity(item.id, 1))
         }
     }
 
@@ -36,7 +41,7 @@ class RoomCartRepository(
 
         if (currentEntity != null) {
             if (currentEntity.quantity > 1) {
-                cartDao.insertOrUpdate(CartEntity(item.id, currentEntity.quantity - 1))
+                cartDao.updateQuantity(item.id, currentEntity.quantity - 1)
             } else {
                 cartDao.deleteById(item.id)
             }
