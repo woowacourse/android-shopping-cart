@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.productdetail
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,6 +22,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
+    onLastViewedProductClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -37,7 +38,9 @@ fun ProductDetailScreen(
                     onAddToCartClick()
                 },
                 onIncreaseClick = { viewModel.increase() },
-                onDecreaseClick = { viewModel.decrease() }
+                onDecreaseClick = { viewModel.decrease() },
+                lastViewedProduct = uiState.lastViewedProduct,
+                onLastViewedProductClick = onLastViewedProductClick
             )
         }
 
@@ -50,46 +53,62 @@ fun ProductDetailScreen(
     product: Product,
     totalPrice: Int,
     count: Int,
+    lastViewedProduct: Product?,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
+    onLastViewedProductClick: () -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        ProductDetailHeader(onCloseClick = onCloseClick)
-
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            ProductDetailHeader(onCloseClick = onCloseClick)
+        },
+        bottomBar = {
+            CartAddButton(onClick = onAddToCartClick)
+        }
+    ) { paddingValues ->
         ProductDetailBody(
             product = product,
             totalPrice = totalPrice,
             count = count,
             onIncreaseClick = onIncreaseClick,
-            onDecreaseClick = onDecreaseClick
+            onDecreaseClick = onDecreaseClick,
+            lastViewedProduct = lastViewedProduct,
+            onLastViewedProductClick = onLastViewedProductClick,
+            modifier = Modifier.padding(paddingValues)
         )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        CartAddButton(onClick = onAddToCartClick)
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun ProductDetailScreenPreview() {
-    val product =
+    val product1 =
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
         )
 
+    val product2 =
+        Product(
+            name = "[든든] 동원 스위트콘",
+            price = Money(1000),
+            imageUrl = "",
+        )
+
     ProductDetailScreen(
-        product = product,
+        product = product1,
         onCloseClick = {},
         onAddToCartClick = {},
         totalPrice = 30000,
         count = 3,
         onIncreaseClick = {},
         onDecreaseClick = {},
+        lastViewedProduct = product2,
+        onLastViewedProductClick = {},
     )
 }

@@ -2,6 +2,7 @@ package woowacourse.shopping.repository.room
 
 import woowacourse.shopping.local.dao.RecentProductDao
 import woowacourse.shopping.local.entity.RecentProductEntity
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
@@ -12,14 +13,19 @@ class RoomRecentProductRepository(
     private val productRepository: ProductRepository
 ): RecentProductRepository {
     override suspend fun getRecentProducts(): Products {
-        val productList = this@RoomRecentProductRepository.recentProductDao.getRecentItems().mapNotNull {
+        val productList = recentProductDao.getRecentItems().mapNotNull {
             productRepository.findProduct(id = it.productId)
         }
         return Products(productList)
     }
 
+    override suspend fun getLastViewedProduct(): Product? {
+        val productId = recentProductDao.getLastItem().productId
+        return productRepository.findProduct(productId)
+    }
+
     override suspend fun add(productId: UUID) {
-        this@RoomRecentProductRepository.recentProductDao.insert(RecentProductEntity(productId = productId, viewedAt = System.currentTimeMillis()))
-        this@RoomRecentProductRepository.recentProductDao.deleteOldItems()
+        recentProductDao.insert(RecentProductEntity(productId = productId, viewedAt = System.currentTimeMillis()))
+        recentProductDao.deleteOldItems()
     }
 }

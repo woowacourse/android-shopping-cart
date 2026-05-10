@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productdetail.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,8 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,26 +31,50 @@ fun ProductDetailBody(
     product: Product,
     totalPrice: Int,
     count: Int,
+    lastViewedProduct: Product?,
     modifier: Modifier = Modifier,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
+    onLastViewedProductClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        ShoppingImage(
-            model = product.imageUrl,
-            contentDescription = "상품 상세 이미지",
-            modifier = Modifier.height(360.dp),
-        )
-        ProductOption(
-            productName = product.name,
-            price = totalPrice,
-            count = count,
-            onIncreaseClick = onIncreaseClick,
-            onDecreaseClick = onDecreaseClick,
-        )
+    Scaffold(
+        modifier = modifier,
+        bottomBar = {
+            if (lastViewedProduct != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 35.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LastViewedProductBanner(
+                        lastViewedProduct = lastViewedProduct,
+                        onClick = onLastViewedProductClick,
+                    )
+                }
+            }
+        },
+        containerColor = Color.White
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            ShoppingImage(
+                model = product.imageUrl,
+                contentDescription = "상품 상세 이미지",
+                modifier = Modifier.height(360.dp),
+            )
+            ProductOption(
+                productName = product.name,
+                price = totalPrice,
+                count = count,
+                onIncreaseClick = onIncreaseClick,
+                onDecreaseClick = onDecreaseClick,
+            )
+        }
     }
 }
 
@@ -100,18 +127,28 @@ private fun ProductOption(
 @Composable
 @Preview(showBackground = true, name = "상품 유닛")
 private fun ProductUnitPreview() {
-    val product =
+    val product1 =
         Product(
             name = "스피또",
             price = Money(1000),
             imageUrl = "",
         )
+
+    val product2 =
+        Product(
+            name = "PET보틀-정사각형(500ml)",
+            price = Money(1000),
+            imageUrl = "",
+        )
     ProductDetailBody(
-        product = product,
+        product = product1,
         totalPrice = 30000,
         count = 3,
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
+        lastViewedProduct = product2,
+        modifier = Modifier,
+        onLastViewedProductClick = {}
     )
 }
 

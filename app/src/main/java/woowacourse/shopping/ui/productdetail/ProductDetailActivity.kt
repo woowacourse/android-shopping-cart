@@ -55,6 +55,7 @@ class ProductDetailActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
                         onAddToCartClick = ::finish,
+                        onLastViewedProductClick = ::finish,
                     )
                 }
             }

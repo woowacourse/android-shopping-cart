@@ -64,10 +64,14 @@ class ProductDetailViewModel(
                 val cartQuantityMap = cartItems.items.associate {
                     it.product.id to it.quantity
                 }
+                var lastViewedProduct = recentProductRepo.getLastViewedProduct()
+                if (lastViewedProduct?.id == productId) lastViewedProduct = null
+
                 _uiState.update {
                     it.copy(
                         product = product,
-                        selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1)
+                        selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1),
+                        lastViewedProduct = lastViewedProduct
                     )
                 }
                 recentProductRepo.add(productId)
