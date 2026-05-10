@@ -1,10 +1,15 @@
 package woowacourse.shopping.ui.productlist
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,8 +30,11 @@ class ProductListViewModelTest {
     private lateinit var cartRepository: CartRepository
     private lateinit var recentProductRepository: RecentProductRepository
 
+    private val testDispatcher = StandardTestDispatcher()
+
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         productRepository = MockProductRepository()
         cartRepository = MockCartRepository()
         recentProductRepository = MockRecentProductRepository()
@@ -36,6 +44,11 @@ class ProductListViewModelTest {
             cartRepository = cartRepository,
             recentProductRepository = recentProductRepository,
         )
+    }
+
+    @AfterEach
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -125,6 +138,7 @@ class MockProductRepository : ProductRepository {
             imageUrl = "",
         )
     }
+
     override suspend fun getProducts(): List<Product> = products
 
     override suspend fun getProduct(id: String): Product? = products.find { it.hasId(id) }
@@ -139,7 +153,15 @@ class MockCartRepository : CartRepository {
         product: Product,
         quantity: Quantity,
     ) {
-        cartItems.value += CartItem(product, quantity)
+        val findItem = cartItems.value.find { it.hasProduct(product) }
+
+        if (findItem != null) {
+            cartItems.value = cartItems.value.map {
+                if (it.hasProduct(product)) it.increase(quantity) else it
+            }
+        } else {
+            cartItems.value += CartItem(product, quantity)
+        }
     }
 
     override suspend fun decreaseCartItem(
@@ -148,6 +170,10 @@ class MockCartRepository : CartRepository {
     ) {
         cartItems.value = cartItems.value.map {
             if (it.product == product) it.decrease(quantity) else it
+        }
+
+        cartItems.value = cartItems.value.filter {
+            it.quantity.count != 0
         }
     }
 
