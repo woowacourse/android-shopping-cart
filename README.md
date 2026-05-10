@@ -148,7 +148,7 @@
 ### LastViewedProduct
 
 - [x] 가장 마지막에 본 상품의 이름을 표시한다
-- [ ] 클릭 시 해당 상품의 ProductDetailScreen으로 이동한다
+- [x] 클릭 시 해당 상품의 ProductDetailScreen으로 이동한다
 
 ### ProductDetailActivity
 
