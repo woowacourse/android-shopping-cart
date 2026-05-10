@@ -22,4 +22,8 @@ class MainDispatcherExtension(
     override fun afterEach(context: ExtensionContext) {
         Dispatchers.resetMain()
     }
+
+    fun advanceUntilIdle() {
+        dispatcher.scheduler.advanceUntilIdle()
+    }
 }
