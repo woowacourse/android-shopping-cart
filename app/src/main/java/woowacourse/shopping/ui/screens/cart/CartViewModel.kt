@@ -46,15 +46,17 @@ class CartViewModel(
         if (_uiState.value.curPage == 1) return
 
         viewModelScope.launch {
+            val page = _uiState.value.curPage - 1
+
             _uiState.update {
                 it.copy(
-                    curPage = _uiState.value.curPage - 1,
+                    curPage = page,
                     cartItems = cartRepository
-                        .getCartItemByPage(_uiState.value.curPage - 1)
+                        .getCartItemByPage(page)
                         .map { cartItem ->
                             cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
                         },
-                    isLast = cartRepository.isLastPage(_uiState.value.curPage),
+                    isLast = cartRepository.isLastPage(page),
                 )
             }
         }
@@ -64,15 +66,17 @@ class CartViewModel(
         if (_uiState.value.isLast) return
 
         viewModelScope.launch {
+            val page = _uiState.value.curPage + 1
+
             _uiState.update {
                 it.copy(
-                    curPage = _uiState.value.curPage + 1,
+                    curPage = page,
                     cartItems = cartRepository
-                        .getCartItemByPage(_uiState.value.curPage + 1)
+                        .getCartItemByPage(page)
                         .map { cartItem ->
                             cartItem.toUiModel(productRepository.getProductById(cartItem.productId))
                         },
-                    isLast = cartRepository.isLastPage(_uiState.value.curPage),
+                    isLast = cartRepository.isLastPage(page),
                 )
             }
         }
