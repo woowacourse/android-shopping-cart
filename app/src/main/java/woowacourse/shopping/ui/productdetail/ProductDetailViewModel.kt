@@ -5,20 +5,27 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.ShoppingRepositoryProvider
+import woowacourse.shopping.repository.network.NetworkMonitor
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository = ShoppingRepositoryProvider.productRepository,
     private val cartRepository: CartRepository = ShoppingRepositoryProvider.cartRepository,
     private val recentProductRepository: RecentProductRepository = ShoppingRepositoryProvider.recentProductRepository,
+    private val networkMonitor: NetworkMonitor = ShoppingRepositoryProvider.networkMonitor,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
+
+    init {
+        observeNetworkState()
+    }
 
     fun loadProduct(productId: ProductId) {
         viewModelScope.launch {
@@ -101,5 +108,15 @@ class ProductDetailViewModel(
                 isAdding = false,
                 errorMessage = null,
             )
+    }
+
+    private fun observeNetworkState() {
+        viewModelScope.launch {
+            networkMonitor.isNetworkConnected.collect { isConnected ->
+                _uiState.update { currentState ->
+                    currentState.copy(isNetworkConnected = isConnected)
+                }
+            }
+        }
     }
 }

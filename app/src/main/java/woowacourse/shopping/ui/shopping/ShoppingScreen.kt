@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.common.component.network.NetworkStatusBanner
 import woowacourse.shopping.ui.shopping.component.ShoppingBody
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
@@ -20,6 +21,7 @@ fun ShoppingScreen(
     cartQuantity: Int,
     hasNext: Boolean,
     isLoading: Boolean,
+    isNetworkConnected: Boolean,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
@@ -36,6 +38,10 @@ fun ShoppingScreen(
             cartQuantity = cartQuantity,
             onCartClick = onCartClick,
         )
+
+        if (!isNetworkConnected) {
+            NetworkStatusBanner(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
+        }
 
         ShoppingBody(
             products = products,
@@ -70,6 +76,7 @@ private fun ShoppingScreenPreview() {
         cartQuantity = 4,
         hasNext = true,
         isLoading = false,
+        isNetworkConnected = true,
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},

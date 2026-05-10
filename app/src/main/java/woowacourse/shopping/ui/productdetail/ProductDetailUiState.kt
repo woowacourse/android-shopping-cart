@@ -7,5 +7,6 @@ data class ProductDetailUiState(
     val lastViewedProduct: Product? = null,
     val quantity: Int = 0,
     val isAdding: Boolean = false,
+    val isNetworkConnected: Boolean = true,
     val errorMessage: String? = null,
 )

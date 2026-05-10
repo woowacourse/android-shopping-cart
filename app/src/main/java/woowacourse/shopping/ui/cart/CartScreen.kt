@@ -12,6 +12,7 @@ import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.cart.component.CartHeader
 import woowacourse.shopping.ui.cart.component.CartItemBody
+import woowacourse.shopping.ui.common.component.network.NetworkStatusBanner
 
 @Composable
 fun CartScreen(
@@ -20,6 +21,7 @@ fun CartScreen(
     totalPages: Int,
     showPagination: Boolean,
     isLoading: Boolean,
+    isNetworkConnected: Boolean,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onDeleteClick: (ProductId) -> Unit,
@@ -32,6 +34,10 @@ fun CartScreen(
         modifier = modifier.fillMaxSize(),
     ) {
         CartHeader(onBackClick = onBackClick)
+
+        if (!isNetworkConnected) {
+            NetworkStatusBanner(modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp))
+        }
 
         if (isLoading && items.isEmpty()) {
             CircularProgressIndicator(modifier = Modifier.padding(20.dp))
@@ -82,6 +88,7 @@ private fun CartScreenPreview() {
         totalPages = 1,
         showPagination = false,
         isLoading = false,
+        isNetworkConnected = true,
         onBackClick = {},
         onDeleteClick = {},
         onIncreaseQuantity = {},

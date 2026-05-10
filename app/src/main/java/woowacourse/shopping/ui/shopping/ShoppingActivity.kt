@@ -38,6 +38,7 @@ class ShoppingActivity : ComponentActivity() {
                         cartQuantity = uiState.cartQuantity,
                         hasNext = uiState.hasNext,
                         isLoading = uiState.isLoading,
+                        isNetworkConnected = uiState.isNetworkConnected,
                         modifier = Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))

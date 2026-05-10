@@ -15,4 +15,5 @@
     <string name="price_label">가격</string>
     <string name="price_format">%1$s 원</string>
     <string name="page_format">%1$d</string>
+    <string name="network_offline_message">네트워크 연결이 끊어졌습니다.</string>
 </resources>

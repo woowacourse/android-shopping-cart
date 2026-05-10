@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.common.component.network.NetworkStatusBanner
 import woowacourse.shopping.ui.common.component.recentlyviewed.LastViewedProductCard
 import woowacourse.shopping.ui.productdetail.component.CartAddButton
 import woowacourse.shopping.ui.productdetail.component.ProductDetailBody
@@ -22,6 +23,7 @@ fun ProductDetailScreen(
     lastViewedProduct: Product?,
     quantity: Int,
     isAdding: Boolean,
+    isNetworkConnected: Boolean,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCart: () -> Unit,
@@ -31,6 +33,10 @@ fun ProductDetailScreen(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProductDetailHeader(onCloseClick = onCloseClick)
+
+        if (!isNetworkConnected) {
+            NetworkStatusBanner(modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp))
+        }
 
         ProductDetailBody(
             product = product,
@@ -66,6 +72,7 @@ private fun ProductDetailScreenAddToCartPreview() {
         lastViewedProduct = InMemoryProductRepository.BBOYAMI,
         quantity = 0,
         isAdding = false,
+        isNetworkConnected = true,
         onCloseClick = {},
         onAddToCart = {},
         onLastViewedProductClick = {},
@@ -83,6 +90,7 @@ private fun ProductDetailScreenQuantityPreview() {
         lastViewedProduct = InMemoryProductRepository.BBOYAMI,
         quantity = 2,
         isAdding = false,
+        isNetworkConnected = true,
         onCloseClick = {},
         onAddToCart = {},
         onLastViewedProductClick = {},

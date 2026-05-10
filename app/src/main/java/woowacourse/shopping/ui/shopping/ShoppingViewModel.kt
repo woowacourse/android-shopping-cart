@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.ShoppingRepositoryProvider
+import woowacourse.shopping.repository.network.NetworkMonitor
 
 private const val PAGE_SIZE = 20
 private const val RECENT_PRODUCT_LIMIT = 10
@@ -19,6 +21,7 @@ class ShoppingViewModel(
     private val productRepository: ProductRepository = ShoppingRepositoryProvider.productRepository,
     private val cartRepository: CartRepository = ShoppingRepositoryProvider.cartRepository,
     private val recentProductRepository: RecentProductRepository = ShoppingRepositoryProvider.recentProductRepository,
+    private val networkMonitor: NetworkMonitor = ShoppingRepositoryProvider.networkMonitor,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState(isLoading = true))
     val uiState: StateFlow<ShoppingUiState> = _uiState.asStateFlow()
@@ -26,6 +29,7 @@ class ShoppingViewModel(
     private var visibleCount = PAGE_SIZE
 
     init {
+        observeNetworkState()
         loadProducts()
     }
 
@@ -72,6 +76,7 @@ class ShoppingViewModel(
                     cartQuantity = cartQuantity,
                     hasNext = hasNext,
                     isLoading = false,
+                    isNetworkConnected = _uiState.value.isNetworkConnected,
                     errorMessage = null,
                 )
         }.onFailure { throwable ->
@@ -120,6 +125,16 @@ class ShoppingViewModel(
                         isLoading = false,
                         errorMessage = throwable.message,
                     )
+            }
+        }
+    }
+
+    private fun observeNetworkState() {
+        viewModelScope.launch {
+            networkMonitor.isNetworkConnected.collect { isConnected ->
+                _uiState.update { currentState ->
+                    currentState.copy(isNetworkConnected = isConnected)
+                }
             }
         }
     }

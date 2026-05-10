@@ -66,6 +66,7 @@ class ProductDetailActivity : ComponentActivity() {
                         lastViewedProduct = uiState.lastViewedProduct,
                         quantity = uiState.quantity,
                         isAdding = uiState.isAdding,
+                        isNetworkConnected = uiState.isNetworkConnected,
                         modifier = Modifier.padding(innerPadding),
                         onCloseClick = ::finish,
                         onAddToCart = viewModel::addToCart,
