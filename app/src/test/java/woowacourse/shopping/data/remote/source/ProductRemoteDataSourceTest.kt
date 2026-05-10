@@ -25,7 +25,7 @@ class ProductRemoteDataSourceTest {
     fun `전체 상품 목록을 가져온다`() = runBlocking {
         val products = dataSource.getProducts()
 
-        Assertions.assertEquals(MockData.MOCK_PRODUCTS.size, products.size)
+        Assertions.assertEquals(MockData.MOCK_PRODUCTS_LIST.size, products.size)
         Assertions.assertEquals("품목1", products[0].name)
     }
 

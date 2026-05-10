@@ -53,7 +53,7 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         val findItem = cartItems.find { it.hasProduct(product) } ?: throw IllegalArgumentException("해당 상품을 찾을 수 없습니다")
         return when {
             findItem.isQuantityLessThan(quantity) -> throw IllegalArgumentException("삭제 수량이 보유 수량보다 많습니다")
-            findItem.isSameQuantity(quantity) -> Cart(cartItems.filterNot { it.hasProduct(product) })
+            findItem.isSameQuantity(quantity) -> removeCartItem(product.id)
             else -> {
                 val updateItems = cartItems.map { cartItem ->
                     if (cartItem.hasProduct(product)) cartItem.decrease(quantity)

@@ -40,14 +40,11 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT_ID = "product_id"
-        private const val EXTRA_ADDED_ID = "added_to_cart_id"
 
         fun newIntent(
             context: Context,
             productId: String,
         ): Intent = Intent(context, ProductDetailActivity::class.java)
             .putExtra(EXTRA_PRODUCT_ID, productId)
-
-        private fun addedIdResult(productId: String?): Intent = Intent().putExtra(EXTRA_ADDED_ID, productId)
     }
 }
