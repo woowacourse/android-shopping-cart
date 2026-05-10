@@ -21,7 +21,8 @@ class RoomCartRepository(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override val cartFlow: StateFlow<Cart> =
-        cartItemDao.getCartItems()
+        cartItemDao
+            .getCartItems()
             .map { it.toDomainCart() }
             .stateIn(
                 scope = scope,
@@ -29,13 +30,17 @@ class RoomCartRepository(
                 initialValue = Cart(),
             )
 
-    override suspend fun addProduct(product: Product, quantity: Quantity) {
+    override suspend fun addProduct(
+        product: Product,
+        quantity: Quantity,
+    ) {
         val existing = cartItemDao.getCartItem(product.id)
-        val nextQuantity = if (existing == null) {
-            quantity
-        } else {
-            Quantity(existing.quantity + quantity.value)
-        }
+        val nextQuantity =
+            if (existing == null) {
+                quantity
+            } else {
+                Quantity(existing.quantity + quantity.value)
+            }
         cartItemDao.upsert(product.toCartItemEntity(nextQuantity))
     }
 

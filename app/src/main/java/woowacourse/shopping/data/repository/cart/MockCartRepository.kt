@@ -13,20 +13,22 @@ class MockCartRepository : CartRepository {
     private val _cartFlow = MutableStateFlow(Cart())
     override val cartFlow: StateFlow<Cart> = _cartFlow.asStateFlow()
 
-
-    override suspend fun addProduct(product: Product, quantity: Quantity) {
-        _cartFlow.update {it.addProduct(product, quantity)}
+    override suspend fun addProduct(
+        product: Product,
+        quantity: Quantity,
+    ) {
+        _cartFlow.update { it.addProduct(product, quantity) }
     }
 
-    override suspend fun increase(productId:String) {
-        _cartFlow.update{it.increase(productId)}
+    override suspend fun increase(productId: String) {
+        _cartFlow.update { it.increase(productId) }
     }
 
-    override suspend fun decrease(productId:String){
-        _cartFlow.update{it.decrease(productId)}
+    override suspend fun decrease(productId: String) {
+        _cartFlow.update { it.decrease(productId) }
     }
 
-    override suspend fun remove(productId:String){
-        _cartFlow.update{it.remove(productId)}
+    override suspend fun remove(productId: String) {
+        _cartFlow.update { it.remove(productId) }
     }
 }

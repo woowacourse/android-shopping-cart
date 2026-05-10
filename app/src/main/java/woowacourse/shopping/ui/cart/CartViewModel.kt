@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
@@ -18,7 +17,6 @@ import kotlin.math.max
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<CartUiState>(CartUiState.Loading)
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
@@ -42,15 +40,15 @@ class CartViewModel(
             cartRepository.remove(productId)
         }
     }
-    
-    fun increase(productId:String){
-        viewModelScope.launch{
+
+    fun increase(productId: String) {
+        viewModelScope.launch {
             cartRepository.increase(productId)
         }
     }
-    
-    fun decrease(productId:String){
-        viewModelScope.launch{
+
+    fun decrease(productId: String) {
+        viewModelScope.launch {
             cartRepository.decrease(productId)
         }
     }
@@ -81,13 +79,14 @@ class CartViewModel(
 
         val pageItems = cart.getPage(currentPage, PAGE_SIZE)
 
-        _uiState.value = CartUiState.Success(
-            cartItems = pageItems,
-            currentPage = currentPage,
-            totalPages = totalPages,
-            hasPrevious = currentPage > 0,
-            hasNext = currentPage < totalPages - 1,
-        )
+        _uiState.value =
+            CartUiState.Success(
+                cartItems = pageItems,
+                currentPage = currentPage,
+                totalPages = totalPages,
+                hasPrevious = currentPage > 0,
+                hasNext = currentPage < totalPages - 1,
+            )
     }
 
     companion object {

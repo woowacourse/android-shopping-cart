@@ -11,7 +11,10 @@ class CartItems(
     val totalPrice: Int
         get() = values.sumOf { it.totalPrice }
 
-    fun addProduct(product: Product, quantity: Quantity = Quantity.ONE): CartItems {
+    fun addProduct(
+        product: Product,
+        quantity: Quantity = Quantity.ONE,
+    ): CartItems {
         val existing = values.find { it.isSameProduct(product.id) }
         return if (existing == null) {
             CartItems(values + CartItem(product, quantity))
@@ -38,8 +41,7 @@ class CartItems(
 
     fun remove(productId: String): CartItems = CartItems(values.filter { !it.isSameProduct(productId) })
 
-    fun findQuantity(productId: String): Quantity =
-        findByProductId(productId)?.quantity ?: Quantity.ZERO
+    fun findQuantity(productId: String): Quantity = findByProductId(productId)?.quantity ?: Quantity.ZERO
 
     fun contains(productId: String): Boolean = findByProductId(productId) != null
 
@@ -54,9 +56,10 @@ class CartItems(
 
     fun size(): Int = values.size
 
-    private fun findByProductId(productId:String): CartItem? =
-        values.firstOrNull{ it.isSameProduct(productId)}
+    private fun findByProductId(productId: String): CartItem? = values.firstOrNull { it.isSameProduct(productId) }
 
-    private fun replace(target:CartItem, replacement:CartItem): CartItems =
-        CartItems(values.map{if(it.isSameCartItem(target)) replacement else it})
+    private fun replace(
+        target: CartItem,
+        replacement: CartItem,
+    ): CartItems = CartItems(values.map { if (it.isSameCartItem(target)) replacement else it })
 }

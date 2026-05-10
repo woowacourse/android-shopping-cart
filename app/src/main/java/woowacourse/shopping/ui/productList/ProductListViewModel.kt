@@ -40,27 +40,27 @@ class ProductListViewModel(
         loadNextPage()
     }
 
-    fun addProduct(product:Product){
-        viewModelScope.launch{
+    fun addProduct(product: Product) {
+        viewModelScope.launch {
             cartRepository.addProduct(product)
         }
     }
 
-    fun increase(productId:String){
-        viewModelScope.launch{
+    fun increase(productId: String) {
+        viewModelScope.launch {
             cartRepository.increase(productId)
         }
     }
 
-    fun decrease(productId:String){
-        viewModelScope.launch{
+    fun decrease(productId: String) {
+        viewModelScope.launch {
             cartRepository.decrease(productId)
         }
     }
 
-    private fun observeCart(){
-        viewModelScope.launch{
-            cartRepository.cartFlow.collect{cart->
+    private fun observeCart() {
+        viewModelScope.launch {
+            cartRepository.cartFlow.collect { cart ->
                 currentCart = cart
                 updateSuccessUiState()
             }
@@ -77,7 +77,7 @@ class ProductListViewModel(
     }
 
     private fun loadNextPage() {
-        if(isLoading || !canLoadMore)   return
+        if (isLoading || !canLoadMore) return
 
         viewModelScope.launch {
             isLoading = true
@@ -86,10 +86,11 @@ class ProductListViewModel(
                 .onSuccess { newProducts ->
                     accumulatedProducts.addAll(newProducts)
                     currentPage++
-                    _uiState.value = createSuccessUiState(
-                        canLoadMore = newProducts.size == PAGE_SIZE,
-                        isLoadingMore = false,
-                    )
+                    _uiState.value =
+                        createSuccessUiState(
+                            canLoadMore = newProducts.size == PAGE_SIZE,
+                            isLoadingMore = false,
+                        )
                 }.onFailure { throwable ->
                     _uiState.value = ProductListUiState.Error.from(throwable)
                 }
@@ -97,30 +98,33 @@ class ProductListViewModel(
         }
     }
 
-    private fun setLoadingMore(loading: Boolean){
-        val  current = _uiState.value
-        _uiState.value = when(current){
-            is ProductListUiState.Success ->  current.copy(isLoadingMore = loading)
-            else -> if (loading) ProductListUiState.Loading else current
-        }
+    private fun setLoadingMore(loading: Boolean) {
+        val current = _uiState.value
+        _uiState.value =
+            when (current) {
+                is ProductListUiState.Success -> current.copy(isLoadingMore = loading)
+                else -> if (loading) ProductListUiState.Loading else current
+            }
     }
 
     private fun updateSuccessUiState() {
-        if(accumulatedProducts.isEmpty())   return
+        if (accumulatedProducts.isEmpty()) return
         val current = _uiState.value as? ProductListUiState.Success
-        _uiState.value = createSuccessUiState(
-            canLoadMore = current?.canLoadMore ?: canLoadMore,
-            isLoadingMore = current?.isLoadingMore ?: false,
-        )
+        _uiState.value =
+            createSuccessUiState(
+                canLoadMore = current?.canLoadMore ?: canLoadMore,
+                isLoadingMore = current?.isLoadingMore ?: false,
+            )
     }
 
     private fun createSuccessUiState(
         canLoadMore: Boolean,
         isLoadingMore: Boolean,
     ): ProductListUiState.Success {
-        val quantities = accumulatedProducts.associate { product ->
-            product.id to currentCart.findQuantity(product.id).value
-        }
+        val quantities =
+            accumulatedProducts.associate { product ->
+                product.id to currentCart.findQuantity(product.id).value
+            }
 
         return ProductListUiState.Success(
             products = accumulatedProducts.toList(),

@@ -7,15 +7,16 @@ import woowacourse.shopping.data.remote.HttpClientProvider
 import woowacourse.shopping.data.remote.MockWebServerProvider
 import woowacourse.shopping.data.remote.api.ProductService
 import woowacourse.shopping.data.remote.api.ProductServiceImpl
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.data.repository.cart.RoomCartRepository
 import woowacourse.shopping.data.repository.product.RemoteProductRepository
 import woowacourse.shopping.data.repository.recent.RoomRecentProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 object DataContainer {
     private var appContext: Context? = null
+
     fun init(context: Context) {
         if (appContext == null) {
             appContext = context.applicationContext
@@ -23,11 +24,13 @@ object DataContainer {
     }
 
     private val database: ShoppingDatabase by lazy {
-        Room.databaseBuilder(
-            requireNotNull(appContext) { "DataContainer.init(context) must be called first." },
-            ShoppingDatabase::class.java,
-            "shopping.db",
-        ).fallbackToDestructiveMigration(dropAllTables = true).build()
+        Room
+            .databaseBuilder(
+                requireNotNull(appContext) { "DataContainer.init(context) must be called first." },
+                ShoppingDatabase::class.java,
+                "shopping.db",
+            ).fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     val cartRepository: CartRepository by lazy { RoomCartRepository(database.cartItemDao()) }

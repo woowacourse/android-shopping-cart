@@ -19,7 +19,8 @@ class RemoteProductRepository(
 
     override suspend fun getProduct(id: String): Product? =
         try {
-            productService.getProduct(id)
+            productService
+                .getProduct(id)
                 .toProductResponseDto()
                 .toDomain()
         } catch (exception: IOException) {
@@ -32,7 +33,8 @@ class RemoteProductRepository(
 
     private suspend fun fetchAllProducts(): Products =
         Products(
-            productService.getProducts()
+            productService
+                .getProducts()
                 .toProductResponseDtos()
                 .map { it.toDomain() },
         )

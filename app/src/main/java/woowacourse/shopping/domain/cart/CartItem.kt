@@ -1,19 +1,19 @@
 package woowacourse.shopping.domain.cart
 
 import woowacourse.shopping.domain.product.Product
-import java.util.UUID
 
 data class CartItem(
     val product: Product,
-    val quantity:Quantity = Quantity.ONE
+    val quantity: Quantity = Quantity.ONE,
 ) {
     val totalPrice: Int
         get() = product.price.value * quantity.value
+
     fun isSameCartItem(targetCartItem: CartItem): Boolean = product.id == targetCartItem.product.id
 
     fun isSameProduct(productId: String): Boolean = product.id == productId
 
-    fun increaseQuantity():CartItem = copy(quantity = quantity.increase())
+    fun increaseQuantity(): CartItem = copy(quantity = quantity.increase())
 
-    fun decreaseQuantity():CartItem = copy(quantity = quantity.decrease())
+    fun decreaseQuantity(): CartItem = copy(quantity = quantity.decrease())
 }

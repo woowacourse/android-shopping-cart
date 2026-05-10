@@ -17,8 +17,7 @@ class RoomRecentProductRepository(
             recentProducts.map { it.toDomain() }
         }
 
-    override suspend fun getMostRecentProduct(): Product? =
-        recentProductDao.getMostRecentProduct()?.toDomain()
+    override suspend fun getMostRecentProduct(): Product? = recentProductDao.getMostRecentProduct()?.toDomain()
 
     override suspend fun save(product: Product) {
         recentProductDao.upsert(product.toRecentProductEntity(currentTimeMillis()))

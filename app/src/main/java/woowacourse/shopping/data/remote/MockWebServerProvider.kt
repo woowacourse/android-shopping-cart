@@ -17,27 +17,29 @@ object MockWebServerProvider {
     @Synchronized
     private fun ensureStarted() {
         if (server != null) return
-        server = MockWebServer().apply {
-            dispatcher = createDispatcher()
-            start()
-        }
+        server =
+            MockWebServer().apply {
+                dispatcher = createDispatcher()
+                start()
+            }
     }
 
-    private fun createDispatcher(): Dispatcher = object : Dispatcher() {
-        override fun dispatch(request: RecordedRequest): MockResponse {
-            val path = request.path ?: return notFound()
-            return when {
-                path == "/products" -> jsonResponse(productsJson())
-                path.startsWith("/products/") -> {
-                    val id = path.removePrefix("/products/")
-                    val productJson = productJson(id) ?: return notFound()
-                    jsonResponse(productJson)
+    private fun createDispatcher(): Dispatcher =
+        object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                val path = request.path ?: return notFound()
+                return when {
+                    path == "/products" -> jsonResponse(productsJson())
+                    path.startsWith("/products/") -> {
+                        val id = path.removePrefix("/products/")
+                        val productJson = productJson(id) ?: return notFound()
+                        jsonResponse(productJson)
+                    }
+                    path == "/cart-items" -> jsonResponse("[]")
+                    else -> notFound()
                 }
-                path == "/cart-items" -> jsonResponse("[]")
-                else -> notFound()
             }
         }
-    }
 
     private fun jsonResponse(body: String): MockResponse =
         MockResponse()
@@ -47,18 +49,17 @@ object MockWebServerProvider {
 
     private fun notFound(): MockResponse = MockResponse().setResponseCode(404)
 
-    private fun productsJson(): String =
-        MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { it.toJson() }
+    private fun productsJson(): String = MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { it.toJson() }
 
-    private fun productJson(id: String): String? =
-        MockProductSeedData.products.firstOrNull { it.id == id }?.toJson()
+    private fun productJson(id: String): String? = MockProductSeedData.products.firstOrNull { it.id == id }?.toJson()
 
-    private fun woowacourse.shopping.domain.product.Product.toJson(): String = """
+    private fun woowacourse.shopping.domain.product.Product.toJson(): String =
+        """
         {
             "id": $id,
             "name": "${name.value}",
             "price": ${price.value},
             "imageUrl": "${imageUrl.value}"
         }
-    """.trimIndent()
+        """.trimIndent()
 }

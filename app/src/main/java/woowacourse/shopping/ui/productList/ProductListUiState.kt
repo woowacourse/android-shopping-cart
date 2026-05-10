@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productList
 
-import java.io.IOException
 import woowacourse.shopping.domain.product.Product
+import java.io.IOException
 
 sealed interface ProductListUiState {
     data object Loading : ProductListUiState

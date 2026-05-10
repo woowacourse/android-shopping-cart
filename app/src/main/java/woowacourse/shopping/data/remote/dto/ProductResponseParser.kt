@@ -7,5 +7,4 @@ import woowacourse.shopping.data.remote.HttpClientProvider
 fun String.toProductResponseDtos(): List<ProductResponseDto> =
     HttpClientProvider.json.decodeFromString(ListSerializer(ProductResponseDto.serializer()), this)
 
-fun String.toProductResponseDto(): ProductResponseDto =
-    HttpClientProvider.json.decodeFromString<ProductResponseDto>(this)
+fun String.toProductResponseDto(): ProductResponseDto = HttpClientProvider.json.decodeFromString<ProductResponseDto>(this)

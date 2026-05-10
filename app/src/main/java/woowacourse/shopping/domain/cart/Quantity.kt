@@ -1,9 +1,11 @@
 package woowacourse.shopping.domain.cart
 
 @JvmInline
-value class Quantity(val value: Int) {
-    init{
-        require(value >= MIN_VALUE){"수량은 0 이상이어야 합니다. value=$value"}
+value class Quantity(
+    val value: Int,
+) {
+    init {
+        require(value >= MIN_VALUE) { "수량은 0 이상이어야 합니다. value=$value" }
     }
 
     val isZero: Boolean
@@ -13,7 +15,7 @@ value class Quantity(val value: Int) {
 
     fun decrease(): Quantity = Quantity((value - 1).coerceAtLeast(MIN_VALUE))
 
-    companion object{
+    companion object {
         const val MIN_VALUE = 0
         val ONE = Quantity(1)
         val ZERO = Quantity(0)

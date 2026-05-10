@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.di.DataContainer
-import woowacourse.shopping.data.repository.cart.MockCartRepository
 
 class CartActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -19,7 +18,6 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
             val viewModel: CartViewModel =
                 viewModel(
                     factory = CartViewModel.factory(DataContainer.cartRepository),

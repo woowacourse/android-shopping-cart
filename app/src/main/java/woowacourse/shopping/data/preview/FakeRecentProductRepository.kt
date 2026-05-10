@@ -9,8 +9,7 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 class FakeRecentProductRepository : RecentProductRepository {
     private val recentProducts = MutableStateFlow<List<Product>>(emptyList())
 
-    override fun getRecentProducts(limit: Int): Flow<List<Product>> =
-        recentProducts.map { products -> products.take(limit) }
+    override fun getRecentProducts(limit: Int): Flow<List<Product>> = recentProducts.map { products -> products.take(limit) }
 
     override suspend fun getMostRecentProduct(): Product? = recentProducts.value.firstOrNull()
 

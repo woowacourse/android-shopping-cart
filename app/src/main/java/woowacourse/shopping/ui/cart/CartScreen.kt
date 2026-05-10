@@ -48,14 +48,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
-import woowacourse.shopping.di.DataContainer.cartRepository
-import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.domain.cart.CartItem
 
 @Composable
 fun CartScreen(
@@ -91,9 +91,9 @@ fun CartScreen(
                 CartItemList(
                     cartItems = state.cartItems,
                     modifier = Modifier.weight(1f),
-                    onRemoveClick =  { productId -> viewModel.removeCartItem(productId) },
-                    onIncrease = {productId -> viewModel.increase(productId)},
-                    onDecrease = {productId -> viewModel.decrease(productId)}
+                    onRemoveClick = { productId -> viewModel.removeCartItem(productId) },
+                    onIncrease = { productId -> viewModel.increase(productId) },
+                    onDecrease = { productId -> viewModel.decrease(productId) },
                 )
 
                 if (state.showPageNavigator) {
@@ -177,7 +177,7 @@ private fun CartItemList(
     ) {
         items(
             items = cartItems,
-            key = {it.product.id}
+            key = { it.product.id },
         ) { cartItem ->
             CartItemCard(
                 modifier =
@@ -193,7 +193,7 @@ private fun CartItemList(
                 },
                 onDecrease = {
                     onDecrease(cartItem.product.id)
-                }
+                },
             )
         }
     }
@@ -312,10 +312,10 @@ private fun CartItemCard(
 @Composable
 private fun QuantityStepper(
     quantity: Int,
-    onIncrease: ()->Unit,
+    onIncrease: () -> Unit,
     onDecrease: () -> Unit,
-    modifier:Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,

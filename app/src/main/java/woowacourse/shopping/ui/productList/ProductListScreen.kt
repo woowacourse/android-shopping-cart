@@ -18,8 +18,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items as lazyRowItems
-import androidx.compose.foundation.lazy.grid.items as lazyGridItems
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,6 +50,8 @@ import woowacourse.shopping.data.preview.FakeProductRepository
 import woowacourse.shopping.data.preview.FakeRecentProductRepository
 import woowacourse.shopping.data.repository.cart.MockCartRepository
 import woowacourse.shopping.domain.product.Product
+import androidx.compose.foundation.lazy.grid.items as lazyGridItems
+import androidx.compose.foundation.lazy.items as lazyRowItems
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,9 +66,10 @@ fun ProductListScreen(
 
     Column(modifier = modifier) {
         ProductListTopAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
             cartCount = cartCount,
             onClick = onCartClick,
         )
@@ -80,9 +81,10 @@ fun ProductListScreen(
 
             is ProductListUiState.Success -> {
                 ProductListContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(20.dp),
                     visibleProducts = state.products,
                     recentProducts = state.recentProducts,
                     quantitiesByProductId = state.quantitiesByProductId,
@@ -156,9 +158,10 @@ private fun RecentProductsSection(
             color = Color.Black,
         )
         LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             lazyRowItems(
@@ -181,17 +184,19 @@ private fun RecentProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .width(96.dp)
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .width(96.dp)
+                .clickable(onClick = onClick),
     ) {
         AsyncImage(
             model = product.imageUrl.value,
             contentDescription = product.name.value,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(96.dp)
-                .background(Color(0xFFF4F4F4)),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(96.dp)
+                    .background(Color(0xFFF4F4F4)),
             contentScale = ContentScale.Crop,
         )
         Text(
@@ -224,12 +229,13 @@ private fun CartBadgeIcon(
         }
         if (cartCount > 0) {
             Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 6.dp, end = 4.dp)
-                    .size(18.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFF1ABC9C)),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 6.dp, end = 4.dp)
+                        .size(18.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF1ABC9C)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -291,13 +297,14 @@ private fun ProductListTopAppBar(
                 onClick = onClick,
             )
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(APP_BAR_COLOR),
-            scrolledContainerColor = Color.Unspecified,
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White,
-            actionIconContentColor = Color.White,
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(APP_BAR_COLOR),
+                scrolledContainerColor = Color.Unspecified,
+                navigationIconContentColor = Color.White,
+                titleContentColor = Color.White,
+                actionIconContentColor = Color.White,
+            ),
         windowInsets = WindowInsets(0, 0, 0, 0),
     )
 }
@@ -339,9 +346,10 @@ private fun ProductCardGrid(
         if (isLoadingMore) {
             item(span = { GridItemSpan(2) }) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
@@ -350,13 +358,14 @@ private fun ProductCardGrid(
         } else if (canLoadMore) {
             item(span = { GridItemSpan(2) }) {
                 MoreButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp, horizontal = 20.dp)
-                        .background(
-                            color = Color(0xFF555555),
-                            shape = RoundedCornerShape(size = 45.dp),
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp, horizontal = 20.dp)
+                            .background(
+                                color = Color(0xFF555555),
+                                shape = RoundedCornerShape(size = 45.dp),
+                            ),
                 ) {
                     onMoreClick()
                 }
@@ -382,9 +391,10 @@ private fun ProductCard(
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "상품 이미지",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(154.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(154.dp),
                 contentScale = ContentScale.Crop,
             )
             ProductCardQuantityControl(
@@ -392,9 +402,10 @@ private fun ProductCard(
                 onAddClick = onAddClick,
                 onIncrease = onIncrease,
                 onDecrease = onDecrease,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp),
             )
         }
         ProductInfoColumn(
@@ -466,11 +477,12 @@ private fun AddCircleButton(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(32.dp)
-            .clip(CircleShape)
-            .background(Color(0xFFB0B0B0))
-            .clickable { onClick() },
+        modifier =
+            modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFB0B0B0))
+                .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -490,17 +502,19 @@ private fun InlineStepper(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .height(32.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .background(Color.White),
+        modifier =
+            modifier
+                .height(32.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(Color.White),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         StepperSign(symbol = "-", onClick = onDecrease)
         Box(
-            modifier = Modifier
-                .width(28.dp)
-                .height(32.dp),
+            modifier =
+                Modifier
+                    .width(28.dp)
+                    .height(32.dp),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -521,10 +535,11 @@ private fun StepperSign(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(width = 28.dp, height = 32.dp)
-            .clickable { onClick() }
-            .padding(horizontal = 6.dp),
+        modifier =
+            modifier
+                .size(width = 28.dp, height = 32.dp)
+                .clickable { onClick() }
+                .padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -541,10 +556,11 @@ private fun StepperSign(
 @Composable
 fun ProductListScreenPreview() {
     ProductListScreen(
-        viewModel = ProductListViewModel(
-            productRepository = FakeProductRepository(),
-            cartRepository = MockCartRepository(),
-            recentProductRepository = FakeRecentProductRepository(),
-        ),
+        viewModel =
+            ProductListViewModel(
+                productRepository = FakeProductRepository(),
+                cartRepository = MockCartRepository(),
+                recentProductRepository = FakeRecentProductRepository(),
+            ),
     )
 }

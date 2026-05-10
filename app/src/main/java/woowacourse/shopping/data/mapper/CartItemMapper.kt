@@ -12,12 +12,13 @@ import woowacourse.shopping.domain.product.ProductName
 
 fun CartItemEntity.toDomain(): CartItem =
     CartItem(
-        product = Product(
-            id = productId,
-            imageUrl = ImageUrl(imageUrl),
-            name = ProductName(name),
-            price = Price(price),
-        ),
+        product =
+            Product(
+                id = productId,
+                imageUrl = ImageUrl(imageUrl),
+                name = ProductName(name),
+                price = Price(price),
+            ),
         quantity = Quantity(quantity),
     )
 

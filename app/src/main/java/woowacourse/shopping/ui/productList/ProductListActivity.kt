@@ -21,11 +21,12 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             val viewModel: ProductListViewModel =
                 viewModel(
-                    factory = ProductListViewModel.factory(
-                        productRepository = DataContainer.productRepository,
-                        cartRepository = DataContainer.cartRepository,
-                        recentProductRepository = DataContainer.recentProductRepository,
-                    ),
+                    factory =
+                        ProductListViewModel.factory(
+                            productRepository = DataContainer.productRepository,
+                            cartRepository = DataContainer.cartRepository,
+                            recentProductRepository = DataContainer.recentProductRepository,
+                        ),
                 )
 
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

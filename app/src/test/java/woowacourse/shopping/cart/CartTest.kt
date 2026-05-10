@@ -15,44 +15,49 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartTest {
-    private val product1 = Product(
-        id = "p1",
-        name = ProductName("우아한두유"),
-        price = Price(3000),
-        imageUrl = ImageUrl("https://velog.io"),
-    )
+    private val product1 =
+        Product(
+            id = "p1",
+            name = ProductName("우아한두유"),
+            price = Price(3000),
+            imageUrl = ImageUrl("https://velog.io"),
+        )
 
-    private val product2 = Product(
-        id = "p2",
-        name = ProductName("우아한물"),
-        price = Price(1000),
-        imageUrl = ImageUrl("https://naver.com"),
-    )
+    private val product2 =
+        Product(
+            id = "p2",
+            name = ProductName("우아한물"),
+            price = Price(1000),
+            imageUrl = ImageUrl("https://naver.com"),
+        )
 
-    private val product3 = Product(
-        id = "p3",
-        name = ProductName("우아한우유"),
-        price = Price(2000),
-        imageUrl = ImageUrl("https://google.com"),
-    )
+    private val product3 =
+        Product(
+            id = "p3",
+            name = ProductName("우아한우유"),
+            price = Price(2000),
+            imageUrl = ImageUrl("https://google.com"),
+        )
 
     private val cartItem1 = CartItem(product = product1)
     private val cartItem2 = CartItem(product = product2)
     private val cartItem3 = CartItem(product = product3)
 
-    private val cartItemsValue = CartItems(
-        values = listOf(cartItem1, cartItem2, cartItem3),
-    )
+    private val cartItemsValue =
+        CartItems(
+            values = listOf(cartItem1, cartItem2, cartItem3),
+        )
 
     @Test
     fun `장바구니에 상품을 추가했을 때 장바구니에 추가된다`() {
         val cart = Cart(cartItems = cartItemsValue)
-        val targetProduct = Product(
-            id = "p4",
-            name = ProductName("우아한스무디"),
-            price = Price(1000),
-            imageUrl = ImageUrl("https://daum.net"),
-        )
+        val targetProduct =
+            Product(
+                id = "p4",
+                name = ProductName("우아한스무디"),
+                price = Price(1000),
+                imageUrl = ImageUrl("https://daum.net"),
+            )
 
         val addedCart = cart.addProduct(targetProduct)
 

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.domain.cart.CartItem
 import woowacourse.shopping.domain.cart.CartItems
 import woowacourse.shopping.domain.cart.Quantity
 import woowacourse.shopping.domain.product.ImageUrl
@@ -13,13 +12,16 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartItemsTest {
-
-    private fun product(id: String, price: Int = 10_000): Product = Product(
-        id = id,
-        imageUrl = ImageUrl("https://example.com/$id.png"),
-        name = ProductName("상품-$id"),
-        price = Price(price),
-    )
+    private fun product(
+        id: String,
+        price: Int = 10_000,
+    ): Product =
+        Product(
+            id = id,
+            imageUrl = ImageUrl("https://example.com/$id.png"),
+            name = ProductName("상품-$id"),
+            price = Price(price),
+        )
 
     @Test
     fun `addProduct - 새 상품을 추가하면 수량 1로 담긴다`() {
@@ -62,9 +64,10 @@ class CartItemsTest {
 
     @Test
     fun `decrease - 담긴 상품의 수량이 1 감소한다`() {
-        val cartItems = CartItems()
-            .addProduct(product("p1"))
-            .increase("p1")
+        val cartItems =
+            CartItems()
+                .addProduct(product("p1"))
+                .increase("p1")
 
         val result = cartItems.decrease("p1")
 
@@ -83,9 +86,10 @@ class CartItemsTest {
 
     @Test
     fun `remove - 지정한 상품이 컬렉션에서 제거된다`() {
-        val cartItems = CartItems()
-            .addProduct(product("p1"))
-            .addProduct(product("p2"))
+        val cartItems =
+            CartItems()
+                .addProduct(product("p1"))
+                .addProduct(product("p2"))
 
         val result = cartItems.remove("p1")
 
@@ -103,23 +107,23 @@ class CartItemsTest {
 
     @Test
     fun `totalQuantity - 담긴 모든 상품의 수량 합계를 반환한다`() {
-        val cartItems = CartItems()
-            .addProduct(product("p1"))
-            .addProduct(product("p1"))
-            .addProduct(product("p2"))
+        val cartItems =
+            CartItems()
+                .addProduct(product("p1"))
+                .addProduct(product("p1"))
+                .addProduct(product("p2"))
 
         assertEquals(3, cartItems.totalQuantity)
     }
 
     @Test
     fun `totalPrice - 담긴 모든 상품의 가격 합계를 반환한다`() {
-        val cartItems = CartItems()
-            .addProduct(product("p1", price = 10_000))
-            .addProduct(product("p1", price = 10_000))
-            .addProduct(product("p2", price = 5_000))
+        val cartItems =
+            CartItems()
+                .addProduct(product("p1", price = 10_000))
+                .addProduct(product("p1", price = 10_000))
+                .addProduct(product("p2", price = 5_000))
 
         assertEquals(25_000, cartItems.totalPrice)
     }
-
-
 }

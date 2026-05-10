@@ -51,7 +51,6 @@ import woowacourse.shopping.data.preview.FakeRecentProductRepository
 import woowacourse.shopping.data.repository.cart.MockCartRepository
 import woowacourse.shopping.domain.product.Product
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
@@ -320,9 +319,10 @@ private fun LastViewedProductSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Text(
             text = "마지막으로 본 상품",
@@ -331,13 +331,14 @@ private fun LastViewedProductSection(
             color = Color(0xFF12B89A),
         )
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White)
-                .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.White)
+                    .clickable(onClick = onClick)
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
         ) {
             Text(
                 text = product.name.value,

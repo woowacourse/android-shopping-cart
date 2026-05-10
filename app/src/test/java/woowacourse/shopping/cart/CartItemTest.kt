@@ -12,13 +12,13 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductName
 
 class CartItemTest {
-
-    private val product = Product(
-        id = "product-1",
-        imageUrl = ImageUrl("https://example.com/image.png"),
-        name = ProductName("PET보틀-정사각형"),
-        price = Price(10_000),
-    )
+    private val product =
+        Product(
+            id = "product-1",
+            imageUrl = ImageUrl("https://example.com/image.png"),
+            name = ProductName("PET보틀-정사각형"),
+            price = Price(10_000),
+        )
 
     @Test
     fun `totalPrice는 상품 가격과 수량의 곱이다`() {
