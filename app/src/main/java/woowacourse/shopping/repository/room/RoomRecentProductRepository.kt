@@ -9,6 +9,10 @@ import woowacourse.shopping.repository.RecentProductRepository
 class RoomRecentProductRepository(
     private val recentProductDao: RecentProductDao,
 ) : RecentProductRepository {
+    companion object {
+        private const val MAX_RECENT_PRODUCTS = 10
+    }
+
     override suspend fun recordView(productId: ProductId) {
         recentProductDao.upsert(
             RecentProductEntity.fromDomain(
@@ -18,6 +22,7 @@ class RoomRecentProductRepository(
                 ),
             ),
         )
+        recentProductDao.trimTo(MAX_RECENT_PRODUCTS)
     }
 
     override suspend fun getRecentProducts(limit: Int): List<RecentProduct> =

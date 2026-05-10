@@ -5,10 +5,10 @@ import okhttp3.OkHttpClient
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.repository.http.HttpProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
 import woowacourse.shopping.repository.network.ConnectivityManagerNetworkMonitor
 import woowacourse.shopping.repository.network.NetworkMonitor
 import woowacourse.shopping.repository.room.RoomCartRepository
+import woowacourse.shopping.repository.room.RoomRecentProductRepository
 
 object ShoppingRepositoryProvider {
     private val httpClient: OkHttpClient = OkHttpClient()
@@ -33,7 +33,7 @@ object ShoppingRepositoryProvider {
 
         val database = ShoppingDatabase.getInstance(context)
         cartRepository = RoomCartRepository(database.cartItemDao())
-        recentProductRepository = InMemoryRecentProductRepository
+        recentProductRepository = RoomRecentProductRepository(database.recentProductDao())
         networkMonitor = ConnectivityManagerNetworkMonitor(context)
     }
 }

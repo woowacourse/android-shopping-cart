@@ -113,7 +113,7 @@ class HttpProductRepository(
 
         return try {
             client.newCall(request).execute().use { response ->
-                val responseBody = response.body?.string()
+                val responseBody = response.body.string()
 
                 if (!response.isSuccessful) {
                     throw ProductResponseException(

@@ -38,12 +38,7 @@ class ProductDetailActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val receivedProductId =
-            intent
-                .getStringExtra(PUT_EXTRA_KEY_PRODUCT_ID)
-                ?.let { ProductId(UUID.fromString(it)) }
-
+        val receivedProductId = parseProductId(intent)
         if (receivedProductId == null) {
             finish()
             return
@@ -80,4 +75,11 @@ class ProductDetailActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun parseProductId(intent: Intent): ProductId? =
+        runCatching {
+            intent
+                .getStringExtra(PUT_EXTRA_KEY_PRODUCT_ID)
+                ?.let { ProductId(UUID.fromString(it)) }
+        }.getOrNull()
 }
