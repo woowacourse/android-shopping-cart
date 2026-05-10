@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.room.Room
 import woowacourse.shopping.data.ProductFixture
 import woowacourse.shopping.data.local.database.ShoppingDatabase
+import woowacourse.shopping.data.local.datastore.dataStore
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.LastViewedProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.LastViewedProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 
@@ -19,6 +22,9 @@ object AppContainer {
         private set
 
     lateinit var recentlyViewedProductRepository: RecentlyViewedProductRepository
+        private set
+
+    lateinit var lastViewedProductRepository: LastViewedProductRepository
         private set
 
     fun initialize(context: Context) {
@@ -39,6 +45,12 @@ object AppContainer {
         recentlyViewedProductRepository =
             RecentlyViewedProductRepositoryImpl(
                 dao = database.recentlyViewedProductDao(),
+                productRepository = productRepository,
+            )
+
+        lastViewedProductRepository =
+            LastViewedProductRepositoryImpl(
+                dataStore = context.dataStore,
                 productRepository = productRepository,
             )
     }

@@ -84,7 +84,10 @@ class ProductDetailViewModelTest {
             val viewModel = createViewModel(recentlyViewedPRepository = recentlyViewedProductRepository)
             val product = ProductFixture.productList.first()
 
-            viewModel.viewProduct(product.productId)
+            viewModel.viewProduct(
+                productId = product.productId,
+                shouldShowLastViewedProduct = true,
+            )
             advanceUntilIdle()
 
             val recentlyViewedProducts = recentlyViewedProductRepository.getRecentlyViewedProducts()
@@ -92,9 +95,91 @@ class ProductDetailViewModelTest {
             assertThat(recentlyViewedProducts.productItems).containsExactly(product)
         }
 
+    @Test
+    fun `상품을 조회하면 현재 상품을 마지막으로 본 상품으로 저장한다`() =
+        runTest {
+            val lastViewedProductRepository = FakeLastViewedProductRepository()
+            val viewModel = createViewModel(lastViewedProductRepository = lastViewedProductRepository)
+            val product = ProductFixture.productList.first()
+
+            viewModel.viewProduct(
+                productId = product.productId,
+                shouldShowLastViewedProduct = true,
+            )
+
+            advanceUntilIdle()
+
+            val lastViewedProduct = lastViewedProductRepository.getLastViewedProduct()
+
+            assertThat(lastViewedProduct).isEqualTo(product)
+        }
+
+    @Test
+    fun `이전에 본 상품이 있으면 마지막으로 본 상품으로 노출한다`() =
+        runTest {
+            val previousProduct = ProductFixture.productList[0]
+            val currentProduct = ProductFixture.productList[1]
+            val lastViewedProductRepository = FakeLastViewedProductRepository(previousProduct)
+
+            val viewModel =
+                createViewModel(
+                    lastViewedProductRepository = lastViewedProductRepository,
+                )
+
+            viewModel.viewProduct(
+                productId = currentProduct.productId,
+                shouldShowLastViewedProduct = true,
+            )
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.lastViewedProduct).isEqualTo(previousProduct)
+        }
+
+    @Test
+    fun `마지막으로 본 상품에서 진입하면 마지막으로 본 상품을 노출하지 않는다`() =
+        runTest {
+            val previousProduct = ProductFixture.productList[0]
+            val currentProduct = ProductFixture.productList[1]
+            val lastViewedProductRepository = FakeLastViewedProductRepository(previousProduct)
+
+            val viewModel =
+                createViewModel(
+                    lastViewedProductRepository = lastViewedProductRepository,
+                )
+
+            viewModel.viewProduct(
+                productId = currentProduct.productId,
+                shouldShowLastViewedProduct = false,
+            )
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.lastViewedProduct).isNull()
+        }
+
+    @Test
+    fun `현재 상품과 마지막으로 본 상품이 같으면 마지막으로 본 상품을 노출하지 않는다`() =
+        runTest {
+            val product = ProductFixture.productList[0]
+            val lastViewedProductRepository = FakeLastViewedProductRepository(product)
+
+            val viewModel =
+                createViewModel(
+                    lastViewedProductRepository = lastViewedProductRepository,
+                )
+
+            viewModel.viewProduct(
+                productId = product.productId,
+                shouldShowLastViewedProduct = true,
+            )
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.lastViewedProduct).isNull()
+        }
+
     private fun createViewModel(
         cartRepository: FakeCartRepository = FakeCartRepository(Cart()),
         recentlyViewedPRepository: FakeRecentlyViewedProductRepository = FakeRecentlyViewedProductRepository(),
+        lastViewedProductRepository: FakeLastViewedProductRepository = FakeLastViewedProductRepository(),
     ): ProductDetailViewModel =
         ProductDetailViewModel(
             productRepository =
@@ -103,5 +188,6 @@ class ProductDetailViewModelTest {
                 ),
             cartRepository = cartRepository,
             recentlyViewedProductRepository = recentlyViewedPRepository,
+            lastViewedProductRepository = lastViewedProductRepository,
         )
 }
