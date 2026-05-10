@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.screens.productdetail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -18,6 +19,12 @@ class ProductDetailActivity : ComponentActivity() {
                 ProductDetailScreen(
                     productId = productId,
                     onDismiss = { finish() },
+                    onNavigateToProduct = { id ->
+                        val intent = Intent(this, ProductDetailActivity::class.java)
+                        intent.putExtra(KEY_PRODUCT_ID, id)
+                        startActivity(intent)
+                        finish()
+                    },
                 )
             }
         }

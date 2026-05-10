@@ -14,11 +14,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRecentRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val productRecentRepository: ProductRecentRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -30,7 +32,15 @@ class ProductDetailViewModel(
                 return@launchWithLoading
             }
             val product = productRepository.getProductById(productId)
-            _uiState.update { it.copy(product = product) }
+            val latestProduct = productRecentRepository.getLatestViewedProduct()
+
+            _uiState.update {
+                it.copy(
+                    product = product,
+                    latestProduct = if (product.id == latestProduct?.productId) null else latestProduct,
+                )
+            }
+            productRecentRepository.insertRecentProduct(productId)
         }
 
     fun plusAmount() {
@@ -79,6 +89,7 @@ class ProductDetailViewModel(
                 ProductDetailViewModel(
                     productRepository = application.productRepository,
                     cartRepository = application.cartRepository,
+                    productRecentRepository = application.productRecentRepository,
                 )
             }
         }
