@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items as lazyRowItems
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items as lazyRowItems
 import androidx.compose.foundation.lazy.grid.items as lazyGridItems
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,8 +50,8 @@ import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.data.preview.FakeProductRepository
 import woowacourse.shopping.data.preview.FakeRecentProductRepository
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.domain.product.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,9 +64,7 @@ fun ProductListScreen(
     val uiState by viewModel.uiState.collectAsState()
     val cartCount = (uiState as? ProductListUiState.Success)?.totalCartCount ?: 0
 
-    Column(
-        modifier = modifier,
-    ) {
+    Column(modifier = modifier) {
         ProductListTopAppBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,7 +99,7 @@ fun ProductListScreen(
             is ProductListUiState.Error -> {
                 ErrorContent(
                     modifier = Modifier.fillMaxSize(),
-                    message = state.throwable.message ?: "상품 목록을 불러오지 못했어요.",
+                    message = state.message,
                 )
             }
         }
@@ -207,6 +205,7 @@ private fun RecentProductCard(
         )
     }
 }
+
 @Composable
 private fun CartBadgeIcon(
     cartCount: Int,
@@ -243,7 +242,6 @@ private fun CartBadgeIcon(
         }
     }
 }
-
 
 @Composable
 private fun LoadingContent(modifier: Modifier = Modifier) {

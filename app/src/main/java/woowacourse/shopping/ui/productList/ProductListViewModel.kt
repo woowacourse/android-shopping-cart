@@ -91,7 +91,7 @@ class ProductListViewModel(
                         isLoadingMore = false,
                     )
                 }.onFailure { throwable ->
-                    _uiState.value = ProductListUiState.Error(throwable)
+                    _uiState.value = ProductListUiState.Error.from(throwable)
                 }
             isLoading = false
         }
