@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.repository.CatalogProductRepository
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.stateholder.retainCatalogScreenStateHolder
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
@@ -52,11 +53,12 @@ class MainActivity : ComponentActivity() {
             }
             if (savedCart != null) cart = savedCart
         }
+        val catalogRepository = CatalogProductRepository(MockCatalog)
 
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val stateHolder = retainCatalogScreenStateHolder(cart)
+                    val stateHolder = retainCatalogScreenStateHolder(catalogRepository, cart)
 
                     LaunchedEffect(cart) {
                         stateHolder.updateCart(cart)

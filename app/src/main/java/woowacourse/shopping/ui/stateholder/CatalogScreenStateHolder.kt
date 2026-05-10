@@ -10,6 +10,8 @@ import woowacourse.shopping.MockCatalog
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.repository.CatalogProductRepository
+import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
 data class CatalogItemUiState(
@@ -18,7 +20,7 @@ data class CatalogItemUiState(
 )
 
 class CatalogScreenStateHolder(
-    val mockingCatalog: MockCatalog,
+    private val productRepository: ProductRepository,
     initialCart: Cart = Cart(CartProducts(emptyList())),
 ) {
     private val _catalog = mutableStateOf(emptyList<Product>())
@@ -73,7 +75,7 @@ class CatalogScreenStateHolder(
 
     private fun loadProducts() {
         val products = runBlocking {
-            mockingCatalog.loadProducts(recentItemIndex, MAX_PRODUCT).await()
+            productRepository.getProducts(recentItemIndex, MAX_PRODUCT)
         }
         _catalog.value += products
     }
@@ -84,8 +86,11 @@ class CatalogScreenStateHolder(
 }
 
 @Composable
-fun retainCatalogScreenStateHolder(initialCart: Cart): CatalogScreenStateHolder =
+fun retainCatalogScreenStateHolder(
+    repository: ProductRepository,
+    initialCart: Cart
+): CatalogScreenStateHolder =
     retain(Unit) {
-        CatalogScreenStateHolder(MockCatalog, initialCart)
+        CatalogScreenStateHolder(repository, initialCart)
     }
 
