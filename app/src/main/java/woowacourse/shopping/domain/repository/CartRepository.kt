@@ -9,20 +9,18 @@ interface CartRepository {
 
     fun getCartItem(productId: String): Flow<CartItem?>
 
-    fun updateCart(cartItem: CartItem)
+    suspend fun updateCart(cartItem: CartItem)
 
-    fun deleteCartItem(productId: String)
+    suspend fun deleteCartItem(productId: String)
 
-    fun increaseCartItemQuantity(productId: String)
+    suspend fun increaseCartItemQuantity(productId: String)
 
-    fun decreaseCartItemQuantity(productId: String)
+    suspend fun decreaseCartItemQuantity(productId: String)
 
-    fun getCartItemCount(): Int
+    suspend fun getCartItemCount(): Int
 
-    fun getPagingCartItems(
+    suspend fun getPagingCartItems(
         page: Int,
         pageSize: Int = 5,
     ): CartItems
-
-    fun saveCartItems(cartItems: CartItems)
 }

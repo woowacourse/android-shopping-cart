@@ -14,13 +14,14 @@ interface CartDao {
     fun getCartItem(productId: String): Flow<CartEntity?>
 
     @Upsert
-    fun upsert(cartEntity: CartEntity)
+    suspend fun upsert(cartEntity: CartEntity)
+
     @Query("DELETE FROM cart_items WHERE productId = :productId")
-    fun deleteCartItem(productId: String)
+    suspend fun deleteCartItem(productId: String)
 
     @Query("SELECT COUNT(*) FROM cart_items")
-    fun getCartItemCount(): Int
+    suspend fun getCartItemCount(): Int
 
     @Query("SELECT * FROM cart_items ORDER BY rowid ASC LIMIT :limit OFFSET :offset")
-    fun getPagingCartItems(limit: Int, offset: Int): List<CartEntity>
+    suspend fun getPagingCartItems(limit: Int, offset: Int): List<CartEntity>
 }
