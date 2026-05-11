@@ -2,9 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization") version "2.3.20"
 }
 
 android {
@@ -67,12 +67,12 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.intents)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
-    testImplementation("androidx.room:room-testing:2.8.4")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    testImplementation("org.assertj:assertj-core:3.26.3")
-    androidTestImplementation("org.assertj:assertj-core:3.26.3")
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("com.squareup.okhttp3:okhttp:5.3.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
-    implementation("com.squareup.okhttp3:mockwebserver:5.3.0")
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.assertj.core)
+    androidTestImplementation(libs.assertj.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.mockwebserver)
+    implementation(libs.kotlinx.serialization.json)
 }
