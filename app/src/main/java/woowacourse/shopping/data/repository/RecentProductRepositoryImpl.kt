@@ -8,8 +8,7 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
-class
-RecentProductRepositoryImpl(
+class RecentProductRepositoryImpl(
     private val recentProductDao: RecentProductDao,
     private val productRepository: ProductRepository,
 ) : RecentProductRepository {

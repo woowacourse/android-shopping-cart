@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.mockwebserver)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.junit.ktx)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
