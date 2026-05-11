@@ -59,7 +59,6 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productdetail.DetailProductActivity
-import woowacourse.shopping.productdetail.DetailProductActivity.Companion.EXTRA_HIDE_LAST_VIEWED_PRODUCT
 import woowacourse.shopping.productlist.ProductListActivity.Companion.CHANGED_PRODUCT_IDS
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.ui.WonMoney
@@ -130,14 +129,12 @@ fun ProductListScreen(
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
                     .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
-                    .putExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, isLatestViewedProduct),
             )
         },
         onViewedProductClick = {
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
                     .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
-                    .putExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, true),
             )
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,

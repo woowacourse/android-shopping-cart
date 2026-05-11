@@ -55,7 +55,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 @Composable
 fun DetailProductScreen(
     productId: String,
-    hideLastViewedProduct: Boolean,
     onNavigateToLastViewedProduct: (String) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -69,11 +68,8 @@ fun DetailProductScreen(
 ) {
     val uiState by detailProductViewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(productId, hideLastViewedProduct) {
-        detailProductViewModel.loadProduct(
-            productId = productId,
-            hideLastViewedProduct = hideLastViewedProduct,
-        )
+    LaunchedEffect(productId) {
+        detailProductViewModel.loadProduct(productId = productId)
     }
 
     DetailProductContent(

@@ -192,7 +192,7 @@ class ProductListViewModel(
     }
 
     private suspend fun getViewedProductUiModels(): List<ViewedProductUiModel> =
-        viewedProductRepository.getViewedProducts(0, VIEWED_PRODUCT_SIZE).map { viewedProduct ->
+        viewedProductRepository.getRecentlyViewedProducts(0, VIEWED_PRODUCT_SIZE).map { viewedProduct ->
             ViewedProductUiModel(
                 productUiModel = viewedProduct.product.toUiModel(),
                 viewedAt = viewedProduct.viewedAt,

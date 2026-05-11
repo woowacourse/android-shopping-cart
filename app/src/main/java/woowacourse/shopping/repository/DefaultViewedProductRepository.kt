@@ -1,27 +1,28 @@
 package woowacourse.shopping.repository
 
+import woowacourse.shopping.model.ViewedProduct
 import woowacourse.shopping.repository.dao.ViewedProductDao
 
-class DatabaseViewedProductRepository(
+class DefaultViewedProductRepository(
     private val productRepository: ProductRepository,
     private val viewedProductDao: ViewedProductDao,
 ) : ViewedProductRepository {
-    override suspend fun addViewedProductByProductId(productId: String) {
+    override suspend fun addViewedProduct(productId: String) {
         viewedProductDao.addViewedProductByProductId(
             productId = productId,
             viewedAt = System.currentTimeMillis(),
         )
     }
 
-    override suspend fun getViewedProducts(
+    override suspend fun getRecentlyViewedProducts(
         offset: Int,
         size: Int,
     ): List<ViewedProduct> =
-        viewedProductDao.getViewedProducts(offset, size).mapNotNull { viewedProduct ->
-            productRepository.getProduct(viewedProduct.productId)?.let { product ->
+        viewedProductDao.getViewedProducts(offset, size).mapNotNull { viewedProductEntity ->
+            productRepository.getProduct(viewedProductEntity.productId)?.let { product ->
                 ViewedProduct(
                     product = product,
-                    viewedAt = viewedProduct.viewedAt,
+                    viewedAt = viewedProductEntity.viewedAt,
                 )
             }
         }

@@ -43,25 +43,17 @@ class DetailProductViewModel(
 
     val uiState = _uiState.asStateFlow()
 
-    fun loadProduct(
-        productId: String,
-        hideLastViewedProduct: Boolean,
-    ) {
+    fun loadProduct(productId: String) {
         viewModelScope.launch {
             val product = productRepository.getProduct(productId) ?: return@launch
-            val lastViewedProductUiModel =
-                if (hideLastViewedProduct) {
-                    null
-                } else {
-                    getLastViewedProductUiModel(product.id)
-                }
-            viewedProductRepository.addViewedProductByProductId(product.id)
 
             _uiState.value =
                 DetailProductUiState(
                     productUiModel = product.toUiModel(),
-                    lastViewedProductUiModel = lastViewedProductUiModel,
+                    lastViewedProductUiModel = getMostRecentlyViewedProductUiModel(product.id),
                 )
+
+            viewedProductRepository.addViewedProduct(product.id)
         }
     }
 
@@ -96,12 +88,13 @@ class DetailProductViewModel(
         }
     }
 
-    private suspend fun getLastViewedProductUiModel(currentProductId: String): ProductUiModel? =
-        viewedProductRepository
-            .getViewedProducts(offset = 0, size = LAST_VIEWED_PRODUCT_SEARCH_SIZE)
-            .firstOrNull { viewedProduct -> viewedProduct.product.id != currentProductId }
-            ?.product
-            ?.toUiModel()
+    private suspend fun getMostRecentlyViewedProductUiModel(productId: String): ProductUiModel? {
+        val viewedProduct = viewedProductRepository
+            .getRecentlyViewedProducts(offset = 0, size = 1)
+            .firstOrNull { viewedProduct -> viewedProduct.product.id != productId } ?: return null
+        return viewedProduct.product.toUiModel()
+    }
+
 
     private suspend fun Product.toUiModel(): ProductUiModel {
         val shoppingCartItem = shoppingCartRepository.getCartItem(id)
@@ -115,8 +108,6 @@ class DetailProductViewModel(
     }
 
     companion object {
-        private const val LAST_VIEWED_PRODUCT_SEARCH_SIZE = 10
-
         fun factory(shoppingApplication: ShoppingApplication) =
             viewModelFactory {
                 initializer {

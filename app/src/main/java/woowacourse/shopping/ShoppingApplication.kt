@@ -9,7 +9,7 @@ import mockwebserver3.RecordedRequest
 import woowacourse.shopping.repository.AndroidShoppingDatabase
 import woowacourse.shopping.repository.DefaultProductRepository
 import woowacourse.shopping.repository.DefaultShoppingCartRepository
-import woowacourse.shopping.repository.DatabaseViewedProductRepository
+import woowacourse.shopping.repository.DefaultViewedProductRepository
 import woowacourse.shopping.repository.ProductRemoteDataSource
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
@@ -38,7 +38,7 @@ class ShoppingApplication : Application() {
     }
 
     val viewedProductRepository: ViewedProductRepository by lazy {
-        DatabaseViewedProductRepository(productRepository, database.viewedProductDao())
+        DefaultViewedProductRepository(productRepository, database.viewedProductDao())
     }
 
     override fun onCreate() {

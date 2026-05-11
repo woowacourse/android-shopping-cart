@@ -25,21 +25,15 @@ class DetailProductActivity : ComponentActivity() {
                     Text(stringResource(R.string.product_not_found_message))
                     return@AndroidShoppingTheme
                 }
-                val hideLastViewedProduct =
-                    intent.getBooleanExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, false)
-
                 DetailProductScreen(
                     productId = productId,
-                    hideLastViewedProduct = hideLastViewedProduct,
                     onNavigateToLastViewedProduct = { lastViewedProductId ->
-                        val intent =
+                        startActivity(
                             Intent(this, DetailProductActivity::class.java)
                                 .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, lastViewedProductId)
-                                .putExtra(EXTRA_HIDE_LAST_VIEWED_PRODUCT, true)
                                 .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
-
-                        startActivity(intent)
-                        finish()
+                        )
+                        this.finish()
                     },
                     onBackClick = {
                         setResult(
@@ -54,9 +48,5 @@ class DetailProductActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    companion object {
-        const val EXTRA_HIDE_LAST_VIEWED_PRODUCT = "hideLastViewedProduct"
     }
 }

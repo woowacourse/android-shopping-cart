@@ -1,16 +1,11 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.model.Product
-
-data class ViewedProduct(
-    val product: Product,
-    val viewedAt: Long,
-)
+import woowacourse.shopping.model.ViewedProduct
 
 interface ViewedProductRepository {
-    suspend fun addViewedProductByProductId(productId: String)
+    suspend fun addViewedProduct(productId: String)
 
-    suspend fun getViewedProducts(
+    suspend fun getRecentlyViewedProducts(
         offset: Int,
         size: Int,
     ): List<ViewedProduct>
