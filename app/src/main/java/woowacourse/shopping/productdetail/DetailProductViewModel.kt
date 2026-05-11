@@ -16,6 +16,7 @@ import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.repository.ViewedProductRepository
 import woowacourse.shopping.ui.WonMoney
+import kotlin.math.max
 
 data class DetailProductUiState(
     val productUiModel: ProductUiModel,
@@ -60,32 +61,28 @@ class DetailProductViewModel(
     }
 
     fun increaseItemQuantity(quantity: Int) {
-        viewModelScope.launch {
-            shoppingCartRepository.addItemToCart(_uiState.value.productUiModel.id, quantity)
-            updateQuantity(_uiState.value.productUiModel.id)
-        }
+        updateQuantity(quantity)
     }
 
     fun decreaseItemQuantity(quantity: Int) {
+        updateQuantity(-quantity)
+    }
+
+    fun addSelectedQuantityToCart(onComplete: () -> Unit) {
         viewModelScope.launch {
-            shoppingCartRepository.decreaseItemQuantity(_uiState.value.productUiModel.id, quantity)
-            updateQuantity(_uiState.value.productUiModel.id)
+            val product = _uiState.value.productUiModel
+            shoppingCartRepository.addItemToCart(product.id, product.quantity)
+            onComplete()
         }
     }
 
-    private suspend fun updateQuantity(productId: String) {
-        val shoppingCartItem = shoppingCartRepository.getCartItem(productId)
-        if (shoppingCartItem == null) {
-            _uiState.update { state ->
-                state.copy(
-                    productUiModel = state.productUiModel.copy(quantity = 0),
-                )
-            }
-            return
-        }
+    private fun updateQuantity(quantity: Int) {
         _uiState.update { state ->
             state.copy(
-                productUiModel = state.productUiModel.copy(quantity = shoppingCartItem.quantity.value),
+                productUiModel =
+                    state.productUiModel.copy(
+                        quantity = max(1, state.productUiModel.quantity + quantity),
+                    ),
             )
         }
     }
@@ -103,14 +100,13 @@ class DetailProductViewModel(
     }
 
 
-    private suspend fun Product.toUiModel(): ProductUiModel {
-        val shoppingCartItem = shoppingCartRepository.getCartItem(id)
+    private fun Product.toUiModel(): ProductUiModel {
         return ProductUiModel(
             id = id,
             name = getTitle(),
             price = WonMoney(getPrice()),
             imageUrl = imageUrl,
-            quantity = shoppingCartItem?.quantity?.value ?: 0,
+            quantity = 1,
         )
     }
 

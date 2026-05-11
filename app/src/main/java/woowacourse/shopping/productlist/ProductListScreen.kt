@@ -57,7 +57,6 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productdetail.DetailProductActivity
-import woowacourse.shopping.productlist.ProductListActivity.Companion.CHANGED_PRODUCT_IDS
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.component.MoreButton
@@ -88,17 +87,15 @@ fun ProductListScreen(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        val changedProductIds = result.data?.getStringArrayListExtra(CHANGED_PRODUCT_IDS) ?: emptyList()
         productListViewModel.loadViewedProducts()
-        productListViewModel.updateProducts(changedProductIds)
+        productListViewModel.updateProducts()
     }
 
     val shoppingCartLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        val changedProductIds = result.data?.getStringArrayListExtra(CHANGED_PRODUCT_IDS) ?: emptyList()
-        productListViewModel.updateProducts(changedProductIds)
+        productListViewModel.updateProducts()
     }
 
     ProductListContent(
@@ -154,19 +151,29 @@ fun ProductListContent(
             columns = GridCells.Fixed(2),
             contentPadding = innerPadding,
             horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 5.dp)
         ) {
             if (viewedProductUiModels.isNotEmpty()) {
                 item(
                     span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    RecentViewedProducts(
-                        products = viewedProductUiModels,
-                        onProductClick = onViewedProductClick,
-                        modifier =
-                            Modifier
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        RecentViewedProducts(
+                            products = viewedProductUiModels,
+                            onProductClick = onViewedProductClick,
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 12.dp),
-                    )
+                                .padding(top=20.dp, bottom = 40.dp),
+                        )
+
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            thickness = 10.dp,
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                        )
+                    }
                 }
             }
 
@@ -239,24 +246,22 @@ private fun RecentViewedProducts(
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
-    val lastViewedAt = products.firstOrNull()?.viewedAt
+    val lastViewedAt = products.maxBy { it.viewedAt }
 
     LaunchedEffect(lastViewedAt) {
-        if (lastViewedAt != null) {
-            lazyListState.scrollToItem(0)
-        }
+        lazyListState.scrollToItem(0)
     }
 
     Column(modifier = modifier) {
         Text(
             text = "최근 본 상품",
             color = Color.Black,
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier =
                 Modifier
                     .padding(bottom = 8.dp)
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
         )
 
         LazyRow(
@@ -274,15 +279,6 @@ private fun RecentViewedProducts(
                 )
             }
         }
-
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.surfaceContainerHighest,
-            thickness = 12.dp,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp)
-        )
     }
 }
 
@@ -397,7 +393,7 @@ private fun ProductListContentPreview() {
                 listOf(
                     ViewedProductUiModel(
                         id = "1",
-                        name = "PET보틀-정사각",
+                        name = "PET보틀-정사각형빈디",
                         imageUrl = "",
                         viewedAt = 1L,
                     ),

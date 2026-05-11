@@ -44,7 +44,7 @@ fun ShoppingCartScreen(
                     LocalContext.current.applicationContext as ShoppingApplication,
                 ),
         ),
-    onBackClick: (ArrayList<String>) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val uiState by shoppingCartViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -57,7 +57,7 @@ fun ShoppingCartScreen(
         currentPage = uiState.currentPage,
         canMoveToPreviousPage = uiState.canMoveToPreviousPage,
         canMoveToNextPage = uiState.canMoveToNextPage,
-        onBackClick = { onBackClick(shoppingCartViewModel.getChangedProductIds()) },
+        onBackClick = onBackClick,
         onRemoveShoppingItemClick = shoppingCartViewModel::removeShoppingItem,
         onIncrementQuantityClick = { productId ->
             shoppingCartViewModel.increaseItemQuantity(productId, 1)

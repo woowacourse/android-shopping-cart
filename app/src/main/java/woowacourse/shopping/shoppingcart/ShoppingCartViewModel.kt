@@ -18,7 +18,6 @@ class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private var currentPage = 0
-    private val changedProductIds = arrayListOf<String>()
     private val _uiState =
         MutableStateFlow(
             ShoppingCartUiState(
@@ -53,7 +52,6 @@ class ShoppingCartViewModel(
         viewModelScope.launch {
             shoppingCartRepository.removeItemFromCart(productId)
             loadShoppingItems(currentPage)
-            changedProductIds.add(productId)
         }
     }
 
@@ -61,7 +59,6 @@ class ShoppingCartViewModel(
         viewModelScope.launch {
             shoppingCartRepository.addItemToCart(productId, quantity)
             loadShoppingItems(currentPage)
-            changedProductIds.add(productId)
         }
     }
 
@@ -69,11 +66,8 @@ class ShoppingCartViewModel(
         viewModelScope.launch {
             shoppingCartRepository.decreaseItemQuantity(productId, quantity)
             loadShoppingItems(currentPage)
-            changedProductIds.add(productId)
         }
     }
-
-    fun getChangedProductIds(): ArrayList<String> = ArrayList(changedProductIds)
 
     private suspend fun loadShoppingItems(page: Int) {
         val totalSize = shoppingCartRepository.getTotalSize()

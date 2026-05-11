@@ -21,8 +21,6 @@ class DetailProductActivity : ComponentActivity() {
         setContent {
             AndroidShoppingTheme {
                 val productId = intent.getStringExtra(ProductListActivity.EXTRA_PRODUCT_ID)
-                val changedProductIds = intent.getStringArrayListExtra(ProductListActivity.CHANGED_PRODUCT_IDS) ?: emptyList()
-                val newChangedProductIds = ArrayList(changedProductIds + productId)
                 if (productId == null) {
                     Text(stringResource(R.string.product_not_found_message))
                     return@AndroidShoppingTheme
@@ -33,19 +31,12 @@ class DetailProductActivity : ComponentActivity() {
                         startActivity(
                             Intent(this, DetailProductActivity::class.java)
                                 .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, lastViewedProductId)
-                                .putExtra(ProductListActivity.CHANGED_PRODUCT_IDS, newChangedProductIds)
                                 .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
                         )
                         this.finish()
                     },
                     onBackClick = {
-                        setResult(
-                            RESULT_OK,
-                            Intent().putStringArrayListExtra(
-                                ProductListActivity.CHANGED_PRODUCT_IDS,
-                                newChangedProductIds
-                            ),
-                        )
+                        setResult(RESULT_OK)
                         this.finish()
                     },
                 )

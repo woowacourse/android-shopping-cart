@@ -21,6 +21,5 @@ class ProductListActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
-        const val CHANGED_PRODUCT_IDS = "changedProductIds"
     }
 }

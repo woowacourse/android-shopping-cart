@@ -78,7 +78,9 @@ fun DetailProductScreen(
         onLastViewedProductClick = { lastViewedProductId ->
             onNavigateToLastViewedProduct(lastViewedProductId)
         },
-        onAddToCartClick = { detailProductViewModel.increaseItemQuantity(1) },
+        onAddToCartClick = {
+            detailProductViewModel.addSelectedQuantityToCart(onBackClick)
+        },
         onIncrementQuantity = detailProductViewModel::increaseItemQuantity,
         onDecrementQuantity = detailProductViewModel::decreaseItemQuantity,
         onBackClick = onBackClick,

@@ -13,12 +13,14 @@ import woowacourse.shopping.model.ProductTitle
 class ProductRemoteDataSource(
     private val baseUrl: String
 ) {
-
     private val client: OkHttpClient = OkHttpClient()
-    suspend fun getTotalSize(): Int = getProducts().size
+    suspend fun getTotalSize(): Int {
+        val responseBody = get("/product/size") ?: return 0
+        return JSONObject(responseBody).getInt("size")
+    }
 
     suspend fun getProduct(productId: String): Product? {
-        val responseBody = get("/products/$productId") ?: return null
+        val responseBody = get("/product/$productId") ?: return null
         return JSONObject(responseBody).toProduct()
     }
 
@@ -27,15 +29,6 @@ class ProductRemoteDataSource(
         size: Int,
     ): List<Product> {
         val responseBody = get("/products?offset=$offset&size=$size") ?: return emptyList()
-        val jsonArray = JSONArray(responseBody)
-
-        return (0 until jsonArray.length()).map { index ->
-            jsonArray.getJSONObject(index).toProduct()
-        }
-    }
-
-    private suspend fun getProducts(): List<Product> {
-        val responseBody = get("/products") ?: return emptyList()
         val jsonArray = JSONArray(responseBody)
 
         return (0 until jsonArray.length()).map { index ->

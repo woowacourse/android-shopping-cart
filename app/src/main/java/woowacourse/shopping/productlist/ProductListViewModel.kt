@@ -89,19 +89,13 @@ class ProductListViewModel(
         }
     }
 
-    fun updateProducts(productIds: List<String>) {
+    fun updateProducts() {
         viewModelScope.launch {
             val updatedProductUiModels =
                 _uiState.value.productUiModels.map { productUiModel ->
-                    if (productUiModel.id !in productIds) {
-                        productUiModel
-                    }
-                    else {
-                        val quantity = shoppingCartRepository.getCartItem(productUiModel.id)?.quantity?.value ?: 0
-                        productUiModel.copy(
-                            quantity = quantity,
-                        )
-                    }
+                    productUiModel.copy(
+                        quantity = getCartQuantity(productUiModel.id),
+                    )
                 }
             val totalCartQuantity = shoppingCartRepository.getTotalQuantity()
 
@@ -117,14 +111,35 @@ class ProductListViewModel(
     fun increaseItemQuantity(productId: String) {
         viewModelScope.launch {
             shoppingCartRepository.addItemToCart(productId, 1)
-            updateProducts(listOf(productId))
+            updateProduct(productId)
         }
     }
 
     fun decreaseItemQuantity(productId: String) {
         viewModelScope.launch {
             shoppingCartRepository.decreaseItemQuantity(productId, 1)
-            updateProducts(listOf(productId))
+            updateProduct(productId)
+        }
+    }
+
+    private suspend fun updateProduct(productId: String) {
+        val updatedProductUiModels =
+            _uiState.value.productUiModels.map { productUiModel ->
+                if (productUiModel.id != productId) {
+                    productUiModel
+                } else {
+                    productUiModel.copy(
+                        quantity = getCartQuantity(productUiModel.id),
+                    )
+                }
+            }
+        val totalCartQuantity = shoppingCartRepository.getTotalQuantity()
+
+        _uiState.update { uiState ->
+            uiState.copy(
+                productUiModels = updatedProductUiModels,
+                cartItemCount = totalCartQuantity,
+            )
         }
     }
 
@@ -148,15 +163,17 @@ class ProductListViewModel(
         }
 
     private suspend fun Product.toUiModel(): ProductUiModel {
-        val cartItem = shoppingCartRepository.getCartItem(id)
         return ProductUiModel(
             id = id,
             name = getTitle(),
             price = WonMoney(getPrice()),
             imageUrl = imageUrl,
-            quantity = cartItem?.quantity?.value ?: 0,
+            quantity = getCartQuantity(id),
         )
     }
+
+    private suspend fun getCartQuantity(productId: String): Int =
+        shoppingCartRepository.getCartItem(productId)?.quantity?.value ?: 0
 
     companion object {
         private const val PRODUCT_LOAD_SIZE = 20
