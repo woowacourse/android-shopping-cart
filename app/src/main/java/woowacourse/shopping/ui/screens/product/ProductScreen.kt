@@ -39,7 +39,7 @@ import woowacourse.shopping.ui.model.UiRecentProduct
 
 @Composable
 fun ProductScreen(
-    viewModel: ProductViewModel = viewModel(factory = ProductViewModel.Factory),
+    viewModel: ProductViewModel,
     onCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
 ) {
@@ -167,6 +167,7 @@ private fun RecentProductGroup(
 @Composable
 private fun ProductScreenPreview() {
     ProductScreen(
+        viewModel = viewModel(factory = ProductViewModel.Factory),
         onCartClick = { },
         onProductClick = { },
     )
