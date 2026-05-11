@@ -6,6 +6,5 @@ data class CartUiState(
     val isCanMoveNext: Boolean = false,
     val isLoading: Boolean = false,
     val totalCartSize: Int = 0,
-) {
-    val isShowPageSection: Boolean get() = totalCartSize > 5
-}
+    val isShowPageSection: Boolean = false,
+)

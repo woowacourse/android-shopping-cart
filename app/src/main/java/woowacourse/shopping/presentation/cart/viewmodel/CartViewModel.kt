@@ -25,7 +25,6 @@ class CartViewModel(
 
     private val _uiEvents = Channel<CartEvent>(Channel.BUFFERED)
     val uiEvents: Flow<CartEvent> = _uiEvents.receiveAsFlow()
-    private val pageSize = 5
 
     fun refreshCart() {
         viewModelScope.launch {
@@ -85,17 +84,18 @@ class CartViewModel(
         try {
             val cart = cartRepository.getCart()
             val items = cart.items.map { it.toUiModel() }
-            val maxPage = if (items.isEmpty()) 0 else (items.size - 1) / pageSize
+            val maxPage = if (items.isEmpty()) 0 else (items.size - 1) / PAGE_SIZE
 
             _uiState.update {
                 val page = it.page.coerceIn(0, maxPage)
-                val fromIndex = page * pageSize
-                val toIndex = min(fromIndex + pageSize, items.size)
+                val fromIndex = page * PAGE_SIZE
+                val toIndex = min(fromIndex + PAGE_SIZE, items.size)
                 it.copy(
                     page = page,
                     totalCartSize = items.size,
                     currentCartItems = items.subList(fromIndex, toIndex),
                     isCanMoveNext = toIndex < items.size,
+                    isShowPageSection = items.size > PAGE_SIZE,
                 )
             }
         } finally {
@@ -103,6 +103,10 @@ class CartViewModel(
                 it.copy(isLoading = false)
             }
         }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 5
     }
 }
 
