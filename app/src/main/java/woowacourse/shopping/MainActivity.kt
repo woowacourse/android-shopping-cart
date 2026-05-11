@@ -10,12 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,24 +32,27 @@ class MainActivity : ComponentActivity() {
                     factory = object : ViewModelProvider.Factory {
                         @Suppress("UNCHECKED_CAST")
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return CatalogViewModel(cartRepository = app.cartRepository) as T
+                            return CatalogViewModel(
+                                cartRepository = app.cartRepository,
+                                recentProductRepository = app.recentProductRepository
+                            ) as T
                         }
                     }
                 )
 
-                val isConnected by networkMonitor.isConnected.collectAsStateWithLifecycle(initialValue = true)
-                var isInitial by rememberSaveable { mutableStateOf(true) }
-
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LaunchedEffect(isConnected) {
-                        if (isInitial) {
-                            isInitial = false
-                            return@LaunchedEffect
-                        }
-                        if (!isConnected) {
-                            Toast.makeText(this@MainActivity, "네트워크 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@MainActivity, "네트워크가 연결되었습니다.", Toast.LENGTH_SHORT).show()
+                    LaunchedEffect(Unit) {
+                        var isInitial = true
+                        networkMonitor.isConnected.collect { connected ->
+                            if (isInitial) {
+                                isInitial = false
+                                return@collect
+                            }
+                            if (!connected) {
+                                Toast.makeText(this@MainActivity, "네트워크 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this@MainActivity, "네트워크가 연결되었습니다.", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 

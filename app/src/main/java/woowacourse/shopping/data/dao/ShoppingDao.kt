@@ -28,7 +28,7 @@ interface ShoppingDao {
     suspend fun deleteCartItem(productId: UUID)
 
     @Transaction
-    @Query("SELECT * FROM cart_items")
+    @Query("SELECT * FROM cart_items ORDER BY addedAt ASC")
     fun getCartItemsWithProduct(): Flow<List<CartItemWithProduct>>
 
     @Query("UPDATE cart_items SET amount = :amount WHERE productId = :productId")

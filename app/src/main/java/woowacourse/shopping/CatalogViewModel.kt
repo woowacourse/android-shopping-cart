@@ -14,12 +14,14 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.cartRepository.CartRepository
 import woowacourse.shopping.repository.productRepository.CatalogProductRepository
+import woowacourse.shopping.repository.productRepository.RecentProductRepository
 import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
 
 class CatalogViewModel(
     private val productRepository: CatalogProductRepository = CatalogProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products.asStateFlow()
@@ -35,9 +37,8 @@ class CatalogViewModel(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val recentProducts: StateFlow<List<Product>> = MutableStateFlow(
-            MockCatalog.catalog.subList(0, 5)
-    )
+    val recentProducts: StateFlow<List<Product>> = recentProductRepository.recentProducts
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private var currentPage = 0
 

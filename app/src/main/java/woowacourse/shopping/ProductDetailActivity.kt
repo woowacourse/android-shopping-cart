@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
@@ -29,12 +30,21 @@ class ProductDetailActivity : ComponentActivity() {
             return
         }
         val product = MockCatalog.findProductById(productId)
-        val cartRepository = (application as ShoppingApplication).cartRepository
+        val app = application as ShoppingApplication
+        val cartRepository = app.cartRepository
+        val recentProductRepository = app.recentProductRepository
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
+
+        lifecycleScope.launch {
+            recentProductRepository.addRecentProduct(product)
+        }
 
         enableEdgeToEdge()
         setContent {
             var amount by rememberSaveable { mutableIntStateOf(1) }
+            val recentProducts by recentProductRepository.recentProducts.collectAsStateWithLifecycle(initialValue = emptyList())
+            val lastViewedProduct = recentProducts.firstOrNull { it.productId != productId }
+
             AndroidshoppingTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -42,6 +52,7 @@ class ProductDetailActivity : ComponentActivity() {
                     ProductDetailScreen(
                         product = product,
                         amount = amount,
+                        lastViewedProduct = lastViewedProduct,
                         onAddRequest = {
                             lifecycleScope.launch {
                                 cartRepository.addProduct(product, amount)

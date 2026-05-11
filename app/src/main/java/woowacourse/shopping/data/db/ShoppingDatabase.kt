@@ -10,7 +10,7 @@ import woowacourse.shopping.data.entity.RecentProductEntity
 
 @Database(
     entities = [CatalogEntity::class, CartEntity::class, RecentProductEntity::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(ShoppingTypeConverters::class)
 abstract class ShoppingDatabase: RoomDatabase() {

@@ -18,5 +18,6 @@ import java.util.UUID
 )
 data class CartEntity(
     @PrimaryKey val productId: UUID,
-    val amount: Int
+    val amount: Int,
+    val addedAt: Long = System.currentTimeMillis()
 )
