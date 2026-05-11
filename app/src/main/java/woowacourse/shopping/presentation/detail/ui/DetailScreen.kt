@@ -89,7 +89,10 @@ fun DetailScreen(
                 .statusBarsPadding(),
     ) { innerPadding ->
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(30.dp),
         ) {
             DetailContent(
@@ -99,15 +102,17 @@ fun DetailScreen(
                 quantity = uiState.quantity,
                 onIncrease = { onIncrease() },
                 onDecrease = { onDecrease() },
-                modifier = Modifier.padding(innerPadding),
             )
             if (uiState.showLastSeenProductCard) {
                 uiState.lastSeenProduct?.let { lastProduct ->
                     LastSeenProductCard(
                         name = lastProduct.name,
                         onClick = { onClickLastProductCard(lastProduct.id) },
-                        modifier = Modifier.padding(horizontal = 18.dp),
+                        modifier =
+                            Modifier
+                                .padding(horizontal = 18.dp),
                     )
+                    Spacer(modifier = Modifier.height(18.dp))
                 }
             }
         }
