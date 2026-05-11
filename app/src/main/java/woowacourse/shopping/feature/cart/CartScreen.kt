@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import woowacourse.shopping.core.designsystem.component.OfflineBanner
 import woowacourse.shopping.feature.cart.component.CartItem
 import woowacourse.shopping.feature.cart.component.CartPageButton
 import woowacourse.shopping.feature.cart.component.CartTopAppBar
@@ -32,6 +33,7 @@ fun CartScreen(
     pageCount: Int,
     isShowControls: Boolean,
     isLoading: Boolean,
+    isOnline: Boolean,
     onBackClick: () -> Unit,
     onCartDeleteClick: (id: String) -> Unit,
     onIncreaseClick: (id: String) -> Unit,
@@ -49,6 +51,9 @@ fun CartScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            if (!isOnline) {
+                OfflineBanner()
+            }
             CartTopAppBar(onClick = onBackClick)
 
             Column(
@@ -107,6 +112,7 @@ private fun CartScreenPreview() {
         pageCount = 1,
         isShowControls = true,
         isLoading = false,
+        isOnline = true,
         onNextClick = {},
         onPreviousClick = {},
     )

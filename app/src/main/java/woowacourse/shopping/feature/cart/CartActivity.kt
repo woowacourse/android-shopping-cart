@@ -9,7 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.core.designsystem.theme.AndroidshoppingTheme
 
 class CartActivity : ComponentActivity() {
@@ -20,6 +23,8 @@ class CartActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val stateHolder = retainCartStateHolder()
+                    val isOnline by ShoppingApplication.instance.isOnline.collectAsState()
+
                     CartScreen(
                         cartItems = stateHolder.uiState.cartItems,
                         onBackClick = { finish() },
@@ -32,6 +37,7 @@ class CartActivity : ComponentActivity() {
                         pageCount = stateHolder.uiState.displayPageNumber,
                         isShowControls = stateHolder.uiState.showControls,
                         isLoading = stateHolder.uiState.isLoading,
+                        isOnline = isOnline,
                         onNextClick = stateHolder::nextPage,
                         onPreviousClick = stateHolder::prevPage,
                     )

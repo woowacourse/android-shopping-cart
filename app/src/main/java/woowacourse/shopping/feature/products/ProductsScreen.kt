@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import woowacourse.shopping.core.designsystem.component.OfflineBanner
 import woowacourse.shopping.core.designsystem.theme.ExtraLightGray
 import woowacourse.shopping.feature.products.component.LoadButton
 import woowacourse.shopping.feature.products.component.ProductItem
@@ -41,6 +42,7 @@ fun ProductsScreen(
     recentProducts: ImmutableList<ShoppingProductInfo>,
     isLastPage: Boolean,
     formattedCartItemCount: String,
+    isOnline: Boolean,
     onCartClick: () -> Unit,
     onProductClick: (id: String) -> Unit,
     onAddClick: (id: String) -> Unit,
@@ -54,6 +56,9 @@ fun ProductsScreen(
             .fillMaxSize()
             .background(Color.White),
     ) {
+        if (!isOnline) {
+            OfflineBanner()
+        }
         ProductsTopAppBar(
             onClick = onCartClick,
             formattedCartItemCount = formattedCartItemCount
@@ -151,6 +156,7 @@ private fun ProductsScreenPreview() {
         recentProducts = products.take(10).toImmutableList(),
         isLastPage = false,
         formattedCartItemCount = "1",
+        isOnline = true,
         onCartClick = {},
         onProductClick = {},
         onAddClick = {},

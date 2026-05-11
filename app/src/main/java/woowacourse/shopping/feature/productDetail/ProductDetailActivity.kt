@@ -10,7 +10,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.core.designsystem.theme.AndroidshoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
@@ -29,10 +32,12 @@ class ProductDetailActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val stateHolder = retainProductDetailStateHolder(productId, isFromRecent)
+                    val isOnline by ShoppingApplication.instance.isOnline.collectAsState()
 
                     ProductDetailScreen(
                         productInfo = stateHolder.productInfo,
                         previousProductName = if (stateHolder.shouldShowRecentSummary) stateHolder.previousProduct?.productTitle?.value else null,
+                        isOnline = isOnline,
                         onCloseClick = { finish() },
                         onRecentProductClick = {
                             stateHolder.previousProduct?.id?.let { id ->

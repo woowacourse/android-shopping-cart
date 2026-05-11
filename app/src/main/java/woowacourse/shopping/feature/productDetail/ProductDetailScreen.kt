@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.core.designsystem.component.AppImage
+import woowacourse.shopping.core.designsystem.component.OfflineBanner
 import woowacourse.shopping.core.designsystem.component.QuantityStepper
 import woowacourse.shopping.feature.productDetail.component.AddCartButton
 import woowacourse.shopping.feature.productDetail.component.ProductDetailTopAppBar
@@ -32,6 +33,7 @@ import woowacourse.shopping.feature.productDetail.model.ProductInfo
 fun ProductDetailScreen(
     productInfo: ProductInfo?,
     previousProductName: String?,
+    isOnline: Boolean,
     onCloseClick: () -> Unit,
     onRecentProductClick: () -> Unit,
     onAddCartClick: () -> Unit,
@@ -45,6 +47,9 @@ fun ProductDetailScreen(
                 .fillMaxSize()
                 .background(Color.White),
     ) {
+        if (!isOnline) {
+            OfflineBanner()
+        }
         ProductDetailTopAppBar(onClick = onCloseClick)
 
         AppImage(
@@ -123,6 +128,7 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productInfo = ProductInfo.PREVIEW,
         previousProductName = "이전 상품",
+        isOnline = true,
         onCloseClick = {},
         onRecentProductClick = {},
         onAddCartClick = {},
