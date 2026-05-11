@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.cart
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +13,7 @@ import woowacourse.shopping.MainDispatcherExtension
 import woowacourse.shopping.data.localdb.dao.CartItemDao
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductName
@@ -27,7 +30,7 @@ class CartViewModelTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
 
-            val viewModel = CartViewModel(CartRepository(cartItemDao))
+            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
             mainDispatcherExtension.advanceUntilIdle()
 
             val items = viewModel.uiState.value.items
@@ -41,7 +44,7 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao))
+            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
             mainDispatcherExtension.advanceUntilIdle()
 
             viewModel.nextPage()
@@ -58,7 +61,7 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao))
+            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
             mainDispatcherExtension.advanceUntilIdle()
             viewModel.nextPage()
 
@@ -75,7 +78,7 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao))
+            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
             mainDispatcherExtension.advanceUntilIdle()
             viewModel.nextPage()
 
@@ -94,7 +97,7 @@ class CartViewModelTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 2)
 
-            val viewModel = CartViewModel(CartRepository(cartItemDao))
+            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 2))))
             mainDispatcherExtension.advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.totalCartSize).isEqualTo(2)
@@ -134,8 +137,21 @@ private class TestCartItemDao : CartItemDao {
 
     override suspend fun getTotalCount(): Int = items.value.size
 
-    override suspend fun getTotalPrice(): Int = items.value.sumOf { it.price * it.quantity }
 }
+
+private class FakeProductRepository(
+    private val products: List<Product>,
+) : ProductRepository {
+    override suspend fun getProducts(
+        offset: Int,
+        limit: Int,
+    ): ImmutableList<Product> = products.drop(offset).take(limit).toImmutableList()
+
+    override suspend fun getProductById(id: String): Product =
+        products.firstOrNull { it.id == id } ?: throw IllegalArgumentException()
+}
+
+private fun createProducts(size: Int): List<Product> = (1..size).map { createProduct(id = it.toString()) }
 
 private fun createProduct(id: String): Product =
     Product(
@@ -152,9 +168,6 @@ private fun createCartItemEntity(
 ): CartItemEntity =
     CartItemEntity(
         id = product.id,
-        name = product.getName(),
-        price = product.getPrice(),
-        imageUrl = product.imageUrl,
         quantity = quantity,
         timestamp = timestamp,
     )

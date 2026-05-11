@@ -102,8 +102,8 @@ class ShoppingViewModelTest {
     ): ShoppingViewModel =
         ShoppingViewModel(
             productRepository = productRepository,
-            cartRepository = CartRepository(cartItemDao),
-            recentItemRepository = RecentItemRepository(recentItemDao),
+            cartRepository = CartRepository(cartItemDao, productRepository),
+            recentItemRepository = RecentItemRepository(recentItemDao, productRepository),
             networkObserver = networkObserver,
         )
 }
@@ -151,7 +151,6 @@ private class TestCartItemDao : CartItemDao {
 
     override suspend fun getTotalCount(): Int = items.value.size
 
-    override suspend fun getTotalPrice(): Int = items.value.sumOf { it.price * it.quantity }
 }
 
 private class TestRecentItemDao : RecentItemDao {
@@ -193,9 +192,6 @@ private fun createCartItemEntity(
 ): CartItemEntity =
     CartItemEntity(
         id = product.id,
-        name = product.getName(),
-        price = product.getPrice(),
-        imageUrl = product.imageUrl,
         quantity = quantity,
         timestamp = 100L,
     )
@@ -206,8 +202,5 @@ private fun createRecentItemEntity(
 ): RecentItemEntity =
     RecentItemEntity(
         id = product.id,
-        name = product.getName(),
-        price = product.getPrice(),
-        imageUrl = product.imageUrl,
         timestamp = timestamp,
     )

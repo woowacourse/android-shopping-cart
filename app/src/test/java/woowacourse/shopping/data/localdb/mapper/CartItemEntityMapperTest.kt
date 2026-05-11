@@ -14,19 +14,20 @@ class CartItemEntityMapperTest {
         val entity =
             CartItemEntity(
                 id = "1",
-                name = "상품",
-                price = 2000,
-                imageUrl = "image-url",
                 quantity = 3,
                 timestamp = 100L,
             )
+        val product =
+            Product(
+                id = "1",
+                name = ProductName("상품"),
+                price = Money(2000),
+                imageUrl = "1",
+            )
 
-        val cartItem = entity.toDomain()
+        val cartItem = entity.toDomain(product)
 
-        assertThat(cartItem.product.id).isEqualTo(entity.id)
-        assertThat(cartItem.product.getName()).isEqualTo(entity.name)
-        assertThat(cartItem.product.getPrice()).isEqualTo(entity.price)
-        assertThat(cartItem.product.imageUrl).isEqualTo(entity.imageUrl)
+        assertThat(cartItem.product).isEqualTo(product)
         assertThat(cartItem.quantity).isEqualTo(entity.quantity)
     }
 
@@ -39,7 +40,7 @@ class CartItemEntityMapperTest {
                         id = "1",
                         name = ProductName("상품"),
                         price = Money(2000),
-                        imageUrl = "image-url",
+                        imageUrl = "1",
                     ),
                 quantity = 3,
             )
@@ -47,9 +48,6 @@ class CartItemEntityMapperTest {
         val entity = cartItem.toEntity(timestamp = 100L)
 
         assertThat(entity.id).isEqualTo(cartItem.product.id)
-        assertThat(entity.name).isEqualTo(cartItem.product.getName())
-        assertThat(entity.price).isEqualTo(cartItem.product.getPrice())
-        assertThat(entity.imageUrl).isEqualTo(cartItem.product.imageUrl)
         assertThat(entity.quantity).isEqualTo(cartItem.quantity)
         assertThat(entity.timestamp).isEqualTo(100L)
     }

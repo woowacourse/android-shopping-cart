@@ -1,10 +1,13 @@
 package woowacourse.shopping.data
 
 import kotlinx.coroutines.test.runTest
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.localdb.dao.RecentItemDao
 import woowacourse.shopping.data.localdb.entity.RecentItemEntity
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
@@ -23,15 +26,12 @@ class RecentItemRepositoryTest {
     fun `최근 본 상품 저장 후 오래된 상품을 삭제한다`() =
         runTest {
             val dao = TestRecentItemDao()
-            val repository = RecentItemRepository(dao)
+            val repository = RecentItemRepository(dao, FakeProductRepository(listOf(product)))
 
             repository.addRecentItem(product)
 
             val savedItem = dao.getRecentItemById(product.id)
             assertThat(savedItem?.id).isEqualTo(product.id)
-            assertThat(savedItem?.name).isEqualTo(product.getName())
-            assertThat(savedItem?.price).isEqualTo(product.getPrice())
-            assertThat(savedItem?.imageUrl).isEqualTo(product.imageUrl)
             assertThat(dao.deleteOldItemCount).isEqualTo(1)
         }
 
@@ -39,7 +39,7 @@ class RecentItemRepositoryTest {
     fun `최근 본 상품 목록을 도메인 상품으로 변환해 반환한다`() =
         runTest {
             val dao = TestRecentItemDao()
-            val repository = RecentItemRepository(dao)
+            val repository = RecentItemRepository(dao, FakeProductRepository(listOf(product)))
             dao.insert(product.toRecentItemEntity(timestamp = 100L))
 
             val recentItems = repository.getRecentItems()
@@ -55,7 +55,7 @@ class RecentItemRepositoryTest {
     fun `마지막으로 본 상품을 반환한다`() =
         runTest {
             val dao = TestRecentItemDao()
-            val repository = RecentItemRepository(dao)
+            val repository = RecentItemRepository(dao, FakeProductRepository(listOf(createProduct(id = "1"), createProduct(id = "2"))))
             dao.insert(createProduct(id = "1").toRecentItemEntity(timestamp = 100L))
             dao.insert(createProduct(id = "2").toRecentItemEntity(timestamp = 200L))
 
@@ -67,7 +67,7 @@ class RecentItemRepositoryTest {
     @Test
     fun `최근 본 상품이 없으면 마지막으로 본 상품은 null이 반환된다`() =
         runTest {
-            val repository = RecentItemRepository(TestRecentItemDao())
+            val repository = RecentItemRepository(TestRecentItemDao(), FakeProductRepository(emptyList()))
 
             val lastViewedItem = repository.getLastViewedItem()
 
@@ -85,9 +85,6 @@ class RecentItemRepositoryTest {
     private fun Product.toRecentItemEntity(timestamp: Long): RecentItemEntity =
         RecentItemEntity(
             id = id,
-            name = getName(),
-            price = getPrice(),
-            imageUrl = imageUrl,
             timestamp = timestamp,
         )
 
@@ -112,5 +109,17 @@ class RecentItemRepositoryTest {
         }
 
         override suspend fun getLastViewedItem(): RecentItemEntity? = items.maxByOrNull { it.timestamp }
+    }
+
+    private class FakeProductRepository(
+        private val products: List<Product>,
+    ) : ProductRepository {
+        override suspend fun getProducts(
+            offset: Int,
+            limit: Int,
+        ): ImmutableList<Product> = products.drop(offset).take(limit).toImmutableList()
+
+        override suspend fun getProductById(id: String): Product =
+            products.firstOrNull { it.id == id } ?: throw IllegalArgumentException()
     }
 }

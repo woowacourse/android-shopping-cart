@@ -13,18 +13,19 @@ class RecentItemEntityMapperTest {
         val entity =
             RecentItemEntity(
                 id = "1",
-                name = "상품",
-                price = 2000,
-                imageUrl = "image-url",
                 timestamp = 100L,
             )
+        val product =
+            Product(
+                id = "1",
+                name = ProductName("상품"),
+                price = Money(2000),
+                imageUrl = "1",
+            )
 
-        val product = entity.toDomain()
+        val result = toDomain(product)
 
-        assertThat(product.id).isEqualTo(entity.id)
-        assertThat(product.getName()).isEqualTo(entity.name)
-        assertThat(product.getPrice()).isEqualTo(entity.price)
-        assertThat(product.imageUrl).isEqualTo(entity.imageUrl)
+        assertThat(result).isEqualTo(product)
     }
 
     @Test
@@ -34,15 +35,12 @@ class RecentItemEntityMapperTest {
                 id = "1",
                 name = ProductName("상품"),
                 price = Money(2000),
-                imageUrl = "image-url",
+                imageUrl = "1",
             )
 
         val entity = product.toEntity(timestamp = 100L)
 
         assertThat(entity.id).isEqualTo(product.id)
-        assertThat(entity.name).isEqualTo(product.getName())
-        assertThat(entity.price).isEqualTo(product.getPrice())
-        assertThat(entity.imageUrl).isEqualTo(product.imageUrl)
         assertThat(entity.timestamp).isEqualTo(100L)
     }
 }

@@ -108,7 +108,7 @@ class DetailViewModelTest {
     private fun createViewModel(
         id: String,
         hideRecentItem: Boolean = false,
-        productRepository: ProductRepository = FakeProductRepository(products = listOf(createProduct(id = "1"))),
+        productRepository: ProductRepository = FakeProductRepository(products = listOf(createProduct(id = "1"), createProduct(id = "2"))),
         cartItemDao: TestCartItemDao = TestCartItemDao(),
         recentItemDao: TestRecentItemDao = TestRecentItemDao(),
     ): DetailViewModel =
@@ -116,8 +116,8 @@ class DetailViewModelTest {
             id = id,
             hideRecentItem = hideRecentItem,
             productRepository = productRepository,
-            cartRepository = CartRepository(cartItemDao),
-            recentItemRepository = RecentItemRepository(recentItemDao),
+            cartRepository = CartRepository(cartItemDao, productRepository),
+            recentItemRepository = RecentItemRepository(recentItemDao, productRepository),
         )
 }
 
@@ -153,7 +153,6 @@ private class TestCartItemDao : CartItemDao {
 
     override suspend fun getTotalCount(): Int = items.value.size
 
-    override suspend fun getTotalPrice(): Int = items.value.sumOf { it.price * it.quantity }
 }
 
 private class TestRecentItemDao : RecentItemDao {
@@ -190,9 +189,6 @@ private fun createCartItemEntity(
 ): CartItemEntity =
     CartItemEntity(
         id = product.id,
-        name = product.getName(),
-        price = product.getPrice(),
-        imageUrl = product.imageUrl,
         quantity = quantity,
         timestamp = 100L,
     )
@@ -203,8 +199,5 @@ private fun createRecentItemEntity(
 ): RecentItemEntity =
     RecentItemEntity(
         id = product.id,
-        name = product.getName(),
-        price = product.getPrice(),
-        imageUrl = product.imageUrl,
         timestamp = timestamp,
     )
