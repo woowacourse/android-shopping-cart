@@ -52,16 +52,17 @@ fun ProductsScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         if (!isOnline) {
             OfflineBanner()
         }
         ProductsTopAppBar(
             onClick = onCartClick,
-            formattedCartItemCount = formattedCartItemCount
+            formattedCartItemCount = formattedCartItemCount,
         )
 
         LazyVerticalGrid(
@@ -72,25 +73,28 @@ fun ProductsScreen(
         ) {
             if (recentProducts.isNotEmpty()) {
                 item(span = { GridItemSpan(2) }) {
-                    Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)) {
+                    Column(
+                        modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    ) {
                         Text(
                             text = "최근 본 상품",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.W700
+                            fontWeight = FontWeight.W700,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             recentProducts.forEach {
                                 RecentProductItem(
                                     productImageUrl = it.productImageUrl,
                                     productName = it.productName,
                                     onClick = { onProductClick(it.id) },
-                                    modifier = Modifier.size(80.dp)
+                                    modifier = Modifier.size(80.dp),
                                 )
                             }
                         }
@@ -100,7 +104,7 @@ fun ProductsScreen(
                 item(span = { GridItemSpan(2) }) {
                     HorizontalDivider(
                         thickness = 7.dp,
-                        color = Color.ExtraLightGray
+                        color = Color.ExtraLightGray,
                     )
                 }
             }
@@ -118,10 +122,11 @@ fun ProductsScreen(
                     onAddClick = { onAddClick(product.id) },
                     onIncreaseClick = { onIncreaseClick(product.id) },
                     onDecreaseClick = { onDecreaseClick(product.id) },
-                    modifier = Modifier.padding(
-                        start = if (products.indexOf(product) % 2 == 0) 20.dp else 0.dp,
-                        end = if (products.indexOf(product) % 2 != 0) 20.dp else 0.dp
-                    )
+                    modifier =
+                        Modifier.padding(
+                            start = if (products.indexOf(product) % 2 == 0) 20.dp else 0.dp,
+                            end = if (products.indexOf(product) % 2 != 0) 20.dp else 0.dp,
+                        ),
                 )
             }
 
@@ -129,7 +134,7 @@ fun ProductsScreen(
                 if (!isLastPage) {
                     LoadButton(
                         onClick = onLoadClick,
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
                     )
                 }
             }

@@ -40,6 +40,6 @@ fun AddCartButton(
 
 @Preview
 @Composable
-fun AddCartButtonPreview() {
+private fun AddCartButtonPreview() {
     AddCartButton(onClick = {})
 }

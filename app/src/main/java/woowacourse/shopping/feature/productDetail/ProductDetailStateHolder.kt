@@ -111,7 +111,7 @@ fun retainProductDetailStateHolder(
             CartRepositoryImpl(application.database.cartDao()),
             RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl),
             productId,
-            isFromRecent
+            isFromRecent,
         )
     }
 }

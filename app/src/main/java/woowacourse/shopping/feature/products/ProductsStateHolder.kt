@@ -15,15 +15,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.domain.model.Quantity
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.feature.products.model.ShoppingProductInfo
 import woowacourse.shopping.feature.products.model.toUiModel
-
-import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
-import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductsStateHolder(
     private val productRepository: ProductRepository,
@@ -65,7 +64,6 @@ class ProductsStateHolder(
             }
             .launchIn(scope)
     }
-
 
     fun getProducts(pageSize: Int = 20) {
         scope.launch {
@@ -133,7 +131,7 @@ fun retainProductsStateHolder(): ProductsStateHolder {
         ProductsStateHolder(
             ProductRepositoryImpl,
             woowacourse.shopping.data.repository.CartRepositoryImpl(application.database.cartDao()),
-            RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl)
+            RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl),
         )
     }
 }

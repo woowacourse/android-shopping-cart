@@ -54,10 +54,9 @@ fun ProductDetailScreen(
 
         AppImage(
             imageUrl = productInfo?.productImageUrl ?: "",
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
         )
 
         Spacer(Modifier.height(16.dp))
@@ -110,9 +109,10 @@ fun ProductDetailScreen(
             RecentProductSummary(
                 productName = previousProductName,
                 onClick = onRecentProductClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
             )
         }
 

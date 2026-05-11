@@ -31,14 +31,12 @@ fun RecentProductSummary(
             .fillMaxWidth()
             .clickable { onClick() }
             .border(
+                border = BorderStroke(1.dp, Color.Gray),
                 shape = RoundedCornerShape(4.dp),
-                border = BorderStroke(1.dp, Color.Gray)
             )
             .padding(horizontal = 18.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
-
-
-        ) {
+    ) {
         Text(
             text = "마지막으로 본 상품",
             fontSize = 12.sp,
@@ -56,9 +54,9 @@ fun RecentProductSummary(
     }
 }
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun RecentProductSummaryPreview() {
+private fun RecentProductSummaryPreview() {
     RecentProductSummary(
         productName = "리자몽",
         onClick = {},

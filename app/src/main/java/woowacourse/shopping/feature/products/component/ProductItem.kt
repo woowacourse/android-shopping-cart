@@ -48,9 +48,10 @@ fun ProductItem(
             )
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp),
             ) {
                 if (formattedQuantity == "0") {
                     AddCartButton(onClick = onAddClick)
@@ -92,7 +93,7 @@ fun ProductItem(
 
 @Preview
 @Composable
-fun ProductItemPreview() {
+private fun ProductItemPreview() {
     ProductItem(
         productImageUrl = "",
         productName = "리자몽은 강력한 불꽃과 비행 능력을 지닌 포켓몬으로, 전투에서 뛰어난 공격력과 카리스마를 발휘하며 많은 트레이너들에게 사랑받는 존재이다.",

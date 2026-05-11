@@ -37,7 +37,7 @@ fun ProductsTopAppBar(
 
         Row(
             modifier = Modifier.clickable(onClick = onClick),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_cart_24),
@@ -58,6 +58,6 @@ fun ProductsTopAppBar(
 private fun ProductsTopAppBarPreview() {
     ProductsTopAppBar(
         onClick = {},
-        formattedCartItemCount = "3"
+        formattedCartItemCount = "3",
     )
 }
