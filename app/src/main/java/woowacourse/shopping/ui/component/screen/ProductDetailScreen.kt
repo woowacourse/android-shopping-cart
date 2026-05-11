@@ -1,15 +1,19 @@
 package woowacourse.shopping.ui.component.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +45,7 @@ fun ProductDetailScreen(
     product: Product,
     amount: Int,
     modifier: Modifier = Modifier,
+    lastViewedProduct: Product? = null,
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
@@ -49,6 +55,7 @@ fun ProductDetailScreen(
                 product = product,
                 onIncrease = onIncrease,
                 onDecrease = onDecrease,
+                lastViewedProduct = lastViewedProduct,
                 amount = amount,
             )
         },
@@ -86,6 +93,7 @@ private fun ProductDetailBody(
     onAddRequest: () -> Unit,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
+    lastViewedProduct: Product?,
     amount: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -102,6 +110,8 @@ private fun ProductDetailBody(
             amount = amount,
         )
 
+        LastViewedProductBox(lastViewedProduct = lastViewedProduct)
+
         TextButton(
             onClick = onAddRequest,
             modifier =
@@ -115,6 +125,43 @@ private fun ProductDetailBody(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 color = Color.White,
+            )
+        }
+    }
+}
+
+@Composable
+private fun LastViewedProductBox(
+    lastViewedProduct: Product?,
+    modifier: Modifier = Modifier,
+) {
+    if (lastViewedProduct == null) return
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp)
+            .border(
+                width = 1.dp,
+                color = Color.LightGray,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                text = "마지막으로 본 상품",
+                color = Color(0xFF63C2A6),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = lastViewedProduct.name,
+                color = Color.DarkGray,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -182,6 +229,11 @@ private fun ProductDetailScreenPreview() {
             ),
         onIncrease = { },
         onDecrease = { },
-        amount = 1
+        amount = 1,
+        lastViewedProduct = Product(
+            imageUri = "emptyUri",
+            name = "PET보틀-정사각형(500ml)",
+            price = 10000
+        )
     )
 }

@@ -109,7 +109,7 @@ fun Int.toPriceString(): String {
 private fun ShoppingItemPreview() {
     ShoppingItem(
         Product(
-            imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
+            imageUri = "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSTq_oHsJxH8irFUpd2k-08we8FWjRQDVdEMDZTiKOtpF6lNFNEzushq-1JWB8nLGhlQBOd3j3pUPMGrNTeW60sbz21lGA-j6PqZAWhfz97cyh2nAop8j3NkrbexhWkSgCpNwzMt54&usqp=CAc",
             name = "매우매우긴상품명입니다",
             price = 1000000000,
         ),

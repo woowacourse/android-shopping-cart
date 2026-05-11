@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,7 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.CatalogViewModel
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.frame.CommonFrame
+import woowacourse.shopping.ui.component.item.RecentlyViewedSection
 import woowacourse.shopping.ui.component.item.ShoppingItem
 import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
@@ -43,11 +47,13 @@ fun MainScreen(
     modifier: Modifier = Modifier,
 ) {
     val products by viewModel.products.collectAsState()
+    val recentProducts by viewModel.recentProducts.collectAsState()
     val cart by viewModel.cart.collectAsState()
 
     CatalogScreen(
         catalog = products.map { CatalogItemUiState(it, viewModel.getQuantity(it.productId)) },
         cartTotalAmount = cart.getTotalQuantity(),
+        recentProducts = recentProducts,
         onItemClick = onItemClick,
         onCartClick = onCartClick,
         onIncrease = { id ->
@@ -63,6 +69,7 @@ fun MainScreen(
 @Composable
 fun CatalogScreen(
     catalog: List<CatalogItemUiState>,
+    recentProducts: List<Product>,
     cartTotalAmount: Int,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
@@ -80,8 +87,9 @@ fun CatalogScreen(
         },
         bodyContent = {
             CatalogBody(
-                catalog,
-                onItemClick,
+                catalog = catalog,
+                recentProducts = recentProducts,
+                onItemClick = onItemClick,
                 onLoadClick = onLoadClick,
                 onDecrease = onDecrease,
                 onIncrease = onIncrease,
@@ -150,6 +158,7 @@ private fun CatalogHeader(
 @Composable
 private fun CatalogBody(
     catalog: List<CatalogItemUiState>,
+    recentProducts: List<Product>,
     onItemClick: (UUID) -> Unit,
     onIncrease: (UUID) -> Unit,
     onDecrease: (UUID) -> Unit,
@@ -161,6 +170,21 @@ private fun CatalogBody(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
     ) {
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Column {
+                RecentlyViewedSection(
+                    recentProducts = recentProducts,
+                    onItemClick = onItemClick
+                )
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .background(Color(0xFFF0F0F0))
+                )
+            }
+        }
+
         items(
             count = catalog.size,
             key = { index -> catalog[index].product.productId },
@@ -205,5 +229,6 @@ private fun LoadBtn(
 @Preview(showBackground = true)
 @Composable
 private fun CatalogScreenPreview() {
-    CatalogScreen(emptyList(), 0, {}, {}, {}, {}, {})
+    CatalogScreen(
+        emptyList(), emptyList(),0, {}, {}, {}, {}, {})
 }

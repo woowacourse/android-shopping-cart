@@ -23,6 +23,11 @@ class CatalogViewModel(
 
     val cart: StateFlow<Cart> = cartRepository.cartFlow
 
+    val recentProducts: StateFlow<List<Product>> = MutableStateFlow(
+            MockCatalog.catalog.subList(0, 5)
+    )
+
+
     private var currentPage = 0
 
     init {
