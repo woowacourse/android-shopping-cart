@@ -11,6 +11,8 @@ data class Cart(
         product: Product,
         quantity: Int,
     ): Cart {
+        if (quantity <= 0) return this
+
         val exists = cartItems.any { product.productId == it.product.productId }
 
         if (!exists) {
