@@ -59,17 +59,24 @@ class RoomCartRepository(
         fromIndex: Int,
         count: Int,
     ): List<CartItem> {
-        val cartItems = toCartItems()
-        require(count >= 0) { "count는 0 이상의 수여야 합니다." }
-        require(fromIndex in 0..cartItems.size) { "$fromIndex 는 장바구니 내 전체 아이템 개수보다 많을 수 없습니다." }
+        require(fromIndex >= 0) { "$fromIndex 는 0 이상의 정수여야 합니다." }
+        require(count >= 0) { "count는 0 이상의 정수여야 합니다." }
 
-        return cartItems.drop(fromIndex).take(count)
+        val pagedEntities = cartDao.getPagedEntities(fromIndex, count)
+
+        return pagedEntities.mapNotNull { entity ->
+            val product = productRepository.findProduct(entity.productId)
+
+            if (product != null) {
+                CartItem(product = product, quantity = entity.quantity)
+            } else {
+                cartDao.deleteById(entity.productId)
+                null
+            }
+        }
     }
 
-    override suspend fun getSize(): Int {
-        val items = toCartItems()
-        return items.size
-    }
+    override suspend fun getSize(): Int = cartDao.getSize()
 
     private suspend fun toCartItems(): List<CartItem> {
         val cartEntities = cartDao.getAll()
