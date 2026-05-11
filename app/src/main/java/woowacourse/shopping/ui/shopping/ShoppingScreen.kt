@@ -2,13 +2,16 @@ package woowacourse.shopping.ui.shopping
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,7 @@ fun ShoppingScreen(
     val lazyGridState = rememberLazyGridState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val isConnected by viewModel.isNetworkConnected.collectAsState()
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -52,22 +56,28 @@ fun ShoppingScreen(
         }
     }
 
-    Box(modifier = modifier) {
-        ShoppingScreen(
-            products = state.visibleProducts,
-            recentProducts = state.recentProducts,
-            cartCount = state.cartCount,
-            hasNext = state.hasNext,
-            lazyGridState = lazyGridState,
-            onCartClick = onCartClick,
-            onProductClick = onProductClick,
-            onMoreClick = { viewModel.loadMore() },
-            onIncreaseClick = { viewModel.increase(it) },
-            onDecreaseClick = { viewModel.decrease(it) },
-            onRecentProductClick = onRecentProductClick
-        )
+    if (!isConnected) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "인터넷 연결이 끊겼습니다. 오프라인 모드입니다. 😥")
+        }
+    } else {
+        Box(modifier = modifier) {
+            ShoppingScreen(
+                products = state.visibleProducts,
+                recentProducts = state.recentProducts,
+                cartCount = state.cartCount,
+                hasNext = state.hasNext,
+                lazyGridState = lazyGridState,
+                onCartClick = onCartClick,
+                onProductClick = onProductClick,
+                onMoreClick = { viewModel.loadMore() },
+                onIncreaseClick = { viewModel.increase(it) },
+                onDecreaseClick = { viewModel.decrease(it) },
+                onRecentProductClick = onRecentProductClick
+            )
 
-        if (state.isLoading) ShoppingLoading()
+            if (state.isLoading) ShoppingLoading()
+        }
     }
 }
 

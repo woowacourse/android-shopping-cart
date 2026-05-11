@@ -3,16 +3,22 @@ package woowacourse.shopping.ui.shopping
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 import java.util.UUID
 
 class ShoppingViewModel(
+    private val networkMonitor: NetworkMonitor,
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
     private val recentProductRepo: RecentProductRepository,
@@ -20,6 +26,12 @@ class ShoppingViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
     val uiState = _uiState.asStateFlow()
+    val isNetworkConnected: StateFlow<Boolean> = networkMonitor.isConnected
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
 
     init {
         viewModelScope.launch {
