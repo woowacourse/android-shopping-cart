@@ -12,7 +12,7 @@ import woowacourse.shopping.data.local.entity.RecentlyViewedProductEntity
         CartItemEntity::class,
         RecentlyViewedProductEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 abstract class ShoppingDatabase : RoomDatabase() {
