@@ -19,7 +19,7 @@ class DetailProductActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                val productId = intent.getStringExtra(ProductListActivity.EXTRA_PRODUCT_ID)
+                val productId = intent.getStringExtra(ProductListActivity.PRODUCT_ID)
                 if (productId == null) {
                     Text(stringResource(R.string.product_not_found_message))
                     return@AndroidShoppingTheme
@@ -29,7 +29,7 @@ class DetailProductActivity : ComponentActivity() {
                     onNavigateToLastViewedProduct = { lastViewedProductId ->
                         startActivity(
                             Intent(this, DetailProductActivity::class.java)
-                                .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, lastViewedProductId)
+                                .putExtra(ProductListActivity.PRODUCT_ID, lastViewedProductId)
                                 .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT),
                         )
                         this.finish()

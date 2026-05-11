@@ -111,13 +111,13 @@ fun ProductListScreen(
         onProductClick = {
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
-                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it),
+                    .putExtra(ProductListActivity.PRODUCT_ID, it),
             )
         },
         onViewedProductClick = {
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
-                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it),
+                    .putExtra(ProductListActivity.PRODUCT_ID, it),
             )
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,
@@ -153,7 +153,6 @@ fun ProductListContent(
             columns = GridCells.Fixed(2),
             contentPadding = innerPadding,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(horizontal = 5.dp),
         ) {
             if (viewedProductUiModels.isNotEmpty()) {
                 item(

@@ -32,7 +32,7 @@ fun startMockWebServer(): MockWebServer {
                             .build()
                     }
 
-                    request.url.encodedPath == "/product/size" -> {
+                    request.url.encodedPath == "/products/size" -> {
                         MockResponse
                             .Builder()
                             .code(200)

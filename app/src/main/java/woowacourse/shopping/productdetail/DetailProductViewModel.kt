@@ -18,11 +18,6 @@ import woowacourse.shopping.repository.ViewedProductRepository
 import woowacourse.shopping.ui.WonMoney
 import kotlin.math.max
 
-data class DetailProductUiState(
-    val productUiModel: ProductUiModel,
-    val lastViewedProductUiModel: ViewedProductUiModel?,
-)
-
 class DetailProductViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,

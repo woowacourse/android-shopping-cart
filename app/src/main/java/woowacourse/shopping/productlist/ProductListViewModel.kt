@@ -15,13 +15,6 @@ import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.repository.ViewedProductRepository
 import woowacourse.shopping.ui.WonMoney
 
-data class ProductListUiState(
-    val productUiModels: List<ProductUiModel>,
-    val viewedProductUiModels: List<ViewedProductUiModel>,
-    val cartItemCount: Int,
-    val isLoadMoreEnabled: Boolean,
-)
-
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,

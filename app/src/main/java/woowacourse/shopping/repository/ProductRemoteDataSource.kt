@@ -16,7 +16,7 @@ class ProductRemoteDataSource(
     private val client: OkHttpClient = OkHttpClient()
 
     suspend fun getTotalSize(): Int {
-        val responseBody = get("/product/size") ?: return 0
+        val responseBody = get("/products/size") ?: return 0
         return JSONObject(responseBody).getInt("size")
     }
 
