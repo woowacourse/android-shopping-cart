@@ -10,6 +10,7 @@ object MockServer {
 
     private var started = false
 
+    @Synchronized
     fun start() {
         if (started) return
         server.start()
