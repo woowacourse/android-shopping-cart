@@ -12,15 +12,13 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ShoppingCartActivity : ComponentActivity() {
-    private val changedProductIds = arrayListOf<String>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
                 ShoppingCartScreen(
-                    onBackClick = {
+                    onBackClick = { changedProductIds ->
                         setResult(
                             RESULT_OK,
                             Intent().putStringArrayListExtra(
@@ -29,9 +27,6 @@ class ShoppingCartActivity : ComponentActivity() {
                             ),
                         )
                         this.finish()
-                    },
-                    onProductChanged = { productId ->
-                        changedProductIds.add(productId)
                     },
                 )
             }

@@ -5,11 +5,10 @@ import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.repository.dao.ShoppingCartItemDao
 import woowacourse.shopping.repository.entity.ShoppingCartItemEntity
 
-class DatabaseShoppingCartRepository(
+class DefaultShoppingCartRepository(
     private val productRepository: ProductRepository,
     private val shoppingCartItemDao: ShoppingCartItemDao,
 ) : ShoppingCartRepository {
-
     override suspend fun addItemToCart(productId: String, amount: Int) {
         val cartItemEntity = shoppingCartItemDao.getCartItem(productId)
         if (cartItemEntity == null) {
@@ -28,7 +27,7 @@ class DatabaseShoppingCartRepository(
             return
         }
 
-        val shoppingCartItem = cartItemEntity.toModel() ?: return
+        val shoppingCartItem = cartItemEntity.toCartItem() ?: return
 
         shoppingCartItemDao.updateCartItem(
             shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.increaseQuantity(amount).quantity.value)
@@ -36,8 +35,8 @@ class DatabaseShoppingCartRepository(
     }
 
     override suspend fun decreaseItemQuantity(productId: String, amount: Int) {
-        val entity = shoppingCartItemDao.getCartItem(productId) ?: return
-        val shoppingCartItem = entity.toModel()?.decreaseQuantity(amount)
+        val cartItemEntity = shoppingCartItemDao.getCartItem(productId) ?: return
+        val shoppingCartItem = cartItemEntity.toCartItem()?.decreaseQuantity(amount)
 
         if (shoppingCartItem == null) {
             removeItemFromCart(productId)
@@ -50,7 +49,7 @@ class DatabaseShoppingCartRepository(
         }
 
         shoppingCartItemDao.updateCartItem(
-            shoppingCartItemEntity = entity.copy(quantity = shoppingCartItem.quantity.value)
+            shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.quantity.value)
         )
     }
 
@@ -65,8 +64,8 @@ class DatabaseShoppingCartRepository(
     }
 
     override suspend fun getCartItem(productId: String): ShoppingCartItem? {
-        val entity = shoppingCartItemDao.getCartItem(productId) ?: return null
-        return entity.toModel()
+        val cartItemEntity = shoppingCartItemDao.getCartItem(productId) ?: return null
+        return cartItemEntity.toCartItem()
     }
 
     override suspend fun getCartItems(
@@ -74,10 +73,10 @@ class DatabaseShoppingCartRepository(
         size: Int,
     ): List<ShoppingCartItem> =
         shoppingCartItemDao.getItems(offset, size).mapNotNull {
-            it.toModel()
+            it.toCartItem()
         }
 
-    private suspend fun ShoppingCartItemEntity.toModel(): ShoppingCartItem? {
+    private suspend fun ShoppingCartItemEntity.toCartItem(): ShoppingCartItem? {
         val product = productRepository.getProduct(productId) ?: return null
         return ShoppingCartItem(
             quantity = Quantity(quantity),

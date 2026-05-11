@@ -31,15 +31,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.WonMoney
-import woowacourse.shopping.ui.component.NumberCounter
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
+import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ShoppingCartScreen(
-    onBackClick: () -> Unit,
-    onProductChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
     shoppingCartViewModel: ShoppingCartViewModel =
         viewModel(
             factory =
@@ -47,6 +44,7 @@ fun ShoppingCartScreen(
                     LocalContext.current.applicationContext as ShoppingApplication,
                 ),
         ),
+    onBackClick: (ArrayList<String>) -> Unit,
 ) {
     val uiState by shoppingCartViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -54,6 +52,38 @@ fun ShoppingCartScreen(
         shoppingCartViewModel.loadShoppingItems()
     }
 
+    ShoppingCartContent(
+        shoppingCartItems = uiState.shoppingCartItems,
+        currentPage = uiState.currentPage,
+        canMoveToPreviousPage = uiState.canMoveToPreviousPage,
+        canMoveToNextPage = uiState.canMoveToNextPage,
+        onBackClick = { onBackClick(shoppingCartViewModel.getChangedProductIds()) },
+        onRemoveShoppingItemClick = shoppingCartViewModel::removeShoppingItem,
+        onIncrementQuantityClick = { productId ->
+            shoppingCartViewModel.increaseItemQuantity(productId, 1)
+        },
+        onDecrementQuantityClick = { productId ->
+            shoppingCartViewModel.decreaseItemQuantity(productId, 1)
+        },
+        onBeforePageClick = shoppingCartViewModel::movePreviousPage,
+        onNextPageClick = shoppingCartViewModel::moveNextPage,
+    )
+}
+
+@Composable
+fun ShoppingCartContent(
+    shoppingCartItems: List<CartItemUiModel>,
+    currentPage: Int,
+    canMoveToPreviousPage: Boolean,
+    canMoveToNextPage: Boolean,
+    onBackClick: () -> Unit,
+    onRemoveShoppingItemClick: (String) -> Unit,
+    onIncrementQuantityClick: (String) -> Unit,
+    onDecrementQuantityClick: (String) -> Unit,
+    onBeforePageClick: () -> Unit,
+    onNextPageClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         topBar = {
             ShoppingCartTopBar(
@@ -79,37 +109,34 @@ fun ShoppingCartScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(
-                    items = uiState.shoppingCartItems,
-                    key = { it.id },
+                    items = shoppingCartItems,
+                    key = { it.productId }
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
                         title = shoppingCartItem.title,
                         imageUrl = shoppingCartItem.imageUrl,
                         displayableMoney = shoppingCartItem.price,
                         onRemoveShoppingItemClick = {
-                            shoppingCartViewModel.removeShoppingItem(
+                            onRemoveShoppingItemClick(
                                 shoppingCartItem.productId,
                             )
-                            onProductChanged(shoppingCartItem.productId)
                         },
                         quantity = shoppingCartItem.quantity,
                         onIncrementQuantity = {
-                            shoppingCartViewModel.increaseItemQuantity(shoppingCartItem.productId, 1)
-                            onProductChanged(shoppingCartItem.productId)
+                            onIncrementQuantityClick(shoppingCartItem.productId)
                         },
                         onnDecrementQuantity = {
-                            shoppingCartViewModel.decreaseItemQuantity(shoppingCartItem.productId, 1)
-                            onProductChanged(shoppingCartItem.productId)
+                            onDecrementQuantityClick(shoppingCartItem.productId)
                         },
                     )
                 }
             }
             PageNavigation(
-                currentPage = uiState.currentPage,
-                canMoveToPreviousPage = uiState.canMoveToPreviousPage,
-                canMoveToNextPage = uiState.canMoveToNextPage,
-                onBeforePageClick = shoppingCartViewModel::movePreviousPage,
-                onNextPageClick = shoppingCartViewModel::moveNextPage,
+                currentPage = currentPage,
+                canMoveToPreviousPage = canMoveToPreviousPage,
+                canMoveToNextPage = canMoveToNextPage,
+                onBeforePageClick = onBeforePageClick,
+                onNextPageClick = onNextPageClick,
             )
         }
     }
@@ -144,37 +171,45 @@ private fun ShoppingCartTopBar(
         modifier = modifier,
     )
 }
-//
-// @Composable
-// @Preview(showBackground = true)
-// private fun ShoppingCartScreenPreview() {
-//    AndroidShoppingTheme {
-//        ShoppingCartScreen(
-//            shoppingCartItems =
-//                listOf(
-//                    ShoppingCartItem(
-//                        id = "1",
-//                        quantity = Quantity(0),
-//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-//                    ),
-//                    ShoppingCartItem(
-//                        id = "2",
-//                        quantity = Quantity(1),
-//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-//                    ),
-//                    ShoppingCartItem(
-//                        id = "3",
-//                        quantity = Quantity(2),
-//                        product = Product("1", ProductTitle("동원 스위트콘"), Price(99_800), ""),
-//                    ),
-//                ),
-//            onBackClick = { },
-//            onRemoveShoppingItemClick = { },
-//            currentPage = 0,
-//            canMoveToPreviousPage = false,
-//            canMoveToNextPage = true,
-//            onBeforePageClick = {},
-//            onNextPageClick = {},
-//        )
-//    }
-// }
+
+@Composable
+@Preview(showBackground = true)
+private fun ShoppingCartScreenPreview() {
+    AndroidShoppingTheme {
+        ShoppingCartContent(
+            shoppingCartItems =
+                listOf(
+                    CartItemUiModel(
+                        productId = "1",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 0,
+                    ),
+                    CartItemUiModel(
+                        productId = "2",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 1,
+                    ),
+                    CartItemUiModel(
+                        productId = "3",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 2,
+                    ),
+                ),
+            onBackClick = { },
+            onRemoveShoppingItemClick = { },
+            onIncrementQuantityClick = { },
+            onDecrementQuantityClick = { },
+            currentPage = 0,
+            canMoveToPreviousPage = false,
+            canMoveToNextPage = true,
+            onBeforePageClick = {},
+            onNextPageClick = {},
+        )
+    }
+}

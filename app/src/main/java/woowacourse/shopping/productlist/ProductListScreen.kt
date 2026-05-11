@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +30,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -101,6 +99,7 @@ fun ProductListScreen(
     }
 
     val context = LocalContext.current
+
     val productDetailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
@@ -120,7 +119,7 @@ fun ProductListScreen(
         productUiModels = uiState.productUiModels,
         viewedProductUiModels = uiState.viewedProductUiModels,
         cartItemCount = uiState.cartItemCount,
-        enableMoreButton = uiState.enableMoreButton,
+        isLoadMoreEnabled = uiState.isLoadMoreEnabled,
         onNavigateToCartClick = {
             shoppingCartLauncher.launch(Intent(context, ShoppingCartActivity::class.java))
         },
@@ -143,7 +142,7 @@ fun ProductListScreen(
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,
         onDecrementQuantity = productListViewModel::decreaseItemQuantity,
-        loadProducts = productListViewModel::loadProducts,
+        onloadMoreProductsClick = productListViewModel::loadProducts,
         modifier = modifier,
     )
 }
@@ -153,13 +152,13 @@ fun ProductListContent(
     productUiModels: List<ProductUiModel>,
     viewedProductUiModels: List<ViewedProductUiModel>,
     cartItemCount: Int,
-    enableMoreButton: Boolean,
+    isLoadMoreEnabled: Boolean,
     onNavigateToCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
     onViewedProductClick: (String) -> Unit,
     onIncrementQuantity: (String) -> Unit,
     onDecrementQuantity: (String) -> Unit,
-    loadProducts: () -> Unit,
+    onloadMoreProductsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -242,11 +241,11 @@ fun ProductListContent(
                 )
             }
 
-            if (enableMoreButton) {
+            if (isLoadMoreEnabled) {
                 item(
                     span = { GridItemSpan(maxLineSpan) },
                 ) {
-                    MoreButton(onClick = loadProducts)
+                    MoreButton(onClick = onloadMoreProductsClick)
                 }
             }
         }
@@ -436,8 +435,8 @@ private fun ProductListContentPreview() {
                         viewedAt = 2L,
                     ),
                 ),
-            enableMoreButton = true,
-            loadProducts = { },
+            isLoadMoreEnabled = true,
+            onloadMoreProductsClick = { },
             cartItemCount = 20,
         )
     }

@@ -33,7 +33,7 @@ data class ProductListUiState(
     val productUiModels: List<ProductUiModel>,
     val viewedProductUiModels: List<ViewedProductUiModel>,
     val cartItemCount: Int,
-    val enableMoreButton: Boolean,
+    val isLoadMoreEnabled: Boolean,
 )
 
 class ProductListViewModel(
@@ -46,7 +46,7 @@ class ProductListViewModel(
             ProductListUiState(
                 productUiModels = emptyList(),
                 viewedProductUiModels = emptyList(),
-                enableMoreButton = false,
+                isLoadMoreEnabled = false,
                 cartItemCount = 0,
             ),
         )
@@ -62,7 +62,7 @@ class ProductListViewModel(
                 currentState.copy(
                     productUiModels = productUiModels,
                     viewedProductUiModels = viewedProductUiModels,
-                    enableMoreButton = productUiModels.size < productRepository.totalSize(),
+                    isLoadMoreEnabled = productUiModels.size < productRepository.totalSize(),
                     cartItemCount = shoppingCartRepository.getTotalQuantity(),
                 )
             }
@@ -102,7 +102,7 @@ class ProductListViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     productUiModels = updatedProductUiModels,
-                    enableMoreButton = updatedProductUiModels.size < productRepository.totalSize(),
+                    isLoadMoreEnabled = updatedProductUiModels.size < productRepository.totalSize(),
                     cartItemCount = shoppingCartRepository.getTotalQuantity(),
                 )
             }

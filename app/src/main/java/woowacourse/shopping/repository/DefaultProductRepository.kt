@@ -2,7 +2,7 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.Product
 
-class DatabaseProductRepository(
+class DefaultProductRepository(
     private val remoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
     override suspend fun totalSize(): Int = remoteDataSource.getTotalSize()

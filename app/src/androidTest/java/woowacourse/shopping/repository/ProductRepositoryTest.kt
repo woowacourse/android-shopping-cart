@@ -35,7 +35,7 @@ class ProductRepositoryTest {
                     .allowMainThreadQueries()
                     .build()
             productDao = database.productDao()
-            productRepository = DatabaseProductRepository(productDao = productDao)
+            productRepository = DefaultProductRepository(productDao = productDao)
             productDao.addProduct("호날두", 1_0000, "")
         }
     }

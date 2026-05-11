@@ -20,8 +20,7 @@ class DetailProductActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidShoppingTheme {
-                val productId =
-                    intent.getStringExtra(ProductListActivity.EXTRA_PRODUCT_ID)
+                val productId = intent.getStringExtra(ProductListActivity.EXTRA_PRODUCT_ID)
                 if (productId == null) {
                     Text(stringResource(R.string.product_not_found_message))
                     return@AndroidShoppingTheme
@@ -45,7 +44,10 @@ class DetailProductActivity : ComponentActivity() {
                     onBackClick = {
                         setResult(
                             RESULT_OK,
-                            Intent().putStringArrayListExtra(ProductListActivity.CHANGED_PRODUCT_IDS, arrayListOf(productId)),
+                            Intent().putStringArrayListExtra(
+                                ProductListActivity.CHANGED_PRODUCT_IDS,
+                                arrayListOf(productId)
+                            ),
                         )
                         this.finish()
                     },

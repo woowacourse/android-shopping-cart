@@ -37,8 +37,8 @@ class ShoppingCartRepositoryTest {
             productDao.addProduct("동원 스위트콘", 99_800, "")
             product = productDao.getProducts(0, 5).single().toModel()
             shoppingCartRepository =
-                DatabaseShoppingCartRepository(
-                    DatabaseProductRepository(productDao),
+                DefaultShoppingCartRepository(
+                    DefaultProductRepository(productDao),
                     database.shoppingCartItemDao(),
                 )
         }
