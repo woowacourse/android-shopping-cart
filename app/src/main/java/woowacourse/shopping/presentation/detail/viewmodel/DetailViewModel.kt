@@ -47,7 +47,7 @@ class DetailViewModel(
             _uiState.value =
                 DetailUiState.Success(
                     product = loaded.toUiModel(),
-                    quantity = cartRepository.getQuantity(loaded.id),
+                    quantity = 1,
                     lastSeenProduct = lastSeen,
                 )
 
