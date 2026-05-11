@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.ui.DisplayText
@@ -33,7 +32,7 @@ data class CartItemUiModel(
 
 fun ShoppingCartItem.toUiModel(): CartItemUiModel {
     return CartItemUiModel(
-        id = id,
+        id = product.id,
         productId = product.id,
         title = product.getTitle(),
         imageUrl = product.imageUrl,
@@ -78,21 +77,21 @@ class ShoppingCartViewModel(
 
     fun removeShoppingItem(productId: String) {
         viewModelScope.launch {
-            shoppingCartRepository.removeItem(productId)
+            shoppingCartRepository.removeItemFromCart(productId)
             loadShoppingItems(currentPage)
         }
     }
 
     fun increaseItemQuantity(productId: String, quantity: Int) {
         viewModelScope.launch {
-            shoppingCartRepository.increaseItemQuantityByProductId(productId, Quantity(quantity))
+            shoppingCartRepository.addItemToCart(productId, quantity)
             loadShoppingItems(currentPage)
         }
     }
 
     fun decreaseItemQuantity(productId: String, quantity: Int) {
         viewModelScope.launch {
-            shoppingCartRepository.decreaseItemQuantityByProductId(productId, Quantity(quantity))
+            shoppingCartRepository.decreaseItemQuantity(productId, quantity)
             loadShoppingItems(currentPage)
         }
     }
@@ -103,7 +102,7 @@ class ShoppingCartViewModel(
         currentPage = page.coerceIn(0, lastPage)
 
         val offset = currentPage * PAGE_SIZE
-        val shoppingItems = shoppingCartRepository.getItems(offset, PAGE_SIZE)
+        val shoppingItems = shoppingCartRepository.getCartItems(offset, PAGE_SIZE)
 
         _uiState.value =
             _uiState.value.copy(

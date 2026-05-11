@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.DisplayText
 import woowacourse.shopping.ui.WonMoney
 

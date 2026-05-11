@@ -12,7 +12,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import woowacourse.shopping.repository.DatabaseProductRepository
 import woowacourse.shopping.repository.dao.ProductDao
 import woowacourse.shopping.repository.entity.ProductEntity
 import kotlin.math.min

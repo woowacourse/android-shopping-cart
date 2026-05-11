@@ -114,10 +114,10 @@ private class MockShoppingCartRepository(
 
     }
 
-    override suspend fun getItemByProductId(shoppingCartItemId: String): ShoppingCartItem? =
+    override suspend fun getCartItem(shoppingCartItemId: String): ShoppingCartItem? =
         shoppingCartItems.find { it.id == shoppingCartItemId }
 
-    override suspend fun getItems(
+    override suspend fun getCartItems(
         offset: Int,
         size: Int,
     ): List<ShoppingCartItem> {

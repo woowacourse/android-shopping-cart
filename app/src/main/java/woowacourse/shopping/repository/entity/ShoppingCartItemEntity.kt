@@ -2,7 +2,6 @@ package woowacourse.shopping.repository.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
@@ -13,7 +12,7 @@ import androidx.room.PrimaryKey
     ],
 )
 data class ShoppingCartItemEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo val quantity: Int,
     @ColumnInfo("product_id") val productId: String,
 )

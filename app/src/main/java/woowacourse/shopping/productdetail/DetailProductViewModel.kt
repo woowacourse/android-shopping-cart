@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
@@ -68,20 +67,20 @@ class DetailProductViewModel(
 
     fun increaseQuantity(quantity: Int) {
         viewModelScope.launch {
-            shoppingCartRepository.increaseItemQuantityByProductId(_uiState.value.productUiModel.id, Quantity(quantity))
+            shoppingCartRepository.addItemToCart(_uiState.value.productUiModel.id, quantity)
             updateQuantity(_uiState.value.productUiModel.id)
         }
     }
 
     fun decreaseQuantity(quantity: Int) {
         viewModelScope.launch {
-            shoppingCartRepository.decreaseItemQuantityByProductId(_uiState.value.productUiModel.id, Quantity(quantity))
+            shoppingCartRepository.decreaseItemQuantity(_uiState.value.productUiModel.id, quantity)
             updateQuantity(_uiState.value.productUiModel.id)
         }
     }
 
     private suspend fun updateQuantity(productId: String) {
-        val shoppingCartItem = shoppingCartRepository.getItemByProductId(productId)
+        val shoppingCartItem = shoppingCartRepository.getCartItem(productId)
         if (shoppingCartItem == null) {
             _uiState.update { state ->
                 state.copy(
@@ -105,7 +104,7 @@ class DetailProductViewModel(
             ?.toUiModel()
 
     private suspend fun Product.toUiModel(): ProductUiModel {
-        val shoppingCartItem = shoppingCartRepository.getItemByProductId(id)
+        val shoppingCartItem = shoppingCartRepository.getCartItem(id)
         return ProductUiModel(
             id = id,
             name = getTitle(),

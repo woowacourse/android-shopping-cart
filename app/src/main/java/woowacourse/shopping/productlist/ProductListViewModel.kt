@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.repository.ViewedProductRepository
@@ -120,20 +119,20 @@ class ProductListViewModel(
 
     fun increaseItemQuantity(productId: String) {
         viewModelScope.launch {
-            shoppingCartRepository.increaseItemQuantityByProductId(productId, Quantity(1))
+            shoppingCartRepository.addItemToCart(productId, 1)
             updateProduct(productId)
         }
     }
 
     fun decreaseItemQuantity(productId: String) {
         viewModelScope.launch {
-            shoppingCartRepository.decreaseItemQuantityByProductId(productId, Quantity(1))
+            shoppingCartRepository.decreaseItemQuantity(productId, 1)
             updateProduct(productId)
         }
     }
 
     private suspend fun updateProduct(productId: String) {
-        val cartItem = shoppingCartRepository.getItemByProductId(productId)
+        val cartItem = shoppingCartRepository.getCartItem(productId)
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -167,7 +166,7 @@ class ProductListViewModel(
 
     private suspend fun getProductQuantities(productIds: List<String>): Map<String, Int> =
         productIds.associateWith { productId ->
-            shoppingCartRepository.getItemByProductId(productId)?.quantity?.value ?: 0
+            shoppingCartRepository.getCartItem(productId)?.quantity?.value ?: 0
         }
 
     private suspend fun updateProductQuantities(changedProductQuantities: Map<String, Int>) {
@@ -209,7 +208,7 @@ class ProductListViewModel(
         }
 
     private suspend fun Product.toUiModel(): ProductUiModel {
-        val cartItem = shoppingCartRepository.getItemByProductId(id)
+        val cartItem = shoppingCartRepository.getCartItem(id)
         return ProductUiModel(
             id = id,
             name = getTitle(),

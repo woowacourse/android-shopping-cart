@@ -53,8 +53,8 @@ class ShoppingCartRepositoryTest {
     @Test
     fun add_item_to_shopping_cart_correctly() =
         runTest {
-            shoppingCartRepository.increaseItemQuantityByProductId(product.id, Quantity(1))
-            val shoppingCartItems = shoppingCartRepository.getItems(0, 5)
+            shoppingCartRepository.addItemToCart(product.id, Quantity(1))
+            val shoppingCartItems = shoppingCartRepository.getCartItems(0, 5)
 
             assertEquals(shoppingCartItems.size, 1)
             assertEquals(shoppingCartItems.single().product, product)
@@ -64,10 +64,10 @@ class ShoppingCartRepositoryTest {
     @Test
     fun remove_item_from_shopping_cart_about_already_added() =
         runTest {
-            shoppingCartRepository.increaseItemQuantityByProductId(product.id, Quantity(1))
-            val addedShoppingCartItem = shoppingCartRepository.getItems(0, 5).single()
+            shoppingCartRepository.addItemToCart(product.id, Quantity(1))
+            val addedShoppingCartItem = shoppingCartRepository.getCartItems(0, 5).single()
 
-            shoppingCartRepository.removeItem(addedShoppingCartItem.product.id)
-            assertEquals(shoppingCartRepository.getItems(0, 5), emptyList<ShoppingCartItem>())
+            shoppingCartRepository.removeItemFromCart(addedShoppingCartItem.product.id)
+            assertEquals(shoppingCartRepository.getCartItems(0, 5), emptyList<ShoppingCartItem>())
         }
 }
