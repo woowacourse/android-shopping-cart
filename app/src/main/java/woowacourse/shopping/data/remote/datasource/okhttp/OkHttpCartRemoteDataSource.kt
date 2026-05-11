@@ -30,7 +30,8 @@ class OkHttpCartRemoteDataSource(
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw Exception("HTTP Error ${response.code}")
-                json.decodeFromString(response.body.string())
+                val body = checkNotNull(response.body) { "Response body is null" }
+                json.decodeFromString(body.string())
             }
         }
 }
