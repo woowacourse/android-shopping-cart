@@ -16,6 +16,8 @@ ktlint = "14.2.0"
 foundation = "1.11.0"
 lifecycleViewmodelCompose = "2.10.0"
 ksp = "2.3.0"
+mockwebserverVersion = "5.3.2"
+okhttp = "5.3.2"
 room = "2.8.4"
 
 [libraries]
@@ -42,6 +44,8 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 kotlinx-coroutines-test-v173 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTestVersion" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp3-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserverVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

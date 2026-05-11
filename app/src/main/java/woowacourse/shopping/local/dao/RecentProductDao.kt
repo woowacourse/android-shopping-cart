@@ -12,7 +12,7 @@ interface RecentProductDao {
     suspend fun getRecentItems(): List<RecentProductEntity>
 
     @Query("SELECT * FROM recent_products ORDER BY viewedAt DESC LIMIT 1")
-    suspend fun getLastItem(): RecentProductEntity
+    suspend fun getLastItem(): RecentProductEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recentProductEntity: RecentProductEntity)

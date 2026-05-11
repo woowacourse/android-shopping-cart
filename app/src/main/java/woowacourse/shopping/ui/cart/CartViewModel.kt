@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
+import kotlin.math.ceil
 
 
 class CartViewModel(
@@ -86,13 +87,20 @@ class CartViewModel(
 
     private suspend fun refreshData() {
         val count = cartRepo.getSize()
+        val maxPage = maxOf(1, ceil(count.toDouble() / pageSize).toInt())
+        val validCurrentPage = if (_uiState.value.currentPage > maxPage) {
+            maxPage
+        } else {
+            _uiState.value.currentPage
+        }
         val items = cartRepo.getPagedItems(
-            fromIndex = (_uiState.value.currentPage - 1) * pageSize,
+            fromIndex = (validCurrentPage - 1) * pageSize,
             count = pageSize
         )
 
         _uiState.update {
             it.copy(
+                currentPage = validCurrentPage,
                 pagedItems = items,
                 totalItemCount = count
             )

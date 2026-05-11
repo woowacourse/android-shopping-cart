@@ -20,7 +20,7 @@ class RoomRecentProductRepository(
     }
 
     override suspend fun getLastViewedProduct(): Product? {
-        val productId = recentProductDao.getLastItem().productId
+        val productId = recentProductDao.getLastItem()?.productId ?: return null
         return productRepository.findProduct(productId)
     }
 

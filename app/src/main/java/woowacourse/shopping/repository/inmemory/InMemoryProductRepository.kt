@@ -220,7 +220,7 @@ class InMemoryProductRepository(
         count: Int,
     ): List<Product> = products.getPagedProducts(fromIndex, count)
 
-    override suspend fun hasNext(current: Int): Boolean = current < size - 1
+    override suspend fun hasNext(currentIndex: Int): Boolean = currentIndex < size - 1
 
     override suspend fun findProduct(id: UUID): Product? {
         return products.firstOrNull { it.id == id }

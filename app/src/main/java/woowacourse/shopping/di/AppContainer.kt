@@ -3,17 +3,20 @@ package woowacourse.shopping.di
 import android.content.Context
 import androidx.room.Room
 import woowacourse.shopping.local.ShoppingDatabase
+import woowacourse.shopping.network.ShoppingNetworkClient
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
-import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.repository.network.NetworkProductRepository
 import woowacourse.shopping.repository.room.RoomCartRepository
 import woowacourse.shopping.repository.room.RoomRecentProductRepository
 
 object AppContainer {
     private lateinit var database: ShoppingDatabase
 
-    val productRepository: ProductRepository = InMemoryProductRepository()
+    val networkClient = ShoppingNetworkClient()
+    val productRepository: ProductRepository =
+        NetworkProductRepository(networkClient = networkClient)
     val cartRepository: CartRepository by lazy {
         RoomCartRepository(
             cartDao = database.cartDao(),

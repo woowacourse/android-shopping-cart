@@ -11,7 +11,7 @@ interface ProductRepository {
         count: Int,
     ): List<Product>
 
-    suspend fun hasNext(current: Int): Boolean
+    suspend fun hasNext(currentIndex: Int): Boolean
 
     suspend fun findProduct(id: UUID): Product?
 }
