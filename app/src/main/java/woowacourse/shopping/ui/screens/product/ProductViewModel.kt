@@ -15,11 +15,14 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiRecentProduct
 import woowacourse.shopping.ui.model.toUiModel
 
 data class ProductUiState(
     val products: List<UiProduct> = emptyList(),
+    val recentProducts: List<UiRecentProduct> = emptyList(),
     val totalCartCount: Int = 0,
     val hasNext: Boolean = false,
     val isLoading: Boolean = false,
@@ -28,8 +31,11 @@ data class ProductUiState(
 class ProductViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private var products: List<Product> = emptyList()
+
+    private var recentProductIds: List<String> = emptyList()
 
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
@@ -41,8 +47,10 @@ class ProductViewModel(
     fun loadInitialProducts() {
         viewModelScope.launch {
             products = productRepository.getProducts(0, PAGE_SIZE)
+            recentProductIds = recentProductRepository.getRecentProductIds()
 
             updateProducts()
+            updateRecentProductIds()
         }
     }
 
@@ -58,6 +66,26 @@ class ProductViewModel(
                 )
             }
         }
+    }
+
+    fun updateRecentProductIds() {
+        _uiState.update {
+            it.copy(
+                recentProducts = recentProductIds.map { productId ->
+                    getUiRecentProduct(productId = productId)
+                },
+            )
+        }
+    }
+
+    private fun getUiRecentProduct(productId: String): UiRecentProduct {
+        val product = productRepository.getProductById(productId)
+
+        return UiRecentProduct(
+            id = productId,
+            imageUrl = product.imageUrl,
+            name = product.name,
+        )
     }
 
     fun getProducts() {
@@ -96,6 +124,14 @@ class ProductViewModel(
         }
     }
 
+    fun addRecentProductId(productId: String) {
+        recentProductRepository.addRecentProductId(productId = productId)
+
+        recentProductIds = recentProductRepository.getRecentProductIds()
+
+        updateRecentProductIds()
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
 
@@ -105,6 +141,7 @@ class ProductViewModel(
                 ProductViewModel(
                     productRepository = app.productRepository,
                     cartRepository = app.cartRepository,
+                    recentProductRepository = app.recentProductRepository,
                 )
             }
         }

@@ -35,13 +35,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.topbar.MainTopBar
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiRecentProduct
 
 @Composable
 fun ProductScreen(
     viewModel: ProductViewModel = viewModel(factory = ProductViewModel.Factory),
     onCartClick: () -> Unit,
-    onProductCardClick: (String) -> Unit,
+    onProductClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val products = uiState.products
@@ -64,8 +64,11 @@ fun ProductScreen(
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 RecentProductGroup(
-                    products = products,
-                    onClick = { },
+                    products = uiState.recentProducts,
+                    onClick = {
+                        onProductClick(it)
+                        viewModel.addRecentProductId(it)
+                    },
                     modifier = Modifier.padding(
                         start = 20.dp,
                         end = 20.dp,
@@ -92,7 +95,10 @@ fun ProductScreen(
                     imageUrl = product.imageUrl,
                     name = product.name,
                     price = product.price,
-                    onClick = { onProductCardClick(product.id) },
+                    onClick = {
+                        onProductClick(product.id)
+                        viewModel.addRecentProductId(product.id)
+                    },
                     cartQuantity = product.cartQuantity,
                     onPlusClick = { viewModel.plusCartCount(product.id) },
                     onMinusClick = { viewModel.minusCartCount(product.id) },
@@ -128,7 +134,7 @@ fun ProductScreen(
 
 @Composable
 private fun RecentProductGroup(
-    products: List<UiProduct>, // 임시로 테스트 용 타입 알맞게 변경하기
+    products: List<UiRecentProduct>,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -147,7 +153,7 @@ private fun RecentProductGroup(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
-                items = products, // 임시로 테스트 용 알맞게 갈아끼우기
+                items = products,
                 key = { it.id },
             ) {
                 RecentProductCard(
@@ -166,6 +172,6 @@ private fun RecentProductGroup(
 private fun ProductScreenPreview() {
     ProductScreen(
         onCartClick = { },
-        onProductCardClick = { },
+        onProductClick = { },
     )
 }

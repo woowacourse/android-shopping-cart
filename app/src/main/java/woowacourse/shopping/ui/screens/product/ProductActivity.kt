@@ -21,7 +21,7 @@ class ProductActivity : ComponentActivity() {
                         val intent = Intent(this, CartActivity::class.java)
                         startActivity(intent)
                     },
-                    onProductCardClick = { id ->
+                    onProductClick = { id ->
                         val intent = ProductDetailActivity.getNewIntent(this, id)
                         startActivity(intent)
                     },
