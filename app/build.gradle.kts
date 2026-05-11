@@ -78,4 +78,9 @@ dependencies {
     // room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
+    //okhttp
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 }
