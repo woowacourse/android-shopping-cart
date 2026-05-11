@@ -17,7 +17,7 @@ import woowacourse.shopping.R
 @Composable
 fun AddCircleButton(
     onAdd: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier
@@ -31,7 +31,8 @@ fun AddCircleButton(
             Icon(
                 painter = painterResource(R.drawable.ic_add),
                 contentDescription = null,
-                tint = Color.Black)
+                tint = Color.Black
+            )
         }
     }
 }

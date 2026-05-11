@@ -48,7 +48,7 @@ class CartProducts(
         return CartProducts(products - product)
     }
 
-    fun calculateTotalPrice() : Long {
+    fun calculateTotalPrice(): Long {
         var totalPrice = 0L
         for (product in products) {
             totalPrice += product.calculateTotalPrice()

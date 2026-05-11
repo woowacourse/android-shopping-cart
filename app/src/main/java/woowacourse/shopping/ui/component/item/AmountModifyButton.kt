@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AmountModifyButton(
-    onIncrease : () -> Unit,
-    onDecrease : () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
     modifier: Modifier = Modifier,
     amount: Int = 0,
 ) {

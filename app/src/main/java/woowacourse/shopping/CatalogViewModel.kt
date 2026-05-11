@@ -11,9 +11,8 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.CatalogProductRepository
-import java.util.UUID
-
 import woowacourse.shopping.repository.InMemoryCartRepository
+import java.util.UUID
 
 class CatalogViewModel(
     private val productRepository: CatalogProductRepository = CatalogProductRepository,

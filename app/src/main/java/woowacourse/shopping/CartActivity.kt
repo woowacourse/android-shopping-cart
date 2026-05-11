@@ -1,7 +1,5 @@
 package woowacourse.shopping
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
@@ -11,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.domain.Cart
+import androidx.lifecycle.lifecycleScope
 import woowacourse.shopping.repository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
-
-import androidx.lifecycle.lifecycleScope
 
 class CartActivity : ComponentActivity() {
     private lateinit var cartStateHolder: CartStateHolder

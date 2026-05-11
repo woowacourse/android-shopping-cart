@@ -76,7 +76,8 @@ fun CatalogScreen(
             CatalogHeader(
                 onCartClick = onCartClick,
                 cartTotalAmount = cartTotalAmount,
-            ) },
+            )
+        },
         bodyContent = {
             CatalogBody(
                 catalog,
@@ -124,7 +125,7 @@ private fun CatalogHeader(
                         .size(24.dp)
                         .clickable(onClick = onCartClick),
             )
-            if(cartTotalAmount != 0) {
+            if (cartTotalAmount != 0) {
                 Box(
                     modifier = Modifier
                         .size(22.dp)

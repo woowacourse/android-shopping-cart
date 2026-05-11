@@ -52,7 +52,7 @@ fun ShoppingItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
             ) {
-                if(quantity == 0) {
+                if (quantity == 0) {
                     AddCircleButton(
                         onAdd = { onIncrease(product.productId) },
                     )
@@ -115,7 +115,7 @@ private fun ShoppingItemPreview() {
         ),
         onClick = {},
         quantity = 1,
-        onIncrease = {  },
-        onDecrease = {  },
+        onIncrease = { },
+        onDecrease = { },
     )
 }

@@ -43,13 +43,15 @@ fun ProductDetailScreen(
 ) {
     CommonFrame(
         headerContent = { ProductDetailHeader(onClose) },
-        bodyContent = { ProductDetailBody(
-            onAddRequest = onAddRequest,
-            product = product,
-            onIncrease = onIncrease,
-            onDecrease = onDecrease,
-            amount = amount,
-        ) },
+        bodyContent = {
+            ProductDetailBody(
+                onAddRequest = onAddRequest,
+                product = product,
+                onIncrease = onIncrease,
+                onDecrease = onDecrease,
+                amount = amount,
+            )
+        },
         modifier = modifier,
     )
 }
@@ -178,7 +180,7 @@ private fun ProductDetailScreenPreview() {
                 name = "우유",
                 price = 100,
             ),
-        onIncrease = {  },
+        onIncrease = { },
         onDecrease = { },
         amount = 1
     )

@@ -25,7 +25,8 @@ class CartStateHolder(
         coroutineScope.launch {
             cartRepository.cartFlow.collect { newCart ->
                 cart = newCart
-                val maxValidPage = if (newCart.getUniqueItemCount() == 0) 0 else (newCart.getUniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
+                val maxValidPage =
+                    if (newCart.getUniqueItemCount() == 0) 0 else (newCart.getUniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
                 if (currentPage > maxValidPage) currentPage = maxValidPage
             }
         }
