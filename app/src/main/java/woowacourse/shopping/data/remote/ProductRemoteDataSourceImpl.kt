@@ -6,7 +6,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import woowacourse.shopping.data.remote.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.dto.ProductDto
 import woowacourse.shopping.data.remote.dto.ProductsResponseDto
 
