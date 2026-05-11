@@ -9,9 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.presentation.shopping.ProductListUiEvent
 import woowacourse.shopping.presentation.shopping.ProductListViewModel
@@ -59,20 +57,4 @@ fun ProductListScreen(
             onQuantityDecrease = viewModel::decreaseQuantity,
         )
     }
-}
-
-@Preview
-@Composable
-private fun ProductListScreenPreview() {
-    ProductListScreen(
-        viewModel =
-            ProductListViewModel(
-                productRepository = AppContainer.productRepository,
-                cartRepository = AppContainer.cartRepository,
-                recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
-                networkMonitor = AppContainer.networkMonitor,
-            ),
-        onCartIconClick = {},
-        onItemClick = {},
-    )
 }

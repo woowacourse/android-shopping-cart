@@ -7,9 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.CartUiEvent
 import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.presentation.cart.component.CartContent
@@ -62,13 +60,4 @@ fun CartScreen(
             onDismiss = viewModel::dismissDeleteDialog,
         )
     }
-}
-
-@Preview
-@Composable
-private fun CartScreenPreview() {
-    CartScreen(
-        viewModel = CartViewModel(AppContainer.cartRepository),
-        onBack = {},
-    )
 }
