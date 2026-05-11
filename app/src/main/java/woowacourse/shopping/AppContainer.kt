@@ -20,11 +20,11 @@ class AppContainer(
     }
 
     val cartRepository: CartRepository by lazy {
-        CartRepository(database.cartItemDao())
+        CartRepository(database.cartItemDao(), productRepository)
     }
 
     val recentItemRepository: RecentItemRepository by lazy {
-        RecentItemRepository(database.recentItemDao())
+        RecentItemRepository(database.recentItemDao(), productRepository)
     }
 
     val networkObserver: NetworkObserver by lazy {

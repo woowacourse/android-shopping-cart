@@ -1,22 +1,33 @@
 package woowacourse.shopping.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.localdb.dao.CartItemDao
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.localdb.mapper.toDomain
-import woowacourse.shopping.data.localdb.mapper.toEntity
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 
 class CartRepository(
     private val cartItemDao: CartItemDao,
+    private val productRepository: ProductRepository,
 ) {
     fun observeCart(): Flow<Cart> =
         cartItemDao
             .getAll()
             .map { entities ->
-                Cart(items = entities.map { it.toDomain() })
+                Cart(
+                    items =
+                        entities.mapNotNull { entity ->
+                            val product =
+                                runCatching {
+                                    productRepository.getProductById(entity.id)
+                                }.getOrNull()
+
+                            product?.let { entity.toDomain(it) }
+                        },
+                )
             }
 
     suspend fun addItem(
@@ -26,9 +37,6 @@ class CartRepository(
         val cartItem =
             CartItemEntity(
                 product.id,
-                product.getName(),
-                product.getPrice(),
-                product.imageUrl,
                 quantity,
                 System.currentTimeMillis(),
             )
@@ -37,19 +45,17 @@ class CartRepository(
 
     suspend fun increaseQuantity(id: String) {
         val cartItem = cartItemDao.findById(id) ?: return
-        val item = cartItem.toDomain()
-        cartItemDao.insert(item.increaseQuantity().toEntity(cartItem.timestamp))
+        cartItemDao.insert(cartItem.copy(quantity = cartItem.quantity + 1))
     }
 
     suspend fun decreaseQuantity(id: String) {
         val cartItem = cartItemDao.findById(id) ?: return
-        val item = cartItem.toDomain()
-        if (item.quantity <= 1) {
+        if (cartItem.quantity <= 1) {
             cartItemDao.deleteById(id)
             return
         }
 
-        cartItemDao.insert(item.decreaseQuantity().toEntity(cartItem.timestamp))
+        cartItemDao.insert(cartItem.copy(quantity = cartItem.quantity - 1))
     }
 
     suspend fun deleteItem(id: String) {
@@ -57,11 +63,18 @@ class CartRepository(
     }
 
     suspend fun getCartItemQuantity(id: String): Int {
-        val item = cartItemDao.findById(id)?.toDomain() ?: return 1
-        return item.quantity
+        return cartItemDao.findById(id)?.quantity ?: 1
     }
 
     suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
 
-    suspend fun getCartTotalPrice(): Int = cartItemDao.getTotalPrice()
+    suspend fun getCartTotalPrice(): Int =
+        cartItemDao
+            .getAll()
+            .first()
+            .sumOf { entity ->
+                runCatching {
+                    productRepository.getProductById(entity.id).getPrice() * entity.quantity
+                }.getOrDefault(0)
+            }
 }

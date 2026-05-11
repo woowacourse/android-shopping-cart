@@ -12,7 +12,7 @@ import kotlin.jvm.java
 
 @Database(
     entities = [CartItemEntity::class, RecentItemEntity::class],
-    version = 1,
+    version = 2,
 )
 abstract class ShoppingDB : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
