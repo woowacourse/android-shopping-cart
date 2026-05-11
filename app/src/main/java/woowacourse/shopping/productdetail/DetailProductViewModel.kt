@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.productlist.ViewedProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.repository.ViewedProductRepository
@@ -18,7 +19,7 @@ import woowacourse.shopping.ui.WonMoney
 
 data class DetailProductUiState(
     val productUiModel: ProductUiModel,
-    val lastViewedProductUiModel: ProductUiModel?,
+    val lastViewedProductUiModel: ViewedProductUiModel?,
 )
 
 class DetailProductViewModel(
@@ -47,24 +48,25 @@ class DetailProductViewModel(
         viewModelScope.launch {
             val product = productRepository.getProduct(productId) ?: return@launch
 
-            _uiState.value =
+            _uiState.update {
                 DetailProductUiState(
                     productUiModel = product.toUiModel(),
                     lastViewedProductUiModel = getMostRecentlyViewedProductUiModel(product.id),
                 )
+            }
 
             viewedProductRepository.addViewedProduct(product.id)
         }
     }
 
-    fun increaseQuantity(quantity: Int) {
+    fun increaseItemQuantity(quantity: Int) {
         viewModelScope.launch {
             shoppingCartRepository.addItemToCart(_uiState.value.productUiModel.id, quantity)
             updateQuantity(_uiState.value.productUiModel.id)
         }
     }
 
-    fun decreaseQuantity(quantity: Int) {
+    fun decreaseItemQuantity(quantity: Int) {
         viewModelScope.launch {
             shoppingCartRepository.decreaseItemQuantity(_uiState.value.productUiModel.id, quantity)
             updateQuantity(_uiState.value.productUiModel.id)
@@ -88,11 +90,16 @@ class DetailProductViewModel(
         }
     }
 
-    private suspend fun getMostRecentlyViewedProductUiModel(productId: String): ProductUiModel? {
+    private suspend fun getMostRecentlyViewedProductUiModel(productId: String): ViewedProductUiModel? {
         val viewedProduct = viewedProductRepository
             .getRecentlyViewedProducts(offset = 0, size = 1)
             .firstOrNull { viewedProduct -> viewedProduct.product.id != productId } ?: return null
-        return viewedProduct.product.toUiModel()
+        return ViewedProductUiModel(
+            id = viewedProduct.product.id,
+            name = viewedProduct.product.getTitle(),
+            imageUrl = viewedProduct.product.imageUrl,
+            viewedAt = viewedProduct.viewedAt,
+        )
     }
 
 

@@ -48,6 +48,7 @@ import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.productlist.ViewedProductUiModel
 import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.component.NumberCounter
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
@@ -77,9 +78,9 @@ fun DetailProductScreen(
         onLastViewedProductClick = { lastViewedProductId ->
             onNavigateToLastViewedProduct(lastViewedProductId)
         },
-        onAddToCartClick = { detailProductViewModel.increaseQuantity(1) },
-        onIncrementQuantity = detailProductViewModel::increaseQuantity,
-        onDecrementQuantity = detailProductViewModel::decreaseQuantity,
+        onAddToCartClick = { detailProductViewModel.increaseItemQuantity(1) },
+        onIncrementQuantity = detailProductViewModel::increaseItemQuantity,
+        onDecrementQuantity = detailProductViewModel::decreaseItemQuantity,
         onBackClick = onBackClick,
         modifier = modifier,
     )
@@ -160,7 +161,7 @@ fun DetailProductContent(
             }
             uiState.lastViewedProductUiModel?.let { lastViewedProduct ->
                 LastViewedProduct(
-                    productUiModel = lastViewedProduct,
+                    viewedProductUiModel = lastViewedProduct,
                     onClick = { onLastViewedProductClick(lastViewedProduct.id) },
                     modifier =
                         Modifier
@@ -185,7 +186,7 @@ fun DetailProductContent(
 
 @Composable
 private fun LastViewedProduct(
-    productUiModel: ProductUiModel,
+    viewedProductUiModel: ViewedProductUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -207,7 +208,7 @@ private fun LastViewedProduct(
             fontWeight = FontWeight.Bold,
         )
         Text(
-            text = productUiModel.name,
+            text = viewedProductUiModel.name,
             color = Color(0xFF555555),
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
@@ -258,12 +259,11 @@ private fun DetailProductContentPreview() {
                             quantity = 0,
                         ),
                     lastViewedProductUiModel =
-                        ProductUiModel(
+                        ViewedProductUiModel(
                             id = "2",
                             name = "PET보틀-정사각형(500ml)",
-                            price = WonMoney(1_000),
                             imageUrl = "",
-                            quantity = 0,
+                            viewedAt = 1L,
                         ),
                 ),
             onAddToCartClick = {},

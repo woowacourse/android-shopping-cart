@@ -52,9 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.Lifecycle
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -70,7 +68,6 @@ import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ProductListScreen(
-    modifier: Modifier = Modifier,
     productListViewModel: ProductListViewModel =
         viewModel(
             factory =
@@ -82,19 +79,7 @@ fun ProductListScreen(
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        productListViewModel.loadInitialProducts()
-    }
-
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        productListViewModel.loadViewedProducts()
-        productListViewModel.refreshDisplayedProducts()
-    }
-
-    val refreshChangedProducts: (Intent?) -> Unit = { data ->
-        val productIds =
-            data?.getStringArrayListExtra(CHANGED_PRODUCT_IDS)
-                ?: emptyList()
-        productListViewModel.refreshProducts(productIds)
+        productListViewModel.loadProducts()
     }
 
     val context = LocalContext.current
@@ -102,16 +87,18 @@ fun ProductListScreen(
     val productDetailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
-        productListViewModel.loadViewedProducts()
         if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        refreshChangedProducts(result.data)
+        val changedProductIds = result.data?.getStringArrayListExtra(CHANGED_PRODUCT_IDS) ?: emptyList()
+        productListViewModel.loadViewedProducts()
+        productListViewModel.updateProducts(changedProductIds)
     }
 
     val shoppingCartLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        refreshChangedProducts(result.data)
+        val changedProductIds = result.data?.getStringArrayListExtra(CHANGED_PRODUCT_IDS) ?: emptyList()
+        productListViewModel.updateProducts(changedProductIds)
     }
 
     ProductListContent(
@@ -123,9 +110,6 @@ fun ProductListScreen(
             shoppingCartLauncher.launch(Intent(context, ShoppingCartActivity::class.java))
         },
         onProductClick = {
-            val isLatestViewedProduct =
-                uiState.viewedProductUiModels.firstOrNull()?.productUiModel?.id == it
-
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
                     .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
@@ -139,8 +123,7 @@ fun ProductListScreen(
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,
         onDecrementQuantity = productListViewModel::decreaseItemQuantity,
-        onloadMoreProductsClick = productListViewModel::loadProducts,
-        modifier = modifier,
+        onloadMoreProductsClick = productListViewModel::loadMoreProducts,
     )
 }
 
@@ -283,11 +266,11 @@ private fun RecentViewedProducts(
         ) {
             lazyRowItems(
                 items = products,
-                key = { "${it.productUiModel.id}-${it.viewedAt}" },
+                key = { "${it.id}-${it.viewedAt}" },
             ) { viewedProduct ->
                 RecentViewedProductItem(
-                    product = viewedProduct.productUiModel,
-                    onClick = { onProductClick(viewedProduct.productUiModel.id) },
+                    product = viewedProduct,
+                    onClick = { onProductClick(viewedProduct.id) },
                 )
             }
         }
@@ -305,7 +288,7 @@ private fun RecentViewedProducts(
 
 @Composable
 private fun RecentViewedProductItem(
-    product: ProductUiModel,
+    product: ViewedProductUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -317,7 +300,10 @@ private fun RecentViewedProductItem(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = stringResource(R.string.product_image_content_description, product.name),
+            contentDescription = stringResource(
+                R.string.product_image_content_description,
+                product.name
+            ),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -410,25 +396,15 @@ private fun ProductListContentPreview() {
             viewedProductUiModels =
                 listOf(
                     ViewedProductUiModel(
-                        productUiModel =
-                            ProductUiModel(
-                                id = "1",
-                                name = "PET보틀-정사각",
-                                price = WonMoney(1_000),
-                                imageUrl = "",
-                                quantity = 0,
-                            ),
+                        id = "1",
+                        name = "PET보틀-정사각",
+                        imageUrl = "",
                         viewedAt = 1L,
                     ),
                     ViewedProductUiModel(
-                        productUiModel =
-                            ProductUiModel(
-                                id = "2",
-                                name = "PET보틀-납작",
-                                price = WonMoney(1_000),
-                                imageUrl = "",
-                                quantity = 0,
-                            ),
+                        id = "2",
+                        name = "PET보틀-납작",
+                        imageUrl = "",
                         viewedAt = 2L,
                     ),
                 ),

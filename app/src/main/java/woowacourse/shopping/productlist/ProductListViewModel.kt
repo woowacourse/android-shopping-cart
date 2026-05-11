@@ -16,19 +16,6 @@ import woowacourse.shopping.repository.ViewedProductRepository
 import woowacourse.shopping.ui.DisplayText
 import woowacourse.shopping.ui.WonMoney
 
-data class ProductUiModel(
-    val id: String,
-    val name: String,
-    val price: DisplayText,
-    val quantity: Int,
-    val imageUrl: String,
-)
-
-data class ViewedProductUiModel(
-    val productUiModel: ProductUiModel,
-    val viewedAt: Long,
-)
-
 data class ProductListUiState(
     val productUiModels: List<ProductUiModel>,
     val viewedProductUiModels: List<ViewedProductUiModel>,
@@ -53,17 +40,19 @@ class ProductListViewModel(
 
     val uiState = _uiState.asStateFlow()
 
-    fun loadInitialProducts() {
+    fun loadProducts() {
         viewModelScope.launch {
             val viewedProductUiModels = getViewedProductUiModels()
             val productUiModels = getProductUiModels(offset = 0, size = PRODUCT_LOAD_SIZE)
+            val totalProductSize = productRepository.totalSize()
+            val totalCartQuantity = shoppingCartRepository.getTotalQuantity()
 
             _uiState.update { currentState ->
                 currentState.copy(
                     productUiModels = productUiModels,
                     viewedProductUiModels = viewedProductUiModels,
-                    isLoadMoreEnabled = productUiModels.size < productRepository.totalSize(),
-                    cartItemCount = shoppingCartRepository.getTotalQuantity(),
+                    isLoadMoreEnabled = productUiModels.size < totalProductSize,
+                    cartItemCount = totalCartQuantity,
                 )
             }
         }
@@ -71,133 +60,84 @@ class ProductListViewModel(
 
     fun loadViewedProducts() {
         viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    viewedProductUiModels = getViewedProductUiModels(),
+            val viewedProductUiModels = getViewedProductUiModels()
+
+            _uiState.update { uiState ->
+                uiState.copy(
+                    viewedProductUiModels = viewedProductUiModels,
                 )
             }
         }
     }
 
-    fun refreshDisplayedProducts() {
-        viewModelScope.launch {
-            val productIds =
-                (
-                    _uiState.value.productUiModels.map { it.id } +
-                        _uiState.value.viewedProductUiModels.map { it.productUiModel.id }
-                ).distinct()
-            val changedProductQuantities = getProductQuantities(productIds)
-
-            updateProductQuantities(changedProductQuantities)
-        }
-    }
-
-    fun loadProducts() {
+    fun loadMoreProducts() {
         viewModelScope.launch {
             val currentProductSize = _uiState.value.productUiModels.size
             val updatedProductUiModels =
                 _uiState.value.productUiModels +
                     getProductUiModels(offset = currentProductSize, size = PRODUCT_LOAD_SIZE)
+            val totalProductSize = productRepository.totalSize()
+            val totalCartQuantity = shoppingCartRepository.getTotalQuantity()
 
             _uiState.update { currentState ->
                 currentState.copy(
                     productUiModels = updatedProductUiModels,
-                    isLoadMoreEnabled = updatedProductUiModels.size < productRepository.totalSize(),
-                    cartItemCount = shoppingCartRepository.getTotalQuantity(),
+                    isLoadMoreEnabled = updatedProductUiModels.size < totalProductSize,
+                    cartItemCount = totalCartQuantity,
                 )
             }
         }
     }
 
-    fun refreshProducts(productIds: List<String>) {
+    fun updateProducts(productIds: List<String>) {
         viewModelScope.launch {
-            val changedProductQuantities = getProductQuantities(productIds.distinct())
+            val updatedProductUiModels =
+                _uiState.value.productUiModels.map { productUiModel ->
+                    if (productUiModel.id !in productIds) {
+                        productUiModel
+                    }
+                    else {
+                        val quantity = shoppingCartRepository.getCartItem(productUiModel.id)?.quantity?.value ?: 0
+                        productUiModel.copy(
+                            quantity = quantity,
+                        )
+                    }
+                }
+            val totalCartQuantity = shoppingCartRepository.getTotalQuantity()
 
-            updateProductQuantities(changedProductQuantities)
+            _uiState.update { uiState ->
+                uiState.copy(
+                    productUiModels = updatedProductUiModels,
+                    cartItemCount = totalCartQuantity,
+                )
+            }
         }
     }
 
     fun increaseItemQuantity(productId: String) {
         viewModelScope.launch {
             shoppingCartRepository.addItemToCart(productId, 1)
-            updateProduct(productId)
+            updateProducts(listOf(productId))
         }
     }
 
     fun decreaseItemQuantity(productId: String) {
         viewModelScope.launch {
             shoppingCartRepository.decreaseItemQuantity(productId, 1)
-            updateProduct(productId)
-        }
-    }
-
-    private suspend fun updateProduct(productId: String) {
-        val cartItem = shoppingCartRepository.getCartItem(productId)
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                productUiModels =
-                    currentState.productUiModels.map { item ->
-                        if (item.id == productId) {
-                            item.copy(
-                                quantity = cartItem?.quantity?.value ?: 0,
-                            )
-                        } else {
-                            item
-                        }
-                    },
-                viewedProductUiModels =
-                    currentState.viewedProductUiModels.map { item ->
-                        if (item.productUiModel.id == productId) {
-                            item.copy(
-                                productUiModel =
-                                    item.productUiModel.copy(
-                                        quantity = cartItem?.quantity?.value ?: 0,
-                                    ),
-                            )
-                        } else {
-                            item
-                        }
-                    },
-                cartItemCount = shoppingCartRepository.getTotalQuantity(),
-            )
-        }
-    }
-
-    private suspend fun getProductQuantities(productIds: List<String>): Map<String, Int> =
-        productIds.associateWith { productId ->
-            shoppingCartRepository.getCartItem(productId)?.quantity?.value ?: 0
-        }
-
-    private suspend fun updateProductQuantities(changedProductQuantities: Map<String, Int>) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                productUiModels =
-                    currentState.productUiModels.map { item ->
-                        changedProductQuantities[item.id]?.let { quantity ->
-                            item.copy(quantity = quantity)
-                        } ?: item
-                    },
-                viewedProductUiModels =
-                    currentState.viewedProductUiModels.map { item ->
-                        changedProductQuantities[item.productUiModel.id]?.let { quantity ->
-                            item.copy(
-                                productUiModel = item.productUiModel.copy(quantity = quantity),
-                            )
-                        } ?: item
-                    },
-                cartItemCount = shoppingCartRepository.getTotalQuantity(),
-            )
+            updateProducts(listOf(productId))
         }
     }
 
     private suspend fun getViewedProductUiModels(): List<ViewedProductUiModel> =
-        viewedProductRepository.getRecentlyViewedProducts(0, VIEWED_PRODUCT_SIZE).map { viewedProduct ->
-            ViewedProductUiModel(
-                productUiModel = viewedProduct.product.toUiModel(),
-                viewedAt = viewedProduct.viewedAt,
-            )
-        }
+        viewedProductRepository.getRecentlyViewedProducts(0, VIEWED_PRODUCT_SIZE)
+            .map { viewedProduct ->
+                ViewedProductUiModel(
+                    id = viewedProduct.product.id,
+                    name = viewedProduct.product.getTitle(),
+                    imageUrl = viewedProduct.product.imageUrl,
+                    viewedAt = viewedProduct.viewedAt,
+                )
+            }
 
     private suspend fun getProductUiModels(
         offset: Int,

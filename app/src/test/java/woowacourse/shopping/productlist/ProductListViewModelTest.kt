@@ -42,7 +42,7 @@ class ProductListViewModelTest {
                     ),
             )
 
-        productListViewModel.loadProducts()
+        productListViewModel.loadMoreProducts()
 
         advanceUntilIdle()
 
@@ -65,7 +65,7 @@ class ProductListViewModelTest {
             )
 
         repeat(pageMoveCount) {
-            productListViewModel.loadProducts()
+            productListViewModel.loadMoreProducts()
         }
 
         advanceUntilIdle()
