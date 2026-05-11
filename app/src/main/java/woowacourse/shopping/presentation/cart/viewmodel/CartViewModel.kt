@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.model.AddItemResult
+import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.RemoveItemResult
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.cart.model.CartUiState
@@ -34,10 +36,9 @@ class CartViewModel(
 
     fun deleteItem(productId: Long) {
         viewModelScope.launch {
-            val result = cartRepository.deleteItem(productId)
-            when (result) {
+            when (val result = cartRepository.deleteItem(productId)) {
                 is RemoveItemResult.Success -> {
-                    refreshCart()
+                    loadCartItems(result.cart)
                     _uiEvents.send(CartEvent.DeleteSuccess)
                 }
                 is RemoveItemResult.NotFoundItem -> {
@@ -49,15 +50,23 @@ class CartViewModel(
 
     fun increase(productId: Long) {
         viewModelScope.launch {
-            cartRepository.addItem(productId)
-            refreshCart()
+            when (val result = cartRepository.addItem(productId)) {
+                is AddItemResult.NewAdded -> loadCartItems(result.cart)
+                is AddItemResult.Incremented -> loadCartItems(result.cart)
+            }
         }
     }
 
     fun decrease(productId: Long) {
         viewModelScope.launch {
-            cartRepository.decrease(productId)
-            refreshCart()
+            when (val result = cartRepository.decrease(productId)) {
+                is RemoveItemResult.Success -> {
+                    loadCartItems(result.cart)
+                }
+                is RemoveItemResult.NotFoundItem -> {
+                    _uiEvents.send(CartEvent.DeleteNotFound)
+                }
+            }
         }
     }
 
@@ -75,14 +84,14 @@ class CartViewModel(
         viewModelScope.launch { refreshCart() }
     }
 
-    private suspend fun loadCartItems() {
+    private suspend fun loadCartItems(providedCart: Cart? = null) {
         if (uiState.value.isLoading) return
         _uiState.update {
             it.copy(isLoading = true)
         }
 
         try {
-            val cart = cartRepository.getCart()
+            val cart = providedCart ?: cartRepository.getCart()
             val items = cart.items.map { it.toUiModel() }
             val maxPage = if (items.isEmpty()) 0 else (items.size - 1) / PAGE_SIZE
 
