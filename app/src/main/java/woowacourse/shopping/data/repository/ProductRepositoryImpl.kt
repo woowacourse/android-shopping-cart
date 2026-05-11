@@ -1,27 +1,31 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.source.ProductDataSource
+import woowacourse.shopping.data.source.remote.model.ProductResponse
+import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
-    productDataSource: ProductDataSource,
+    private val productDataSource: ProductDataSource,
 ) : ProductRepository {
-    private val products = productDataSource.products
-    override val productSize get() = products.size
+    override suspend fun getProductSize(): Int = productDataSource.getTotalCount()
 
-    override fun getProductById(id: String): Product =
-        products.firstOrNull { it.id == id }
-            ?: throw IllegalArgumentException("존재하지 않는 상품입니다. 삐용삐용")
+    override suspend fun getProductById(id: String): Product = productDataSource.getProductById(id).toDomain()
 
     override suspend fun getProducts(
         startIndex: Int,
         count: Int,
-    ): List<Product> {
-        require(startIndex in 0..productSize) { "시작 인덱스가 올바르지 않습니다." }
+    ): List<Product> =
+        productDataSource.getProducts(startIndex, count).map {
+            it.toDomain()
+        }
 
-        val endIndex = minOf(startIndex + count, productSize)
-
-        return products.subList(startIndex, endIndex)
-    }
+    private fun ProductResponse.toDomain(): Product =
+        Product(
+            id = id.toString(),
+            name = name,
+            price = Price(price),
+            imageUrl = imageUrl,
+        )
 }
