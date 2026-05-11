@@ -7,7 +7,7 @@ import androidx.room.Update
 
 @Dao
 interface RecentProductDao {
-    @Query("SELECT * from recentProduct LIMIT 10")
+    @Query("SELECT * from recentProduct ORDER BY view_time DESC LIMIT 10")
     suspend fun getRecentProduct(): List<RecentProductEntity>
 
     @Insert
