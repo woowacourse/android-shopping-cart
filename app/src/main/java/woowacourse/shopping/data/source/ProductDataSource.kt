@@ -1,7 +1,14 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.source.remote.model.ProductResponse
 
 interface ProductDataSource {
-    val products: List<Product>
+    suspend fun getProducts(
+        startIndex: Int,
+        count: Int,
+    ): List<ProductResponse>
+
+    suspend fun getProductById(id: String): ProductResponse
+
+    suspend fun getTotalCount(): Int
 }
