@@ -102,11 +102,13 @@ fun DetailScreen(
                 modifier = Modifier.padding(innerPadding),
             )
             if (uiState.showLastSeenProductCard) {
-                LastSeenProductCard(
-                    name = uiState.lastSeenProduct!!.name,
-                    onClick = { onClickLastProductCard(uiState.lastSeenProduct!!.id) },
-                    modifier = Modifier.padding(horizontal = 18.dp),
-                )
+                uiState.lastSeenProduct?.let { lastProduct ->
+                    LastSeenProductCard(
+                        name = lastProduct.name,
+                        onClick = { onClickLastProductCard(lastProduct.id) },
+                        modifier = Modifier.padding(horizontal = 18.dp),
+                    )
+                }
             }
         }
     }
