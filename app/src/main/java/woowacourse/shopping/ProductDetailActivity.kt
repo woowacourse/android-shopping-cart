@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.repository.cartRepository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import java.util.UUID
@@ -30,6 +29,7 @@ class ProductDetailActivity : ComponentActivity() {
             return
         }
         val product = MockCatalog.findProductById(productId)
+        val cartRepository = (application as ShoppingApplication).cartRepository
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
 
         enableEdgeToEdge()
@@ -44,7 +44,7 @@ class ProductDetailActivity : ComponentActivity() {
                         amount = amount,
                         onAddRequest = {
                             lifecycleScope.launch {
-                                InMemoryCartRepository.addProduct(product, amount)
+                                cartRepository.addProduct(product, amount)
                                 toast.show()
                                 finish()
                             }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import woowacourse.shopping.repository.cartRepository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
 
@@ -21,9 +20,10 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val repository = (application as ShoppingApplication).cartRepository
         val restoredPage = savedInstanceState?.getInt("CURRENT_PAGE") ?: 0
         cartStateHolder = CartStateHolder(
-            cartRepository = InMemoryCartRepository,
+            cartRepository = repository,
             coroutineScope = lifecycleScope,
             initialPage = restoredPage
         )

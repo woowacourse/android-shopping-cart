@@ -41,7 +41,7 @@ import java.util.UUID
 
 @Composable
 fun MainScreen(
-    viewModel: CatalogViewModel = viewModel(),
+    viewModel: CatalogViewModel,
     onItemClick: (UUID) -> Unit,
     onCartClick: () -> Unit,
     modifier: Modifier = Modifier,

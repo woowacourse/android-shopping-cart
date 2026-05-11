@@ -17,6 +17,6 @@ import java.util.UUID
     ]
 )
 data class CartEntity(
-    @PrimaryKey(autoGenerate = true) val productId: UUID,
+    @PrimaryKey val productId: UUID,
     val amount: Int
 )
