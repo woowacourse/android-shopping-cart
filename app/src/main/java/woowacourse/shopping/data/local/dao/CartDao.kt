@@ -1,8 +1,9 @@
 package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.local.entity.CartItemEntity
 import woowacourse.shopping.data.local.entity.CartProductRow
@@ -12,8 +13,8 @@ interface CartDao {
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     suspend fun getByProductId(productId: String): CartItemEntity?
 
-    @Insert
-    suspend fun insert(item: CartItemEntity)
+    @Upsert
+    suspend fun upsert(item: CartItemEntity)
 
     @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
     suspend fun updateQuantity(
@@ -40,4 +41,63 @@ interface CartDao {
       """,
     )
     fun getCartProducts(): Flow<List<CartProductRow>>
+
+    @Query(
+        """
+          UPDATE cart_items
+          SET quantity = quantity + :quantityToAdd
+          WHERE productId = :productId
+          """
+    )
+    suspend fun increaseQuantity(
+        productId: String,
+        quantityToAdd: Int
+    ): Int
+
+    @Query(
+        """
+        UPDATE cart_items
+        SET quantity = quantity - :quantityToRemove
+        WHERE productId = :productId
+        AND quantity >= :quantityToRemove
+    """
+    )
+    suspend fun decreaseQuantity(
+        productId: String,
+        quantityToRemove: Int
+    ): Int
+
+    @Query(
+        """
+          DELETE FROM cart_items
+          WHERE productId = :productId
+            AND quantity = 0
+          """
+    )
+    suspend fun deleteIfZero(productId: String): Int
+
+    @Transaction
+    suspend fun decreaseProduct(
+        productId: String,
+        quantityToRemove: Int
+    ): Boolean {
+        val updated = decreaseQuantity(productId, quantityToRemove)
+        if (updated == 0) return false
+
+        deleteIfZero(productId)
+        return true
+    }
+
+    @Transaction
+    suspend fun addProduct(
+        productId: String,
+        quantityToAdd: Int,
+    ) {
+        val updated = increaseQuantity(productId, quantityToAdd)
+        if (updated == 0) {
+            upsert(CartItemEntity(productId, quantityToAdd))
+        }
+    }
 }
+
+

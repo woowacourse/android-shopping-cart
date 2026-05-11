@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.entity.CartItemEntity
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductWithQuantity
@@ -16,7 +17,8 @@ class RoomCartRepository(
 ) : CartRepository {
     override suspend fun getTotalProductQuantity(): Int = cartDao.getTotalQuantity()
 
-    override suspend fun getProductQuantity(productId: Uuid): Int = cartDao.getByProductId(productId = productId.toString())?.quantity ?: 0
+    override suspend fun getProductQuantity(productId: Uuid): Int =
+        cartDao.getByProductId(productId = productId.toString())?.quantity ?: 0
 
     override fun getCartProducts(): Flow<List<ProductWithQuantity>> =
         cartDao.getCartProducts().map { rows ->
@@ -40,15 +42,12 @@ class RoomCartRepository(
     ) {
         val productId = product.productId.toString()
         val existing = cartDao.getByProductId(productId)
-
-        if (existing == null) {
-            cartDao.insert(CartItemEntity(productId = productId, quantity = quantityToAdd))
-        } else {
-            cartDao.updateQuantity(productId, existing.quantity + quantityToAdd)
-        }
+        val newQuantity = (existing?.quantity ?: 0) + quantityToAdd
+        cartDao.upsert(CartItemEntity(productId = productId, quantity = newQuantity))
     }
 
-    override suspend fun deleteProduct(productId: Uuid) = cartDao.deleteByProductId(productId = productId.toString())
+    override suspend fun deleteProduct(productId: Uuid) =
+        cartDao.deleteByProductId(productId = productId.toString())
 
     override suspend fun decreaseProduct(
         productId: Uuid,
