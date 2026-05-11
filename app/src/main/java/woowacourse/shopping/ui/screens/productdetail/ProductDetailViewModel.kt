@@ -47,12 +47,18 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             val id = recentProductRepository.getLastViewProductId()
 
+            val recentProduct = if (id == null) {
+                null
+            } else {
+                UiLastViewProduct(
+                    id = id,
+                    name = productRepository.getProductById(id).name,
+                )
+            }
+
             _uiState.update {
                 it.copy(
-                    recentProduct = UiLastViewProduct(
-                        id = id,
-                        name = productRepository.getProductById(id).name,
-                    ),
+                    recentProduct = recentProduct,
                 )
             }
         }
