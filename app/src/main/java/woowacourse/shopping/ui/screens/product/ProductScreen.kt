@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.screens.product
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,14 +18,17 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
@@ -49,13 +53,36 @@ fun ProductScreen(
         },
         modifier = Modifier.statusBarsPadding(),
     ) { innerPadding ->
-        ProductScreenContent(
-            uiState = uiState,
-            innerPadding = innerPadding,
-            onItemClick = onItemClick,
-            onMinusClick = viewModel::minusAmount,
-            onAddClick = viewModel::addAmount,
-            onMoreClick = viewModel::getMoreProducts,
+        Column(modifier = Modifier.padding(innerPadding)) {
+            if (!uiState.isNetworkAvailable) {
+                NetworkUnavailableBanner()
+            }
+            ProductScreenContent(
+                uiState = uiState,
+                innerPadding = PaddingValues(),
+                onItemClick = onItemClick,
+                onMinusClick = viewModel::minusAmount,
+                onAddClick = viewModel::addAmount,
+                onMoreClick = viewModel::getMoreProducts,
+            )
+        }
+    }
+}
+
+@Composable
+private fun NetworkUnavailableBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFFE7D9C4))
+            .padding(vertical = 6.dp, horizontal = 16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "네트워크에 연결되어 있지 않습니다",
+            color = Color(0xFFFF0000),
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center,
         )
     }
 }
