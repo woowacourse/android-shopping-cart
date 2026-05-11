@@ -7,5 +7,4 @@ data class DetailUiState(
     val quantity: Int = 1,
     val totalPrice: Int = 0,
     val recentItem: ProductUiModel? = null,
-    val isNotFound: Boolean = false,
 )

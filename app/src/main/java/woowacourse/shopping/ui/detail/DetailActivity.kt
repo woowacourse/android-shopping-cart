@@ -52,6 +52,19 @@ class DetailActivity : ComponentActivity() {
                                 startActivity(CartActivity.getIntent(this@DetailActivity))
                             }
 
+                            DetailEvent.NavigateBack -> {
+                                finish()
+                            }
+
+                            DetailEvent.ShowProductNotFoundMessage -> {
+                                Toast
+                                    .makeText(
+                                        this@DetailActivity,
+                                        "상품을 찾을 수 없습니다.",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+
                             DetailEvent.ShowAddCartFailureMessage -> {
                                 Toast
                                     .makeText(

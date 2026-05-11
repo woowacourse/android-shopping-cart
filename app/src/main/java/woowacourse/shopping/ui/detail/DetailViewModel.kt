@@ -55,7 +55,8 @@ class DetailViewModel(
                         totalPrice = product.getPrice() * quantity,
                     )
             } catch (e: IllegalArgumentException) {
-                _uiState.value = _uiState.value.copy(isNotFound = true)
+                _event.send(DetailEvent.ShowProductNotFoundMessage)
+                _event.send(DetailEvent.NavigateBack)
             }
         }
     }
