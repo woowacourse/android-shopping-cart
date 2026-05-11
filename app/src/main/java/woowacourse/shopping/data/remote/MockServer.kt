@@ -9,9 +9,10 @@ import woowacourse.shopping.data.DUMMY_PRODUCTS
 
 object MockServer {
     private var mockWebServer: MockWebServer? = null
+    private var baseUrl: String = "http://localhost:8080/"
     private val json = Json { encodeDefaults = true }
 
-    fun start(port: Int = 8080, blocking: Boolean = false) {
+    fun start(port: Int = 0, blocking: Boolean = false) {
         if (mockWebServer != null) return
         
         if (blocking) {
@@ -19,6 +20,7 @@ object MockServer {
             server.dispatcher = dispatcher
             server.start(port)
             mockWebServer = server
+            baseUrl = server.url("/").toString()
         } else {
             Thread {
                 try {
@@ -26,6 +28,7 @@ object MockServer {
                     server.dispatcher = dispatcher
                     server.start(port)
                     mockWebServer = server
+                    baseUrl = server.url("/").toString()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -39,7 +42,7 @@ object MockServer {
     }
 
     fun getBaseUrl(): String {
-        return "http://localhost:8080/"
+        return baseUrl
     }
 
     private val dispatcher = object : Dispatcher() {

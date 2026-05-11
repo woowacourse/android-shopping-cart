@@ -45,10 +45,11 @@ object ProductRepositoryImpl : ProductRepository {
 
         val allProducts = fetchAllProducts()
         val fromIndex = page * pageSize
+        if (fromIndex >= allProducts.size) {
+            return ProductItems(emptyList())
+        }
+
         val toIndex = min(fromIndex + pageSize, allProducts.size)
-
-        require(fromIndex <= toIndex) { "페이지 범위가 올바르지 않습니다." }
-
         val result = allProducts.subList(fromIndex, toIndex)
         return ProductItems(result)
     }
