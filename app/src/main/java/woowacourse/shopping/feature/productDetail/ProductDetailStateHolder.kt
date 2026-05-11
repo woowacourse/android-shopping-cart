@@ -2,28 +2,30 @@ package woowacourse.shopping.feature.productDetail
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.domain.model.Quantity
 import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
 import woowacourse.shopping.feature.productDetail.model.toUiModel
-import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
-import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailStateHolder(
     private val productRepository: ProductRepository,
@@ -31,9 +33,11 @@ class ProductDetailStateHolder(
     private val recentProductRepository: RecentProductRepository,
     private val productId: String,
     private val isFromRecent: Boolean,
+    private val scope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob()),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var product: Product? = null
+    private var selectedQuantity by mutableIntStateOf(1)
 
     var productInfo: ProductInfo? by mutableStateOf(null)
         private set
@@ -46,8 +50,8 @@ class ProductDetailStateHolder(
 
     init {
         scope.launch {
-            product = withContext(Dispatchers.IO) { productRepository.getProduct(productId) }
-            refreshUiState()
+            product = withContext(ioDispatcher) { productRepository.getProduct(productId) }
+            updateProductInfo()
             saveRecentProduct()
             observeRecentProducts()
         }
@@ -63,46 +67,34 @@ class ProductDetailStateHolder(
 
     private fun saveRecentProduct() {
         val product = product ?: return
-        scope.launch(Dispatchers.IO) {
+        scope.launch(ioDispatcher) {
             recentProductRepository.saveRecentProduct(product)
         }
     }
 
     fun onAddClick() {
         val product = product ?: return
-        scope.launch(Dispatchers.IO) {
-            cartRepository.updateCart(CartItem(product, Quantity(1)))
-            refreshUiState()
+        val quantityToAdd = selectedQuantity
+        scope.launch(ioDispatcher) {
+            val currentCartItem = cartRepository.getCartItem(productId).first()
+            val nextQuantity = (currentCartItem?.quantity?.value ?: 0) + quantityToAdd
+            cartRepository.updateCart(CartItem(product, Quantity(nextQuantity)))
         }
     }
 
     fun onIncreaseClick() {
-        scope.launch(Dispatchers.IO) {
-            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
-            cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value + 1)))
-            refreshUiState()
-        }
+        selectedQuantity += 1
+        updateProductInfo()
     }
 
     fun onDecreaseClick() {
-        scope.launch(Dispatchers.IO) {
-            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
-            if (currentCartItem.quantity.value <= 1) {
-                cartRepository.deleteCartItem(productId)
-            } else {
-                cartRepository.updateCart(CartItem(currentCartItem.product, Quantity(currentCartItem.quantity.value - 1)))
-            }
-            refreshUiState()
-        }
+        if (selectedQuantity <= 1) return
+        selectedQuantity -= 1
+        updateProductInfo()
     }
 
-    private fun refreshUiState() {
-        scope.launch {
-            val quantity = withContext(Dispatchers.IO) {
-                cartRepository.getCartItem(productId).first()?.quantity?.value ?: 0
-            }
-            productInfo = product?.toUiModel()?.copy(formattedQuantity = quantity.toString())
-        }
+    private fun updateProductInfo() {
+        productInfo = product?.toUiModel()?.copy(formattedQuantity = selectedQuantity.toString())
     }
 }
 
@@ -123,4 +115,3 @@ fun retainProductDetailStateHolder(
         )
     }
 }
-
