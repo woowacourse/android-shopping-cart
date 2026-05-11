@@ -1,17 +1,34 @@
 package woowacourse.shopping.data.source
 
-object RecentProductSourceImpl : RecentProductSource {
-    private val productIds = mutableListOf("1", "2", "3")
+import woowacourse.shopping.data.source.local.recent.RecentProductDao
+import woowacourse.shopping.data.source.local.recent.RecentProductEntity
 
-    override fun getRecentProductIds(): List<String> = productIds.reversed()
+class RecentProductSourceImpl(
+    private val dao: RecentProductDao,
+) : RecentProductSource {
+    override suspend fun getRecentProductIds(): List<RecentProductEntity> = dao.getRecentProduct()
 
-    override fun addRecentProductId(productId: String) {
-        if (productIds.contains(productId)) {
-            productIds.remove(productId)
+    override suspend fun addRecentProductId(productId: String) {
+        val viewTime = System.currentTimeMillis()
+
+        if (getRecentProductIds().count { it.productId == productId } > 0) {
+            dao.update(
+                recentProduct = RecentProductEntity(
+                    productId = productId,
+                    viewTime = viewTime,
+                ),
+            )
+
+            return
         }
 
-        productIds.add(productId)
+        dao.insert(
+            recentProduct = RecentProductEntity(
+                productId = productId,
+                viewTime = viewTime,
+            ),
+        )
     }
 
-    override fun getLastViewProductId(): String = productIds.first()
+    override suspend fun getLastViewProductId(): RecentProductEntity = getRecentProductIds().first()
 }

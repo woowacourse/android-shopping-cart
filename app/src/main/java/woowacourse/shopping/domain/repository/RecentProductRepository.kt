@@ -1,9 +1,9 @@
 package woowacourse.shopping.domain.repository
 
 interface RecentProductRepository {
-    fun getRecentProductIds(): List<String>
+    suspend fun getRecentProductIds(): List<String>
 
-    fun getLastViewProductId(): String
+    suspend fun getLastViewProductId(): String
 
-    fun addRecentProductId(productId: String)
+    suspend fun addRecentProductId(productId: String)
 }

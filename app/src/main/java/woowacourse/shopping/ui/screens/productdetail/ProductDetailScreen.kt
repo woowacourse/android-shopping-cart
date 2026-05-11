@@ -81,14 +81,16 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(29.dp))
 
-            if (productId != state.recentProduct.id) {
-                LastViewProductCard(
-                    name = state.recentProduct.name,
-                    onClick = { onLastViewProductClick(state.recentProduct.id) },
-                    modifier = Modifier
-                        .padding(horizontal = 18.dp)
-                        .fillMaxWidth(),
-                )
+            state.recentProduct?.let {
+                if (productId != it.id) {
+                    LastViewProductCard(
+                        name = it.name,
+                        onClick = { onLastViewProductClick(it.id) },
+                        modifier = Modifier
+                            .padding(horizontal = 18.dp)
+                            .fillMaxWidth(),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

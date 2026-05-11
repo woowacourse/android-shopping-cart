@@ -6,11 +6,11 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 class RecentProductRepositoryImpl(
     private val dataSource: RecentProductSource,
 ) : RecentProductRepository {
-    override fun getRecentProductIds(): List<String> = dataSource.getRecentProductIds()
+    override suspend fun getRecentProductIds(): List<String> = dataSource.getRecentProductIds().map { it.productId }
 
-    override fun getLastViewProductId(): String = dataSource.getRecentProductIds().first()
+    override suspend fun getLastViewProductId(): String = dataSource.getRecentProductIds().first().productId
 
-    override fun addRecentProductId(productId: String) {
+    override suspend fun addRecentProductId(productId: String) {
         dataSource.addRecentProductId(productId = productId)
     }
 }
