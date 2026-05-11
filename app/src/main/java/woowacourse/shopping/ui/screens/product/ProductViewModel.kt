@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.util.NetworkMonitor
 import woowacourse.shopping.domain.CartItems
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
@@ -26,6 +27,7 @@ class ProductViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val productRecentRepository: ProductRecentRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
@@ -48,9 +50,18 @@ class ProductViewModel(
         )
 
     init {
+        observeNetworkState()
         observeCartChanged()
         observeRecentProductsChanged()
         loadProducts()
+    }
+
+    private fun observeNetworkState() {
+        viewModelScope.launch {
+            networkMonitor.isConnected.collect { isConnected ->
+                _uiState.update { it.copy(isNetworkAvailable = isConnected) }
+            }
+        }
     }
 
     private fun loadProducts() =
@@ -149,6 +160,7 @@ class ProductViewModel(
                     productRepository = application.productRepository,
                     cartRepository = application.cartRepository,
                     productRecentRepository = application.productRecentRepository,
+                    networkMonitor = application.networkMonitor,
                 )
             }
         }

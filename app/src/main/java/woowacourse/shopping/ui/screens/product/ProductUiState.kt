@@ -9,4 +9,5 @@ data class ProductUiState(
     val hasNext: Boolean = true,
     val showRecentProducts: Boolean = false,
     val isLoading: Boolean = false,
+    val isNetworkAvailable: Boolean = true,
 )
