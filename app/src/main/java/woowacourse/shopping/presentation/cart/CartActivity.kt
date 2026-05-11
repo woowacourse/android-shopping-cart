@@ -9,7 +9,9 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.cart.ui.CartScreen
 import woowacourse.shopping.presentation.cart.viewmodel.CartEvent
@@ -32,13 +34,15 @@ class CartActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(Unit) {
-                    viewModel.uiEvents.collect { event ->
-                        val toastMessage =
-                            when (event) {
-                                is CartEvent.DeleteSuccess -> R.string.delete_item_success
-                                is CartEvent.DeleteNotFound -> R.string.not_found_item
-                            }
-                        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.uiEvents.collect { event ->
+                            val toastMessage =
+                                when (event) {
+                                    is CartEvent.DeleteSuccess -> R.string.delete_item_success
+                                    is CartEvent.DeleteNotFound -> R.string.not_found_item
+                                }
+                            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
 
