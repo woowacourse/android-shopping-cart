@@ -3,8 +3,8 @@ package woowacourse.shopping.data.source
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
-object ProductDataSourceImpl : ProductDataSource {
-    override val products = listOf(
+object ProductDataSourceImpl {
+    val products = listOf(
         Product(
             id = "1",
             name = "bolt",
