@@ -10,14 +10,17 @@ import woowacourse.shopping.repository.ProductRepository
 
 class RoomCartRepository(
     private val cartDao: CartDao,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) : CartRepository {
     override suspend fun getAllCartItems(): Cart {
         val cartItems = toCartItems()
         return Cart(cartItems)
     }
 
-    override suspend fun add(item: Product, quantity: Int) {
+    override suspend fun add(
+        item: Product,
+        quantity: Int,
+    ) {
         val currentEntity = cartDao.getCartItemById(item.id)
         if (currentEntity != null) {
             cartDao.updateQuantity(item.id, currentEntity.quantity + quantity)
@@ -54,7 +57,7 @@ class RoomCartRepository(
 
     override suspend fun getPagedItems(
         fromIndex: Int,
-        count: Int
+        count: Int,
     ): List<CartItem> {
         val cartItems = toCartItems()
         require(count >= 0) { "count는 0 이상의 수여야 합니다." }
@@ -71,16 +74,17 @@ class RoomCartRepository(
     private suspend fun toCartItems(): List<CartItem> {
         val cartEntities = cartDao.getAll()
 
-        val items = cartEntities.mapNotNull { entity ->
-            val product = productRepository.findProduct(entity.productId)
+        val items =
+            cartEntities.mapNotNull { entity ->
+                val product = productRepository.findProduct(entity.productId)
 
-            if (product != null) {
-                CartItem(product = product, quantity = entity.quantity)
-            } else {
-                cartDao.deleteById(entity.productId)
-                null
+                if (product != null) {
+                    CartItem(product = product, quantity = entity.quantity)
+                } else {
+                    cartDao.deleteById(entity.productId)
+                    null
+                }
             }
-        }
         return items
     }
 }

@@ -7,5 +7,5 @@ import java.util.UUID
 @Entity(tableName = "cart_items")
 data class CartEntity(
     @PrimaryKey val productId: UUID,
-    val quantity: Int
+    val quantity: Int,
 )

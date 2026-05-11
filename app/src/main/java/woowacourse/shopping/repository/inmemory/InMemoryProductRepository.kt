@@ -222,7 +222,5 @@ class InMemoryProductRepository(
 
     override suspend fun hasNext(currentIndex: Int): Boolean = currentIndex < size - 1
 
-    override suspend fun findProduct(id: UUID): Product? {
-        return products.firstOrNull { it.id == id }
-    }
+    override suspend fun findProduct(id: UUID): Product? = products.firstOrNull { it.id == id }
 }

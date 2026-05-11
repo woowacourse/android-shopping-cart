@@ -35,17 +35,18 @@ fun ProductDetailBody(
     modifier: Modifier = Modifier,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
-    onLastViewedProductClick: (Product) -> Unit
+    onLastViewedProductClick: (Product) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         bottomBar = {
             if (lastViewedProduct != null) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 35.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 35.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     LastViewedProductBanner(
                         lastViewedProduct = lastViewedProduct,
@@ -54,12 +55,13 @@ fun ProductDetailBody(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Color.White,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ShoppingImage(
@@ -148,7 +150,7 @@ private fun ProductUnitPreview() {
         onDecreaseClick = {},
         lastViewedProduct = product2,
         modifier = Modifier,
-        onLastViewedProductClick = {}
+        onLastViewedProductClick = {},
     )
 }
 
@@ -166,6 +168,6 @@ private fun ProductOptionPreview() {
         price = product.price.value,
         count = 3,
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
     )
 }

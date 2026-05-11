@@ -19,7 +19,8 @@ class ShoppingApplication : Application() {
         thread {
             val mockWebServer = MockWebServer()
 
-            val products = """
+            val products =
+                """
 [
   {
     "id": "a0000000-0000-0000-0000-000000000001",
@@ -202,23 +203,24 @@ class ShoppingApplication : Application() {
     "imageUrl": "https://cdn.dummyjson.com/products/images/groceries/Kiwi/thumbnail.png"
   }
 ]
-""".trimIndent()
+                """.trimIndent()
 
+            val dispatcher =
+                object : Dispatcher() {
+                    override fun dispatch(request: RecordedRequest): MockResponse =
+                        when (request.path) {
+                            "/products" -> {
+                                MockResponse()
+                                    .setHeader("Content-Type", "application/json")
+                                    .setResponseCode(200)
+                                    .setBody(products)
+                            }
 
-            val dispatcher = object : Dispatcher() {
-                override fun dispatch(request: RecordedRequest): MockResponse {
-                    return when (request.path) {
-                        "/products" -> {
-                            MockResponse().setHeader("Content-Type", "application/json")
-                                .setResponseCode(200).setBody(products)
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
-
-                        else -> {
-                            MockResponse().setResponseCode(404)
-                        }
-                    }
                 }
-            }
 
             mockWebServer.dispatcher = dispatcher
             mockWebServer.start(12345)

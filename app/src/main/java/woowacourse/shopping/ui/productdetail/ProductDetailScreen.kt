@@ -22,7 +22,7 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onAddToCartClick: () -> Unit,
-    onLastViewedProductClick: (Product) -> Unit
+    onLastViewedProductClick: (Product) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -40,7 +40,7 @@ fun ProductDetailScreen(
                 onIncreaseClick = { viewModel.increase() },
                 onDecreaseClick = { viewModel.decrease() },
                 lastViewedProduct = uiState.lastViewedProduct,
-                onLastViewedProductClick = onLastViewedProductClick
+                onLastViewedProductClick = onLastViewedProductClick,
             )
         }
 
@@ -68,7 +68,7 @@ fun ProductDetailScreen(
         },
         bottomBar = {
             CartAddButton(onClick = onAddToCartClick)
-        }
+        },
     ) { paddingValues ->
         ProductDetailBody(
             product = product,
@@ -78,7 +78,7 @@ fun ProductDetailScreen(
             onDecreaseClick = onDecreaseClick,
             lastViewedProduct = lastViewedProduct,
             onLastViewedProductClick = onLastViewedProductClick,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         )
     }
 }

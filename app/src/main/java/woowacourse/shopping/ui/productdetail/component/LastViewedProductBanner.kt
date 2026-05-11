@@ -22,19 +22,19 @@ import woowacourse.shopping.model.Product
 fun LastViewedProductBanner(
     lastViewedProduct: Product,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .size(width = 324.dp, height = 80.dp)
-            .border(
-                width = 1.dp,
-                color = Color.Gray,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 18.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .size(width = 324.dp, height = 80.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(4.dp),
+                ).clickable(onClick = onClick)
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "마지막으로 본 상품",
@@ -55,13 +55,14 @@ fun LastViewedProductBanner(
 @Preview(showBackground = true)
 @Composable
 private fun LastViewedProductBannerPreview() {
-    val product = Product(
-        name = "PET보틀-정사각형(500ml)",
-        price = Money(8000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "PET보틀-정사각형(500ml)",
+            price = Money(8000),
+            imageUrl = "",
+        )
     LastViewedProductBanner(
         lastViewedProduct = product,
-        onClick = {}
+        onClick = {},
     )
 }

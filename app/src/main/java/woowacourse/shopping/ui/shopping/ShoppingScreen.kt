@@ -36,7 +36,7 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
-    onRecentProductClick: (Product) -> Unit
+    onRecentProductClick: (Product) -> Unit,
 ) {
     val lazyGridState = rememberLazyGridState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -44,11 +44,12 @@ fun ShoppingScreen(
     val isConnected by viewModel.isNetworkConnected.collectAsState()
 
     DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.syncCartState()
+        val observer =
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    viewModel.syncCartState()
+                }
             }
-        }
 
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
@@ -73,7 +74,7 @@ fun ShoppingScreen(
                 onMoreClick = { viewModel.loadMore() },
                 onIncreaseClick = { viewModel.increase(it) },
                 onDecreaseClick = { viewModel.decrease(it) },
-                onRecentProductClick = onRecentProductClick
+                onRecentProductClick = onRecentProductClick,
             )
 
             if (state.isLoading) ShoppingLoading()
@@ -102,14 +103,14 @@ fun ShoppingScreen(
     ) {
         ShoppingHeader(
             cartCount = cartCount,
-            onCartClick = onCartClick
+            onCartClick = onCartClick,
         )
 
         if (recentProducts.any()) {
             RecentProductGroup(
                 products = recentProducts,
                 modifier = Modifier.fillMaxWidth(),
-                onRecentProductClick = onRecentProductClick
+                onRecentProductClick = onRecentProductClick,
             )
 
             HorizontalDivider(thickness = 7.dp, color = Color(0xFFEBEBEB))
@@ -126,7 +127,7 @@ fun ShoppingScreen(
             onProductClick = onProductClick,
             onMoreClick = onMoreClick,
             onIncreaseClick = onIncreaseClick,
-            onDecreaseClick = onDecreaseClick
+            onDecreaseClick = onDecreaseClick,
         )
     }
 }
@@ -185,6 +186,6 @@ private fun ShoppingScreenPreview2() {
         onIncreaseClick = {},
         onDecreaseClick = {},
         modifier = Modifier,
-        onRecentProductClick = {}
+        onRecentProductClick = {},
     )
 }

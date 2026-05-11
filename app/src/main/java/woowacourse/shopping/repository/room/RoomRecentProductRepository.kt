@@ -10,12 +10,13 @@ import java.util.UUID
 
 class RoomRecentProductRepository(
     private val recentProductDao: RecentProductDao,
-    private val productRepository: ProductRepository
-): RecentProductRepository {
+    private val productRepository: ProductRepository,
+) : RecentProductRepository {
     override suspend fun getRecentProducts(): Products {
-        val productList = recentProductDao.getRecentItems().mapNotNull {
-            productRepository.findProduct(id = it.productId)
-        }
+        val productList =
+            recentProductDao.getRecentItems().mapNotNull {
+                productRepository.findProduct(id = it.productId)
+            }
         return Products(productList)
     }
 

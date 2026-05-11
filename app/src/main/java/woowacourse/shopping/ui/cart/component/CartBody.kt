@@ -80,6 +80,6 @@ private fun CartBodyPreview() {
         onPreviousClick = {},
         onNextClick = {},
         onAddClick = {},
-        onRemoveClick = {}
+        onRemoveClick = {},
     )
 }

@@ -12,7 +12,10 @@ class InMemoryCartRepository(
 
     override suspend fun getAllCartItems(): Cart = Cart(value)
 
-    override suspend fun add(item: Product, quantity: Int) {
+    override suspend fun add(
+        item: Product,
+        quantity: Int,
+    ) {
         val existingIndex = value.indexOfFirst { it.product.id == item.id }
 
         if (existingIndex != -1) {

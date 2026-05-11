@@ -40,8 +40,7 @@ fun CartItemUnit(
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
     onAddClick: () -> Unit,
-    onRemoveClick: () -> Unit
-
+    onRemoveClick: () -> Unit,
 ) {
     Column(
         modifier =
@@ -59,7 +58,7 @@ fun CartItemUnit(
         CartItemBody(
             cartItem = cartItem,
             onAddClick = onAddClick,
-            onRemoveClick = onRemoveClick
+            onRemoveClick = onRemoveClick,
         )
     }
 }
@@ -100,7 +99,7 @@ private fun CartItemBody(
     cartItem: CartItem,
     modifier: Modifier = Modifier,
     onAddClick: () -> Unit,
-    onRemoveClick: () -> Unit
+    onRemoveClick: () -> Unit,
 ) {
     val price = cartItem.totalPrice.value
     val formatted = String.format("%,d", price)
@@ -122,7 +121,7 @@ private fun CartItemBody(
         )
         Column(
             horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             QuantityControlButton(
                 count = cartItem.quantity,
@@ -136,7 +135,7 @@ private fun CartItemBody(
                 color = Color.DarkGray,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400,
-                modifier = Modifier
+                modifier = Modifier,
             )
         }
     }
@@ -145,42 +144,48 @@ private fun CartItemBody(
 @Preview(showBackground = true, name = "카트 아이템 유닛")
 @Composable
 private fun CartItemUnitPreview() {
-    val cartItem = CartItem(
-        Product(
-            name = "스피또",
-            price = Money(1000),
-            imageUrl = "",
-        ), 2
-    )
+    val cartItem =
+        CartItem(
+            Product(
+                name = "스피또",
+                price = Money(1000),
+                imageUrl = "",
+            ),
+            2,
+        )
     CartItemUnit(cartItem = cartItem, onDeleteClick = {}, onAddClick = {}, onRemoveClick = {})
 }
 
 @Preview(showBackground = true, name = "이름과 닫기아이콘")
 @Composable
 private fun CartItemHeaderPreview() {
-    val cartItem = CartItem(
-        Product(
-            name = "스피또",
-            price = Money(1000),
-            imageUrl = "",
-        ), 2
-    )
+    val cartItem =
+        CartItem(
+            Product(
+                name = "스피또",
+                price = Money(1000),
+                imageUrl = "",
+            ),
+            2,
+        )
     CartItemHeader(cartItem = cartItem, onClick = {})
 }
 
 @Preview(showBackground = true, name = "사진과 수량, 금액")
 @Composable
 private fun CartItemBodyPreview() {
-    val cartItem = CartItem(
-        Product(
-            name = "스피또",
-            price = Money(1000),
-            imageUrl = "",
-        ), 2
-    )
+    val cartItem =
+        CartItem(
+            Product(
+                name = "스피또",
+                price = Money(1000),
+                imageUrl = "",
+            ),
+            2,
+        )
     CartItemBody(
         cartItem = cartItem,
         onAddClick = {},
-        onRemoveClick = {}
+        onRemoveClick = {},
     )
 }

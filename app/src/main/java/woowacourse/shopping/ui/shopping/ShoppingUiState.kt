@@ -9,5 +9,5 @@ data class ShoppingUiState(
     val recentProducts: Products = Products(emptyList()),
     val hasNext: Boolean = false,
     val sizeInRepo: Int = 0,
-    val cartCount: Int = 0
+    val cartCount: Int = 0,
 )

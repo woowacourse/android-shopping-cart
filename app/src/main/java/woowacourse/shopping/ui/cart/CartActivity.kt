@@ -18,7 +18,6 @@ class CartActivity : ComponentActivity() {
     val cartRepo = AppContainer.cartRepository
     val pageSize = 5
 
-
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,16 +25,17 @@ class CartActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel: CartViewModel = viewModel(
-                        factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                return CartViewModel(
-                                    cartRepo = cartRepo,
-                                    pageSize = pageSize
-                                ) as T
-                            }
-                        }
-                    )
+                    val viewModel: CartViewModel =
+                        viewModel(
+                            factory =
+                                object : ViewModelProvider.Factory {
+                                    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                                        CartViewModel(
+                                            cartRepo = cartRepo,
+                                            pageSize = pageSize,
+                                        ) as T
+                                },
+                        )
 
                     CartScreen(
                         viewModel = viewModel,

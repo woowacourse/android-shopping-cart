@@ -20,21 +20,24 @@ object AppContainer {
     val cartRepository: CartRepository by lazy {
         RoomCartRepository(
             cartDao = database.cartDao(),
-            productRepository = productRepository
+            productRepository = productRepository,
         )
     }
     val recentProductRepository: RecentProductRepository by lazy {
         RoomRecentProductRepository(
             recentProductDao = database.recentProductDao(),
-            productRepository = productRepository
+            productRepository = productRepository,
         )
     }
 
     fun init(context: Context) {
-        database = Room.databaseBuilder(
-            context.applicationContext,
-            Database::class.java,
-            "shopping-db"
-        ).fallbackToDestructiveMigration(false).build()
+        database =
+            Room
+                .databaseBuilder(
+                    context.applicationContext,
+                    Database::class.java,
+                    "shopping-db",
+                ).fallbackToDestructiveMigration(false)
+                .build()
     }
 }

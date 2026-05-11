@@ -40,13 +40,13 @@ fun ProductGroup(
         items(items = products, key = { it.product.id }) { productModel ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 ProductUnit(
                     model = productModel,
                     onClick = { onProductClick(productModel.product) },
                     onIncreaseClick = onIncreaseClick,
-                    onDecreaseClick = onDecreaseClick
+                    onDecreaseClick = onDecreaseClick,
                 )
             }
         }
@@ -93,6 +93,6 @@ private fun ProductGroupPreview() {
         onProductClick = {},
         onMoreClick = {},
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
     )
 }

@@ -55,7 +55,7 @@ fun ShoppingHeader(
                         Text(text = cartCount.toString())
                     }
                 }
-            }
+            },
         ) {
             Icon(
                 imageVector = Icons.Default.ShoppingCart,

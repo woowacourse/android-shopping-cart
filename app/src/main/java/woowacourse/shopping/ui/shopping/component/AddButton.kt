@@ -16,23 +16,24 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AddButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     IconButton(
         onClick = onClick,
         shape = CircleShape,
-        modifier = modifier
-            .size(48.dp)
-            .background(
-                color = Color.White,
-                shape = CircleShape
-            )
+        modifier =
+            modifier
+                .size(48.dp)
+                .background(
+                    color = Color.White,
+                    shape = CircleShape,
+                ),
     ) {
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "추가 아이콘",
             tint = Color.DarkGray,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(40.dp),
         )
     }
 }
@@ -41,6 +42,6 @@ fun AddButton(
 @Composable
 private fun AddButtonPreview() {
     AddButton(
-        onClick = {}
+        onClick = {},
     )
 }

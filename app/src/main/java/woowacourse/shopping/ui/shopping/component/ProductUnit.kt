@@ -32,16 +32,17 @@ fun ProductUnit(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onIncreaseClick: (Product) -> Unit,
-    onDecreaseClick: (Product) -> Unit
+    onDecreaseClick: (Product) -> Unit,
 ) {
     val product = model.product
     val price = product.price.value
     val formatted = String.format("%,d", price)
     Column(
-        modifier = modifier
-            .width(154.dp)
-            .height(206.dp)
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .width(154.dp)
+                .height(206.dp)
+                .clickable(onClick = onClick),
     ) {
         Box {
             ShoppingImage(
@@ -55,16 +56,18 @@ fun ProductUnit(
                     count = model.cartQuantity,
                     onIncreaseClick = { onIncreaseClick(product) },
                     onDecreaseClick = { onDecreaseClick(product) },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(8.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(8.dp),
                 )
             } else {
                 AddButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp),
-                    onClick = { onIncreaseClick(product) }
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp),
+                    onClick = { onIncreaseClick(product) },
                 )
             }
         }
@@ -92,19 +95,21 @@ fun ProductUnit(
 @Composable
 @Preview(showBackground = true, name = "상품 2개")
 private fun ProductUnitPreview() {
-    val product = ProductUiModel(
-        product = Product(
-            name = "연금복권",
-            price = Money(1000),
-            imageUrl = "",
-        ),
-        cartQuantity = 2
-    )
+    val product =
+        ProductUiModel(
+            product =
+                Product(
+                    name = "연금복권",
+                    price = Money(1000),
+                    imageUrl = "",
+                ),
+            cartQuantity = 2,
+        )
     ProductUnit(
         model = product,
         onClick = {},
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
     )
 }
 
@@ -112,15 +117,17 @@ private fun ProductUnitPreview() {
 @Preview(showBackground = true, name = "상품 0개 & 긴 이름을 가진 상품")
 private fun ProductUnitPreview2() {
     ProductUnit(
-        model = ProductUiModel(
-            product = Product(
-                name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
-                price = Money(1000),
-                imageUrl = "",
-            )
-        ),
+        model =
+            ProductUiModel(
+                product =
+                    Product(
+                        name = "정말정말 엄청나게 긴 이름을 가지고 있는 상품",
+                        price = Money(1000),
+                        imageUrl = "",
+                    ),
+            ),
         onClick = {},
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
     )
 }

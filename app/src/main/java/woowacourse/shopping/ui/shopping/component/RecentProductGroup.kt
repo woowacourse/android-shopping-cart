@@ -40,7 +40,7 @@ fun RecentProductGroup(
             text = "최근 본 상품",
             fontWeight = FontWeight.W700,
             fontSize = 16.sp,
-            modifier = Modifier.padding(start = 20.dp)
+            modifier = Modifier.padding(start = 20.dp),
         )
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -48,12 +48,12 @@ fun RecentProductGroup(
         LazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(items = products.toList(), key = { it.id }) { product ->
                 RecentProductUnit(
                     product = product,
-                    onClick = { onRecentProductClick(product) }
+                    onClick = { onRecentProductClick(product) },
                 )
             }
         }
@@ -63,29 +63,33 @@ fun RecentProductGroup(
 @Preview(showBackground = true)
 @Composable
 private fun RecentProductGroupPreview() {
-    val product1 = Product(
-        name = "소고기",
-        price = Money(10000),
-        imageUrl = ""
-    )
-    val product2 = Product(
-        name = "돼지고기",
-        price = Money(10000),
-        imageUrl = ""
-    )
-    val product3 = Product(
-        name = "양고기",
-        price = Money(10000),
-        imageUrl = ""
-    )
-    val product4 = Product(
-        name = "닭고기",
-        price = Money(10000),
-        imageUrl = ""
-    )
+    val product1 =
+        Product(
+            name = "소고기",
+            price = Money(10000),
+            imageUrl = "",
+        )
+    val product2 =
+        Product(
+            name = "돼지고기",
+            price = Money(10000),
+            imageUrl = "",
+        )
+    val product3 =
+        Product(
+            name = "양고기",
+            price = Money(10000),
+            imageUrl = "",
+        )
+    val product4 =
+        Product(
+            name = "닭고기",
+            price = Money(10000),
+            imageUrl = "",
+        )
     val products = Products(listOf(product1, product2, product3, product4))
     RecentProductGroup(
         products = products,
-        onRecentProductClick = {}
+        onRecentProductClick = {},
     )
 }

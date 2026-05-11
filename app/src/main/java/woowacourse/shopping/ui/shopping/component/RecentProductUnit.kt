@@ -25,21 +25,23 @@ import woowacourse.shopping.ui.component.ShoppingImage
 fun RecentProductUnit(
     product: Product,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .width(98.dp)
-            .height(121.dp)
-            .clickable(onClick = onClick),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .width(98.dp)
+                .height(121.dp)
+                .clickable(onClick = onClick),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ShoppingImage(
             model = product.imageUrl,
             contentDescription = "최근 본 상품 이미지",
-            modifier = Modifier
-                .size(98.dp)
-                .align(Alignment.CenterHorizontally)
+            modifier =
+                Modifier
+                    .size(98.dp)
+                    .align(Alignment.CenterHorizontally),
         )
 
         Text(
@@ -49,7 +51,7 @@ fun RecentProductUnit(
             fontSize = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = 4.dp)
+            modifier = Modifier.padding(horizontal = 4.dp),
         )
     }
 }
@@ -57,13 +59,14 @@ fun RecentProductUnit(
 @Preview(showBackground = true)
 @Composable
 private fun RecentProductUnitPreview() {
-    val product = Product(
-        name = "소고기 질 좋아요 드셔보세요",
-        price = Money(20000),
-        imageUrl = ""
-    )
+    val product =
+        Product(
+            name = "소고기 질 좋아요 드셔보세요",
+            price = Money(20000),
+            imageUrl = "",
+        )
     RecentProductUnit(
         product = product,
-        onClick = {}
+        onClick = {},
     )
 }

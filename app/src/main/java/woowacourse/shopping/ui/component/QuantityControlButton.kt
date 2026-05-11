@@ -38,15 +38,16 @@ fun QuantityControlButton(
             Icon(
                 imageVector = Icons.Default.Remove,
                 contentDescription = "제거 아이콘",
-                tint = Color.DarkGray
+                tint = Color.DarkGray,
             )
         }
 
         Box(
-            modifier = Modifier
-                .size(42.dp)
-                .background(Color.White),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(42.dp)
+                    .background(Color.White),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = count.toString(),
@@ -63,7 +64,7 @@ fun QuantityControlButton(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "추가 아이콘",
-                tint = Color.DarkGray
+                tint = Color.DarkGray,
             )
         }
     }
@@ -73,15 +74,16 @@ fun QuantityControlButton(
 private fun ControlButton(
     roundedCornerShape: RoundedCornerShape,
     onClick: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .size(42.dp)
-            .clickable(onClick = onClick)
-            .clip(roundedCornerShape)
-            .background(color = Color.White),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .size(42.dp)
+                .clickable(onClick = onClick)
+                .clip(roundedCornerShape)
+                .background(color = Color.White),
+        contentAlignment = Alignment.Center,
     ) {
         content()
     }
@@ -93,6 +95,6 @@ private fun QuantityControlButtonPreview() {
     QuantityControlButton(
         count = 2,
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
     )
 }

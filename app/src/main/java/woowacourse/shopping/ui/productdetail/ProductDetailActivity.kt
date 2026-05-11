@@ -28,30 +28,33 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val receivedProductId: String = intent.getStringExtra(EXTRA_PRODUCT_ID)
-            ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
+        val receivedProductId: String =
+            intent.getStringExtra(EXTRA_PRODUCT_ID)
+                ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel: ProductDetailViewModel = viewModel(
-                        factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(
-                                modelClass: Class<T>,
-                                extras: CreationExtras
-                            ): T {
-                                val savedStateHandle = extras.createSavedStateHandle()
+                    val viewModel: ProductDetailViewModel =
+                        viewModel(
+                            factory =
+                                object : ViewModelProvider.Factory {
+                                    override fun <T : ViewModel> create(
+                                        modelClass: Class<T>,
+                                        extras: CreationExtras,
+                                    ): T {
+                                        val savedStateHandle = extras.createSavedStateHandle()
 
-                                return ProductDetailViewModel(
-                                    savedStateHandle = savedStateHandle,
-                                    productRepo = productRepo,
-                                    cartRepo = cartRepo,
-                                    recentProductRepo = recentProductRepo,
-                                    productId = UUID.fromString(receivedProductId)
-                                ) as T
-                            }
-                        }
-                    )
+                                        return ProductDetailViewModel(
+                                            savedStateHandle = savedStateHandle,
+                                            productRepo = productRepo,
+                                            cartRepo = cartRepo,
+                                            recentProductRepo = recentProductRepo,
+                                            productId = UUID.fromString(receivedProductId),
+                                        ) as T
+                                    }
+                                },
+                        )
 
                     ProductDetailScreen(
                         viewModel = viewModel,
@@ -78,10 +81,11 @@ class ProductDetailActivity : ComponentActivity() {
         fun newIntent(
             context: Context,
             productId: UUID,
-            isFromBanner: Boolean = false
-        ): Intent = Intent(context, ProductDetailActivity::class.java).apply {
-            putExtra(EXTRA_PRODUCT_ID, productId.toString())
-            putExtra(EXTRA_IS_FROM_BANNER, isFromBanner)
-        }
+            isFromBanner: Boolean = false,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(EXTRA_PRODUCT_ID, productId.toString())
+                putExtra(EXTRA_IS_FROM_BANNER, isFromBanner)
+            }
     }
 }

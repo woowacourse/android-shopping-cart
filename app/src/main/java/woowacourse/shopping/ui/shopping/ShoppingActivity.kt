@@ -31,19 +31,20 @@ class ShoppingActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel: ShoppingViewModel = viewModel(
-                        factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                return ShoppingViewModel(
-                                    networkMonitor = NetworkMonitor(applicationContext),
-                                    productRepo = productRepo,
-                                    cartRepo = cartRepo,
-                                    recentProductRepo = recentProductRepo,
-                                    loadSize = loadSize
-                                ) as T
-                            }
-                        }
-                    )
+                    val viewModel: ShoppingViewModel =
+                        viewModel(
+                            factory =
+                                object : ViewModelProvider.Factory {
+                                    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                                        ShoppingViewModel(
+                                            networkMonitor = NetworkMonitor(applicationContext),
+                                            productRepo = productRepo,
+                                            cartRepo = cartRepo,
+                                            recentProductRepo = recentProductRepo,
+                                            loadSize = loadSize,
+                                        ) as T
+                                },
+                        )
 
                     ShoppingScreen(
                         viewModel = viewModel,
@@ -60,7 +61,7 @@ class ShoppingActivity : ComponentActivity() {
                             val intent =
                                 ProductDetailActivity.newIntent(context = this, productId = it.id)
                             startActivity(intent)
-                        }
+                        },
                     )
                 }
             }

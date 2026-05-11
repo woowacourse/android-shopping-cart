@@ -10,10 +10,9 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.ui.paging.Pager
 
-
 class CartViewModel(
     private val cartRepo: CartRepository,
-    private val pageSize: Int
+    private val pageSize: Int,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState = _uiState.asStateFlow()
@@ -92,17 +91,18 @@ class CartViewModel(
         val totalPages = pager.getTotalPages(totalCount)
         val validCurrentPage = _uiState.value.currentPage.coerceIn(1, totalPages)
 
-        val items = cartRepo.getPagedItems(
-            fromIndex = pager.getOffset(validCurrentPage),
-            count = pageSize
-        )
+        val items =
+            cartRepo.getPagedItems(
+                fromIndex = pager.getOffset(validCurrentPage),
+                count = pageSize,
+            )
 
         _uiState.update {
             it.copy(
                 currentPage = validCurrentPage,
                 pagedItems = items,
                 totalItemCount = totalCount,
-                pageSize = pageSize
+                pageSize = pageSize,
             )
         }
     }

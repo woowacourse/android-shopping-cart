@@ -27,13 +27,13 @@ class ShoppingViewModel(
     private val _uiState = MutableStateFlow(ShoppingUiState())
     private val pager = Pager(loadSize)
     val uiState = _uiState.asStateFlow()
-    val isNetworkConnected: StateFlow<Boolean> = networkMonitor.isConnected
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = true
-        )
-
+    val isNetworkConnected: StateFlow<Boolean> =
+        networkMonitor.isConnected
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = true,
+            )
 
     init {
         viewModelScope.launch {
@@ -51,7 +51,7 @@ class ShoppingViewModel(
                         visibleProducts = uiModels,
                         hasNext = hasNextPage,
                         sizeInRepo = totalSize,
-                        recentProducts = recentProducts
+                        recentProducts = recentProducts,
                     )
                 }
             } finally {
@@ -67,13 +67,14 @@ class ShoppingViewModel(
                 cartRepo.increase(product)
 
                 _uiState.update { state ->
-                    val updatedProducts = state.visibleProducts.map { uiModel ->
-                        if (uiModel.product.id == product.id) {
-                            uiModel.copy(cartQuantity = uiModel.cartQuantity + 1)
-                        } else {
-                            uiModel
+                    val updatedProducts =
+                        state.visibleProducts.map { uiModel ->
+                            if (uiModel.product.id == product.id) {
+                                uiModel.copy(cartQuantity = uiModel.cartQuantity + 1)
+                            } else {
+                                uiModel
+                            }
                         }
-                    }
                     val cartCount = state.cartCount + 1
                     state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
                 }
@@ -90,13 +91,14 @@ class ShoppingViewModel(
                 cartRepo.decrease(product)
 
                 _uiState.update { state ->
-                    val updatedProducts = state.visibleProducts.map { uiModel ->
-                        if (uiModel.product.id == product.id) {
-                            uiModel.copy(cartQuantity = maxOf(0, uiModel.cartQuantity - 1))
-                        } else {
-                            uiModel
+                    val updatedProducts =
+                        state.visibleProducts.map { uiModel ->
+                            if (uiModel.product.id == product.id) {
+                                uiModel.copy(cartQuantity = maxOf(0, uiModel.cartQuantity - 1))
+                            } else {
+                                uiModel
+                            }
                         }
-                    }
                     val cartCount = maxOf(0, state.cartCount - 1)
                     state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
                 }
@@ -115,10 +117,11 @@ class ShoppingViewModel(
             try {
                 val currentSize = _uiState.value.visibleProducts.size
                 val currentProducts = _uiState.value.visibleProducts
-                val newProducts = productRepo.getProducts(
-                    fromIndex = currentSize,
-                    count = loadSize,
-                )
+                val newProducts =
+                    productRepo.getProducts(
+                        fromIndex = currentSize,
+                        count = loadSize,
+                    )
                 val newUiModels = mapToProductUiModels(newProducts)
                 val combineProducts = currentProducts + newUiModels
                 val totalSize = productRepo.getSize()
@@ -129,7 +132,7 @@ class ShoppingViewModel(
                         visibleCount = minOf(it.visibleCount + loadSize, totalSize),
                         visibleProducts = combineProducts,
                         hasNext = hasNext,
-                        sizeInRepo = totalSize
+                        sizeInRepo = totalSize,
                     )
                 }
             } finally {
@@ -151,7 +154,7 @@ class ShoppingViewModel(
                 state.copy(
                     visibleProducts = updatedUiModels,
                     cartCount = totalCartCount,
-                    recentProducts = recentProducts
+                    recentProducts = recentProducts,
                 )
             }
         }
@@ -159,13 +162,14 @@ class ShoppingViewModel(
 
     private suspend fun mapToProductUiModels(products: List<Product>): List<ProductUiModel> {
         val cartItems = cartRepo.getAllCartItems()
-        val cartQuantityMap: Map<UUID, Int> = cartItems.items.associate {
-            it.product.id to it.quantity
-        }
+        val cartQuantityMap: Map<UUID, Int> =
+            cartItems.items.associate {
+                it.product.id to it.quantity
+            }
         return products.map { product ->
             ProductUiModel(
                 product = product,
-                cartQuantity = cartQuantityMap[product.id] ?: 0
+                cartQuantity = cartQuantityMap[product.id] ?: 0,
             )
         }
     }

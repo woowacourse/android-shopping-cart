@@ -2,7 +2,9 @@ package woowacourse.shopping.ui.paging
 
 import kotlin.math.ceil
 
-class Pager(private val pageSize: Int) {
+class Pager(
+    private val pageSize: Int,
+) {
     /**
      * 특정 페이지의 시작 위치(Offset)를 계산합니다.
      */
@@ -22,9 +24,10 @@ class Pager(private val pageSize: Int) {
     /**
      * 현재 페이지를 기준으로 다음 페이지가 존재하는지 확인합니다.
      */
-    fun hasNext(currentPage: Int, totalCount: Int): Boolean {
-        return currentPage < getTotalPages(totalCount)
-    }
+    fun hasNext(
+        currentPage: Int,
+        totalCount: Int,
+    ): Boolean = currentPage < getTotalPages(totalCount)
 
     /**
      * 현재 페이지를 기준으로 이전 페이지가 존재하는지 확인합니다.
@@ -34,6 +37,8 @@ class Pager(private val pageSize: Int) {
     /**
      * 현재 크기와 전체 아이템 개수를 기준으로 다음 아이템이 있는지 확인합니다.
      */
-    fun canLoadMore(currentSize: Int, totalCount: Int): Boolean =
-        currentSize < totalCount
+    fun canLoadMore(
+        currentSize: Int,
+        totalCount: Int,
+    ): Boolean = currentSize < totalCount
 }

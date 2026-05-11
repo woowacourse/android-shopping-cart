@@ -7,5 +7,5 @@ import java.util.UUID
 @Entity(tableName = "recent_products")
 data class RecentProductEntity(
     @PrimaryKey val productId: UUID,
-    val viewedAt: Long
+    val viewedAt: Long,
 )

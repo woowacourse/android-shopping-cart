@@ -37,7 +37,7 @@ fun CartScreen(
             onPreviousClick = { viewModel.previousPage() },
             onNextClick = { viewModel.nextPage() },
             onAddClick = { viewModel.increase(it.product) },
-            onRemoveClick = { viewModel.decrease(it.product) }
+            onRemoveClick = { viewModel.decrease(it.product) },
         )
 
         if (uiState.isLoading) ShoppingLoading()
@@ -76,7 +76,7 @@ fun CartScreen(
             onPreviousClick = onPreviousClick,
             onNextClick = onNextClick,
             onAddClick = onAddClick,
-            onRemoveClick = onRemoveClick
+            onRemoveClick = onRemoveClick,
         )
     }
 }
@@ -105,7 +105,7 @@ private fun CartScreenPreview1() {
         onPreviousClick = {},
         onNextClick = {},
         onAddClick = {},
-        onRemoveClick = {}
+        onRemoveClick = {},
     )
 }
 
@@ -125,6 +125,6 @@ private fun CartScreenPreview2() {
         onPreviousClick = {},
         onNextClick = {},
         onAddClick = {},
-        onRemoveClick = {}
+        onRemoveClick = {},
     )
 }

@@ -17,7 +17,7 @@ class ProductDetailViewModel(
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
     private val recentProductRepo: RecentProductRepository,
-    private val productId: UUID
+    private val productId: UUID,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -62,21 +62,23 @@ class ProductDetailViewModel(
             try {
                 val product = productRepo.findProduct(productId)
                 val cartItems = cartRepo.getAllCartItems()
-                val cartQuantityMap = cartItems.items.associate {
-                    it.product.id to it.quantity
-                }
-                val bannerProduct = recentProductRepo.getLastViewedProduct()
-                    ?.takeIf { !isFromBanner && it.id != productId }
+                val cartQuantityMap =
+                    cartItems.items.associate {
+                        it.product.id to it.quantity
+                    }
+                val bannerProduct =
+                    recentProductRepo
+                        .getLastViewedProduct()
+                        ?.takeIf { !isFromBanner && it.id != productId }
 
                 _uiState.update {
                     it.copy(
                         product = product,
                         selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1),
-                        lastViewedProduct = bannerProduct
+                        lastViewedProduct = bannerProduct,
                     )
                 }
                 recentProductRepo.add(productId)
-
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

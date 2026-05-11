@@ -13,10 +13,11 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun ShoppingLoading(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.3f))
-            .clickable(enabled = false, onClick = {}),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.3f))
+                .clickable(enabled = false, onClick = {}),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
