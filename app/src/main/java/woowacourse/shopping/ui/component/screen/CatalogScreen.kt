@@ -46,23 +46,18 @@ fun MainScreen(
     onCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val products by viewModel.products.collectAsState()
+    val catalogItems by viewModel.catalogItems.collectAsState()
     val recentProducts by viewModel.recentProducts.collectAsState()
     val cart by viewModel.cart.collectAsState()
 
     CatalogScreen(
-        catalog = products.map { product ->
-            CatalogItemUiState(
-                product,
-                cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
-            )
-        },
+        catalog = catalogItems,
         cartTotalAmount = cart.getTotalQuantity(),
         recentProducts = recentProducts,
         onItemClick = onItemClick,
         onCartClick = onCartClick,
         onIncrease = { id ->
-            val product = products.find { it.productId == id }
+            val product = catalogItems.find { it.product.productId == id }?.product
             if (product != null) viewModel.addProductToCart(product)
         },
         onDecrease = { id -> viewModel.decreaseProductInCart(id) },

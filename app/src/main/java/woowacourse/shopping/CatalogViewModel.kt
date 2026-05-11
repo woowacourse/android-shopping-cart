@@ -3,14 +3,18 @@ package woowacourse.shopping
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.cartRepository.CartRepository
 import woowacourse.shopping.repository.productRepository.CatalogProductRepository
+import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
 
 class CatalogViewModel(
@@ -21,6 +25,15 @@ class CatalogViewModel(
     val products: StateFlow<List<Product>> = _products.asStateFlow()
 
     val cart: StateFlow<Cart> = cartRepository.cartFlow
+
+    val catalogItems: StateFlow<List<CatalogItemUiState>> = combine(products, cart) { products, cart ->
+        products.map { product ->
+            CatalogItemUiState(
+                product = product,
+                quantity = cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val recentProducts: StateFlow<List<Product>> = MutableStateFlow(
             MockCatalog.catalog.subList(0, 5)
