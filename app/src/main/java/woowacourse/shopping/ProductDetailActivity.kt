@@ -29,8 +29,9 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val product = MockCatalog.findProductById(productId)
         val app = application as ShoppingApplication
+        val productRepository = app.productRepository
+        val product = productRepository.getProductById(productId) ?: return finish()
         val cartRepository = app.cartRepository
         val recentProductRepository = app.recentProductRepository
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)

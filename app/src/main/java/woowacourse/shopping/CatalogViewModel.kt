@@ -13,13 +13,13 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.cartRepository.CartRepository
-import woowacourse.shopping.repository.productRepository.CatalogProductRepository
+import woowacourse.shopping.repository.productRepository.ProductRepository
 import woowacourse.shopping.repository.productRepository.RecentProductRepository
 import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
 
 class CatalogViewModel(
-    private val productRepository: CatalogProductRepository = CatalogProductRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {

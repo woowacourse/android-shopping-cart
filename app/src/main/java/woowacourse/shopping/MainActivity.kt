@@ -32,11 +32,13 @@ class MainActivity : ComponentActivity() {
                     factory = object : ViewModelProvider.Factory {
                         @Suppress("UNCHECKED_CAST")
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return CatalogViewModel(
-                                cartRepository = app.cartRepository,
-                                recentProductRepository = app.recentProductRepository
-                            ) as T
+                           return CatalogViewModel(
+                               productRepository = app.productRepository,
+                               cartRepository = app.cartRepository,
+                               recentProductRepository = app.recentProductRepository
+                           ) as T
                         }
+
                     }
                 )
 
