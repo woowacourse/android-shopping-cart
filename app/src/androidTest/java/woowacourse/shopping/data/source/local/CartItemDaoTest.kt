@@ -9,6 +9,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.data.source.local.ShoppingDataBase
+import woowacourse.shopping.data.source.local.cart.CartItemDao
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
 @RunWith(AndroidJUnit4::class)
 class CartItemDaoTest {

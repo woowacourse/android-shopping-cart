@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.data.source.local.CartItemEntity
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
 interface CartDataSource {
     suspend fun getCartItems(): List<CartItemEntity>

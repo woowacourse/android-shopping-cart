@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.data.source.local.CartItemDao
-import woowacourse.shopping.data.source.local.CartItemEntity
+import woowacourse.shopping.data.source.local.cart.CartItemDao
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
 class CartDataSourceImpl(
     private val dao: CartItemDao,

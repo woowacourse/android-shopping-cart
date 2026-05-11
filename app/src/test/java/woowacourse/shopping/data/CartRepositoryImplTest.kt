@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSource
-import woowacourse.shopping.data.source.local.CartItemEntity
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 import woowacourse.shopping.fixture.ShoppingFixture
 
 class CartRepositoryImplTest {

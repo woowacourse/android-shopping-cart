@@ -8,7 +8,7 @@ import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSourceImpl
 import woowacourse.shopping.data.source.ProductDataSourceImpl
 import woowacourse.shopping.data.source.RecentProductSourceImpl
-import woowacourse.shopping.data.source.local.ShoppingDataBase
+import woowacourse.shopping.data.source.local.cart.ShoppingDataBase
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
