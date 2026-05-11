@@ -125,7 +125,7 @@ fun ShoppingCartContent(
                         onIncrementQuantity = {
                             onIncrementQuantityClick(shoppingCartItem.productId)
                         },
-                        onnDecrementQuantity = {
+                        onDecrementQuantity = {
                             onDecrementQuantityClick(shoppingCartItem.productId)
                         },
                     )

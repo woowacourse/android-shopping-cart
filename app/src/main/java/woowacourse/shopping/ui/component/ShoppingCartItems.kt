@@ -39,7 +39,7 @@ fun ShoppingCartItems(
     imageUrl: String,
     quantity: Int,
     onIncrementQuantity: () -> Unit,
-    onnDecrementQuantity: () -> Unit,
+    onDecrementQuantity: () -> Unit,
     displayableMoney: DisplayText,
     onRemoveShoppingItemClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +104,7 @@ fun ShoppingCartItems(
                 NumberCounter(
                     count = quantity,
                     onIncrement = onIncrementQuantity,
-                    onDecrement = onnDecrementQuantity,
+                    onDecrement = onDecrementQuantity,
                     modifier = Modifier.width(120.dp),
                 )
 
@@ -126,6 +126,6 @@ private fun ShoppingCartItemsPreview() {
         onRemoveShoppingItemClick = {},
         quantity = 1,
         onIncrementQuantity = {},
-        onnDecrementQuantity = { },
+        onDecrementQuantity = { },
     )
 }
