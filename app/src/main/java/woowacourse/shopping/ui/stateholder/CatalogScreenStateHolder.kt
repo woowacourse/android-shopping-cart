@@ -10,9 +10,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.InMemoryCartRepository
-import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.cartRepository.CartRepository
+import woowacourse.shopping.repository.cartRepository.InMemoryCartRepository
+import woowacourse.shopping.repository.productRepository.ProductRepository
 import java.util.UUID
 
 data class CatalogItemUiState(

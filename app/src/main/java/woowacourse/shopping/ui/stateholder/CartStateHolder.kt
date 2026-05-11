@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.cartRepository.CartRepository
 import java.util.UUID
 import kotlin.math.min
 

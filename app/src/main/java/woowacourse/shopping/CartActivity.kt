@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import woowacourse.shopping.repository.InMemoryCartRepository
+import woowacourse.shopping.repository.cartRepository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
 

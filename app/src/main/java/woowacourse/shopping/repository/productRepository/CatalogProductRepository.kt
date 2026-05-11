@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository
+package woowacourse.shopping.repository.productRepository
 
 import woowacourse.shopping.MockCatalog
 import woowacourse.shopping.domain.Product

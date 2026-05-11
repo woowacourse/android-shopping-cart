@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository
+package woowacourse.shopping.repository.cartRepository
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

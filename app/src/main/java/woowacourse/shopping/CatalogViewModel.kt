@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.CatalogProductRepository
-import woowacourse.shopping.repository.InMemoryCartRepository
+import woowacourse.shopping.repository.cartRepository.CartRepository
+import woowacourse.shopping.repository.productRepository.CatalogProductRepository
+import woowacourse.shopping.repository.cartRepository.InMemoryCartRepository
 import java.util.UUID
 
 class CatalogViewModel(
