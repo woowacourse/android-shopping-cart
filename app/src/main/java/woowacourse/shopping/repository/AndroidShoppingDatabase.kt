@@ -1,8 +1,8 @@
 package woowacourse.shopping.repository
 
 import androidx.room.Database
-import androidx.room.migration.Migration
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import woowacourse.shopping.repository.dao.ShoppingCartItemDao
 import woowacourse.shopping.repository.dao.ViewedProductDao

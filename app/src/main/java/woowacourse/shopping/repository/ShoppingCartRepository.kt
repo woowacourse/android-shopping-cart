@@ -3,7 +3,10 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    suspend fun addItemToCart(productId: String, amount: Int)
+    suspend fun addItemToCart(
+        productId: String,
+        amount: Int,
+    )
 
     suspend fun decreaseItemQuantity(
         productId: String,

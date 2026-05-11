@@ -149,7 +149,7 @@ fun DetailProductContent(
                 Text(
                     text = productUiModel.price.display(),
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(start = 6.dp)
+                    modifier = Modifier.padding(start = 6.dp),
                 )
 
                 NumberCounter(
@@ -158,7 +158,7 @@ fun DetailProductContent(
                     onDecrement = { onDecrementQuantity(1) },
                     modifier =
                         Modifier
-                            .width(140.dp)
+                            .width(140.dp),
                 )
             }
             uiState.lastViewedProductUiModel?.let { lastViewedProduct ->
@@ -199,8 +199,7 @@ private fun LastViewedProduct(
                     width = 1.dp,
                     color = Color(0xFFBDBDBD),
                     shape = MaterialTheme.shapes.small,
-                )
-                .clickable { onClick() }
+                ).clickable { onClick() }
                 .padding(horizontal = 22.dp, vertical = 18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {

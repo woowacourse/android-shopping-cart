@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.model.ShoppingCartItem
 import woowacourse.shopping.repository.ShoppingCartRepository
-import woowacourse.shopping.ui.DisplayText
 import woowacourse.shopping.ui.WonMoney
 import kotlin.math.max
 
@@ -55,14 +53,20 @@ class ShoppingCartViewModel(
         }
     }
 
-    fun increaseItemQuantity(productId: String, quantity: Int) {
+    fun increaseItemQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         viewModelScope.launch {
             shoppingCartRepository.addItemToCart(productId, quantity)
             loadShoppingItems(currentPage)
         }
     }
 
-    fun decreaseItemQuantity(productId: String, quantity: Int) {
+    fun decreaseItemQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         viewModelScope.launch {
             shoppingCartRepository.decreaseItemQuantity(productId, quantity)
             loadShoppingItems(currentPage)
@@ -77,21 +81,23 @@ class ShoppingCartViewModel(
         val offset = currentPage * PAGE_SIZE
         val shoppingItems = shoppingCartRepository.getCartItems(offset, PAGE_SIZE)
 
-        _uiState.value = _uiState.value.copy(
-            shoppingCartItems = shoppingItems.map { cartItem ->
-                val product = cartItem.product
-                CartItemUiModel(
-                    productId = product.id,
-                    title = product.getTitle(),
-                    imageUrl = product.imageUrl,
-                    price = WonMoney(product.getPrice()),
-                    quantity = cartItem.quantity.value,
-                )
-            },
-            currentPage = currentPage,
-            canMoveToPreviousPage = currentPage > 0,
-            canMoveToNextPage = (currentPage + 1) * PAGE_SIZE < totalSize,
-        )
+        _uiState.value =
+            _uiState.value.copy(
+                shoppingCartItems =
+                    shoppingItems.map { cartItem ->
+                        val product = cartItem.product
+                        CartItemUiModel(
+                            productId = product.id,
+                            title = product.getTitle(),
+                            imageUrl = product.imageUrl,
+                            price = WonMoney(product.getPrice()),
+                            quantity = cartItem.quantity.value,
+                        )
+                    },
+                currentPage = currentPage,
+                canMoveToPreviousPage = currentPage > 0,
+                canMoveToNextPage = (currentPage + 1) * PAGE_SIZE < totalSize,
+            )
     }
 
     companion object {

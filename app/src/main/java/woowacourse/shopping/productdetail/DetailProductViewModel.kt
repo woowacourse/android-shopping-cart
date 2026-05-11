@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.productlist.ViewedProductUiModel
 import woowacourse.shopping.repository.ProductRepository
@@ -88,9 +88,10 @@ class DetailProductViewModel(
     }
 
     private suspend fun getMostRecentlyViewedProductUiModel(productId: String): ViewedProductUiModel? {
-        val viewedProduct = viewedProductRepository
-            .getRecentlyViewedProducts(offset = 0, size = 1)
-            .firstOrNull { viewedProduct -> viewedProduct.product.id != productId } ?: return null
+        val viewedProduct =
+            viewedProductRepository
+                .getRecentlyViewedProducts(offset = 0, size = 1)
+                .firstOrNull { viewedProduct -> viewedProduct.product.id != productId } ?: return null
         return ViewedProductUiModel(
             id = viewedProduct.product.id,
             name = viewedProduct.product.getTitle(),
@@ -99,16 +100,14 @@ class DetailProductViewModel(
         )
     }
 
-
-    private fun Product.toUiModel(): ProductUiModel {
-        return ProductUiModel(
+    private fun Product.toUiModel(): ProductUiModel =
+        ProductUiModel(
             id = id,
             name = getTitle(),
             price = WonMoney(getPrice()),
             imageUrl = imageUrl,
             quantity = 1,
         )
-    }
 
     companion object {
         fun factory(shoppingApplication: ShoppingApplication) =

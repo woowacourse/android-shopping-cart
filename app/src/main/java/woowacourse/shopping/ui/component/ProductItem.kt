@@ -42,14 +42,14 @@ fun ProductImage(
                     .background(MaterialTheme.colorScheme.surfaceContainer),
         )
         Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 20.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 20.dp),
         ) {
             bottomHoverContent()
         }
     }
-
 }
 
 @Composable
@@ -98,7 +98,7 @@ private fun ProductItemPreview() {
                     contentDescription = "동원 스위트콘",
                     bottomHoverContent = { Text("Hello") },
                 )
-            }
+            },
         )
     }
 }

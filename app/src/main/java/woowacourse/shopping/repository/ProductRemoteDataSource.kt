@@ -11,9 +11,10 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
 
 class ProductRemoteDataSource(
-    private val baseUrl: String
+    private val baseUrl: String,
 ) {
     private val client: OkHttpClient = OkHttpClient()
+
     suspend fun getTotalSize(): Int {
         val responseBody = get("/product/size") ?: return 0
         return JSONObject(responseBody).getInt("size")
@@ -39,7 +40,8 @@ class ProductRemoteDataSource(
     private suspend fun get(path: String): String? =
         withContext(Dispatchers.IO) {
             val request =
-                Request.Builder()
+                Request
+                    .Builder()
                     .url("$baseUrl$path")
                     .build()
 

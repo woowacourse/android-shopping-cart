@@ -2,10 +2,6 @@ package woowacourse.shopping
 
 import android.app.Application
 import androidx.room.Room
-import mockwebserver3.Dispatcher
-import mockwebserver3.MockResponse
-import mockwebserver3.MockWebServer
-import mockwebserver3.RecordedRequest
 import woowacourse.shopping.repository.AndroidShoppingDatabase
 import woowacourse.shopping.repository.DefaultProductRepository
 import woowacourse.shopping.repository.DefaultShoppingCartRepository
@@ -19,7 +15,8 @@ class ShoppingApplication : Application() {
     private val mockWebServer by lazy { startMockWebServer() }
 
     private val database by lazy {
-        Room.databaseBuilder(
+        Room
+            .databaseBuilder(
                 applicationContext,
                 AndroidShoppingDatabase::class.java,
                 "shopping-db",

@@ -110,7 +110,7 @@ fun ShoppingCartContent(
             ) {
                 items(
                     items = shoppingCartItems,
-                    key = { it.productId }
+                    key = { it.productId },
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
                         title = shoppingCartItem.title,

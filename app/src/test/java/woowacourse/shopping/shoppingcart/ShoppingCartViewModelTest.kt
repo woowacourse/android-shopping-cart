@@ -92,14 +92,14 @@ private class MockShoppingCartRepository(
             ShoppingCartItem(Uuid.random().toString(), Quantity(0), product)
         }
 
-    override suspend fun increaseItemQuantity(productId: String, quantity: Int) {
+    override suspend fun increaseItemQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         shoppingCartItems.add(ShoppingCartItem(Uuid.random().toString(), Quantity(quantity), product))
     }
 
-    override suspend fun getShoppingCartItem(productId: String): ShoppingCartItem? {
-        return null
-    }
-
+    override suspend fun getShoppingCartItem(productId: String): ShoppingCartItem? = null
 
     override suspend fun getTotalSize(): Int = shoppingCartItems.size
 
@@ -109,13 +109,11 @@ private class MockShoppingCartRepository(
 
     override suspend fun removeOrDecreaseCartItem(
         shoppingCartItemId: String,
-        quantity: Int
+        quantity: Int,
     ) {
-
     }
 
-    override suspend fun getCartItem(shoppingCartItemId: String): ShoppingCartItem? =
-        shoppingCartItems.find { it.id == shoppingCartItemId }
+    override suspend fun getCartItem(shoppingCartItemId: String): ShoppingCartItem? = shoppingCartItems.find { it.id == shoppingCartItemId }
 
     override suspend fun getCartItems(
         offset: Int,

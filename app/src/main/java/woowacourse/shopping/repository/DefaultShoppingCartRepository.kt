@@ -9,7 +9,10 @@ class DefaultShoppingCartRepository(
     private val productRepository: ProductRepository,
     private val shoppingCartItemDao: ShoppingCartItemDao,
 ) : ShoppingCartRepository {
-    override suspend fun addItemToCart(productId: String, amount: Int) {
+    override suspend fun addItemToCart(
+        productId: String,
+        amount: Int,
+    ) {
         val cartItemEntity = shoppingCartItemDao.getCartItem(productId)
         if (cartItemEntity == null) {
             val product = productRepository.getProduct(productId) ?: return
@@ -19,10 +22,11 @@ class DefaultShoppingCartRepository(
                     product = product,
                 )
             shoppingCartItemDao.addCartItem(
-                shoppingCartItemEntity = ShoppingCartItemEntity(
-                    quantity = shoppingCartItem.quantity.value,
-                    productId = product.id,
-                )
+                shoppingCartItemEntity =
+                    ShoppingCartItemEntity(
+                        quantity = shoppingCartItem.quantity.value,
+                        productId = product.id,
+                    ),
             )
             return
         }
@@ -30,11 +34,14 @@ class DefaultShoppingCartRepository(
         val shoppingCartItem = cartItemEntity.toCartItem() ?: return
 
         shoppingCartItemDao.updateCartItem(
-            shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.increaseQuantity(amount).quantity.value)
+            shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.increaseQuantity(amount).quantity.value),
         )
     }
 
-    override suspend fun decreaseItemQuantity(productId: String, amount: Int) {
+    override suspend fun decreaseItemQuantity(
+        productId: String,
+        amount: Int,
+    ) {
         val cartItemEntity = shoppingCartItemDao.getCartItem(productId) ?: return
         val shoppingCartItem = cartItemEntity.toCartItem()?.decreaseQuantity(amount)
 
@@ -49,7 +56,7 @@ class DefaultShoppingCartRepository(
         }
 
         shoppingCartItemDao.updateCartItem(
-            shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.quantity.value)
+            shoppingCartItemEntity = cartItemEntity.copy(quantity = shoppingCartItem.quantity.value),
         )
     }
 
@@ -59,9 +66,7 @@ class DefaultShoppingCartRepository(
 
     override suspend fun getTotalSize(): Int = shoppingCartItemDao.getTotalSize()
 
-    override suspend fun getTotalQuantity(): Int {
-        return shoppingCartItemDao.getTotalQuantity()
-    }
+    override suspend fun getTotalQuantity(): Int = shoppingCartItemDao.getTotalQuantity()
 
     override suspend fun getCartItem(productId: String): ShoppingCartItem? {
         val cartItemEntity = shoppingCartItemDao.getCartItem(productId) ?: return null

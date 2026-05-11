@@ -13,7 +13,6 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingCartRepository
 import woowacourse.shopping.repository.ViewedProductRepository
-import woowacourse.shopping.ui.DisplayText
 import woowacourse.shopping.ui.WonMoney
 
 data class ProductListUiState(
@@ -144,7 +143,8 @@ class ProductListViewModel(
     }
 
     private suspend fun getViewedProductUiModels(): List<ViewedProductUiModel> =
-        viewedProductRepository.getRecentlyViewedProducts(0, VIEWED_PRODUCT_SIZE)
+        viewedProductRepository
+            .getRecentlyViewedProducts(0, VIEWED_PRODUCT_SIZE)
             .map { viewedProduct ->
                 ViewedProductUiModel(
                     id = viewedProduct.product.id,
@@ -162,18 +162,16 @@ class ProductListViewModel(
             product.toUiModel()
         }
 
-    private suspend fun Product.toUiModel(): ProductUiModel {
-        return ProductUiModel(
+    private suspend fun Product.toUiModel(): ProductUiModel =
+        ProductUiModel(
             id = id,
             name = getTitle(),
             price = WonMoney(getPrice()),
             imageUrl = imageUrl,
             quantity = getCartQuantity(id),
         )
-    }
 
-    private suspend fun getCartQuantity(productId: String): Int =
-        shoppingCartRepository.getCartItem(productId)?.quantity?.value ?: 0
+    private suspend fun getCartQuantity(productId: String): Int = shoppingCartRepository.getCartItem(productId)?.quantity?.value ?: 0
 
     companion object {
         private const val PRODUCT_LOAD_SIZE = 20

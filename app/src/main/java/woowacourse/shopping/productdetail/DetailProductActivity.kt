@@ -1,6 +1,5 @@
 package woowacourse.shopping.productdetail
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -31,7 +30,7 @@ class DetailProductActivity : ComponentActivity() {
                         startActivity(
                             Intent(this, DetailProductActivity::class.java)
                                 .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, lastViewedProductId)
-                                .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+                                .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT),
                         )
                         this.finish()
                     },

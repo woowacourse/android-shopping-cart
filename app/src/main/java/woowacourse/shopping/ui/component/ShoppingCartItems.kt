@@ -77,16 +77,18 @@ fun ShoppingCartItems(
             )
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
             verticalAlignment = Alignment.Bottom,
         ) {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = stringResource(R.string.product_image_description),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
+                modifier =
+                    Modifier
                         .width(136.dp)
                         .height(72.dp)
                         .padding(bottom = 8.dp)
@@ -124,6 +126,6 @@ private fun ShoppingCartItemsPreview() {
         onRemoveShoppingItemClick = {},
         quantity = 1,
         onIncrementQuantity = {},
-        onnDecrementQuantity = {  },
+        onnDecrementQuantity = { },
     )
 }

@@ -20,12 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items as lazyRowItems
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,6 +63,7 @@ import woowacourse.shopping.ui.component.NumberCounter
 import woowacourse.shopping.ui.component.ProductImage
 import woowacourse.shopping.ui.component.ProductItem
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
+import androidx.compose.foundation.lazy.items as lazyRowItems
 
 @Composable
 fun ProductListScreen(
@@ -83,20 +83,22 @@ fun ProductListScreen(
 
     val context = LocalContext.current
 
-    val productDetailLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        productListViewModel.loadViewedProducts()
-        productListViewModel.updateProducts()
-    }
+    val productDetailLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
+            productListViewModel.loadViewedProducts()
+            productListViewModel.updateProducts()
+        }
 
-    val shoppingCartLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
-        productListViewModel.updateProducts()
-    }
+    val shoppingCartLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
+            productListViewModel.updateProducts()
+        }
 
     ProductListContent(
         productUiModels = uiState.productUiModels,
@@ -109,13 +111,13 @@ fun ProductListScreen(
         onProductClick = {
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
-                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
+                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it),
             )
         },
         onViewedProductClick = {
             productDetailLauncher.launch(
                 Intent(context, DetailProductActivity::class.java)
-                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it)
+                    .putExtra(ProductListActivity.EXTRA_PRODUCT_ID, it),
             )
         },
         onIncrementQuantity = productListViewModel::increaseItemQuantity,
@@ -151,7 +153,7 @@ fun ProductListContent(
             columns = GridCells.Fixed(2),
             contentPadding = innerPadding,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(horizontal = 5.dp)
+            modifier = Modifier.padding(horizontal = 5.dp),
         ) {
             if (viewedProductUiModels.isNotEmpty()) {
                 item(
@@ -163,9 +165,10 @@ fun ProductListContent(
                         RecentViewedProducts(
                             products = viewedProductUiModels,
                             onProductClick = onViewedProductClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top=20.dp, bottom = 40.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 20.dp, bottom = 40.dp),
                         )
 
                         HorizontalDivider(
@@ -194,20 +197,22 @@ fun ProductListContent(
                                         count = product.quantity,
                                         onIncrement = { onIncrementQuantity(product.id) },
                                         onDecrement = { onDecrementQuantity(product.id) },
-                                        modifier = Modifier
-                                            .height(40.dp)
-                                            .padding(horizontal = 20.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(Color.White)
+                                        modifier =
+                                            Modifier
+                                                .height(40.dp)
+                                                .padding(horizontal = 20.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(Color.White),
                                     )
                                 } else {
                                     Box(
-                                        modifier = Modifier
-                                            .padding(end = 10.dp)
-                                            .size(40.dp)
-                                            .clip(CircleShape)
-                                            .background(MaterialTheme.colorScheme.background)
-                                            .clickable { onIncrementQuantity(product.id) },
+                                        modifier =
+                                            Modifier
+                                                .padding(end = 10.dp)
+                                                .size(40.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.background)
+                                                .clickable { onIncrementQuantity(product.id) },
                                         contentAlignment = Alignment.Center,
                                     ) {
                                         Text(
@@ -217,7 +222,7 @@ fun ProductListContent(
                                         )
                                     }
                                 }
-                            }
+                            },
                         )
                     },
                     modifier =
@@ -296,10 +301,11 @@ private fun RecentViewedProductItem(
     ) {
         AsyncImage(
             model = product.imageUrl,
-            contentDescription = stringResource(
-                R.string.product_image_content_description,
-                product.name
-            ),
+            contentDescription =
+                stringResource(
+                    R.string.product_image_content_description,
+                    product.name,
+                ),
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -330,9 +336,10 @@ private fun ProductListTopBar(
         title = { Text(text = stringResource(R.string.app_name)) },
         actions = {
             Row(
-                modifier = Modifier
-                    .padding(end = 20.dp)
-                    .clickable { onNavigateToCartClick() },
+                modifier =
+                    Modifier
+                        .padding(end = 20.dp)
+                        .clickable { onNavigateToCartClick() },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
@@ -344,17 +351,18 @@ private fun ProductListTopBar(
 
                 if (cartItemCount > 0) {
                     Box(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
+                        modifier =
+                            Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = cartItemCount.toString(),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
