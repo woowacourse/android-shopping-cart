@@ -95,7 +95,6 @@ object AppContainer {
         recentlyViewedProductRepository =
             RecentlyViewedProductRepositoryImpl(
                 dao = database.recentlyViewedProductDao(),
-                productRepository = productRepository,
             )
 
         lastViewedProductRepository =

@@ -46,7 +46,6 @@ class RecentlyViewedProductRepositoryImplTest {
         repository =
             RecentlyViewedProductRepositoryImpl(
                 dao = dao,
-                productRepository = productRepository,
             )
     }
 
