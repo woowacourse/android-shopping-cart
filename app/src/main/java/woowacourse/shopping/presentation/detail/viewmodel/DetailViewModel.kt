@@ -32,26 +32,36 @@ class DetailViewModel(
         isFromLastSeen: Boolean,
     ) {
         viewModelScope.launch {
-            val loaded = productRepository.getProductById(id)
-            loadedProduct = loaded
+            try {
+                val loaded = productRepository.getProductById(id)
+                loadedProduct = loaded
 
-            val lastSeen =
+                val lastSeen =
+                    runCatching {
+                        if (!isFromLastSeen) {
+                            recentProductRepository
+                                .getRecentProducts(limit = 1)
+                                .firstOrNull()
+                                ?.toUiModel()
+                        } else {
+                            null
+                        }
+                    }.getOrNull()
+
+                _uiState.value =
+                    DetailUiState.Success(
+                        product = loaded.toUiModel(),
+                        quantity = 1,
+                        lastSeenProduct = lastSeen,
+                    )
                 if (!isFromLastSeen) {
-                    recentProductRepository
-                        .getRecentProducts(limit = 1)
-                        .firstOrNull()
-                        ?.toUiModel()
-                } else {
-                    null
+                    runCatching {
+                        recentProductRepository.upsertRecentProduct(id)
+                    }
                 }
-            _uiState.value =
-                DetailUiState.Success(
-                    product = loaded.toUiModel(),
-                    quantity = 1,
-                    lastSeenProduct = lastSeen,
-                )
-
-            if (!isFromLastSeen) recentProductRepository.upsertRecentProduct(id)
+            } catch (e: Exception) {
+                _uiState.value = DetailUiState.Error("상품 로딩에 실패했습니다.")
+            }
         }
     }
 
