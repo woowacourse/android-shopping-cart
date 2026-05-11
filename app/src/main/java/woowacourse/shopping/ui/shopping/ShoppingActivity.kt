@@ -54,6 +54,11 @@ class ShoppingActivity : ComponentActivity() {
                                 ProductDetailActivity.newIntent(context = this, productId = it.id)
                             startActivity(intent)
                         },
+                        onRecentProductClick = {
+                            val intent =
+                                ProductDetailActivity.newIntent(context = this, productId = it.id)
+                            startActivity(intent)
+                        }
                     )
                 }
             }

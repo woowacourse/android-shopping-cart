@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,8 +24,15 @@ import woowacourse.shopping.model.Products
 @Composable
 fun RecentProductGroup(
     products: Products,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecentProductClick: (Product) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(key1 = products) {
+        listState.scrollToItem(0)
+    }
+
     Column(
         modifier = modifier.padding(top = 20.dp, bottom = 40.dp),
     ) {
@@ -37,12 +46,14 @@ fun RecentProductGroup(
         Spacer(modifier = Modifier.size(8.dp))
 
         LazyRow(
+            state = listState,
             contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(items = products.toList(), key = { it.id }) { product ->
                 RecentProductUnit(
-                    product = product
+                    product = product,
+                    onClick = { onRecentProductClick(product) }
                 )
             }
         }
@@ -74,6 +85,7 @@ private fun RecentProductGroupPreview() {
     )
     val products = Products(listOf(product1, product2, product3, product4))
     RecentProductGroup(
-        products = products
+        products = products,
+        onRecentProductClick = {}
     )
 }

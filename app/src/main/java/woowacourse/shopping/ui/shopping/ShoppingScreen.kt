@@ -23,8 +23,8 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.ui.component.ShoppingLoading
-import woowacourse.shopping.ui.shopping.component.RecentProductGroup
 import woowacourse.shopping.ui.shopping.component.ProductGroup
+import woowacourse.shopping.ui.shopping.component.RecentProductGroup
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
 @Composable
@@ -33,6 +33,7 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
+    onRecentProductClick: (Product) -> Unit
 ) {
     val lazyGridState = rememberLazyGridState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -62,7 +63,8 @@ fun ShoppingScreen(
             onProductClick = onProductClick,
             onMoreClick = { viewModel.loadMore() },
             onIncreaseClick = { viewModel.increase(it) },
-            onDecreaseClick = { viewModel.decrease(it) }
+            onDecreaseClick = { viewModel.decrease(it) },
+            onRecentProductClick = onRecentProductClick
         )
 
         if (state.isLoading) ShoppingLoading()
@@ -81,7 +83,8 @@ fun ShoppingScreen(
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
     onIncreaseClick: (Product) -> Unit,
-    onDecreaseClick: (Product) -> Unit
+    onDecreaseClick: (Product) -> Unit,
+    onRecentProductClick: (Product) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -95,7 +98,8 @@ fun ShoppingScreen(
         if (recentProducts.any()) {
             RecentProductGroup(
                 products = recentProducts,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onRecentProductClick = onRecentProductClick
             )
 
             HorizontalDivider(thickness = 7.dp, color = Color(0xFFEBEBEB))
@@ -151,6 +155,8 @@ private fun ShoppingScreenPreview1() {
         onMoreClick = {},
         onIncreaseClick = {},
         onDecreaseClick = {},
+        modifier = Modifier,
+        onRecentProductClick = {},
     )
 }
 
@@ -167,6 +173,8 @@ private fun ShoppingScreenPreview2() {
         onProductClick = {},
         onMoreClick = {},
         onIncreaseClick = {},
-        onDecreaseClick = {}
+        onDecreaseClick = {},
+        modifier = Modifier,
+        onRecentProductClick = {}
     )
 }

@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.shopping.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -22,12 +23,15 @@ import woowacourse.shopping.ui.component.ShoppingImage
 
 @Composable
 fun RecentProductUnit(
-    product: Product, modifier: Modifier = Modifier
+    product: Product,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .width(98.dp)
-            .height(121.dp),
+            .height(121.dp)
+            .clickable(onClick = onClick),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ShoppingImage(
@@ -59,6 +63,7 @@ private fun RecentProductUnitPreview() {
         imageUrl = ""
     )
     RecentProductUnit(
-        product = product
+        product = product,
+        onClick = {}
     )
 }
