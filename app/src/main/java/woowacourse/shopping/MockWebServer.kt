@@ -32,6 +32,15 @@ fun startMockWebServer(): MockWebServer {
                             .build()
                     }
 
+                    request.url.encodedPath == "/product/size" -> {
+                        MockResponse
+                            .Builder()
+                            .code(200)
+                            .setHeader("Content-Type", "application/json")
+                            .body("{\"size\": 30}")
+                            .build()
+                    }
+
                     request.url.encodedPath.startsWith("/product/") -> {
                         val productId =
                             request.url.encodedPath
@@ -51,15 +60,6 @@ fun startMockWebServer(): MockWebServer {
                                 .code(404)
                                 .build()
                         }
-                    }
-
-                    request.url.encodedPath == "/product/size" -> {
-                        MockResponse
-                            .Builder()
-                            .code(200)
-                            .setHeader("Content-Type", "application/json")
-                            .body("{\"size\": 30}")
-                            .build()
                     }
 
                     else -> {

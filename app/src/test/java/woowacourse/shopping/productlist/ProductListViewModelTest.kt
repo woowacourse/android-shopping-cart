@@ -10,11 +10,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import woowacourse.shopping.repository.dao.ProductDao
-import woowacourse.shopping.repository.entity.ProductEntity
-import kotlin.math.min
+import woowacourse.shopping.fake.FakeProductRepository
+import woowacourse.shopping.fake.FakeShoppingCartRepository
+import woowacourse.shopping.fake.FakeViewedProductRepository
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductListViewModelTest {
@@ -36,14 +37,12 @@ class ProductListViewModelTest {
     ) = runTest {
         val productListViewModel =
             ProductListViewModel(
-                productRepository =
-                    DatabaseProductRepository(
-                        productDao = MockProductDao(itemSize),
-                    ),
+                productRepository = FakeProductRepository(itemSize),
+                shoppingCartRepository = FakeShoppingCartRepository(),
+                viewedProductRepository = FakeViewedProductRepository(),
             )
 
         productListViewModel.loadMoreProducts()
-
         advanceUntilIdle()
 
         productListViewModel.uiState.value.productUiModels.size shouldBe expectedItemSize
@@ -58,47 +57,61 @@ class ProductListViewModelTest {
     ) = runTest {
         val productListViewModel =
             ProductListViewModel(
-                productRepository =
-                    DatabaseProductRepository(
-                        productDao = MockProductDao(itemSize),
-                    ),
+                productRepository = FakeProductRepository(itemSize),
+                shoppingCartRepository = FakeShoppingCartRepository(),
+                viewedProductRepository = FakeViewedProductRepository(),
             )
 
         repeat(pageMoveCount) {
             productListViewModel.loadMoreProducts()
         }
-
         advanceUntilIdle()
 
         productListViewModel.uiState.value.productUiModels.size shouldBe expectedItemSize
     }
-}
 
-private class MockProductDao(
-    itemSize: Int,
-) : ProductDao {
-    private val products =
-        List(itemSize) { index ->
-            ProductEntity(
-                id = index + 1,
-                price = 10_000,
-                name = "호날두",
-                imageUrl = "",
-            )
+    @Test
+    fun `상품 수량을 추가하면 장바구니 수량이 증가한다`() =
+        runTest {
+            val productListViewModel =
+                ProductListViewModel(
+                    productRepository = FakeProductRepository(),
+                    shoppingCartRepository = FakeShoppingCartRepository(itemSize = 0),
+                    viewedProductRepository = FakeViewedProductRepository(),
+                )
+
+            productListViewModel.loadProducts()
+            advanceUntilIdle()
+
+            productListViewModel.increaseItemQuantity(productId = "1")
+            advanceUntilIdle()
+
+            productListViewModel.uiState.value.productUiModels
+                .first()
+                .quantity shouldBe 1
+            productListViewModel.uiState.value.cartItemCount shouldBe 1
         }
 
-    override suspend fun addProduct(
-        name: String,
-        price: Int,
-        imageUrl: String,
-    ): Unit = throw UnsupportedOperationException("쓸 필요가 없습니다")
+    @Test
+    fun `상품 수량을 감소하면 장바구니 수량이 감소한다`() =
+        runTest {
+            val shoppingCartRepository = FakeShoppingCartRepository(initialQuantity = 2)
+            val productListViewModel =
+                ProductListViewModel(
+                    productRepository = FakeProductRepository(),
+                    shoppingCartRepository = shoppingCartRepository,
+                    viewedProductRepository = FakeViewedProductRepository(),
+                )
 
-    override suspend fun getProducts(
-        offset: Int,
-        size: Int,
-    ): List<ProductEntity> = products.subList(offset, min(offset + size, products.size))
+            productListViewModel.loadProducts()
+            advanceUntilIdle()
 
-    override suspend fun getTotalSize(): Int = products.size
+            productListViewModel.decreaseItemQuantity(productId = "1")
+            advanceUntilIdle()
 
-    override suspend fun getProductEntity(id: Int): ProductEntity? = products.find { it.id == id }
+            productListViewModel.uiState.value.productUiModels
+                .first()
+                .quantity shouldBe 1
+            productListViewModel.uiState.value.cartItemCount shouldBe 1
+        }
 }
