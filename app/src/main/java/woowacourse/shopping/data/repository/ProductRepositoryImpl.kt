@@ -10,12 +10,19 @@ import kotlin.math.min
 class ProductRepositoryImpl(
     private val productRemoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override suspend fun getProducts(): Products =
-        Products(
-            productRemoteDataSource
-                .getProducts()
-                .map { it.toDomain() },
-        )
+    private var cachedProducts: Products? = null
+
+    override suspend fun getProducts(): Products {
+        cachedProducts?.let { return it }
+
+        val remoteProducts =
+            Products(
+                productRemoteDataSource.getProducts().map { it.toDomain() },
+            )
+
+        cachedProducts = remoteProducts
+        return remoteProducts
+    }
 
     override suspend fun getPagingProducts(
         page: Int,
