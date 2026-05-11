@@ -52,11 +52,10 @@ object MockWebServerProvider {
 
         mockWebServer.dispatcher = dispatcher
 
-        var url = ""
         val thread =
             Thread {
                 try {
-                    url = mockWebServer.url("/").toString()
+                    mockWebServer.start()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -64,6 +63,10 @@ object MockWebServerProvider {
         thread.start()
         thread.join()
 
-        return url
+        return mockWebServer.url("/").toString()
+    }
+
+    fun shutdown() {
+        mockWebServer?.shutdown()
     }
 }

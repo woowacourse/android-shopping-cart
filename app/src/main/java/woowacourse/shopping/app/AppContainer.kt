@@ -12,7 +12,6 @@ import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpProductRemoteDataSource
-import woowacourse.shopping.data.remote.mock.MockWebServerProvider
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.LastViewedProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -56,11 +55,10 @@ object AppContainer {
     lateinit var networkMonitor: NetworkMonitor
         private set
 
-    private val baseUrl: String by lazy {
-        MockWebServerProvider.start()
-    }
-
-    fun initialize(context: Context) {
+    fun initialize(
+        context: Context,
+        baseUrl: String,
+    ) {
         database =
             Room
                 .databaseBuilder(
