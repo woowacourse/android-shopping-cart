@@ -43,7 +43,9 @@ class ProductDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var amount by rememberSaveable { mutableIntStateOf(1) }
-            val recentProducts by recentProductRepository.recentProducts.collectAsStateWithLifecycle(initialValue = emptyList())
+            val recentProducts by recentProductRepository.recentProducts.collectAsStateWithLifecycle(
+                initialValue = emptyList()
+            )
             val lastViewedProduct = recentProducts.firstOrNull { it.productId != productId }
 
             AndroidshoppingTheme {

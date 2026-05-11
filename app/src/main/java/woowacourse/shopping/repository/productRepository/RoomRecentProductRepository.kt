@@ -9,7 +9,7 @@ import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.Product
 
 class RoomRecentProductRepository(
-    private val dao: ShoppingDao
+    private val dao: ShoppingDao,
 ) : RecentProductRepository {
     override val recentProducts: Flow<List<Product>> =
         dao.getRecentProductsWithDetail().map { entities ->

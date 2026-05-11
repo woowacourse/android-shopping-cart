@@ -13,6 +13,6 @@ import woowacourse.shopping.data.entity.RecentProductEntity
     version = 2
 )
 @TypeConverters(ShoppingTypeConverters::class)
-abstract class ShoppingDatabase: RoomDatabase() {
+abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun shoppingDao(): ShoppingDao
 }

@@ -22,7 +22,7 @@ import java.util.UUID
 fun RecentlyViewedSection(
     recentProducts: List<Product>,
     onItemClick: (UUID) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (recentProducts.isEmpty()) return
 

@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.CatalogViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
@@ -230,5 +229,5 @@ private fun LoadBtn(
 @Composable
 private fun CatalogScreenPreview() {
     CatalogScreen(
-        emptyList(), emptyList(),0, {}, {}, {}, {}, {})
+        emptyList(), emptyList(), 0, {}, {}, {}, {}, {})
 }

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity(tableName = "recent_products")
-data class RecentProductEntity (
+data class RecentProductEntity(
     @PrimaryKey val productId: UUID,
-    val viewedAt: Long = System.currentTimeMillis()
+    val viewedAt: Long = System.currentTimeMillis(),
 )

@@ -28,14 +28,15 @@ class CatalogViewModel(
 
     val cart: StateFlow<Cart> = cartRepository.cartFlow
 
-    val catalogItems: StateFlow<List<CatalogItemUiState>> = combine(products, cart) { products, cart ->
-        products.map { product ->
-            CatalogItemUiState(
-                product = product,
-                quantity = cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
-            )
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val catalogItems: StateFlow<List<CatalogItemUiState>> =
+        combine(products, cart) { products, cart ->
+            products.map { product ->
+                CatalogItemUiState(
+                    product = product,
+                    quantity = cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
+                )
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val recentProducts: StateFlow<List<Product>> = recentProductRepository.recentProducts
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

@@ -80,19 +80,21 @@ class ShoppingApplication : Application() {
                         "price": 4040525,
                         "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSU2K0RaXfa_b6OADBdza1nfAjbY4Yr5QePd7y9HjHNsUzW57R_Hx4FA08LcLfcnZN6uxGqa61UM8WmmfNfzUX9xYdisBiGi_X7LL3KEErP6rYADKkD3s6HLNLT4k_5wbmjbN5xbA&usqp=CAc"
                     },
-                    ${(6..60).joinToString(",\n") { id ->
-            val index = (id - 1) % 5
-            val names = listOf("딸기주스", "무엘사", "딸기주스 12개입", "딸기주스 12종 13개입", "깁슨 레스폴")
-            val prices = listOf(1000, 1005, 1000055, 104055, 4040525)
-            val images = listOf(
-                "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcREOx9x8uZchUa41cKYxYrqv5uj-bD4zupCW4G3ADchbwNbXaxRIZtdeG9clkH0F06NCsQnTQ690KD0G4PygBj6ZPVbvCS7KUEmMwETqd9c7xuGRnAFucVgDQhFmfK2FJ3XWHAcKw&usqp=CAc",
-                "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSMZrtQytDKeuZGZEvtKR3Sw3cGtHJsSeEtQq5hDAf4SI0YphsQxzzpNcgHcKzyBlAMj2UNOrz3RaArEjG40cscQe6oO0Nvw4l5Pab87SDNZp3IcwD8HFjg3iAQD3WpUWfThCszN8FJUA&usqp=CAc",
-                "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSlsRMhSbGSFqVwVHoDWavYlbAQk_nzok7g3up6n_W13ePJAzAlxbpJLWp8sKbdFnPQb5dMDfsJ0jEs0knG0dYcmtNElFV9K5N5dUdetBwVaJPvZOkiRX-l6SC95Muq4iysT0hdOg&usqp=CAc",
-                "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSTq_oHsJxH8irFUpd2k-08we8FWjRQDVdEMDZTiKOtpF6lNFNEzushq-1JWB8nLGhlQBOd3j3pUPMGrNTeW60sbz21lGA-j6PqZAWhfz97cyh2nAop8j3NkrbexhWkSgCpNwzMt54&usqp=CAc",
-                "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSU2K0RaXfa_b6OADBdza1nfAjbY4Yr5QePd7y9HjHNsUzW57R_Hx4FA08LcLfcnZN6uxGqa61UM8WmmfNfzUX9xYdisBiGi_X7LL3KEErP6rYADKkD3s6HLNLT4k_5wbmjbN5xbA&usqp=CAc"
-            )
-            """{ "id": $id, "name": "${names[index]} $id", "price": ${prices[index]}, "imageUrl": "${images[index]}" }"""
-        }}
+                    ${
+            (6..60).joinToString(",\n") { id ->
+                val index = (id - 1) % 5
+                val names = listOf("딸기주스", "무엘사", "딸기주스 12개입", "딸기주스 12종 13개입", "깁슨 레스폴")
+                val prices = listOf(1000, 1005, 1000055, 104055, 4040525)
+                val images = listOf(
+                    "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcREOx9x8uZchUa41cKYxYrqv5uj-bD4zupCW4G3ADchbwNbXaxRIZtdeG9clkH0F06NCsQnTQ690KD0G4PygBj6ZPVbvCS7KUEmMwETqd9c7xuGRnAFucVgDQhFmfK2FJ3XWHAcKw&usqp=CAc",
+                    "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSMZrtQytDKeuZGZEvtKR3Sw3cGtHJsSeEtQq5hDAf4SI0YphsQxzzpNcgHcKzyBlAMj2UNOrz3RaArEjG40cscQe6oO0Nvw4l5Pab87SDNZp3IcwD8HFjg3iAQD3WpUWfThCszN8FJUA&usqp=CAc",
+                    "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSlsRMhSbGSFqVwVHoDWavYlbAQk_nzok7g3up6n_W13ePJAzAlxbpJLWp8sKbdFnPQb5dMDfsJ0jEs0knG0dYcmtNElFV9K5N5dUdetBwVaJPvZOkiRX-l6SC95Muq4iysT0hdOg&usqp=CAc",
+                    "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSTq_oHsJxH8irFUpd2k-08we8FWjRQDVdEMDZTiKOtpF6lNFNEzushq-1JWB8nLGhlQBOd3j3pUPMGrNTeW60sbz21lGA-j6PqZAWhfz97cyh2nAop8j3NkrbexhWkSgCpNwzMt54&usqp=CAc",
+                    "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSU2K0RaXfa_b6OADBdza1nfAjbY4Yr5QePd7y9HjHNsUzW57R_Hx4FA08LcLfcnZN6uxGqa61UM8WmmfNfzUX9xYdisBiGi_X7LL3KEErP6rYADKkD3s6HLNLT4k_5wbmjbN5xbA&usqp=CAc"
+                )
+                """{ "id": $id, "name": "${names[index]} $id", "price": ${prices[index]}, "imageUrl": "${images[index]}" }"""
+            }
+        }
                 ]
             """.trimIndent()
 
@@ -105,16 +107,17 @@ class ShoppingApplication : Application() {
                             .setResponseCode(200)
                             .setBody(products)
                     }
+
                     else -> MockResponse().setResponseCode(404)
                 }
             }
         }
         mockWebServer.dispatcher = dispatcher
-        
+
         thread {
             mockWebServer.start(12345)
         }
-        
+
         productRepository = HttpProductRepository("http://localhost:12345/")
     }
 

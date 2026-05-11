@@ -32,11 +32,11 @@ class MainActivity : ComponentActivity() {
                     factory = object : ViewModelProvider.Factory {
                         @Suppress("UNCHECKED_CAST")
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                           return CatalogViewModel(
-                               productRepository = app.productRepository,
-                               cartRepository = app.cartRepository,
-                               recentProductRepository = app.recentProductRepository
-                           ) as T
+                            return CatalogViewModel(
+                                productRepository = app.productRepository,
+                                cartRepository = app.cartRepository,
+                                recentProductRepository = app.recentProductRepository
+                            ) as T
                         }
 
                     }
@@ -51,9 +51,17 @@ class MainActivity : ComponentActivity() {
                                 return@collect
                             }
                             if (!connected) {
-                                Toast.makeText(this@MainActivity, "네트워크 연결이 끊겼습니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "네트워크 연결이 끊겼습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
-                                Toast.makeText(this@MainActivity, "네트워크가 연결되었습니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "네트워크가 연결되었습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }

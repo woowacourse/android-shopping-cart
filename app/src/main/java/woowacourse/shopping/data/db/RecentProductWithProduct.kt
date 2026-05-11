@@ -11,5 +11,5 @@ data class RecentProductWithProduct(
         parentColumn = "productId",
         entityColumn = "productId"
     )
-    val catalogEntity: CatalogEntity
+    val catalogEntity: CatalogEntity,
 )
