@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.paging
+package woowacourse.shopping.ui.common.paging
 
 import kotlin.math.ceil
 

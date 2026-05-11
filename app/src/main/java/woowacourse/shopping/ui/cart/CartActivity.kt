@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.di.AppContainer
-import woowacourse.shopping.ui.theme.ShoppingTheme
+import woowacourse.shopping.ui.common.theme.ShoppingTheme
 
 class CartActivity : ComponentActivity() {
     val cartRepo = AppContainer.cartRepository

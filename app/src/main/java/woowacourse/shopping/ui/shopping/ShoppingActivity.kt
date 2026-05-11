@@ -16,7 +16,7 @@ import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.theme.ShoppingTheme
+import woowacourse.shopping.ui.common.theme.ShoppingTheme
 
 class ShoppingActivity : ComponentActivity() {
     val productRepo = AppContainer.productRepository

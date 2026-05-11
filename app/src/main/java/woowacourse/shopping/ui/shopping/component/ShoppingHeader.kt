@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.theme.Gray5
-import woowacourse.shopping.ui.theme.PrimaryColor
-import woowacourse.shopping.ui.theme.Typography
+import woowacourse.shopping.ui.common.theme.Gray5
+import woowacourse.shopping.ui.common.theme.PrimaryColor
+import woowacourse.shopping.ui.common.theme.Typography
 
 @Composable
 fun ShoppingHeader(

@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.component.QuantityControlButton
-import woowacourse.shopping.ui.component.ShoppingImage
+import woowacourse.shopping.ui.common.component.QuantityControlButton
+import woowacourse.shopping.ui.common.component.ShoppingImage
 
 @Composable
 fun ProductDetailBody(

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.component
+package woowacourse.shopping.ui.common.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image

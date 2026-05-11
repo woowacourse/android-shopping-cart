@@ -14,7 +14,7 @@ import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
-import woowacourse.shopping.ui.paging.Pager
+import woowacourse.shopping.ui.common.paging.Pager
 import java.util.UUID
 
 class ShoppingViewModel(
