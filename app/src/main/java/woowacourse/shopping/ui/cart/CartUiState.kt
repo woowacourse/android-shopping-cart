@@ -9,6 +9,6 @@ data class CartUiState(
     val totalItemCount: Int = 0,
     val pageSize: Int = 5,
 ) {
-    val totalPages: Int get() = (totalItemCount - 1) / 5 + 1
-    val showPagination: Boolean get() = totalItemCount > 5
+    val totalPages: Int get() = (totalItemCount - 1) / pageSize + 1
+    val showPagination: Boolean get() = totalItemCount > pageSize
 }

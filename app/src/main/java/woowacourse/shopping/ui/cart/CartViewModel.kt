@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
-import kotlin.math.ceil
+import woowacourse.shopping.ui.paging.Pager
 
 
 class CartViewModel(
@@ -17,6 +17,7 @@ class CartViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState = _uiState.asStateFlow()
+    val pager = Pager(pageSize)
 
     init {
         loadData()
@@ -59,17 +60,18 @@ class CartViewModel(
     }
 
     fun nextPage() {
-        val currentState = _uiState.value
-        if (currentState.currentPage < currentState.totalPages) {
-            _uiState.update { it.copy(currentPage = currentState.currentPage + 1) }
+        val currentPage = _uiState.value.currentPage
+        val totalCount = _uiState.value.totalItemCount
+        if (pager.hasNext(currentPage, totalCount)) {
+            _uiState.update { it.copy(currentPage = currentPage + 1) }
             loadData()
         }
     }
 
     fun previousPage() {
-        val currentState = _uiState.value
-        if (currentState.currentPage > 1) {
-            _uiState.update { it.copy(currentPage = currentState.currentPage - 1) }
+        val currentPage = _uiState.value.currentPage
+        if (pager.hasPrevious(currentPage)) {
+            _uiState.update { it.copy(currentPage = currentPage - 1) }
             loadData()
         }
     }
@@ -86,15 +88,12 @@ class CartViewModel(
     }
 
     private suspend fun refreshData() {
-        val count = cartRepo.getSize()
-        val maxPage = maxOf(1, ceil(count.toDouble() / pageSize).toInt())
-        val validCurrentPage = if (_uiState.value.currentPage > maxPage) {
-            maxPage
-        } else {
-            _uiState.value.currentPage
-        }
+        val totalCount = cartRepo.getSize()
+        val totalPages = pager.getTotalPages(totalCount)
+        val validCurrentPage = _uiState.value.currentPage.coerceIn(1, totalPages)
+
         val items = cartRepo.getPagedItems(
-            fromIndex = (validCurrentPage - 1) * pageSize,
+            fromIndex = pager.getOffset(validCurrentPage),
             count = pageSize
         )
 
@@ -102,7 +101,8 @@ class CartViewModel(
             it.copy(
                 currentPage = validCurrentPage,
                 pagedItems = items,
-                totalItemCount = count
+                totalItemCount = totalCount,
+                pageSize = pageSize
             )
         }
     }

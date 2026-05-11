@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -15,16 +14,18 @@ import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
+import woowacourse.shopping.ui.paging.Pager
 import java.util.UUID
 
 class ShoppingViewModel(
-    private val networkMonitor: NetworkMonitor,
+    networkMonitor: NetworkMonitor,
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
     private val recentProductRepo: RecentProductRepository,
     private val loadSize: Int,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShoppingUiState())
+    private val pager = Pager(loadSize)
     val uiState = _uiState.asStateFlow()
     val isNetworkConnected: StateFlow<Boolean> = networkMonitor.isConnected
         .stateIn(
@@ -32,6 +33,7 @@ class ShoppingViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = true
         )
+
 
     init {
         viewModelScope.launch {
@@ -105,25 +107,28 @@ class ShoppingViewModel(
     }
 
     fun loadMore() {
+        val currentState = _uiState.value
+        if (!pager.canLoadMore(currentState.visibleProducts.size, currentState.sizeInRepo)) return
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
+                val currentSize = _uiState.value.visibleProducts.size
                 val currentProducts = _uiState.value.visibleProducts
                 val newProducts = productRepo.getProducts(
-                    fromIndex = _uiState.value.visibleProducts.size,
+                    fromIndex = currentSize,
                     count = loadSize,
                 )
                 val newUiModels = mapToProductUiModels(newProducts)
-
                 val combineProducts = currentProducts + newUiModels
-                val hasNextPage = productRepo.hasNext(combineProducts.lastIndex)
                 val totalSize = productRepo.getSize()
+                val hasNext = pager.canLoadMore(combineProducts.size, totalSize)
 
                 _uiState.update {
                     it.copy(
                         visibleCount = minOf(it.visibleCount + loadSize, totalSize),
                         visibleProducts = combineProducts,
-                        hasNext = hasNextPage,
+                        hasNext = hasNext,
                         sizeInRepo = totalSize
                     )
                 }
