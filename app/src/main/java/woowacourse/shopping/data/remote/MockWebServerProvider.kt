@@ -1,10 +1,12 @@
 package woowacourse.shopping.data.remote
 
+import android.R.attr.name
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.mock.MockProductSeedData
+import woowacourse.shopping.domain.product.Product
 
 object MockWebServerProvider {
     private var server: MockWebServer? = null
@@ -49,17 +51,17 @@ object MockWebServerProvider {
 
     private fun notFound(): MockResponse = MockResponse().setResponseCode(404)
 
-    private fun productsJson(): String = MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { it.toJson() }
+    private fun productsJson(): String = MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { productJson(it) }
 
-    private fun productJson(id: String): String? = MockProductSeedData.products.firstOrNull { it.id == id }?.toJson()
+    private fun productJson(id: String): String? = MockProductSeedData.products.firstOrNull { it.id == id }?.let { productJson(it) }
 
-    private fun woowacourse.shopping.domain.product.Product.toJson(): String =
+    private fun productJson(product:Product): String =
         """
         {
-            "id": $id,
-            "name": "${name.value}",
-            "price": ${price.value},
-            "imageUrl": "${imageUrl.value}"
+            "id": "${product.id}",
+            "name": "${product.name.value}",
+            "price": ${product.price.value},
+            "imageUrl": "${product.imageUrl.value}"
         }
         """.trimIndent()
 }
