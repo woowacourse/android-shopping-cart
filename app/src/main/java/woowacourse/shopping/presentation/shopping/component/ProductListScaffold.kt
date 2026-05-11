@@ -13,6 +13,7 @@ fun ProductListScaffold(
     totalQuantity: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
     Scaffold(
@@ -22,6 +23,7 @@ fun ProductListScaffold(
                 onClick = onClick,
             )
         },
+        snackbarHost = snackbarHostState,
         containerColor = Color.White,
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {

@@ -1,13 +1,19 @@
 package woowacourse.shopping.presentation.shopping.screen
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.product.Product
+import woowacourse.shopping.presentation.shopping.ProductListUiEvent
 import woowacourse.shopping.presentation.shopping.ProductListViewModel
 import woowacourse.shopping.presentation.shopping.component.ProductListContent
 import woowacourse.shopping.presentation.shopping.component.ProductListScaffold
@@ -21,9 +27,24 @@ fun ProductListScreen(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is ProductListUiEvent.ShowMessage -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short,
+                    )
+                }
+            }
+        }
+    }
 
     ProductListScaffold(
         totalQuantity = uiState.totalQuantity,
+        snackbarHostState = { SnackbarHost(hostState = snackbarHostState) },
         onClick = onCartIconClick,
         modifier = modifier,
     ) {
@@ -49,6 +70,7 @@ private fun ProductListScreenPreview() {
                 productRepository = AppContainer.productRepository,
                 cartRepository = AppContainer.cartRepository,
                 recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
+                networkMonitor = AppContainer.networkMonitor,
             ),
         onCartIconClick = {},
         onItemClick = {},

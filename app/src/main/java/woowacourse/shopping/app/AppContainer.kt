@@ -6,6 +6,8 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import woowacourse.shopping.data.local.database.ShoppingDatabase
 import woowacourse.shopping.data.local.datastore.dataStore
+import woowacourse.shopping.data.network.ConnectivityManagerNetworkMonitor
+import woowacourse.shopping.data.network.NetworkMonitor
 import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
@@ -49,6 +51,9 @@ object AppContainer {
         private set
 
     lateinit var lastViewedProductRepository: LastViewedProductRepository
+        private set
+
+    lateinit var networkMonitor: NetworkMonitor
         private set
 
     private val baseUrl: String by lazy {
@@ -100,5 +105,7 @@ object AppContainer {
                 dataStore = context.dataStore,
                 productRepository = productRepository,
             )
+
+        networkMonitor = ConnectivityManagerNetworkMonitor(context)
     }
 }

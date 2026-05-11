@@ -10,6 +10,7 @@ data class ProductListUiState(
     val recentlyViewedProducts: RecentlyViewedProducts = RecentlyViewedProducts(),
     val currentPageIndex: Int = 0,
     val hasNextPage: Boolean = false,
+    val isOnline: Boolean = true,
 ) {
     val totalQuantity: Int
         get() = cart.getTotalQuantity()

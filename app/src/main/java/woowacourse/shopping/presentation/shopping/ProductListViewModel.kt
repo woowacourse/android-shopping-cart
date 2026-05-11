@@ -3,11 +3,15 @@ package woowacourse.shopping.presentation.shopping
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.network.NetworkMonitor
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.CartRepository
@@ -18,14 +22,32 @@ class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
+    private val networkMonitor: NetworkMonitor,
     private val pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
+    private val _uiEvent = Channel<ProductListUiEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
+
     init {
-        loadPages()
-        refreshCart()
+        viewModelScope.launch {
+            networkMonitor.isOnline.collect { isOnline ->
+                val wasOffline = _uiState.value.isOnline
+
+                _uiState.update { it.copy(isOnline = isOnline) }
+
+                if (wasOffline && !isOnline) {
+                    _uiEvent.send(ProductListUiEvent.ShowMessage("네트워크 연결이 끊겼습니다."))
+                }
+
+                if (wasOffline && isOnline) {
+                    loadPages()
+                    refreshCart()
+                }
+            }
+        }
     }
 
     fun loadMore() {
@@ -126,6 +148,7 @@ class ProductListViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
@@ -134,6 +157,7 @@ class ProductListViewModelFactory(
                 productRepository = productRepository,
                 cartRepository = cartRepository,
                 recentlyViewedProductRepository = recentlyViewedProductRepository,
+                networkMonitor = networkMonitor,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

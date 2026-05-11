@@ -130,5 +130,6 @@ class ProductListViewModelTest {
                 ),
             cartRepository = cartRepository,
             recentlyViewedProductRepository = recentlyViewedProductRepository,
+            networkMonitor = FakeNetworkMonitor(),
         )
 }

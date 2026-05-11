@@ -18,6 +18,7 @@ class ProductListActivity : ComponentActivity() {
             productRepository = AppContainer.productRepository,
             cartRepository = AppContainer.cartRepository,
             recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
+            networkMonitor = AppContainer.networkMonitor,
         )
     }
 
