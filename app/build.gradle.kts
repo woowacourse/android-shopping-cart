@@ -84,5 +84,6 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+    implementation(libs.mockwebserver)
     implementation(libs.kotlinx.serialization.json)
 }
