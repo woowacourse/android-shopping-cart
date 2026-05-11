@@ -3,7 +3,7 @@ package woowacourse.shopping.data.source
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
-object ProductDataSourceImpl {
+object ProductData {
     val products = listOf(
         Product(
             id = "1",
