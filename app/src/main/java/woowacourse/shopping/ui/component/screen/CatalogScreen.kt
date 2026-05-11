@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,11 +27,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.CatalogViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.ShoppingItem
 import woowacourse.shopping.ui.stateholder.CatalogItemUiState
 import java.util.UUID
+
+@Composable
+fun MainScreen(
+    viewModel: CatalogViewModel = viewModel(),
+    onItemClick: (UUID) -> Unit,
+    onCartClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val products by viewModel.products.collectAsState()
+    val cart by viewModel.cart.collectAsState()
+
+    CatalogScreen(
+        catalog = products.map { CatalogItemUiState(it, viewModel.getQuantity(it.productId)) },
+        cartTotalAmount = cart.getTotalQuantity(),
+        onItemClick = onItemClick,
+        onCartClick = onCartClick,
+        onIncrease = { id ->
+            val product = products.find { it.productId == id }
+            if (product != null) viewModel.addProductToCart(product)
+        },
+        onDecrease = { id -> viewModel.decreaseProductInCart(id) },
+        onLoadClick = { viewModel.loadProducts() },
+        modifier = modifier,
+    )
+}
 
 @Composable
 fun CatalogScreen(

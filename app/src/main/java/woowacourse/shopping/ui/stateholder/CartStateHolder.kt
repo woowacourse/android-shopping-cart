@@ -4,18 +4,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.shopping.domain.Cart
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.repository.CartRepository
 import java.util.UUID
 import kotlin.math.min
 
 class CartStateHolder(
-    initialCart: Cart,
+    private val cartRepository: CartRepository,
+    val coroutineScope: CoroutineScope,
     initialPage: Int = 0,
 ) {
-    var cart by mutableStateOf(initialCart)
+    var cart by mutableStateOf(cartRepository.cart)
+        private set
 
     var currentPage by mutableIntStateOf(initialPage)
+
+    init {
+        coroutineScope.launch {
+            cartRepository.cartFlow.collect { newCart ->
+                cart = newCart
+                val maxValidPage = if (newCart.getUniqueItemCount() == 0) 0 else (newCart.getUniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
+                if (currentPage > maxValidPage) currentPage = maxValidPage
+            }
+        }
+    }
 
     fun onPrevious() {
         if (hasPreviousPage()) currentPage--
@@ -27,23 +41,26 @@ class CartStateHolder(
 
     fun onIncreaseProduct(id: UUID) {
         val cartProduct = cart.cartProducts.findSameProduct(id) ?: return
-        cart = cart.addProduct(cartProduct.product, 1)
+        coroutineScope.launch {
+            cartRepository.addProduct(cartProduct.product, 1)
+        }
     }
 
     fun onDecreaseProduct(id: UUID) {
         val cartProduct = cart.cartProducts.findSameProduct(id) ?: return
-        if (cartProduct.amount > 1) {
-            cart = cart.decreaseProduct(id, 1)
-        } else {
-            onDeleteProduct(id)
+        coroutineScope.launch {
+            if (cartProduct.amount > 1) {
+                cartRepository.decreaseProduct(id, 1)
+            } else {
+                cartRepository.removeProduct(id)
+            }
         }
     }
 
     fun onDeleteProduct(id: UUID) {
-        cart = cart.removeProduct(id)
-
-        val maxValidPage = if (cart.getUniqueItemCount() == 0) 0 else (cart.getUniqueItemCount() - 1) / ONE_PAGE_ITEM_COUNT
-        if (currentPage > maxValidPage) currentPage = maxValidPage
+        coroutineScope.launch {
+            cartRepository.removeProduct(id)
+        }
     }
 
     fun hasPreviousPage(): Boolean = currentPage > 0

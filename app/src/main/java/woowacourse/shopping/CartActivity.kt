@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.repository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.CartScreen
 import woowacourse.shopping.ui.stateholder.CartStateHolder
+
+import androidx.lifecycle.lifecycleScope
 
 class CartActivity : ComponentActivity() {
     private lateinit var cartStateHolder: CartStateHolder
@@ -22,30 +25,15 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val savedCart = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            savedInstanceState?.getParcelable("extra_cart", Cart::class.java)
-        } else {
-            savedInstanceState?.getParcelable("extra_cart")
-        }
-
-        val intentCart = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("extra_cart", Cart::class.java)
-        } else {
-            intent.getParcelableExtra("extra_cart")
-        }
-
-        val cart = savedCart ?: intentCart
-
-        if (cart == null) {
-            finish()
-            return
-        }
-
         val restoredPage = savedInstanceState?.getInt("CURRENT_PAGE") ?: 0
-        cartStateHolder = CartStateHolder(initialCart = cart, initialPage = restoredPage)
+        cartStateHolder = CartStateHolder(
+            cartRepository = InMemoryCartRepository,
+            coroutineScope = lifecycleScope,
+            initialPage = restoredPage
+        )
 
         onBackPressedDispatcher.addCallback(this) {
-            returnResultAndFinish()
+            finish()
         }
 
         setContent {
@@ -60,7 +48,7 @@ class CartActivity : ComponentActivity() {
                     nextEnable = cartStateHolder.hasNextPage(),
                     currentPage = cartStateHolder.currentPage,
                     onClose = {
-                        returnResultAndFinish()
+                        finish()
                     },
                     getPartedItem = { uuid -> cartStateHolder.getPartedItem(uuid) },
                     isPageable = { cartStateHolder.isPageable() },
@@ -73,17 +61,8 @@ class CartActivity : ComponentActivity() {
         }
     }
 
-    private fun returnResultAndFinish() {
-        val resultIntent = Intent().apply {
-            putExtra("extra_cart", cartStateHolder.cart)
-        }
-        setResult(RESULT_OK, resultIntent)
-        finish()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("CURRENT_PAGE", cartStateHolder.currentPage)
-        outState.putParcelable("extra_cart", cartStateHolder.cart)
     }
 }

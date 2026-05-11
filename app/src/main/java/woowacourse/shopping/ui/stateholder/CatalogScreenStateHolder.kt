@@ -3,14 +3,16 @@ package woowacourse.shopping.ui.stateholder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import woowacourse.shopping.MockCatalog
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.CatalogProductRepository
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.InMemoryCartRepository
 import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
@@ -21,12 +23,22 @@ data class CatalogItemUiState(
 
 class CatalogScreenStateHolder(
     private val productRepository: ProductRepository,
-    initialCart: Cart = Cart(CartProducts(emptyList())),
+    private val cartRepository: CartRepository = InMemoryCartRepository,
+    private val coroutineScope: CoroutineScope,
 ) {
     private val _catalog = mutableStateOf(emptyList<Product>())
 
-    var cart by mutableStateOf(initialCart)
+    var cart by mutableStateOf(cartRepository.cart)
         private set
+
+    init {
+        coroutineScope.launch {
+            cartRepository.cartFlow.collect { newCart ->
+                cart = newCart
+            }
+        }
+        loadProducts()
+    }
 
     val uiStates: List<CatalogItemUiState>
         get() = _catalog.value.map { product ->
@@ -38,29 +50,18 @@ class CatalogScreenStateHolder(
 
     private var recentItemIndex = 0
 
-    init {
-        loadProducts()
-    }
-
-    fun updateCart(newCart: Cart) {
-        cart = newCart
-    }
-
     fun onIncrease(id: UUID) {
         val product = _catalog.value.find { it.productId == id }
         if (product != null) {
-            cart = cart.addProduct(product)
+            coroutineScope.launch {
+                cartRepository.addProduct(product)
+            }
         }
     }
 
     fun onDecrease(id: UUID) {
-        val cartProduct = cart.cartProducts.findSameProduct(id)
-        if (cartProduct != null) {
-            cart = if (cartProduct.amount > 1) {
-                cart.decreaseProduct(id)
-            } else {
-                cart.removeProduct(id)
-            }
+        coroutineScope.launch {
+            cartRepository.decreaseProduct(id)
         }
     }
 
@@ -88,9 +89,9 @@ class CatalogScreenStateHolder(
 @Composable
 fun retainCatalogScreenStateHolder(
     repository: ProductRepository,
-    initialCart: Cart
-): CatalogScreenStateHolder =
-    retain(Unit) {
-        CatalogScreenStateHolder(repository, initialCart)
+): CatalogScreenStateHolder {
+    val scope = rememberCoroutineScope()
+    return retain(Unit) {
+        CatalogScreenStateHolder(repository, coroutineScope = scope)
     }
-
+}

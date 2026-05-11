@@ -13,16 +13,16 @@ import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.CatalogProductRepository
 import java.util.UUID
 
-class CatalogViewModel(
-    private val productRepository: CatalogProductRepository,
-    private val cartRepository: CartRepository,
-) : ViewModel() {
+import woowacourse.shopping.repository.InMemoryCartRepository
 
+class CatalogViewModel(
+    private val productRepository: CatalogProductRepository = CatalogProductRepository,
+    private val cartRepository: CartRepository = InMemoryCartRepository,
+) : ViewModel() {
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products.asStateFlow()
 
-    private val _cart = MutableStateFlow(cartRepository.cart)
-    val cart: StateFlow<Cart> = _cart.asStateFlow()
+    val cart: StateFlow<Cart> = cartRepository.cartFlow
 
     private var currentPage = 0
 
@@ -41,22 +41,23 @@ class CatalogViewModel(
     fun addProductToCart(product: Product) {
         viewModelScope.launch {
             cartRepository.addProduct(product)
-            _cart.value = cartRepository.cart
         }
     }
 
     fun decreaseProductInCart(productId: UUID) {
         viewModelScope.launch {
             cartRepository.decreaseProduct(productId)
-            _cart.value = cartRepository.cart
         }
     }
 
     fun removeProductFromCart(productId: UUID) {
         viewModelScope.launch {
             cartRepository.removeProduct(productId)
-            _cart.value = cartRepository.cart
         }
+    }
+
+    fun getQuantity(id: UUID): Int {
+        return cart.value.cartProducts.findSameProduct(id)?.amount ?: 0
     }
 
     companion object {

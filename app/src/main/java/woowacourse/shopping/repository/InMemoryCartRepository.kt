@@ -1,26 +1,31 @@
 package woowacourse.shopping.repository
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import java.util.UUID
 
 object InMemoryCartRepository : CartRepository {
-    override var cart: Cart = Cart(CartProducts(emptyList()))
-        private set
+    private val _cartFlow = MutableStateFlow(Cart(CartProducts(emptyList())))
+    override val cartFlow: StateFlow<Cart> = _cartFlow.asStateFlow()
+
+    override val cart: Cart get() = _cartFlow.value
 
     override suspend fun addProduct(
         product: Product,
         amount: Int,
     ) {
-        cart = cart.addProduct(product, amount)
+        _cartFlow.value = _cartFlow.value.addProduct(product, amount)
     }
 
     override suspend fun decreaseProduct(productId: UUID, amount: Int) {
-        cart = cart.decreaseProduct(productId, amount)
+        _cartFlow.value = _cartFlow.value.decreaseProduct(productId, amount)
     }
 
     override suspend fun removeProduct(productId: UUID) {
-        cart = cart.removeProduct(productId)
+        _cartFlow.value = _cartFlow.value.removeProduct(productId)
     }
 }

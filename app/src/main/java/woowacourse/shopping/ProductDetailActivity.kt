@@ -16,22 +16,21 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.InMemoryCartRepository
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import java.util.UUID
+
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val productId = runCatching { UUID.fromString(intent.getStringExtra("id")) }.getOrNull()
-        var cart = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("extra_cart", Cart::class.java)
-        } else {
-            intent.getParcelableExtra("extra_cart")
-        }
-
-        if (productId == null || cart == null) {
+        if (productId == null) {
             finish()
             return
         }
@@ -49,13 +48,11 @@ class ProductDetailActivity : ComponentActivity() {
                         product = product,
                         amount = amount,
                         onAddRequest = {
-                            cart = cart?.addProduct(product, amount)
-                            val resultIntent = Intent().apply {
-                                putExtra("extra_cart", cart)
+                            lifecycleScope.launch {
+                                InMemoryCartRepository.addProduct(product, amount)
+                                toast.show()
+                                finish()
                             }
-                            setResult(RESULT_OK, resultIntent)
-                            toast.show()
-                            finish()
                         },
                         onClose = { finish() },
                         onIncrease = { amount++ },
