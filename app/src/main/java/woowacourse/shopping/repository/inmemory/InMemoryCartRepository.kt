@@ -16,6 +16,7 @@ class InMemoryCartRepository(
         item: Product,
         quantity: Int,
     ) {
+        require(quantity > 0) { "장바구니에 추가하는 수량($quantity)은 1 이상의 정수여야 합니다." }
         val existingIndex = value.indexOfFirst { it.product.id == item.id }
 
         if (existingIndex != -1) {
@@ -39,10 +40,9 @@ class InMemoryCartRepository(
 
     override suspend fun decrease(item: Product) {
         val existingIndex = value.indexOfFirst { it.product.id == item.id }
-        require(existingIndex != -1) { "장바구니에 해당 제품(${item.name})이 없습니다." }
+        if (existingIndex < 0) return
 
         val cartItem = value[existingIndex]
-
         if (cartItem.quantity > 1) {
             value[existingIndex] = cartItem.copy(quantity = cartItem.quantity - 1)
         } else {
