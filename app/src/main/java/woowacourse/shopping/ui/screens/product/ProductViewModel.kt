@@ -124,14 +124,6 @@ class ProductViewModel(
         }
     }
 
-    fun addRecentProductId(productId: String) {
-        recentProductRepository.addRecentProductId(productId = productId)
-
-        recentProductIds = recentProductRepository.getRecentProductIds()
-
-        updateRecentProductIds()
-    }
-
     companion object {
         private const val PAGE_SIZE = 20
 

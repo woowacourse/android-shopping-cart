@@ -65,10 +65,7 @@ fun ProductScreen(
             item(span = { GridItemSpan(maxLineSpan) }) {
                 RecentProductGroup(
                     products = uiState.recentProducts,
-                    onClick = {
-                        onProductClick(it)
-                        viewModel.addRecentProductId(it)
-                    },
+                    onClick = onProductClick,
                     modifier = Modifier.padding(
                         start = 20.dp,
                         end = 20.dp,
@@ -97,7 +94,6 @@ fun ProductScreen(
                     price = product.price,
                     onClick = {
                         onProductClick(product.id)
-                        viewModel.addRecentProductId(product.id)
                     },
                     cartQuantity = product.cartQuantity,
                     onPlusClick = { viewModel.plusCartCount(product.id) },

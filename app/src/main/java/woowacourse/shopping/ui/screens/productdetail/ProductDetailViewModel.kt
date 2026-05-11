@@ -39,6 +39,10 @@ class ProductDetailViewModel(
 
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
+    init {
+        addRecentProductId(targetProductId)
+    }
+
     private fun getLastViewProduct(): UiLastViewProduct {
         val id = recentProductRepository.getLastViewProductId()
 
@@ -70,6 +74,10 @@ class ProductDetailViewModel(
                 quantity = it.quantity - 1,
             )
         }
+    }
+
+    private fun addRecentProductId(productId: String) {
+        recentProductRepository.addRecentProductId(productId = productId)
     }
 
     companion object {
