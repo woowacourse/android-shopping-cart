@@ -16,16 +16,12 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.ui.model.UiLastViewProduct
 
 data class ProductDetailUiState(
     val product: Product,
     val recentProduct: UiLastViewProduct,
     val quantity: Int = 1,
-)
-
-data class UiLastViewProduct(
-    val id: String,
-    val name: String,
 )
 
 class ProductDetailViewModel(

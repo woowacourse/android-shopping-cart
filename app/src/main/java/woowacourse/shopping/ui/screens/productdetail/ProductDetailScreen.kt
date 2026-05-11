@@ -40,6 +40,7 @@ fun ProductDetailScreen(
             productId,
         ),
     ),
+    onLastViewProductClick: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -80,13 +81,15 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(29.dp))
 
-            LastViewProductCard(
-                name = "마지막으로 본 친구", // 임시
-                onClick = { },
-                modifier = Modifier
-                    .padding(horizontal = 18.dp)
-                    .fillMaxWidth(),
-            )
+            if (productId != state.recentProduct.id) {
+                LastViewProductCard(
+                    name = state.recentProduct.name,
+                    onClick = { onLastViewProductClick(state.recentProduct.id) },
+                    modifier = Modifier
+                        .padding(horizontal = 18.dp)
+                        .fillMaxWidth(),
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -175,5 +178,6 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productId = "",
         onDismiss = { },
+        onLastViewProductClick = { },
     )
 }
