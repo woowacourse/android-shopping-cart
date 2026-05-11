@@ -2,8 +2,8 @@ package woowacourse.shopping.di
 
 import android.content.Context
 import androidx.room.Room
-import woowacourse.shopping.local.ShoppingDatabase
-import woowacourse.shopping.network.ShoppingNetworkClient
+import woowacourse.shopping.local.Database
+import woowacourse.shopping.network.NetworkClient
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
@@ -12,9 +12,9 @@ import woowacourse.shopping.repository.room.RoomCartRepository
 import woowacourse.shopping.repository.room.RoomRecentProductRepository
 
 object AppContainer {
-    private lateinit var database: ShoppingDatabase
+    private lateinit var database: Database
 
-    val networkClient = ShoppingNetworkClient()
+    val networkClient = NetworkClient()
     val productRepository: ProductRepository =
         NetworkProductRepository(networkClient = networkClient)
     val cartRepository: CartRepository by lazy {
@@ -33,7 +33,7 @@ object AppContainer {
     fun init(context: Context) {
         database = Room.databaseBuilder(
             context.applicationContext,
-            ShoppingDatabase::class.java,
+            Database::class.java,
             "shopping-db"
         ).fallbackToDestructiveMigration(false).build()
     }

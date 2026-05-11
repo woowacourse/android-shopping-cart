@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.IOException
 
-class ShoppingNetworkClient {
+class NetworkClient {
     private val client = OkHttpClient()
 
     suspend fun getProducts(baseUrl: String): String = withContext(Dispatchers.IO) {

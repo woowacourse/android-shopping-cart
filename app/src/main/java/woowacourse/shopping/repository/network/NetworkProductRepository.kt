@@ -4,12 +4,12 @@ import org.json.JSONArray
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.network.ShoppingNetworkClient
+import woowacourse.shopping.network.NetworkClient
 import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
 class NetworkProductRepository(
-    private val networkClient: ShoppingNetworkClient
+    private val networkClient: NetworkClient
 ) : ProductRepository {
     private var cachedProducts: List<Product>? = null
 
