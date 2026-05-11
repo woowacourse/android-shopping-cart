@@ -15,23 +15,42 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 data class ProductDetailUiState(
     val product: Product,
+    val recentProduct: UiLastViewProduct,
     val quantity: Int = 1,
+)
+
+data class UiLastViewProduct(
+    val id: String,
+    val name: String,
 )
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val targetProductId: String,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         ProductDetailUiState(
             product = productRepository.getProductById(targetProductId),
+            recentProduct = getLastViewProduct(),
         ),
     )
+
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
+
+    private fun getLastViewProduct(): UiLastViewProduct {
+        val id = recentProductRepository.getLastViewProductId()
+
+        return UiLastViewProduct(
+            id = id,
+            name = productRepository.getProductById(id).name,
+        )
+    }
 
     fun addToCart() {
         viewModelScope.launch {
@@ -65,6 +84,7 @@ class ProductDetailViewModel(
                     ProductDetailViewModel(
                         productRepository = app.productRepository,
                         cartRepository = app.cartRepository,
+                        recentProductRepository = app.recentProductRepository,
                         targetProductId = productId,
                     )
                 }
