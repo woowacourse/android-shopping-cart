@@ -15,7 +15,7 @@ import java.util.UUID
 
 @Dao
 interface ShoppingDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertProduct(products: List<CatalogEntity>)
 
     @Query("SELECT * FROM products")

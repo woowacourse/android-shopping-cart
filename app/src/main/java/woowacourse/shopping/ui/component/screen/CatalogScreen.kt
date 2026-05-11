@@ -51,7 +51,12 @@ fun MainScreen(
     val cart by viewModel.cart.collectAsState()
 
     CatalogScreen(
-        catalog = products.map { CatalogItemUiState(it, viewModel.getQuantity(it.productId)) },
+        catalog = products.map { product ->
+            CatalogItemUiState(
+                product,
+                cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
+            )
+        },
         cartTotalAmount = cart.getTotalQuantity(),
         recentProducts = recentProducts,
         onItemClick = onItemClick,
