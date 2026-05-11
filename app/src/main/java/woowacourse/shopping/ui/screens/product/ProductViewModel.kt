@@ -56,12 +56,13 @@ class ProductViewModel(
 
     fun updateProducts() {
         viewModelScope.launch {
+            val totalSize = productRepository.getProductSize()
             _uiState.update {
                 it.copy(
                     products = products.map { product ->
                         product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
                     },
-                    hasNext = productRepository.productSize > products.size,
+                    hasNext = totalSize > products.size,
                     totalCartCount = cartRepository.getCartItemCount(),
                 )
             }
@@ -69,23 +70,21 @@ class ProductViewModel(
     }
 
     fun updateRecentProductIds() {
-        _uiState.update {
-            it.copy(
-                recentProducts = recentProductIds.map { productId ->
-                    getUiRecentProduct(productId = productId)
-                },
-            )
+        viewModelScope.launch {
+            val uiRecentProducts = recentProductIds.map { productId ->
+                val product = productRepository.getProductById(productId)
+                UiRecentProduct(
+                    id = productId,
+                    imageUrl = product.imageUrl,
+                    name = product.name,
+                )
+            }
+            _uiState.update {
+                it.copy(
+                    recentProducts = uiRecentProducts,
+                )
+            }
         }
-    }
-
-    private fun getUiRecentProduct(productId: String): UiRecentProduct {
-        val product = productRepository.getProductById(productId)
-
-        return UiRecentProduct(
-            id = productId,
-            imageUrl = product.imageUrl,
-            name = product.name,
-        )
     }
 
     fun getProducts() {
@@ -95,9 +94,8 @@ class ProductViewModel(
             _uiState.update { it.copy(isLoading = true) }
 
             try {
-                products = products + productRepository
-                    .getProducts(products.size, PAGE_SIZE)
-                    .distinct()
+                val nextProducts = productRepository.getProducts(products.size, PAGE_SIZE)
+                products = (products + nextProducts).distinctBy { it.id }
 
                 updateProducts()
             } finally {
@@ -107,9 +105,8 @@ class ProductViewModel(
     }
 
     fun plusCartCount(productId: String) {
-        val product = productRepository.getProductById(productId)
-
         viewModelScope.launch {
+            val product = productRepository.getProductById(productId)
             cartRepository.plusItemCount(product)
 
             updateProducts()

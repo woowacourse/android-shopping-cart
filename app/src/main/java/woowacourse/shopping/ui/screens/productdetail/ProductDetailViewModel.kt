@@ -19,7 +19,7 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.UiLastViewProduct
 
 data class ProductDetailUiState(
-    val product: Product,
+    val product: Product? = null,
     val recentProduct: UiLastViewProduct? = null,
     val quantity: Int = 1,
 )
@@ -30,17 +30,20 @@ class ProductDetailViewModel(
     private val recentProductRepository: RecentProductRepository,
     private val targetProductId: String,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        ProductDetailUiState(
-            product = productRepository.getProductById(targetProductId),
-        ),
-    )
-
+    private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
 
     init {
+        loadProduct()
         loadLastViewProduct()
         addRecentProductId(targetProductId)
+    }
+
+    private fun loadProduct() {
+        viewModelScope.launch {
+            val product = productRepository.getProductById(targetProductId)
+            _uiState.update { it.copy(product = product) }
+        }
     }
 
     private fun loadLastViewProduct() {

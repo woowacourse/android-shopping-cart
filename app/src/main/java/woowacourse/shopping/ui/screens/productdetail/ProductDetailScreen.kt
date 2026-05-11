@@ -44,7 +44,7 @@ fun ProductDetailScreen(
     onDismiss: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val product = state.product
+    val product = state.product ?: return
 
     Scaffold(
         topBar = {
