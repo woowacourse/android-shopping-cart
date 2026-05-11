@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.ui.component.counter.QuantityCounter
 import woowacourse.shopping.ui.component.image.ShoppingImage
+import woowacourse.shopping.ui.component.network.NetworkErrorBar
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
@@ -43,14 +44,19 @@ fun ProductDetailScreen(
     onLastViewProductClick: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val product = state.product ?: return
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val product = uiState.product ?: return
 
     Scaffold(
         topBar = {
-            DismissTopBar(
-                onDismiss = onDismiss,
-            )
+            Column {
+                if (!uiState.isNetworkConnected) {
+                    NetworkErrorBar()
+                }
+                DismissTopBar(
+                    onDismiss = onDismiss,
+                )
+            }
         },
         modifier = Modifier
             .systemBarsPadding(),
@@ -74,14 +80,14 @@ fun ProductDetailScreen(
             ProductInfoText(
                 name = product.name,
                 price = product.price,
-                quantity = state.quantity,
+                quantity = uiState.quantity,
                 onPlusClick = { viewModel.plusCartCount() },
                 onMinusClick = { viewModel.minusCartCount() },
             )
 
             Spacer(modifier = Modifier.height(29.dp))
 
-            state.recentProduct?.let {
+            uiState.recentProduct?.let {
                 if (productId != it.id) {
                     LastViewProductCard(
                         name = it.name,

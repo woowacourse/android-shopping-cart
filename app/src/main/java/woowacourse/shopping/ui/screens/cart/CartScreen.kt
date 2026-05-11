@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.ui.component.network.NetworkErrorBar
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
@@ -31,15 +33,20 @@ fun CartScreen(
     viewModel: CartViewModel = viewModel(factory = CartViewModel.Factory),
     onNavigateUp: () -> Unit,
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val cartItems = state.cartItems
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val cartItems = uiState.cartItems
 
     Scaffold(
         topBar = {
-            NavigateUpTopBar(
-                title = "Cart",
-                onNavigateUp = onNavigateUp,
-            )
+            Column {
+                if (!uiState.isNetworkConnected) {
+                    NetworkErrorBar()
+                }
+                NavigateUpTopBar(
+                    title = "Cart",
+                    onNavigateUp = onNavigateUp,
+                )
+            }
         },
         modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
@@ -65,11 +72,11 @@ fun CartScreen(
                 )
             }
 
-            if (state.curPage != 1 || !state.isLast) {
+            if (uiState.curPage != 1 || !uiState.isLast) {
                 item {
                     CartPagination(
-                        curPage = state.curPage,
-                        isLastPage = state.isLast,
+                        curPage = uiState.curPage,
+                        isLastPage = uiState.isLast,
                         onPrevClick = {
                             viewModel.getPrevPage()
                         },

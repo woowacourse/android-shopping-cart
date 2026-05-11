@@ -17,21 +17,30 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ui.model.UiCart
 import woowacourse.shopping.ui.model.toUiModel
+import woowacourse.shopping.ui.util.NetworkMonitor
 
 data class CartUiState(
     val curPage: Int = 1,
     val isLast: Boolean = true,
     val cartItems: List<UiCart> = emptyList(),
+    val isNetworkConnected: Boolean = true,
 )
 
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            networkMonitor.isConnected.collect { isConnected ->
+                _uiState.update { it.copy(isNetworkConnected = isConnected) }
+            }
+        }
+
         initCartItems()
     }
 
@@ -137,6 +146,7 @@ class CartViewModel(
                 CartViewModel(
                     cartRepository = app.cartRepository,
                     productRepository = app.productRepository,
+                    networkMonitor = app.networkMonitor,
                 )
             }
         }

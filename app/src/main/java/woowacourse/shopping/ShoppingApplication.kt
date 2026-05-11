@@ -14,6 +14,7 @@ import woowacourse.shopping.data.source.remote.mock.MockServerManager
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.ui.util.NetworkMonitor
 
 class ShoppingApplication : Application() {
     private val client = OkHttpClient()
@@ -50,4 +51,6 @@ class ShoppingApplication : Application() {
             RecentProductSourceImpl(recentProductDao),
         )
     }
+
+    val networkMonitor by lazy { NetworkMonitor(applicationContext) }
 }

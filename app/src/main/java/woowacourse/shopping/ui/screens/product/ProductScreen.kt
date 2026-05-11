@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.component.network.NetworkErrorBar
 import woowacourse.shopping.ui.component.topbar.MainTopBar
 import woowacourse.shopping.ui.model.UiRecentProduct
 
@@ -48,11 +49,17 @@ fun ProductScreen(
 
     Scaffold(
         topBar = {
-            MainTopBar(
-                title = "Shopping",
-                cartProductCount = uiState.totalCartCount,
-                onCartClick = onCartClick,
-            )
+            Column {
+                if (!uiState.isNetworkConnected) {
+                    NetworkErrorBar()
+                }
+
+                MainTopBar(
+                    title = "Shopping",
+                    cartProductCount = uiState.totalCartCount,
+                    onCartClick = onCartClick,
+                )
+            }
         },
         modifier = Modifier.statusBarsPadding(),
     ) { innerPadding ->
