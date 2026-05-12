@@ -62,7 +62,7 @@ class ProductDetailActivity : ComponentActivity() {
                                     intent.putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, it.id)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intent)
-                                }
+                                } ?: finish()
                             },
                             onAdd = { viewModel.addCount() },
                             onMinus = { viewModel.minusCount() },
