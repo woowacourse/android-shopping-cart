@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class CartRepositoryImpl(
-    private var cartDao: CartDao,
+    private val cartDao: CartDao,
     private val productRepository: ProductRepository,
 ) : CartRepository {
     override suspend fun getItems(): Cart = Cart(cartDao.findAll().map { it.toDomain() })
