@@ -39,7 +39,7 @@ class HttpProductRepository(
         limit: Int,
     ): Products =
         withContext(Dispatchers.IO) {
-            val allProducts = fetchAllProducts()
+            val allProducts = getCachedOrFetchProducts()
             val safeFrom = fromIndex.coerceIn(0, allProducts.size)
             val safeLimit = limit.coerceAtLeast(0)
             val safeTo = minOf(safeFrom + safeLimit, allProducts.size)
@@ -49,7 +49,7 @@ class HttpProductRepository(
 
     override suspend fun hasNext(current: Int): Boolean =
         withContext(Dispatchers.IO) {
-            val allProducts = if (cachedProducts.isNotEmpty()) cachedProducts else fetchAllProducts()
+            val allProducts = getCachedOrFetchProducts()
             current < allProducts.lastIndex
         }
 
@@ -87,6 +87,12 @@ class HttpProductRepository(
 
         cachedProducts = products
         return products
+    }
+
+    private fun getCachedOrFetchProducts(): List<Product> {
+        if (cachedProducts.isNotEmpty()) return cachedProducts
+
+        return fetchAllProducts()
     }
 
     private fun fetchProductById(productId: ProductId): Product? {

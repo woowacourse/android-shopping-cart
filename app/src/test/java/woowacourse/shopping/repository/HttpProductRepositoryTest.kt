@@ -57,6 +57,25 @@ class HttpProductRepositoryTest {
         }
 
     @Test
+    fun `상품 목록을 한 번 조회한 뒤에는 캐시된 목록으로 슬라이스를 반환한다`() =
+        runBlocking {
+            mockWebServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setHeader("Content-Type", "application/json")
+                    .setBody(productsJson),
+            )
+
+            repository.getProducts(fromIndex = 0, limit = 20)
+            val actual = repository.getProducts(fromIndex = 1, limit = 1).toList()
+
+            assertEquals(1, mockWebServer.requestCount)
+            assertEquals(1, actual.size)
+            assertEquals(ProductId.fromRemoteId(2), actual.first().id)
+            assertEquals("피자", actual.first().name)
+        }
+
+    @Test
     fun `상품 상세 API 성공 응답을 기준으로 ID 목록을 조회한다`() =
         runBlocking {
             mockWebServer.enqueue(
