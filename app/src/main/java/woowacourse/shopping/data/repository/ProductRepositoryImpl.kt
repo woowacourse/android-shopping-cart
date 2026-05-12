@@ -30,8 +30,8 @@ class ProductRepositoryImpl(
                 in 500..599 -> ShoppingException.ServerException("서버 오류가 발생했습니다.")
                 else -> ShoppingException.ConnectionException("네트워크 오류가 발생했습니다.")
             }
-        } catch (_: Exception) {
-            throw ShoppingException.ConnectionException("알 수 없는 오류가 발생했습니다.")
+        } catch (e: Exception) {
+            throw ShoppingException.ConnectionException(e.message.toString())
         }
     }
 
@@ -72,7 +72,7 @@ class ProductRepositoryImpl(
                 in 500..599 -> ShoppingException.ServerException("서버 오류가 발생했습니다.")
                 else -> ShoppingException.ConnectionException("네트워크 오류가 발생했습니다.")
             }
-        } catch (_: Exception) {
-            throw ShoppingException.ConnectionException("알 수 없는 오류가 발생했습니다.")
+        } catch (e: Exception) {
+            throw ShoppingException.ConnectionException(e.message.toString())
         }
 }
