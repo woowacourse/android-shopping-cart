@@ -1,5 +1,28 @@
 # 기능 구현 사항
 
+## 1차 리팩토링
+### 베르
+- [ ] 비동기 이미지 코드를 공통 컴포저블로 분리
+- [ ] getRecentItems를 observable query로 변경
+- [ ] 최신 uiState나 MutableStateFlow.update로 loadMore()을 수행하도록 수정
+- [ ] updateQuantity로 통합
+### 셀프
+- [ ] Repository 간 의존 관계 분리
+- [ ] CartPage 로직을 Cart로부터 분리 
+### Rabbit
+- [ ] tie-breaker 추가
+- [ ] 장바구니 매핑에서 ID 정합성 보호
+- [ ] 최근 본 상품 매핑에서 ID 정합성 보호
+- [ ] 상세 화면 기본 수량 로직과 장바구니 내 상품 수량 로직 간 분리
+- [ ] 상품 조회 실패 시 가격을 0으로 처리하는 정책 수정
+- [ ] AppContainer 내 okHttpClient 생성 및 주입
+- [ ] require를 IOException으로 변경
+- [ ] recentItem.id == currentId 제외 조건을 View->ViewModel로 이전
+- [ ] IOException을 대응하는 로직 추가
+- [ ] 불필요한 import 제거
+- [ ] observeNetwork()에서 복구 시 loadRecentItems()도 호출하도록 수정
+- [ ] isLoading 관련 로직을 try-catch로 변경
+
 ## 3/4 단계 기능 요구 사항
 ### Room
 - [x] Room, KSP 의존성 추가
