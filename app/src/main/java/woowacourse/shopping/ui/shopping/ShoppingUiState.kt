@@ -12,4 +12,5 @@ data class ShoppingUiState(
     val canLoadMore: Boolean = true,
     val isLoading: Boolean = false,
     val isNetworkAvailable: Boolean = true,
+    val cartErrorMessage: String? = null,
 )

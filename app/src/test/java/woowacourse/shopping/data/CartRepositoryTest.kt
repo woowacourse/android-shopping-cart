@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.localdb.dao.CartItemDao
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.CartResult
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
@@ -46,11 +47,24 @@ class CartRepositoryTest {
             val repository = CartRepository(dao, FakeProductRepository(listOf(updatedProduct)))
             dao.insert(CartItemEntity(id = product.id, quantity = 2, timestamp = 100L))
 
-            val cart = repository.observeCart().first()
+            val result = repository.observeCart().first()
+            val cart = (result as CartResult.Success).cart
 
             assertThat(cart.items.first().product.getName()).isEqualTo("updated")
             assertThat(cart.items.first().product.getPrice()).isEqualTo(3000)
             assertThat(cart.calculateTotalPrice()).isEqualTo(6000)
+        }
+
+    @Test
+    fun `장바구니 상품을 못 찾을 시 Failure를 반환한다`() =
+        runTest {
+            val dao = TestCartItemDao()
+            val repository = CartRepository(dao, FakeProductRepository(emptyList()))
+            dao.insert(CartItemEntity(id = product.id, quantity = 2, timestamp = 100L))
+
+            val result = repository.observeCart().first()
+
+            assertThat(result).isInstanceOf(CartResult.Failure::class.java)
         }
 
     @Test
@@ -139,7 +153,7 @@ class CartRepositoryTest {
             val repository = CartRepository(TestCartItemDao(), FakeProductRepository(listOf(product)))
             repository.addItem(product = product, quantity = 3)
 
-            val totalPrice = repository.getCartTotalPrice()
+            val totalPrice = repository.getCartTotalPrice().getOrThrow()
 
             assertThat(totalPrice).isEqualTo(6000)
         }

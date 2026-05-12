@@ -88,6 +88,7 @@ fun CartScreen(
                 onDeleteItem(it)
             },
             cartItems = uiState.items,
+            errorMessage = uiState.errorMessage,
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -102,12 +103,23 @@ private fun CartContent(
     onDecreaseQuantity: (String) -> Unit,
     onDeleteItem: (String) -> Unit,
     cartItems: ImmutableList<CartItemUiModel>,
+    errorMessage: String?,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier,
     ) {
+        if (errorMessage != null) {
+            item {
+                Text(
+                    text = errorMessage,
+                    color = Color.Black,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+        }
+
         items(
             items = cartItems,
             key = { it.product.id },
@@ -178,5 +190,6 @@ private fun CartContentPreview() {
                     totalPrice = 1000,
                 ),
             ).toImmutableList(),
+        errorMessage = null,
     )
 }

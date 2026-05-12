@@ -13,20 +13,21 @@ class CartRepository(
     private val cartItemDao: CartItemDao,
     private val productRepository: ProductRepository,
 ) {
-    fun observeCart(): Flow<Cart> =
+    fun observeCart(): Flow<CartResult> =
         cartItemDao
             .getAll()
             .map { entities ->
-                Cart(
-                    items =
-                        entities.mapNotNull { entity ->
-                            val product =
-                                runCatching {
-                                    productRepository.getProductById(entity.id)
-                                }.getOrNull()
-
-                            product?.let { entity.toDomain(it) }
-                        },
+                runCatching {
+                    Cart(
+                        items =
+                            entities.map { entity ->
+                                val product = productRepository.getProductById(entity.id)
+                                entity.toDomain(product)
+                            },
+                    )
+                }.fold(
+                    onSuccess = { CartResult.Success(it) },
+                    onFailure = { CartResult.Failure(it) },
                 )
             }
 
@@ -68,13 +69,13 @@ class CartRepository(
 
     suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
 
-    suspend fun getCartTotalPrice(): Int =
-        cartItemDao
-            .getAll()
-            .first()
-            .sumOf { entity ->
-                runCatching {
+    suspend fun getCartTotalPrice(): Result<Int> =
+        runCatching {
+            cartItemDao
+                .getAll()
+                .first()
+                .sumOf { entity ->
                     productRepository.getProductById(entity.id).getPrice() * entity.quantity
-                }.getOrDefault(0)
-            }
+                }
+        }
 }

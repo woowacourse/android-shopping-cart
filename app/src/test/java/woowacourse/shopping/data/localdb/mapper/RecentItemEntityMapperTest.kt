@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.localdb.mapper
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.localdb.entity.RecentItemEntity
 import woowacourse.shopping.model.Money
@@ -23,9 +24,29 @@ class RecentItemEntityMapperTest {
                 imageUrl = "1",
             )
 
-        val result = toDomain(product)
+        val result = entity.toDomain(product)
 
         assertThat(result).isEqualTo(product)
+    }
+
+    @Test
+    fun `최근 본 상품과 Product 간 id가 불일치할 시 예외가 발생한다`() {
+        val entity =
+            RecentItemEntity(
+                id = "1",
+                timestamp = 100L,
+            )
+        val product =
+            Product(
+                id = "2",
+                name = ProductName("상품"),
+                price = Money(2000),
+                imageUrl = "2",
+            )
+
+        assertThatThrownBy { entity.toDomain(product) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("id가 일치하지 않습니다.")
     }
 
     @Test

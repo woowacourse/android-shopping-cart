@@ -21,7 +21,7 @@ class RecentItemRepository(
                     productRepository.getProductById(entity.id)
                 }.getOrNull()
 
-            product?.let { toDomain(it) }
+            product?.let { entity.toDomain(it) }
         }
 
     suspend fun getLastViewedItem(): Product? {
@@ -31,6 +31,6 @@ class RecentItemRepository(
                 productRepository.getProductById(entity.id)
             }.getOrNull()
 
-        return product?.let { toDomain(it) }
+        return product?.let { entity.toDomain(it) }
     }
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.network.NetworkObserver
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.CartResult
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
@@ -49,12 +50,25 @@ class ShoppingViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.observeCart().collect { cart ->
-                _uiState.value =
-                    _uiState.value.copy(
-                        cartSize = cart.getTotalQuantity(),
-                        cartQuantities = cart.items.associate { it.product.id to it.quantity },
-                    )
+            cartRepository.observeCart().collect { result ->
+                when (result) {
+                    is CartResult.Success -> {
+                        val cart = result.cart
+                        _uiState.value =
+                            _uiState.value.copy(
+                                cartSize = cart.getTotalQuantity(),
+                                cartQuantities = cart.items.associate { it.product.id to it.quantity },
+                                cartErrorMessage = null,
+                            )
+                    }
+
+                    is CartResult.Failure -> {
+                        _uiState.value =
+                            _uiState.value.copy(
+                                cartErrorMessage = "장바구니 상품 정보를 불러오지 못했습니다.",
+                            )
+                    }
+                }
             }
         }
     }
