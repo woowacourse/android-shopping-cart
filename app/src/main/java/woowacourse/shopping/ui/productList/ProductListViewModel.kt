@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.product.Product
@@ -27,8 +29,14 @@ class ProductListViewModel(
     private val accumulatedProducts = mutableListOf<Product>()
     private var canLoadMore = true
     private var isLoading = false
-    private var currentCart: Cart = Cart()
     private var recentProducts: List<Product> = emptyList()
+
+    private val cartStateFlow: StateFlow<Cart> =
+        cartRepository.cartFlow.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = Cart(),
+        )
 
     init {
         observeCart()
@@ -60,9 +68,8 @@ class ProductListViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.cartFlow.collect { cart ->
-                currentCart = cart
-                updateSuccessUiState()
+            cartStateFlow.collect { cart ->
+                updateSuccessUiState(cart)
             }
         }
     }
@@ -71,7 +78,7 @@ class ProductListViewModel(
         viewModelScope.launch {
             recentProductRepository.getRecentProducts().collect { products ->
                 recentProducts = products
-                updateSuccessUiState()
+                updateSuccessUiState(cartStateFlow.value)
             }
         }
     }
@@ -91,6 +98,7 @@ class ProductListViewModel(
                     _uiState.value =
                         createSuccessUiState(
                             canLoadMore = canLoadMore,
+                            cart = cartStateFlow.value,
                             isLoadingMore = false,
                         )
                 }.onFailure { throwable ->
@@ -109,23 +117,25 @@ class ProductListViewModel(
             }
     }
 
-    private fun updateSuccessUiState() {
+    private fun updateSuccessUiState(cart: Cart) {
         if (accumulatedProducts.isEmpty()) return
         val current = _uiState.value as? ProductListUiState.Success
         _uiState.value =
             createSuccessUiState(
                 canLoadMore = current?.canLoadMore ?: canLoadMore,
+                cart = cart,
                 isLoadingMore = current?.isLoadingMore ?: false,
             )
     }
 
     private fun createSuccessUiState(
         canLoadMore: Boolean,
+        cart: Cart,
         isLoadingMore: Boolean,
     ): ProductListUiState.Success {
         val quantities =
             accumulatedProducts.associate { product ->
-                product.id to currentCart.findQuantity(product.id).value
+                product.id to cart.findQuantity(product.id).value
             }
 
         return ProductListUiState.Success(
@@ -134,7 +144,7 @@ class ProductListViewModel(
             quantitiesByProductId = quantities,
             canLoadMore = canLoadMore,
             isLoadingMore = isLoadingMore,
-            totalCartCount = currentCart.totalQuantity,
+            totalCartCount = cart.totalQuantity,
         )
     }
 

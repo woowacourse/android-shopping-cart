@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
@@ -21,7 +23,11 @@ class CartViewModel(
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
     private var currentPage = 0
-    private var currentCart: Cart = Cart()
+    private val cartStateFlow: StateFlow<Cart> = cartRepository.cartFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = Cart()
+    )
 
     init {
         observeCart()
@@ -29,8 +35,7 @@ class CartViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.cartFlow.collect { cart ->
-                currentCart = cart
+            cartStateFlow.collect { cart ->
                 updateUiState(cart)
             }
         }
@@ -58,14 +63,14 @@ class CartViewModel(
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasNext) return
         currentPage++
-        updateUiState(currentCart)
+        updateUiState(cartStateFlow.value)
     }
 
     fun goToPreviousPage() {
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasPrevious) return
         currentPage--
-        updateUiState(currentCart)
+        updateUiState(cartStateFlow.value)
     }
 
     private fun updateUiState(cart: Cart) {
