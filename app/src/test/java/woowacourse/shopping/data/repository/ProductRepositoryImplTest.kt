@@ -2,7 +2,8 @@ package woowacourse.shopping.data.repository
 
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.dto.ProductResponse
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -10,11 +11,14 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class ProductRepositoryImplTest {
     private lateinit var repository: ProductRepository
 
+    @BeforeEach
+    fun setup() {
+        repository = createRepository()
+    }
+
     @Test
     fun getProducts() =
         runTest {
-            repository = createRepository()
-
             val products = repository.getProducts()
 
             assertThat(products.productItems).hasSize(3)
@@ -26,8 +30,6 @@ class ProductRepositoryImplTest {
     @Test
     fun getPagingProducts() =
         runTest {
-            repository = createRepository()
-
             val products =
                 repository.getPagingProducts(
                     page = 0,
@@ -42,8 +44,6 @@ class ProductRepositoryImplTest {
     @Test
     fun returnEmptyProductsWhenPageIsNegative() =
         runTest {
-            repository = createRepository()
-
             val products =
                 repository.getPagingProducts(
                     page = -1,
@@ -56,8 +56,6 @@ class ProductRepositoryImplTest {
     @Test
     fun returnEmptyProductsWhenPageSizeIsZeroOrNegative() =
         runTest {
-            repository = createRepository()
-
             val zeroPageSizeProducts =
                 repository.getPagingProducts(
                     page = 0,
@@ -77,8 +75,6 @@ class ProductRepositoryImplTest {
     @Test
     fun returnEmptyProductsWhenPageIsOutOfRange() =
         runTest {
-            repository = createRepository()
-
             val products =
                 repository.getPagingProducts(
                     page = 10,
@@ -91,8 +87,6 @@ class ProductRepositoryImplTest {
     @Test
     fun returnTrueWhenNextPageExists() =
         runTest {
-            repository = createRepository()
-
             val hasNextPage =
                 repository.hasNextPage(
                     currentPage = 0,
@@ -105,8 +99,6 @@ class ProductRepositoryImplTest {
     @Test
     fun returnFalseWhenNextPageDoesNotExist() =
         runTest {
-            repository = createRepository()
-
             val hasNextPage =
                 repository.hasNextPage(
                     currentPage = 1,
@@ -119,8 +111,6 @@ class ProductRepositoryImplTest {
     @Test
     fun findProductById() =
         runTest {
-            repository = createRepository()
-
             val product = repository.findProductById(1)
 
             assertThat(product?.productId).isEqualTo(1)
