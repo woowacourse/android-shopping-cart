@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
                                 viewModel.updateHistory(product)
                                 val intent =
                                     Intent(this, ProductDetailActivity::class.java).apply {
-                                        putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
-                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
+                                        putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct?.id)
                                     }
                                 startActivity(intent)
                             },
@@ -61,8 +61,8 @@ class MainActivity : ComponentActivity() {
                                 viewModel.updateHistory(product)
                                 val intent =
                                     Intent(this, ProductDetailActivity::class.java).apply {
-                                        putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
-                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT, lastViewedProduct)
+                                        putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct?.id)
                                     }
                                 startActivity(intent)
                             },
