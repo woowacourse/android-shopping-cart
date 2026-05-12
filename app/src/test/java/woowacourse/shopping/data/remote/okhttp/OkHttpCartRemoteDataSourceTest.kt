@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
-import woowacourse.shopping.data.remote.mock.MockWebServerProvider
 
 class OkHttpCartRemoteDataSourceTest {
     private lateinit var mockWebServer: MockWebServer
