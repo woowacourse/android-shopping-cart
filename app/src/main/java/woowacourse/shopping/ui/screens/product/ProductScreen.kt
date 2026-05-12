@@ -117,7 +117,7 @@ fun ProductScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { viewModel.getProducts() },
+                            .clickable { viewModel.loadProducts() },
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_down),

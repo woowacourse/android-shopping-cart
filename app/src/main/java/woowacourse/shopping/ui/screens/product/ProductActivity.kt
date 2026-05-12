@@ -37,6 +37,6 @@ class ProductActivity : ComponentActivity() {
     override fun onRestart() {
         super.onRestart()
 
-        viewModel.loadInitialProducts()
+        viewModel.loadProducts()
     }
 }
