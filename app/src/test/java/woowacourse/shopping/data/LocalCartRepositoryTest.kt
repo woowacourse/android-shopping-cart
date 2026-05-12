@@ -65,7 +65,7 @@ class LocalCartRepositoryTest {
             coEvery { cartDao.findById(productId) } returns existingEntity
             coEvery { cartDao.deleteOrDecrement(productId) } returns Unit
             coEvery { cartDao.getAll() } returns listOf(CartEntity(productId, 1))
-            coEvery { productRepository.getProductById(productId) } returns product
+            coEvery { productRepository.getProductsByIds(listOf(productId)) } returns listOf(product)
 
             val result = repository.decrease(productId)
 

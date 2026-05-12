@@ -30,7 +30,7 @@ class RemoteProductRepositoryTest {
         val dataSource =
             ProductRemoteDataSource(
                 client = OkHttpClient(),
-                baseUrl = server.url("/").toString(),
+                baseUrlProvider = { server.url("/").toString() },
             )
         repository = RemoteProductRepository(dataSource)
     }

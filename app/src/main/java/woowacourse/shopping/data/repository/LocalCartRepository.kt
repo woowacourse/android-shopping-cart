@@ -14,11 +14,15 @@ class LocalCartRepository(
 ) : CartRepository {
     override suspend fun getCart(): Cart {
         val rows = cartDao.getAll()
+
+        val products =
+            runCatching {
+                productRepository.getProductsByIds(rows.map { it.productId })
+            }.getOrDefault(emptyList()).associateBy { it.id }
+
         val items =
             rows.mapNotNull { row ->
-                runCatching { productRepository.getProductById(row.productId) }
-                    .getOrNull()
-                    ?.let { CartItem(it, row.quantity) }
+                products[row.productId]?.let { CartItem(it, row.quantity) }
             }
         return Cart(items)
     }

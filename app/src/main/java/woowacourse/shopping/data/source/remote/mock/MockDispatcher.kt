@@ -12,6 +12,7 @@ import mockwebserver3.MockResponse
 import mockwebserver3.RecordedRequest
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import woowacourse.shopping.data.source.remote.mock.ProductData.products
+import kotlin.Result.Companion.success
 
 class MockDispatcher : Dispatcher() {
     private val productsArray = Json.parseToJsonElement(products).jsonArray
@@ -23,13 +24,27 @@ class MockDispatcher : Dispatcher() {
 
         return when {
             path == "/products" -> {
-                val offset = httpUrl.queryParameter("offset")?.toIntOrNull() ?: 0
-                val limit = httpUrl.queryParameter("limit")?.toIntOrNull() ?: productsArray.size
-                if (offset >= productsArray.size) {
-                    success("[]")
+                val idsParam = httpUrl.queryParameter("ids")
+                if (idsParam != null) {
+                    val ids =
+                        idsParam
+                            .split(",")
+                            .mapNotNull { it.trim().takeIf(String::isNotEmpty) }
+                            .toSet()
+                    val filtered =
+                        productsArray.filter {
+                            it.jsonObject["id"]?.jsonPrimitive?.content in ids
+                        }
+                    success(JsonArray(filtered).toString())
                 } else {
-                    val sliced = productsArray.drop(offset).take(limit)
-                    success(JsonArray(sliced).toString())
+                    val offset = httpUrl.queryParameter("offset")?.toIntOrNull() ?: 0
+                    val limit = httpUrl.queryParameter("limit")?.toIntOrNull() ?: productsArray.size
+                    if (offset >= productsArray.size) {
+                        success("[]")
+                    } else {
+                        val sliced = productsArray.drop(offset).take(limit)
+                        success(JsonArray(sliced).toString())
+                    }
                 }
             }
             path.startsWith("/products/") -> {
