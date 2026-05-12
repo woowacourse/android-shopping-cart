@@ -40,6 +40,7 @@ class RoomCartRepository(
         product: Product,
         quantityToAdd: Int,
     ) {
+        require(quantityToAdd > 0) { "추가 수량은 1 이상이어야 합니다." }
         val productId = product.productId.toString()
         val existing = cartDao.getByProductId(productId)
         val newQuantity = (existing?.quantity ?: 0) + quantityToAdd
@@ -54,6 +55,7 @@ class RoomCartRepository(
         productId: Uuid,
         quantityToRemove: Int,
     ) {
+        require(quantityToRemove > 0) { "감소 수량은 1 이상이어야 합니다." }
         val cartProductId = productId.toString()
         val existing = cartDao.getByProductId(cartProductId) ?: return
         val updatedQuantity = existing.quantity - quantityToRemove
