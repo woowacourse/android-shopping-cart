@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.localdb.mapper
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
 import woowacourse.shopping.model.CartItem
@@ -29,6 +30,27 @@ class CartItemEntityMapperTest {
 
         assertThat(cartItem.product).isEqualTo(product)
         assertThat(cartItem.quantity).isEqualTo(entity.quantity)
+    }
+
+    @Test
+    fun `장바구니 내 상품과 Product 간 id가 불일치할 시 예외가 발생한다`() {
+        val entity =
+            CartItemEntity(
+                id = "1",
+                quantity = 3,
+                timestamp = 100L,
+            )
+        val product =
+            Product(
+                id = "2",
+                name = ProductName("상품"),
+                price = Money(2000),
+                imageUrl = "2",
+            )
+
+        assertThatThrownBy { entity.toDomain(product) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("id가 일치하지 않습니다.")
     }
 
     @Test
