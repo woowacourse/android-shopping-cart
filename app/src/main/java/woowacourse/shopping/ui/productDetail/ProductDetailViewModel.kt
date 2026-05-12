@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.Quantity
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -37,7 +38,7 @@ class ProductDetailViewModel(
                         if (product != null) {
                             val mostRecentProduct = recentProductRepository.getMostRecentProduct()
                             val lastViewedProduct =
-                                if (openedFromLastViewed || mostRecentProduct?.id == product.id) {
+                                if (openedFromLastViewed || product.isSameProduct(mostRecentProduct)) {
                                     null
                                 } else {
                                     mostRecentProduct

@@ -7,4 +7,8 @@ data class Product(
     val imageUrl: ImageUrl,
     val name: ProductName,
     val price: Price,
-)
+){
+    fun isSameProduct(product: Product): Boolean{
+        return this.id == product.id
+    }
+}
