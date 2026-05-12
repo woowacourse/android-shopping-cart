@@ -9,7 +9,11 @@ import woowacourse.shopping.di.RepositoryProvider
 class ShoppingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        runBlocking(Dispatchers.IO) { MockServer.start() }
+
+        if (BuildConfig.DEBUG) {
+            runBlocking(Dispatchers.IO) { MockServer.start() }
+        }
+
         RepositoryProvider.init(this)
     }
 }
