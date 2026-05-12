@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.data.remote.mock.MockWebServer
+import woowacourse.shopping.data.remote.mock.ProductWebServer
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 import woowacourse.shopping.ui.viewmodel.ShoppingViewModel
@@ -26,7 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val isServerReady by MockWebServer.isReady.collectAsStateWithLifecycle()
+            val isServerReady by ProductWebServer.isReady.collectAsStateWithLifecycle()
 
             if (isServerReady) {
                 val viewModel: ShoppingViewModel =
@@ -35,7 +34,7 @@ class MainActivity : ComponentActivity() {
                             ShoppingViewModelFactory(
                                 (application as ShoppingApplication).purchaseProductsRepository,
                                 (application as ShoppingApplication).recentlyViewedProductRepository,
-                                (application as ShoppingApplication).webServerRepository,
+                                (application as ShoppingApplication).productRepository,
                             ),
                     )
                 val cartState by viewModel.cart.collectAsStateWithLifecycle()
