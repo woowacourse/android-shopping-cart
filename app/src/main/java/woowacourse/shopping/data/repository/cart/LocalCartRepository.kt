@@ -35,23 +35,17 @@ class LocalCartRepository(
     }
 
     override suspend fun increase(productId: String) {
-        val existing = cartItemDao.getCartItem(productId) ?: return
-        cartItemDao.upsert(
-            existing.copy(quantity = existing.quantity + 1),
-        )
+        cartItemDao.increaseQuantity(productId, amount = 1)
     }
 
     override suspend fun decrease(productId: String) {
-        val existing = cartItemDao.getCartItem(productId) ?: return
-        val nextQuantity = existing.quantity - 1
-        if (nextQuantity <= Quantity.MIN_VALUE) {
-            cartItemDao.delete(productId)
-            return
-        }
-        cartItemDao.upsert(existing.copy(quantity = nextQuantity))
+        cartItemDao.decreaseQuantity(productId)
     }
 
     override suspend fun remove(productId: String) {
-        cartItemDao.delete(productId)
+        val updatedRows = cartItemDao.decreaseQuantity(productId)
+        if(updatedRows == 0){
+            cartItemDao.delete(productId)
+        }
     }
 }

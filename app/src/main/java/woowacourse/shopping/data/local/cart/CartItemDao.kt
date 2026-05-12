@@ -45,4 +45,12 @@ interface CartItemDao {
         productId: String,
         amount: Int,
     ): Int
+
+    @Query(
+        """
+            UPDATE cart_items
+            SET quantity = quantity - 1
+            WHERE productId = :productId AND quantity>1
+        """)
+    suspend fun decreaseQuantity(productId:String): Int
 }
