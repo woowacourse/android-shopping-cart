@@ -11,11 +11,22 @@ import woowacourse.shopping.data.local.dao.RecentlyViewedProductDao
 import woowacourse.shopping.data.local.entity.PurchaseProductEntity
 import woowacourse.shopping.data.local.entity.RecentlyViewedProductEntity
 
-val MIGRATION_2_3 =
-    object : Migration(2, 3) {
+val MIGRATION_3_4 =
+    object : Migration(3, 4) {
         override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("DROP TABLE `purchase_products`")
             db.execSQL(
                 """
+                CREATE TABLE IF NOT EXISTS `purchase_products` (
+                    `id` TEXT NOT NULL,
+                    `count` INTEGER NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+                """.trimIndent()
+            )
+            db.execSQL("DROP TABLE `recently_viewed_products`")
+            db.execSQL(
+                """                
                 CREATE TABLE IF NOT EXISTS `recently_viewed_products` (
                     `id` TEXT NOT NULL,
                     `name` TEXT NOT NULL,
@@ -31,7 +42,7 @@ val MIGRATION_2_3 =
 
 @Database(
     entities = [PurchaseProductEntity::class, RecentlyViewedProductEntity::class],
-    version = 3,
+    version = 4,
 )
 abstract class DataBase : RoomDatabase() {
     abstract fun purchaseProductsDao(): PurchaseProductsDao
@@ -49,7 +60,7 @@ abstract class DataBase : RoomDatabase() {
                         context = context,
                         klass = DataBase::class.java,
                         name = "shopping_database",
-                    ).addMigrations(MIGRATION_2_3)
+                    ).addMigrations(MIGRATION_3_4)
                     .build()
                     .also { instance = it }
             }
