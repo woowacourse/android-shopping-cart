@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.dto.ProductResponse
+import woowacourse.shopping.data.remote.exception.NetworkException
 
 class OkHttpProductRemoteDataSource(
     private val client: OkHttpClient,
@@ -51,7 +52,12 @@ class OkHttpProductRemoteDataSource(
                     .build()
 
             client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) throw Exception("HTTP Error ${response.code}")
+                if (!response.isSuccessful) {
+                    throw NetworkException(
+                        code = response.code,
+                        message = "서버 오류가 발생했습니다. (에러 코드: ${response.code})",
+                    )
+                }
                 val body = checkNotNull(response.body) { "Response body is null" }
                 json.decodeFromString(body.string())
             }
