@@ -4,53 +4,36 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class CartTest {
+
     @Test
-    fun `상품을 추가하면 추가된 Cart 를 반환한다`() {
-        // given : 상품과 Cart가 주어진다
+    fun `quantityOf 는 해당 상품의 수량을 반환한다`() {
         val product = normalProduct("임시")
-        val cartContent = CartContent(product, CartContentQuantity(1))
-        val cart = Cart(emptyList())
+        val cart = Cart(listOf(CartContent(product, 3)))
 
-        // when : 상품을 Cart에 추가하면
-        val newCart = cart.plusCartContent(cartContent)
-
-        // then : 상품이 추가된 Cart가 반환된다
-        val result = newCart.contains(product)
-        assertEquals(result, true)
+        assertEquals(3, cart.quantityOf(product.id))
     }
 
     @Test
-    fun `product가 존재한다면 true를 반환한다`() {
-        // given : 상품과 Cart가 주어진다
-        val product = normalProduct("임시")
-        val cartContent = CartContent(product, CartContentQuantity(1))
-        val cart = Cart(listOf(cartContent))
+    fun `quantityOf 는 존재하지 않는 상품이면 0을 반환한다`() {
+        val cart = Cart(listOf(CartContent(normalProduct("임시"), 1)))
 
-        // when : 상품이 존재하는지 확인할 때
-        val result = cart.contains(product)
-
-        // then : true가 반환된다
-        assertEquals(result, true)
+        assertEquals(0, cart.quantityOf("없는상품"))
     }
 
     @Test
-    fun `product가 존재하지 않는다면 false를 반환한다`() {
-        // given : 상품과 Cart, 다른 상품이 주어진다
-        val product = normalProduct("임시")
-        val cartContent = CartContent(product, CartContentQuantity(1))
-        val cart = Cart(listOf(cartContent))
+    fun `totalQuantityOf 는 모든 상품 수량의 합을 반환한다`() {
+        val cart = Cart(
+            listOf(
+                CartContent(normalProduct("A"), 2),
+                CartContent(normalProduct("B"), 3),
+            ),
+        )
 
-        val otherProduct = normalProduct("임시2")
-
-        // when : 상품이 존재하는지 확인할 때
-        val result = cart.contains(otherProduct)
-
-        // then : false가 반환된다
-        assertEquals(result, false)
+        assertEquals(5, cart.totalQuantityOf())
     }
 
-    private fun normalProduct(title: String): Product = Product(
-        name = title,
+    private fun normalProduct(name: String): Product = Product(
+        name = name,
         price = Money(1000),
         imageUrl = "",
     )

@@ -10,6 +10,7 @@ object MockData {
 
     val MOCK_PRODUCTS: List<Product> = (1..35).map { i ->
         Product(
+            id = i.toString(),
             name = "품목$i",
             price = Money(i * 1_000),
             imageUrl = "$IMAGE_BASE_URL${(i - 1) % 5}$IMAGE_URL_SUFFIX",

@@ -6,6 +6,8 @@
     <string name="left_arrow_description">뒤로 가기</string>
     <string name="close_description">닫기</string>
     <string name="load_more_description">상품 더보기</string>
+    <string name="add_product_description">상품 수량 더하기</string>
+    <string name="decrease_product_description">상품 수량 빼기기</string>
 
 
     <string name="product_detail_price">가격</string>
