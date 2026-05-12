@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.local.entity.PurchaseProductEntity
+import woowacourse.shopping.data.local.entity.RecentlyViewedProductEntity
 import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
 import woowacourse.shopping.data.local.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.data.remote.repository.ProductRepository
@@ -27,7 +28,7 @@ class ShoppingViewModel(
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    val savedList: StateFlow<List<PurchaseProductEntity>?> =
+    val cartedList: StateFlow<List<PurchaseProductEntity>?> =
         purchaseProductsRepository
             .getAll()
             .stateIn(
@@ -36,11 +37,20 @@ class ShoppingViewModel(
                 initialValue = emptyList(),
             )
 
+    val recentlyViewedList: StateFlow<List<RecentlyViewedProductEntity>?> =
+        recentlyViewedProductRepository
+            .getAll()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+
     private val _products = MutableStateFlow<Products>(Products())
     val products: StateFlow<Products> = _products.asStateFlow()
 
     val cart: StateFlow<Cart> =
-        combine(savedList, products) { entities, allProducts ->
+        combine(cartedList, products) { entities, allProducts ->
             val purchaseProducts =
                 entities?.mapNotNull { entity ->
                     val product = allProducts.findWithId(entity.id)
@@ -53,13 +63,34 @@ class ShoppingViewModel(
             initialValue = Cart(),
         )
 
+    val recentlyViewedProducts: StateFlow<Products> =
+        combine(recentlyViewedList, products) { entities, allProducts ->
+            val productList =
+                entities?.mapNotNull { entity ->
+                    allProducts.findWithId(entity.id)
+                } ?: emptyList()
+            Products(productList)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = Products()
+        )
+
+    val lastViewProductId: StateFlow<String?> = recentlyViewedProductRepository.getLatestItem()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ""
+        )
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         fetchProducts()
+
         viewModelScope.launch {
-            savedList.collect { entities ->
+            cartedList.collect { entities ->
                 entities?.forEach { entity ->
                     if (_products.value.findWithId(entity.id) == null) {
                         launch {
@@ -111,29 +142,13 @@ class ShoppingViewModel(
         }
     }
 
-    val viewingHistory: StateFlow<Products> =
-        recentlyViewedProductRepository
-            .getAll()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = Products(),
-            )
-
-    val lastViewedProduct: StateFlow<Product?> =
-        recentlyViewedProductRepository
-            .getLatestItem()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = null,
-            )
-
     fun updateHistory(product: Product) {
         viewModelScope.launch {
             recentlyViewedProductRepository.updateList(product)
         }
     }
+
+    fun getLastViewedProductID() = recentlyViewedProductRepository.getLatestItem()
 
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()

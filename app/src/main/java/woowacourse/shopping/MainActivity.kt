@@ -38,9 +38,9 @@ class MainActivity : ComponentActivity() {
                             ),
                     )
                 val cartState by viewModel.cart.collectAsStateWithLifecycle()
-                val viewHistory by viewModel.viewingHistory.collectAsStateWithLifecycle()
-                val lastViewedProduct by viewModel.lastViewedProduct.collectAsStateWithLifecycle()
+                val viewHistory by viewModel.recentlyViewedProducts.collectAsStateWithLifecycle()
                 val currentProducts by viewModel.products.collectAsStateWithLifecycle()
+                val lastViewedProduct by viewModel.lastViewProductId.collectAsStateWithLifecycle()
                 val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
                 AndroidshoppingTheme {
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                                 val intent =
                                     Intent(this, ProductDetailActivity::class.java).apply {
                                         putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
-                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct?.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct)
                                     }
                                 startActivity(intent)
                             },
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                                 val intent =
                                     Intent(this, ProductDetailActivity::class.java).apply {
                                         putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
-                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct?.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct)
                                     }
                                 startActivity(intent)
                             },
