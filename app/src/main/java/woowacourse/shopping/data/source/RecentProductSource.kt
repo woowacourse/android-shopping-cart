@@ -7,5 +7,5 @@ interface RecentProductSource {
 
     suspend fun addRecentProductId(productId: String)
 
-    suspend fun getLastViewProductId(): RecentProductEntity
+    suspend fun getLastViewProductId(): RecentProductEntity?
 }

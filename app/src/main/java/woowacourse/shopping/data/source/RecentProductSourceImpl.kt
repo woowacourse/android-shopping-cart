@@ -30,5 +30,5 @@ class RecentProductSourceImpl(
         )
     }
 
-    override suspend fun getLastViewProductId(): RecentProductEntity = getRecentProductIds().first()
+    override suspend fun getLastViewProductId(): RecentProductEntity? = getRecentProductIds().firstOrNull()
 }
