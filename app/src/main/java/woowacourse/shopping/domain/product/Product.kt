@@ -8,7 +8,5 @@ data class Product(
     val name: ProductName,
     val price: Price,
 ){
-    fun isSameProduct(product: Product): Boolean{
-        return this.id == product.id
-    }
+    fun isSameProduct(product: Product?): Boolean = id == product?.id
 }
