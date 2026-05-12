@@ -39,8 +39,7 @@ class ShoppingActivity : ComponentActivity() {
                         startActivity(intent)
                     },
                     onCartClick = { startActivity(CartActivity.getIntent(applicationContext)) },
-                    onIncreaseQuantity = viewModel::increaseQuantity,
-                    onDecreaseQuantity = viewModel::decreaseQuantity,
+                    onQuantityChange = viewModel::updateQuantity,
                 )
             }
         }

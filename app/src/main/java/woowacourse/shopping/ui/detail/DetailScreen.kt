@@ -42,8 +42,7 @@ import woowacourse.shopping.ui.util.formattedPrice
 fun DetailScreen(
     uiState: DetailUiState,
     onCloseClick: () -> Unit,
-    onIncreaseQuantity: () -> Unit,
-    onDecreaseQuantity: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
     onAddToCart: () -> Unit,
     onRecentItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -91,8 +90,7 @@ fun DetailScreen(
             productName = uiState.product.name,
             quantity = uiState.quantity,
             totalPrice = uiState.totalPrice,
-            onIncreaseQuantity = onIncreaseQuantity,
-            onDecreaseQuantity = onDecreaseQuantity,
+            onQuantityChange = onQuantityChange,
             recentItem = {
                 if (uiState.recentItem != null) {
                     RecentItemCard(
@@ -119,8 +117,7 @@ private fun DetailContent(
     productName: String,
     quantity: Int,
     totalPrice: Int,
-    onIncreaseQuantity: () -> Unit,
-    onDecreaseQuantity: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
     recentItem: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -159,9 +156,8 @@ private fun DetailContent(
                 color = Color.Black,
             )
             QuantitySelector(
-                onIncreaseQuantity = onIncreaseQuantity,
-                onDecreaseQuantity = onDecreaseQuantity,
                 quantity = quantity,
+                onQuantityChange = onQuantityChange,
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -175,8 +171,7 @@ private fun DetailScreenPreview() {
     DetailScreen(
         uiState = DetailUiState(),
         onCloseClick = {},
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
+        onQuantityChange = {},
         onRecentItemClick = {},
         onAddToCart = {},
     )
@@ -190,8 +185,7 @@ private fun DetailContentPreview() {
         productName = "Test",
         quantity = 1,
         totalPrice = 1000,
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
+        onQuantityChange = {},
         recentItem = {},
     )
 }

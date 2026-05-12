@@ -88,7 +88,7 @@ class DetailViewModelTest {
             val viewModel = createViewModel(id = "1")
             mainDispatcherExtension.advanceUntilIdle()
 
-            viewModel.increaseQuantity()
+            viewModel.updateQuantity(2)
 
             assertThat(viewModel.uiState.value.quantity).isEqualTo(2)
             assertThat(viewModel.uiState.value.totalPrice).isEqualTo(4000)

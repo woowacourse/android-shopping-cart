@@ -31,10 +31,17 @@ class CartRepository(
                 )
             }
 
-    suspend fun addItem(
+    suspend fun setQuantity(
         product: Product,
         quantity: Int,
     ) {
+        require(quantity >= 0) { "Quantity must be 0 or greater." }
+
+        if (quantity == 0) {
+            cartItemDao.deleteById(product.id)
+            return
+        }
+
         val cartItem =
             CartItemEntity(
                 product.id,
@@ -44,19 +51,19 @@ class CartRepository(
         cartItemDao.insert(cartItem)
     }
 
-    suspend fun increaseQuantity(id: String) {
-        val cartItem = cartItemDao.findById(id) ?: return
-        cartItemDao.insert(cartItem.copy(quantity = cartItem.quantity + 1))
-    }
+    suspend fun updateQuantity(
+        id: String,
+        quantity: Int,
+    ) {
+        require(quantity >= 0) { "수량은 0 이상이어야 합니다." }
 
-    suspend fun decreaseQuantity(id: String) {
-        val cartItem = cartItemDao.findById(id) ?: return
-        if (cartItem.quantity <= 1) {
+        if (quantity == 0) {
             cartItemDao.deleteById(id)
             return
         }
 
-        cartItemDao.insert(cartItem.copy(quantity = cartItem.quantity - 1))
+        val cartItem = cartItemDao.findById(id) ?: return
+        cartItemDao.insert(cartItem.copy(quantity = quantity))
     }
 
     suspend fun deleteItem(id: String) {

@@ -25,9 +25,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun QuantitySelector(
-    onIncreaseQuantity: () -> Unit,
-    onDecreaseQuantity: () -> Unit,
     quantity: Int,
+    onQuantityChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentColor: Color = Color.Black,
 ) {
@@ -41,7 +40,7 @@ fun QuantitySelector(
                 .background(Color.White),
     ) {
         IconButton(
-            onClick = onDecreaseQuantity,
+            onClick = { onQuantityChange((quantity - 1).coerceAtLeast(0)) },
             modifier = Modifier.size(42.dp),
         ) {
             Icon(
@@ -61,7 +60,7 @@ fun QuantitySelector(
         )
 
         IconButton(
-            onClick = onIncreaseQuantity,
+            onClick = { onQuantityChange(quantity + 1) },
             modifier = Modifier.size(42.dp),
         ) {
             Icon(
@@ -79,8 +78,7 @@ fun QuantitySelector(
 @Composable
 private fun QuantitySelectorPreview() {
     QuantitySelector(
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
         quantity = 1,
+        onQuantityChange = {},
     )
 }

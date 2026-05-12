@@ -89,8 +89,7 @@ class DetailActivity : ComponentActivity() {
                 DetailScreen(
                     uiState = uiState,
                     onCloseClick = { finish() },
-                    onIncreaseQuantity = viewModel::increaseQuantity,
-                    onDecreaseQuantity = viewModel::decreaseQuantity,
+                    onQuantityChange = viewModel::updateQuantity,
                     onAddToCart = viewModel::addToCart,
                     onRecentItemClick = { id ->
                         startActivity(getIntent(this, id, hideRecentItem = true))

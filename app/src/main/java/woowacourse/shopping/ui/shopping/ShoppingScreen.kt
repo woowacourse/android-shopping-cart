@@ -39,8 +39,7 @@ fun ShoppingScreen(
     onLoad: () -> Unit,
     onProductClick: (String) -> Unit,
     onCartClick: () -> Unit,
-    onIncreaseQuantity: (String) -> Unit,
-    onDecreaseQuantity: (String) -> Unit,
+    onQuantityChange: (String, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -96,8 +95,7 @@ fun ShoppingScreen(
                 modifier = Modifier.padding(innerPadding),
                 onLoad = onLoad,
                 onProductClick = onProductClick,
-                onIncreaseQuantity = onIncreaseQuantity,
-                onDecreaseQuantity = onDecreaseQuantity,
+                onQuantityChange = onQuantityChange,
                 isCanLoadMore = uiState.canLoadMore,
             )
         } else {
@@ -119,8 +117,7 @@ private fun ShoppingContents(
     onLoad: () -> Unit,
     isCanLoadMore: Boolean,
     onProductClick: (String) -> Unit,
-    onIncreaseQuantity: (String) -> Unit,
-    onDecreaseQuantity: (String) -> Unit,
+    onQuantityChange: (String, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -153,11 +150,8 @@ private fun ShoppingContents(
                     onClick = {
                         onProductClick(product.id)
                     },
-                    onIncreaseQuantity = {
-                        onIncreaseQuantity(product.id)
-                    },
-                    onDecreaseQuantity = {
-                        onDecreaseQuantity(product.id)
+                    onQuantityChange = { quantity ->
+                        onQuantityChange(product.id, quantity)
                     },
                 )
             }
@@ -182,7 +176,6 @@ private fun ShoppingScreenPreview() {
         onLoad = {},
         onProductClick = {},
         onCartClick = {},
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
+        onQuantityChange = { _, _ -> },
     )
 }

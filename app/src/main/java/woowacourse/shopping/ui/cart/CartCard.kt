@@ -35,8 +35,7 @@ import woowacourse.shopping.ui.util.formattedPrice
 @Composable
 fun CartCard(
     onDeleteItem: () -> Unit,
-    onIncreaseQuantity: () -> Unit,
-    onDecreaseQuantity: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
     productName: String,
     imageUrl: String,
     price: Int,
@@ -98,9 +97,8 @@ fun CartCard(
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 QuantitySelector(
-                    onIncreaseQuantity = onIncreaseQuantity,
-                    onDecreaseQuantity = onDecreaseQuantity,
                     quantity = quantity,
+                    onQuantityChange = onQuantityChange,
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
@@ -120,8 +118,7 @@ fun CartCard(
 fun CartCardPreview() {
     CartCard(
         onDeleteItem = {},
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
+        onQuantityChange = {},
         productName = "Test",
         imageUrl = "Test",
         price = 1000,

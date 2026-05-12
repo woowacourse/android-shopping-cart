@@ -77,15 +77,12 @@ class CartViewModel(
         }
     }
 
-    fun increaseQuantity(productId: String) {
+    fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         viewModelScope.launch {
-            cartRepository.increaseQuantity(productId)
-        }
-    }
-
-    fun decreaseQuantity(productId: String) {
-        viewModelScope.launch {
-            cartRepository.decreaseQuantity(productId)
+            cartRepository.updateQuantity(productId, quantity = quantity)
         }
     }
 

@@ -65,18 +65,8 @@ class DetailViewModel(
         }
     }
 
-    fun increaseQuantity() {
-        val nextQuantity = _uiState.value.quantity + 1
-
-        _uiState.value =
-            _uiState.value.copy(
-                quantity = nextQuantity,
-                totalPrice = _uiState.value.product.price * nextQuantity,
-            )
-    }
-
-    fun decreaseQuantity() {
-        val nextQuantity = (_uiState.value.quantity - 1).coerceAtLeast(1)
+    fun updateQuantity(quantity: Int) {
+        val nextQuantity = quantity.coerceAtLeast(1)
 
         _uiState.value =
             _uiState.value.copy(
@@ -89,7 +79,7 @@ class DetailViewModel(
         viewModelScope.launch {
             try {
                 val product = productRepository.getProductById(id)
-                cartRepository.addItem(product, _uiState.value.quantity)
+                cartRepository.setQuantity(product, _uiState.value.quantity)
                 _event.send(DetailEvent.NavigateToCart)
             } catch (e: IllegalArgumentException) {
                 _event.send(DetailEvent.ShowAddCartFailureMessage)

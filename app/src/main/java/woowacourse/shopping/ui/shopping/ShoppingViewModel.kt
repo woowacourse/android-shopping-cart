@@ -109,22 +109,17 @@ class ShoppingViewModel(
         }
     }
 
-    fun increaseQuantity(productId: String) {
+    fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         viewModelScope.launch {
-            val product = productRepository.getProductById(productId)
-            val currentQuantity = _uiState.value.cartQuantities[productId] ?: 0
-
-            if (currentQuantity == 0) {
-                cartRepository.addItem(product, quantity = 1)
+            if (productId !in _uiState.value.cartQuantities) {
+                val product = productRepository.getProductById(productId)
+                cartRepository.setQuantity(product, quantity = quantity)
             } else {
-                cartRepository.increaseQuantity(productId)
+                cartRepository.updateQuantity(productId, quantity = quantity)
             }
-        }
-    }
-
-    fun decreaseQuantity(productId: String) {
-        viewModelScope.launch {
-            cartRepository.decreaseQuantity(productId)
         }
     }
 

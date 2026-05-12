@@ -36,8 +36,7 @@ class CartActivity : ComponentActivity() {
                     onDeleteItem = { viewModel.deleteItem(it) },
                     onNextPage = viewModel::nextPage,
                     onPreviousPage = viewModel::previousPage,
-                    onIncreaseQuantity = { viewModel.increaseQuantity(it) },
-                    onDecreaseQuantity = { viewModel.decreaseQuantity(it) },
+                    onQuantityChange = viewModel::updateQuantity,
                 )
             }
         }

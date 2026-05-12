@@ -36,8 +36,7 @@ fun ProductCard(
     price: Int,
     quantity: Int,
     onClick: () -> Unit,
-    onIncreaseQuantity: () -> Unit,
-    onDecreaseQuantity: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -77,14 +76,13 @@ fun ProductCard(
                         modifier =
                             Modifier
                                 .size(32.dp)
-                                .clickable { onIncreaseQuantity() },
+                                .clickable { onQuantityChange(1) },
                     )
                 }
             } else {
                 QuantitySelector(
                     quantity = quantity,
-                    onIncreaseQuantity = onIncreaseQuantity,
-                    onDecreaseQuantity = onDecreaseQuantity,
+                    onQuantityChange = onQuantityChange,
                     modifier = Modifier.padding(bottom = 8.dp),
                     contentColor = Gray50,
                 )
@@ -119,7 +117,6 @@ private fun ProductCardPreview() {
         price = 1000,
         quantity = 0,
         onClick = {},
-        onIncreaseQuantity = {},
-        onDecreaseQuantity = {},
+        onQuantityChange = {},
     )
 }
