@@ -13,18 +13,17 @@ object ProductWebServer {
     private var isRun = false
     private val _isReady = MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
-    private val server =
-        MockWebServer().apply {
-            dispatcher = ProductWebServerDispatcher()
-        }
+    private var server: MockWebServer? = null
 
-
-    val baseUrl: String get() = server.url("/").toString()
+    val baseUrl: String get() = server?.url("/").toString()
 
     fun start() {
         if(!isRun){
+            server = MockWebServer().apply {
+                dispatcher = ProductWebServerDispatcher()
+            }
             serverScope.launch {
-                server.start()
+                server?.start()
                 _isReady.value = true
             }
             isRun = true
@@ -33,9 +32,11 @@ object ProductWebServer {
 
     fun stop() {
         if(isRun) {
-            server.close()
+            server?.close()
             isRun = false
             serverScope.cancel()
+            server = null
+            _isReady.value = false
         }
     }
 }

@@ -1,72 +1,78 @@
 package woowacourse.shopping
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.remote.mock.ProductWebServer
 import woowacourse.shopping.data.remote.repository.ProductRepository
 
 class ProductWebServerTest {
     @Test
-    fun `상품 목록을 페이지네이션을 적용해 불러올 수 있다`() =
-        runBlocking {
-            // given
-            val page = 0
-            val pageSize = 5
+    fun `상품 목록을 페이지네이션을 적용해 불러올 수 있다`() = runBlocking {
+        val page = 0
+        val pageSize = 5
 
-            // when
-            val products = repository.getProducts(page, pageSize)
+        // when
+        val products = repository.getProducts(page, pageSize)
 
-            // then
-            assert(products.size == 5)
-            assert(products[0].id == "1")
-        }
+        // then
+        assertEquals(5, products.size)
+        assertEquals("1", products[0].id)
+    }
 
     @Test
-    fun `특정 ID를 가진 상품의 상세 정보를 가져올 수 있다`() =
-        runBlocking {
-            // given
-            val targetId = "2"
+    fun `특정 ID를 가진 상품의 상세 정보를 가져올 수 있다`() = runBlocking {
+        // given
+        val targetId = "2"
 
-            // when
-            val product = repository.getProduct(targetId)
+        // when
+        val product = repository.getProduct(targetId)
 
-            // then
-            assert(product.id == "2")
-            assert(product.name == "무엘사")
-        }
+        // then
+        assertEquals("2", product.id)
+        assertEquals("무엘사", product.name)
+    }
 
     @Test
-    fun `존재하지 않는 상품을 요청하면 에러가 발생한다`() =
-        runBlocking {
-            // given
-            val invalidID = "invalidId"
+    fun `존재하지 않는 상품을 요청하면 에러가 발생한다`() = runBlocking {
+        // given
+        val invalidID = "invalidId"
 
-            // when & then
-            val result =
-                runCatching {
-                    repository.getProduct(invalidID)
-                }
-            assert(result.isFailure)
-        }
+        // when & then
+        val result =
+            runCatching {
+                repository.getProduct(invalidID)
+            }
+
+        assertEquals(true, result.isFailure)
+    }
 
     companion object {
         private lateinit var repository: ProductRepository
         private val client = OkHttpClient()
 
         @JvmStatic
-        @BeforeAll
-        fun setUp() {
-            ProductWebServer.start()
-            repository = ProductRepository(client, ProductWebServer.baseUrl)
+        @AfterAll
+        fun tearDown(): Unit {
+            ProductWebServer.stop()
         }
 
         @JvmStatic
-        @AfterAll
-        fun tearDown() {
-            ProductWebServer.stop()
+        @BeforeAll
+        fun setUp(): Unit = runBlocking {
+            ProductWebServer.start()
+
+            ProductWebServer.isReady.first { it == true }
+
+            repository = ProductRepository(client, ProductWebServer.baseUrl)
         }
     }
+
 }
