@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
+import woowacourse.shopping.data.remote.mock.MockWebServerProvider
 
 class OkHttpCartRemoteDataSourceTest {
     private lateinit var mockWebServer: MockWebServer
@@ -36,7 +37,7 @@ class OkHttpCartRemoteDataSourceTest {
         mockWebServer.shutdown()
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     fun getCartItems() =
         runTest {
             val cartItems = dataSource.getCartItems()
@@ -109,6 +110,7 @@ class OkHttpCartRemoteDataSourceTest {
             }
 
         mockWebServer.dispatcher = dispatcher
+        mockWebServer.start()
 
         return mockWebServer
     }

@@ -126,6 +126,7 @@ class OkHttpProductRemoteDataSourceTest {
             }
 
         mockWebServer.dispatcher = dispatcher
+        mockWebServer.start()
 
         return mockWebServer
     }
