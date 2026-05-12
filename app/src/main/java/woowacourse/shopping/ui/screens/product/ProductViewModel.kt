@@ -37,7 +37,7 @@ class ProductViewModel(
         .getAllCartItems()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = CartItems(emptyList(), true),
         )
 
@@ -45,7 +45,7 @@ class ProductViewModel(
         .getRecentProducts(RECENT_PRODUCT_LIMIT)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList(),
         )
 
