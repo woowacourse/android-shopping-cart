@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.product.ProductName
 
 fun ProductResponseDto.toDomain(): Product =
     Product(
-        id = id.toString(),
+        id = id,
         imageUrl = ImageUrl(imageUrl),
         name = ProductName(name),
         price = Price(price),

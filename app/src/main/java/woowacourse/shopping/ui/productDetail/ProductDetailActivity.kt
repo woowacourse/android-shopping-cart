@@ -20,9 +20,9 @@ class ProductDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val appContainer = (application as ShoppingApplication).appContainer
-        val productId = intent.getStringExtra(EXTRA_PRODUCT_ID)
+        val productId = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
         val openedFromLastViewed = intent.getBooleanExtra(EXTRA_OPENED_FROM_LAST_VIEWED, false)
-        if (productId == null) {
+        if (productId == -1) {
             finish()
             return
         }
@@ -67,7 +67,7 @@ class ProductDetailActivity : ComponentActivity() {
 
         fun newIntent(
             context: Context,
-            productId: String,
+            productId: Int,
             openedFromLastViewed: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {

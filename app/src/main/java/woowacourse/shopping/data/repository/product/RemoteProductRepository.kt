@@ -15,7 +15,7 @@ class RemoteProductRepository(
         pageSize: Int,
     ): List<Product> = fetchAllProducts().getPage(page, pageSize)
 
-    override suspend fun getProduct(id: String): Product? =
+    override suspend fun getProduct(id: Int): Product? =
         productDataSource.getProduct(id)?.toDomain()
 
     private suspend fun fetchAllProducts(): Products =

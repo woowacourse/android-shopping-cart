@@ -41,19 +41,19 @@ class CartViewModel(
         }
     }
 
-    fun removeCartItem(productId: String) {
+    fun removeCartItem(productId: Int) {
         viewModelScope.launch {
             cartRepository.remove(productId)
         }
     }
 
-    fun increase(productId: String) {
+    fun increase(productId: Int) {
         viewModelScope.launch {
             cartRepository.increase(productId)
         }
     }
 
-    fun decrease(productId: String) {
+    fun decrease(productId: Int) {
         viewModelScope.launch {
             cartRepository.decrease(productId)
         }

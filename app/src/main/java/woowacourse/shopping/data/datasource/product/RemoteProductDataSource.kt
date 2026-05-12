@@ -19,7 +19,7 @@ class RemoteProductDataSource(
             json.decodeFromString(body)
         }
 
-    override suspend fun getProduct(id: String): ProductResponseDto? =
+    override suspend fun getProduct(id: Int): ProductResponseDto? =
         try{
             request("products/$id"){body ->
                 json.decodeFromString(body)

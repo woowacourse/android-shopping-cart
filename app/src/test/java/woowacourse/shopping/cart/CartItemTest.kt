@@ -14,7 +14,7 @@ import woowacourse.shopping.domain.product.ProductName
 class CartItemTest {
     private val product =
         Product(
-            id = "product-1",
+            id = 1,
             imageUrl = ImageUrl("https://example.com/image.png"),
             name = ProductName("PET보틀-정사각형"),
             price = Price(10_000),
@@ -36,11 +36,11 @@ class CartItemTest {
     }
 
     @Test
-    fun `productId 문자열로 isSameProduct를 비교할 수 있다`() {
+    fun `productId 정수로 isSameProduct를 비교할 수 있다`() {
         val cartItem = CartItem(product = product, quantity = Quantity(1))
 
-        assertTrue(cartItem.isSameProduct("product-1"))
-        assertFalse(cartItem.isSameProduct("product-2"))
+        assertTrue(cartItem.isSameProduct(1))
+        assertFalse(cartItem.isSameProduct(2))
     }
 
     @Test

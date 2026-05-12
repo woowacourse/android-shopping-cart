@@ -20,15 +20,15 @@ class FakeCartRepository : CartRepository {
         _cartFlow.update { it.addProduct(product, quantity) }
     }
 
-    override suspend fun increase(productId: String) {
+    override suspend fun increase(productId: Int) {
         _cartFlow.update { it.increase(productId) }
     }
 
-    override suspend fun decrease(productId: String) {
+    override suspend fun decrease(productId: Int) {
         _cartFlow.update { it.decrease(productId) }
     }
 
-    override suspend fun remove(productId: String) {
+    override suspend fun remove(productId: Int) {
         _cartFlow.update { it.remove(productId) }
     }
 }

@@ -13,7 +13,7 @@ import woowacourse.shopping.domain.product.Products
 class ProductsTest {
     private val product1 =
         Product(
-            id = "1",
+            id = 1,
             name = ProductName("우아한두유"),
             price = Price(3000),
             imageUrl = ImageUrl("https://velog.io"),
@@ -21,7 +21,7 @@ class ProductsTest {
 
     private val product2 =
         Product(
-            id = "2",
+            id = 2,
             name = ProductName("우아한물"),
             price = Price(1000),
             imageUrl = ImageUrl("https://naver.com"),
@@ -29,7 +29,7 @@ class ProductsTest {
 
     private val product3 =
         Product(
-            id = "3",
+            id = 3,
             name = ProductName("우아한우유"),
             price = Price(2000),
             imageUrl = ImageUrl("https://google.com"),
@@ -37,7 +37,7 @@ class ProductsTest {
 
     private val product4 =
         Product(
-            id = "4",
+            id = 4,
             name = ProductName("우아한스무디"),
             price = Price(1000),
             imageUrl = ImageUrl("https://daum.net"),
@@ -45,7 +45,7 @@ class ProductsTest {
 
     private val product5 =
         Product(
-            id = "5",
+            id = 5,
             name = ProductName("우아한커피"),
             price = Price(4000),
             imageUrl = ImageUrl("https://kakao.com"),

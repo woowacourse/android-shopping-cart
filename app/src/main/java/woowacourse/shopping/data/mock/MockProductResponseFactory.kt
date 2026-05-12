@@ -20,7 +20,7 @@ object MockProductResponseFactory {
 
     private fun Product.toResponseDto(): ProductResponseDto =
         ProductResponseDto(
-            id = id.toInt(),
+            id = id,
             imageUrl = imageUrl.value,
             name = name.value,
             price = price.value,

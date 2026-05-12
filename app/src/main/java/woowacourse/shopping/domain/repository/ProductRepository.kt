@@ -8,5 +8,5 @@ interface ProductRepository {
         pageSize: Int,
     ): List<Product>
 
-    suspend fun getProduct(id: String): Product?
+    suspend fun getProduct(id: Int): Product?
 }

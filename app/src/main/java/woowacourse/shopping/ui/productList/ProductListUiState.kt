@@ -9,7 +9,7 @@ sealed interface ProductListUiState {
     data class Success(
         val products: List<Product>,
         val recentProducts: List<Product> = emptyList(),
-        val quantitiesByProductId: Map<String, Int> = emptyMap(),
+        val quantitiesByProductId: Map<Int, Int> = emptyMap(),
         val canLoadMore: Boolean,
         val isLoadingMore: Boolean = false,
         val totalCartCount: Int = 0,

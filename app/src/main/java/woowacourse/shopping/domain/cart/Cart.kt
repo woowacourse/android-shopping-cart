@@ -14,13 +14,13 @@ data class Cart(
         quantity: Quantity = Quantity.ONE,
     ): Cart = copy(cartItems = cartItems.addProduct(product, quantity))
 
-    fun increase(productId: String): Cart = copy(cartItems = cartItems.increase(productId))
+    fun increase(productId: Int): Cart = copy(cartItems = cartItems.increase(productId))
 
-    fun decrease(productId: String): Cart = copy(cartItems = cartItems.decrease(productId))
+    fun decrease(productId: Int): Cart = copy(cartItems = cartItems.decrease(productId))
 
-    fun remove(productId: String): Cart = copy(cartItems = cartItems.remove(productId))
+    fun remove(productId: Int): Cart = copy(cartItems = cartItems.remove(productId))
 
-    fun findQuantity(productId: String): Quantity = cartItems.findQuantity(productId)
+    fun findQuantity(productId: Int): Quantity = cartItems.findQuantity(productId)
 
     fun getPage(
         page: Int,

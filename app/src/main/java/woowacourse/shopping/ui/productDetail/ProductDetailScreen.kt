@@ -441,7 +441,7 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         viewModel =
             ProductDetailViewModel(
-                productId = "1",
+                productId = 1,
                 openedFromLastViewed = false,
                 productRepository = FakeProductRepository(),
                 cartRepository = FakeCartRepository(),

@@ -33,18 +33,18 @@ class LocalCartRepository(
         }
     }
 
-    override suspend fun increase(productId: String) {
+    override suspend fun increase(productId: Int) {
         cartDataSource.increaseQuantity(productId, amount = 1)
     }
 
-    override suspend fun decrease(productId: String) {
+    override suspend fun decrease(productId: Int) {
         val updatedRows = cartDataSource.decreaseQuantity(productId)
         if (updatedRows == 0) {
             cartDataSource.delete(productId)
         }
     }
 
-    override suspend fun remove(productId: String) {
+    override suspend fun remove(productId: Int) {
         cartDataSource.delete(productId)
     }
 }

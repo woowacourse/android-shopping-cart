@@ -54,13 +54,13 @@ class ProductListViewModel(
         }
     }
 
-    fun increase(productId: String) {
+    fun increase(productId: Int) {
         viewModelScope.launch {
             cartRepository.increase(productId)
         }
     }
 
-    fun decrease(productId: String) {
+    fun decrease(productId: Int) {
         viewModelScope.launch {
             cartRepository.decrease(productId)
         }

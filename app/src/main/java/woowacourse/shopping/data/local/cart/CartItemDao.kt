@@ -22,7 +22,7 @@ interface CartItemDao {
         LIMIT 1
         """,
     )
-    suspend fun getCartItem(productId: String): CartItemEntity?
+    suspend fun getCartItem(productId: Int): CartItemEntity?
 
     @Upsert
     suspend fun upsert(cartItem: CartItemEntity)
@@ -33,7 +33,7 @@ interface CartItemDao {
         WHERE productId = :productId
         """,
     )
-    suspend fun delete(productId: String)
+    suspend fun delete(productId: Int)
 
     @Query(
         """
@@ -42,7 +42,7 @@ interface CartItemDao {
         WHERE productId = :productId
         """)
     suspend fun increaseQuantity(
-        productId: String,
+        productId: Int,
         amount: Int,
     ): Int
 
@@ -52,5 +52,5 @@ interface CartItemDao {
             SET quantity = quantity - 1
             WHERE productId = :productId AND quantity>1
         """)
-    suspend fun decreaseQuantity(productId:String): Int
+    suspend fun decreaseQuantity(productId: Int): Int
 }

@@ -13,9 +13,9 @@ interface CartRepository {
         quantity: Quantity = Quantity.ONE,
     )
 
-    suspend fun increase(productId: String)
+    suspend fun increase(productId: Int)
 
-    suspend fun decrease(productId: String)
+    suspend fun decrease(productId: Int)
 
-    suspend fun remove(productId: String)
+    suspend fun remove(productId: Int)
 }

@@ -164,9 +164,9 @@ private fun ErrorContent(
 @Composable
 private fun CartItemList(
     cartItems: List<CartItem>,
-    onRemoveClick: (String) -> Unit,
-    onIncrease: (String) -> Unit,
-    onDecrease: (String) -> Unit,
+    onRemoveClick: (Int) -> Unit,
+    onIncrease: (Int) -> Unit,
+    onDecrease: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(

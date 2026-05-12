@@ -13,5 +13,5 @@ class FakeProductRepository : ProductRepository {
         pageSize: Int,
     ): List<Product> = products.getPage(page, pageSize)
 
-    override suspend fun getProduct(id: String): Product? = MockProductSeedData.products.find { it.id == id }
+    override suspend fun getProduct(id: Int): Product? = MockProductSeedData.products.find { it.id == id }
 }

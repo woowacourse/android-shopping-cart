@@ -40,7 +40,7 @@ object MockWebServerProvider {
                     }
 
                     path.startsWith("/products/") -> {
-                        val id = path.removePrefix("/products/")
+                        val id = path.removePrefix("/products/").toInt()
 
                         val product =
                             MockProductSeedData.products

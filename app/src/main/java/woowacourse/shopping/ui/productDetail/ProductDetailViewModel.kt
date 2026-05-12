@@ -16,7 +16,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModel(
-    val productId: String,
+    val productId: Int,
     private val openedFromLastViewed: Boolean,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
@@ -79,7 +79,7 @@ class ProductDetailViewModel(
 
     companion object {
         fun factory(
-            productId: String,
+            productId: Int,
             openedFromLastViewed: Boolean,
             productRepository: ProductRepository,
             cartRepository: CartRepository,

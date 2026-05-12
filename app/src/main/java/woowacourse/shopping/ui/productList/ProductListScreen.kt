@@ -112,14 +112,14 @@ fun ProductListScreen(
 private fun ProductListContent(
     visibleProducts: List<Product>,
     recentProducts: List<Product>,
-    quantitiesByProductId: Map<String, Int>,
+    quantitiesByProductId: Map<Int, Int>,
     canLoadMore: Boolean,
     isLoadingMore: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
     onAddClick: (Product) -> Unit = {},
-    onIncrease: (String) -> Unit = {},
-    onDecrease: (String) -> Unit = {},
+    onIncrease: (Int) -> Unit = {},
+    onDecrease: (Int) -> Unit = {},
     onMoreClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -312,14 +312,14 @@ private fun ProductListTopAppBar(
 @Composable
 private fun ProductCardGrid(
     visibleProducts: List<Product>,
-    quantitiesByProductId: Map<String, Int>,
+    quantitiesByProductId: Map<Int, Int>,
     canLoadMore: Boolean,
     isLoadingMore: Boolean,
     modifier: Modifier = Modifier,
     onProductClick: (Product) -> Unit = {},
     onAddClick: (Product) -> Unit = {},
-    onIncrease: (String) -> Unit = {},
-    onDecrease: (String) -> Unit = {},
+    onIncrease: (Int) -> Unit = {},
+    onDecrease: (Int) -> Unit = {},
     onMoreClick: () -> Unit = {},
 ) {
     LazyVerticalGrid(
