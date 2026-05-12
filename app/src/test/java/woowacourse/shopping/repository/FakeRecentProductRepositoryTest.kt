@@ -4,21 +4,13 @@ package woowacourse.shopping.repository
 
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.repository.inmemory.InMemoryRecentProductRepository
 
-class InMemoryRecentProductRepositoryTest {
-    private val repo = InMemoryRecentProductRepository
+class FakeRecentProductRepositoryTest {
+    private val repo = FakeRecentProductRepository()
 
     private val product1 = CartRepositoryFixture.shrimpCracker
     private val product2 = CartRepositoryFixture.sourCandy
-
-    @BeforeEach
-    fun setUp() =
-        runBlocking {
-            repo.clear()
-        }
 
     @Test
     fun `최근 본 상품을 저장하면 최신순으로 조회할 수 있다`() =

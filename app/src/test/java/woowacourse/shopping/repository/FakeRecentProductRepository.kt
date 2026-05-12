@@ -1,15 +1,14 @@
-package woowacourse.shopping.repository.inmemory
+package woowacourse.shopping.repository
 
 import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.model.RecentProduct
-import woowacourse.shopping.repository.RecentProductRepository
 
-object InMemoryRecentProductRepository : RecentProductRepository {
-    private val recentProducts = mutableListOf<RecentProduct>()
-
-    fun clear() {
-        recentProducts.clear()
+class FakeRecentProductRepository : RecentProductRepository {
+    companion object {
+        private const val MAX_RECENT_PRODUCTS = 10
     }
+
+    private val recentProducts = mutableListOf<RecentProduct>()
 
     override suspend fun recordView(productId: ProductId) {
         recentProducts.removeAll { it.productId == productId }
@@ -19,6 +18,7 @@ object InMemoryRecentProductRepository : RecentProductRepository {
                 viewedAtMillis = System.currentTimeMillis(),
             ),
         )
+        trimToMax()
     }
 
     override suspend fun getRecentProducts(limit: Int): List<RecentProduct> {
@@ -33,4 +33,13 @@ object InMemoryRecentProductRepository : RecentProductRepository {
         recentProducts
             .asReversed()
             .firstOrNull { it.productId != productId }
+
+    private fun trimToMax() {
+        val overflow = recentProducts.size - MAX_RECENT_PRODUCTS
+        if (overflow > 0) {
+            repeat(overflow) {
+                recentProducts.removeAt(0)
+            }
+        }
+    }
 }
