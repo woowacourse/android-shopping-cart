@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.detail
 
-import android.R.attr.name
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column

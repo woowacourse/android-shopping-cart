@@ -19,7 +19,7 @@
 - [x] require를 IOException으로 변경
 - [x] recentItem.id == currentId 제외 조건을 View->ViewModel로 이전
 - [x] IOException을 대응하는 로직 추가
-- [ ] 불필요한 import 제거
+- [x] 불필요한 import 제거
 - [ ] observeNetwork()에서 복구 시 loadRecentItems()도 호출하도록 수정
 - [ ] isLoading 관련 로직을 try-catch로 변경
 
