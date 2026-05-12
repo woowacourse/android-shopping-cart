@@ -13,6 +13,7 @@ import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.ShoppingRepositoryProvider
 import woowacourse.shopping.repository.network.NetworkMonitor
+import woowacourse.shopping.ui.common.recentlyviewed.RecentViewedProductsMapper
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository = ShoppingRepositoryProvider.productRepository,
@@ -89,11 +90,16 @@ class ProductDetailViewModel(
 
     private suspend fun refreshProductDetail(productId: ProductId) {
         val product = productRepository.findAllByIds(setOf(productId))[productId] ?: return
-        val lastViewedProductId = recentProductRepository.getLatestViewedProductExcluding(productId)?.productId
+        val lastViewedRecentProduct = recentProductRepository.getLatestViewedProductExcluding(productId)
+        val lastViewedProductsById =
+            productRepository.findAllByIds(
+                listOfNotNull(lastViewedRecentProduct?.productId).toSet(),
+            )
         val lastViewedProduct =
-            lastViewedProductId?.let { latestId ->
-                productRepository.findAllByIds(setOf(latestId))[latestId]
-            }
+            RecentViewedProductsMapper.toProduct(
+                recentProduct = lastViewedRecentProduct,
+                productsById = lastViewedProductsById,
+            )
         val quantity =
             cartRepository
                 .getCartItemsByProductIds(setOf(productId))

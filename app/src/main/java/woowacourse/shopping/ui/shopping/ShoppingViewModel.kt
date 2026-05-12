@@ -13,6 +13,7 @@ import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 import woowacourse.shopping.repository.ShoppingRepositoryProvider
 import woowacourse.shopping.repository.network.NetworkMonitor
+import woowacourse.shopping.ui.common.recentlyviewed.RecentViewedProductsMapper
 
 private const val PAGE_SIZE = 20
 private const val RECENT_PRODUCT_LIMIT = 10
@@ -54,25 +55,27 @@ class ShoppingViewModel(
             val hasNext = productRepository.hasNext(visibleProducts.count() - 1)
             val cartItems = cartRepository.getCartItems(0, cartRepository.count())
             val cartQuantity = cartItems.sumOf { it.quantity }
-            val recentProductIds = recentProductRepository.getRecentProducts(RECENT_PRODUCT_LIMIT).map { it.productId }
-            val recentProductsById = productRepository.findAllByIds(recentProductIds.toSet())
-            val recentProducts = recentProductIds.mapNotNull { recentProductsById[it] }
+            val recentProducts = recentProductRepository.getRecentProducts(RECENT_PRODUCT_LIMIT)
+            val recentProductsById = productRepository.findAllByIds(recentProducts.map { it.productId }.toSet())
+            val restoredRecentProducts =
+                RecentViewedProductsMapper.toProducts(
+                    recentProducts = recentProducts,
+                    productsById = recentProductsById,
+                )
 
             val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
             val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
 
             val products =
-                visibleProducts.map { product ->
-                    ShoppingProductUiState(
-                        product = product,
-                        quantity = quantityByProductId[product.id] ?: 0,
-                    )
-                }
+                ShoppingProductUiStateMapper.toUiStates(
+                    products = visibleProducts,
+                    quantityByProductId = quantityByProductId,
+                )
 
             _uiState.value =
                 ShoppingUiState(
                     products = products,
-                    recentProducts = recentProducts,
+                    recentProducts = restoredRecentProducts,
                     cartQuantity = cartQuantity,
                     hasNext = hasNext,
                     isLoading = false,

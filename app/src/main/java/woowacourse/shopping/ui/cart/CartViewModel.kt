@@ -130,17 +130,10 @@ class CartViewModel(
         val productMap = productRepository.findAllByIds(cartItems.map { it.productId }.toSet())
 
         val items =
-            cartItems.mapNotNull { cartItem ->
-                val product = productMap[cartItem.productId] ?: return@mapNotNull null
-
-                CartItemUiModel(
-                    productId = cartItem.productId,
-                    name = product.name,
-                    imageUrl = product.imageUrl,
-                    price = product.price.value,
-                    quantity = cartItem.quantity,
-                )
-            }
+            CartItemUiModelMapper.toUiModels(
+                cartItems = cartItems,
+                productsById = productMap,
+            )
 
         _uiState.value =
             _uiState.value.copy(
