@@ -31,7 +31,7 @@ class RoomCartRepository(
         val productId = item.value.toString()
         val existingItem =
             cartItemDao.findByProductId(productId)
-                ?: throw IllegalArgumentException("해당 상품은 장바구니에 존재하지 않습니다.")
+                ?: throw CartItemNotFoundException(item)
 
         if (existingItem.quantity == 1) {
             cartItemDao.deleteByProductId(productId)
