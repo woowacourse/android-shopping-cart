@@ -1,8 +1,12 @@
 package woowacourse.shopping.data
 
-import kotlinx.coroutines.test.runTest
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.localdb.dao.RecentItemDao
@@ -42,7 +46,7 @@ class RecentItemRepositoryTest {
             val repository = RecentItemRepository(dao, FakeProductRepository(listOf(product)))
             dao.insert(product.toRecentItemEntity(timestamp = 100L))
 
-            val recentItems = repository.getRecentItems()
+            val recentItems = repository.getRecentItems().first()
 
             assertThat(recentItems).hasSize(1)
             assertThat(recentItems[0].id).isEqualTo(product.id)
@@ -89,26 +93,34 @@ class RecentItemRepositoryTest {
         )
 
     private class TestRecentItemDao : RecentItemDao {
-        private val items = mutableListOf<RecentItemEntity>()
+        private val items = MutableStateFlow<List<RecentItemEntity>>(emptyList())
         var deleteOldItemCount = 0
             private set
 
         override suspend fun insert(item: RecentItemEntity) {
-            items.removeAll { it.id == item.id }
-            items.add(item)
+            items.value = items.value.filterNot { it.id == item.id } + item
         }
 
-        override suspend fun getRecentItems(): List<RecentItemEntity> = items.sortedByDescending { it.timestamp }.take(10)
+        override fun getRecentItems(): Flow<List<RecentItemEntity>> =
+            items.map { entities ->
+                entities.sortedWith(compareByDescending<RecentItemEntity> { it.timestamp }.thenByDescending { it.id }).take(10)
+            }
 
-        override suspend fun getRecentItemById(id: String): RecentItemEntity? = items.firstOrNull { it.id == id }
+        override suspend fun getRecentItemById(id: String): RecentItemEntity? = items.value.firstOrNull { it.id == id }
 
         override suspend fun deleteOldItem() {
             deleteOldItemCount++
-            val recentIds = getRecentItems().map { it.id }.toSet()
-            items.removeAll { it.id !in recentIds }
+            val recentIds =
+                items.value
+                    .sortedWith(compareByDescending<RecentItemEntity> { it.timestamp }.thenByDescending { it.id })
+                    .take(10)
+                    .map { it.id }
+                    .toSet()
+            items.value = items.value.filter { it.id in recentIds }
         }
 
-        override suspend fun getLastViewedItem(): RecentItemEntity? = items.maxByOrNull { it.timestamp }
+        override suspend fun getLastViewedItem(): RecentItemEntity? =
+            items.value.maxWithOrNull(compareBy<RecentItemEntity> { it.timestamp }.thenBy { it.id })
     }
 
     private class FakeProductRepository(

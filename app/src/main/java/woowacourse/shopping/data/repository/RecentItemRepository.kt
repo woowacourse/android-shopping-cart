@@ -1,5 +1,7 @@
 package woowacourse.shopping.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.localdb.dao.RecentItemDao
 import woowacourse.shopping.data.localdb.mapper.toDomain
 import woowacourse.shopping.data.localdb.mapper.toEntity
@@ -14,14 +16,16 @@ class RecentItemRepository(
         recentItemDao.deleteOldItem()
     }
 
-    suspend fun getRecentItems(): List<Product> =
-        recentItemDao.getRecentItems().mapNotNull { entity ->
-            val product =
-                runCatching {
-                    productRepository.getProductById(entity.id)
-                }.getOrNull()
+    fun getRecentItems(): Flow<List<Product>> =
+        recentItemDao.getRecentItems().map { entities ->
+            entities.mapNotNull { entity ->
+                val product =
+                    runCatching {
+                        productRepository.getProductById(entity.id)
+                    }.getOrNull()
 
-            product?.let { entity.toDomain(it) }
+                product?.let { entity.toDomain(it) }
+            }
         }
 
     suspend fun getLastViewedItem(): Product? {

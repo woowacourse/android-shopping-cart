@@ -5,6 +5,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -158,23 +159,31 @@ private class TestCartItemDao : CartItemDao {
 }
 
 private class TestRecentItemDao : RecentItemDao {
-    private val items = mutableListOf<RecentItemEntity>()
+    private val items = MutableStateFlow<List<RecentItemEntity>>(emptyList())
 
     override suspend fun insert(item: RecentItemEntity) {
-        items.removeAll { it.id == item.id }
-        items.add(item)
+        items.value = items.value.filterNot { it.id == item.id } + item
     }
 
-    override suspend fun getRecentItems(): List<RecentItemEntity> = items.sortedByDescending { it.timestamp }.take(10)
+    override fun getRecentItems(): Flow<List<RecentItemEntity>> =
+        items.map { entities ->
+            entities.sortedWith(compareByDescending<RecentItemEntity> { it.timestamp }.thenByDescending { it.id }).take(10)
+        }
 
-    override suspend fun getRecentItemById(id: String): RecentItemEntity? = items.firstOrNull { it.id == id }
+    override suspend fun getRecentItemById(id: String): RecentItemEntity? = items.value.firstOrNull { it.id == id }
 
     override suspend fun deleteOldItem() {
-        val recentIds = getRecentItems().map { it.id }.toSet()
-        items.removeAll { it.id !in recentIds }
+        val recentIds =
+            items.value
+                .sortedWith(compareByDescending<RecentItemEntity> { it.timestamp }.thenByDescending { it.id })
+                .take(10)
+                .map { it.id }
+                .toSet()
+        items.value = items.value.filter { it.id in recentIds }
     }
 
-    override suspend fun getLastViewedItem(): RecentItemEntity? = items.maxByOrNull { it.timestamp }
+    override suspend fun getLastViewedItem(): RecentItemEntity? =
+        items.value.maxWithOrNull(compareBy<RecentItemEntity> { it.timestamp }.thenBy { it.id })
 }
 
 private fun createProduct(id: String): Product =

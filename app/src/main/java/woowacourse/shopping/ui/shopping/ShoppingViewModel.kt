@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +36,7 @@ class ShoppingViewModel(
     init {
         observeNetwork()
         observeCart()
-        loadRecentItems()
+        observeRecentItems()
     }
 
     private fun observeNetwork() {
@@ -91,10 +92,21 @@ class ShoppingViewModel(
         }
     }
 
+    private fun observeRecentItems() {
+        viewModelScope.launch {
+            recentItemRepository.getRecentItems().collect { recentItems ->
+                _uiState.value =
+                    _uiState.value.copy(
+                        recentItems = recentItems.map { it.toUiModel() }.toImmutableList(),
+                    )
+            }
+        }
+    }
+
     fun loadRecentItems() {
         viewModelScope.launch {
             val recentItems =
-                recentItemRepository.getRecentItems().map { it.toUiModel() }.toImmutableList()
+                recentItemRepository.getRecentItems().first().map { it.toUiModel() }.toImmutableList()
 
             _uiState.value = _uiState.value.copy(recentItems = recentItems)
         }
