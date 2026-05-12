@@ -76,6 +76,20 @@ class ShoppingApplication : Application() {
                                 .split("&")
                                 .mapNotNull { it.split("=").takeIf { p -> p.size == 2 } }
                                 .associate { (k, v) -> k to v }
+
+                            val ids = params["ids"]?.split(",")?.filter { it.isNotEmpty() }
+                            if (ids != null) {
+                                val filtered = JSONArray()
+                                for (i in 0 until allProducts.length()) {
+                                    val obj = allProducts.getJSONObject(i)
+                                    if (obj.getString("id") in ids) filtered.put(obj)
+                                }
+                                return MockResponse()
+                                    .setHeader("Content-Type", "application/json")
+                                    .setResponseCode(200)
+                                    .setBody("""{"products": $filtered, "last": true}""")
+                            }
+
                             val page = params["page"]?.toIntOrNull() ?: 0
                             val pageSize = params["pageSize"]?.toIntOrNull() ?: allProducts.length()
                             MockResponse()
