@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okio.IOException
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.di.RepositoryProvider.productRepository
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -29,21 +30,28 @@ class ShoppingViewModel(
 
     private val pageSize = 20
 
-    suspend fun initialize() {
-        if (uiState.value.offset == 0) loadMore()
-        loadRecentProducts(10)
+    fun initialize() {
+        viewModelScope.launch {
+            if (uiState.value.offset == 0) loadMore()
+            loadRecentProducts(10)
+        }
     }
 
-    suspend fun loadCartItemQuantities() {
-        val quantities = cartRepository.getAllQuantities()
-        _uiState.update {
-            it.copy(
-                products =
-                    it.products.map { product ->
-                        ShoppingItemUiModel(product.product, quantities[product.product.id] ?: 0)
-                    },
-                totalQuantity = quantities.values.sum(),
-            )
+    fun loadCartItemQuantities() {
+        viewModelScope.launch {
+            val quantities = cartRepository.getAllQuantities()
+            _uiState.update {
+                it.copy(
+                    products =
+                        it.products.map { product ->
+                            ShoppingItemUiModel(
+                                product.product,
+                                quantities[product.product.id] ?: 0,
+                            )
+                        },
+                    totalQuantity = quantities.values.sum(),
+                )
+            }
         }
     }
 
@@ -64,6 +72,38 @@ class ShoppingViewModel(
             loadCartItemQuantities()
         }
     }
+
+    fun upsertRecentProduct(id: Long) {
+        viewModelScope.launch {
+            recentProductRepository.upsertRecentProduct(id)
+        }
+    }
+
+    fun loadRecentProducts(limit: Int) {
+        viewModelScope.launch {
+            refreshRecentProducts(limit)
+        }
+    }
+
+    private suspend fun refreshRecentProducts(limit: Int) {
+        _uiState.update {
+            it.copy(
+                recentProducts =
+                    recentProductRepository.getRecentProducts(limit).map { product ->
+                        product.toUiModel()
+                    },
+            )
+        }
+    }
+
+    private suspend fun getProductData(
+        offset: Int,
+        limit: Int,
+    ): ImmutableList<ProductUiModel> =
+        productRepository
+            .getProducts(offset, limit)
+            .map { it.toUiModel() }
+            .toImmutableList()
 
     private suspend fun loadNext() {
         if (uiState.value.isLoading || !uiState.value.canLoadMore) return
@@ -92,30 +132,4 @@ class ShoppingViewModel(
             _uiState.update { it.copy(isLoading = false) }
         }
     }
-
-    fun upsertRecentProduct(id: Long) {
-        viewModelScope.launch {
-            recentProductRepository.upsertRecentProduct(id)
-        }
-    }
-
-    suspend fun loadRecentProducts(limit: Int) {
-        _uiState.update {
-            it.copy(
-                recentProducts =
-                    recentProductRepository.getRecentProducts(limit).map { product ->
-                        product.toUiModel()
-                    },
-            )
-        }
-    }
-
-    private suspend fun getProductData(
-        offset: Int,
-        limit: Int,
-    ): ImmutableList<ProductUiModel> =
-        productRepository
-            .getProducts(offset, limit)
-            .map { it.toUiModel() }
-            .toImmutableList()
 }

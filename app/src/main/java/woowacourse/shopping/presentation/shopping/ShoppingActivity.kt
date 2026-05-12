@@ -9,8 +9,6 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.shopping.ui.ShoppingScreen
@@ -49,9 +47,7 @@ class ShoppingActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            viewModel.loadCartItemQuantities()
-            viewModel.loadRecentProducts(10)
-        }
+        viewModel.loadCartItemQuantities()
+        viewModel.loadRecentProducts(10)
     }
 }
