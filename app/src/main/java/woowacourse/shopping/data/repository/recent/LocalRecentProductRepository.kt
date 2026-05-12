@@ -8,7 +8,7 @@ import woowacourse.shopping.data.mapper.toRecentProductEntity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
-class RoomRecentProductRepository(
+class LocalRecentProductRepository(
     private val recentProductDao: RecentProductDao,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
 ) : RecentProductRepository {

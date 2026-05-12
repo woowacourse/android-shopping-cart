@@ -48,13 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
-import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.preview.FakeCartRepository
 import woowacourse.shopping.domain.cart.CartItem
 
 @Composable
@@ -426,6 +425,6 @@ private fun ProductImage(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        viewModel = CartViewModel(MockCartRepository()),
+        viewModel = CartViewModel(FakeCartRepository()),
     )
 }

@@ -48,7 +48,7 @@ import woowacourse.shopping.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
 import woowacourse.shopping.data.preview.FakeProductRepository
 import woowacourse.shopping.data.preview.FakeRecentProductRepository
-import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.preview.FakeCartRepository
 import woowacourse.shopping.domain.product.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -444,7 +444,7 @@ fun ProductDetailScreenPreview() {
                 productId = "1",
                 openedFromLastViewed = false,
                 productRepository = FakeProductRepository(),
-                cartRepository = MockCartRepository(),
+                cartRepository = FakeCartRepository(),
                 recentProductRepository = FakeRecentProductRepository(),
             ),
         onAddToCartClick = {},

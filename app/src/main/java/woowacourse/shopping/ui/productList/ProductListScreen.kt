@@ -48,7 +48,7 @@ import woowacourse.shopping.constant.Format.formatPrice
 import woowacourse.shopping.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.data.preview.FakeProductRepository
 import woowacourse.shopping.data.preview.FakeRecentProductRepository
-import woowacourse.shopping.data.repository.cart.MockCartRepository
+import woowacourse.shopping.data.preview.FakeCartRepository
 import woowacourse.shopping.domain.product.Product
 import androidx.compose.foundation.lazy.grid.items as lazyGridItems
 import androidx.compose.foundation.lazy.items as lazyRowItems
@@ -559,7 +559,7 @@ fun ProductListScreenPreview() {
         viewModel =
             ProductListViewModel(
                 productRepository = FakeProductRepository(),
-                cartRepository = MockCartRepository(),
+                cartRepository = FakeCartRepository(),
                 recentProductRepository = FakeRecentProductRepository(),
             ),
     )

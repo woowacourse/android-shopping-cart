@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.repository.cart
+package woowacourse.shopping.data.preview
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.cart.Quantity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
-class MockCartRepository : CartRepository {
+class FakeCartRepository : CartRepository {
     private val _cartFlow = MutableStateFlow(Cart())
     override val cartFlow: StateFlow<Cart> = _cartFlow.asStateFlow()
 

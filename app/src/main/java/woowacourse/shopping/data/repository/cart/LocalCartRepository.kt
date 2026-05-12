@@ -15,7 +15,7 @@ import woowacourse.shopping.domain.cart.Quantity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
-class RoomCartRepository(
+class LocalCartRepository(
     private val cartItemDao: CartItemDao,
 ) : CartRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
