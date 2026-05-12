@@ -26,7 +26,9 @@ class AppContainer(
             context.applicationContext,
             ShoppingDatabase::class.java,
             "shopping.db",
-        ).build()
+        ).addMigrations(ShoppingDatabase.MIGRATION_3_4)
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
 
     private val cartDataSource: CartDataSource = RoomCartDataSource(database.cartItemDao())
     private val productDataSource: ProductDataSource = RemoteProductDataSource(
