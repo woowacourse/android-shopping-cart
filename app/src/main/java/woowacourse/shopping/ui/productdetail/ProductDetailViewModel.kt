@@ -13,7 +13,7 @@ import woowacourse.shopping.repository.RecentProductRepository
 import java.util.UUID
 
 class ProductDetailViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val productRepo: ProductRepository,
     private val cartRepo: CartRepository,
     private val recentProductRepo: RecentProductRepository,
@@ -21,7 +21,8 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
-    private val isFromBanner: Boolean = savedStateHandle[ProductDetailActivity.EXTRA_IS_FROM_BANNER] ?: false
+    private val isFromBanner: Boolean =
+        savedStateHandle[ProductDetailActivity.EXTRA_IS_FROM_BANNER] ?: false
 
     init {
         loadProduct()
@@ -31,14 +32,12 @@ class ProductDetailViewModel(
         _uiState.update {
             it.copy(selectedQuantity = it.selectedQuantity + 1)
         }
-        savedStateHandle[KEY_QUANTITY] = _uiState.value.selectedQuantity
     }
 
     fun decrease() {
         _uiState.update {
             it.copy(selectedQuantity = maxOf(1, it.selectedQuantity - 1))
         }
-        savedStateHandle[KEY_QUANTITY] = _uiState.value.selectedQuantity
     }
 
     fun addToCart() {
@@ -56,16 +55,10 @@ class ProductDetailViewModel(
     }
 
     private fun loadProduct() {
-        val savedQuantity = savedStateHandle.get<Int>(KEY_QUANTITY)
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
                 val product = productRepo.findProduct(productId)
-                val cartItems = cartRepo.getAllCartItems()
-                val cartQuantityMap =
-                    cartItems.items.associate {
-                        it.product.id to it.quantity
-                    }
                 val bannerProduct =
                     recentProductRepo
                         .getLastViewedProduct()
@@ -74,7 +67,7 @@ class ProductDetailViewModel(
                 _uiState.update {
                     it.copy(
                         product = product,
-                        selectedQuantity = savedQuantity ?: (cartQuantityMap[product?.id] ?: 1),
+                        selectedQuantity = 1,
                         lastViewedProduct = bannerProduct,
                     )
                 }
@@ -83,9 +76,5 @@ class ProductDetailViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
-    }
-
-    companion object {
-        const val KEY_QUANTITY = "selected_quantity"
     }
 }

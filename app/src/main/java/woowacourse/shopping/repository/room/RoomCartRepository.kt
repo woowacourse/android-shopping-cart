@@ -23,7 +23,7 @@ class RoomCartRepository(
     ) {
         val currentEntity = cartDao.getCartItemById(item.id)
         if (currentEntity != null) {
-            cartDao.updateQuantity(item.id, quantity)
+            cartDao.updateQuantity(item.id, currentEntity.quantity + quantity)
         } else {
             cartDao.insert(CartEntity(item.id, quantity))
         }
