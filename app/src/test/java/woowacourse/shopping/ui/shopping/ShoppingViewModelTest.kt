@@ -21,6 +21,7 @@ import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductName
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ShoppingViewModelTest {

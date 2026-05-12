@@ -16,6 +16,7 @@ import woowacourse.shopping.data.repository.CartResult
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
+import java.io.IOException
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository,
@@ -84,23 +85,27 @@ class ShoppingViewModel(
     }
 
     fun loadMore() {
-        val currentState = _uiState.value
-        if (!currentState.isNetworkAvailable || !currentState.canLoadMore || currentState.isLoading) return
+        if (!_uiState.value.isNetworkAvailable || !_uiState.value.canLoadMore || _uiState.value.isLoading) return
 
         viewModelScope.launch {
-            _uiState.value = currentState.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(isLoading = true)
 
-            val loadProducts =
-                productRepository.getProducts(offset, pageSize).map { it.toUiModel() }
+            try {
+                val loadProducts =
+                    productRepository.getProducts(offset, pageSize).map { it.toUiModel() }
 
-            offset += loadProducts.size
+                offset += loadProducts.size
 
-            _uiState.value =
-                _uiState.value.copy(
-                    products = (currentState.products + loadProducts).toImmutableList(),
-                    canLoadMore = loadProducts.size == pageSize,
-                    isLoading = false,
-                )
+                _uiState.value =
+                    _uiState.value.copy(
+                        products = (_uiState.value.products + loadProducts).toImmutableList(),
+                        canLoadMore = loadProducts.size == pageSize,
+                    )
+            } catch (e: IOException) {
+                _uiState.value = _uiState.value
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
         }
     }
 

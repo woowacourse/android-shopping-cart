@@ -4,7 +4,7 @@
 ### 베르
 - [ ] 비동기 이미지 코드를 공통 컴포저블로 분리
 - [ ] getRecentItems를 observable query로 변경
-- [ ] 최신 uiState나 MutableStateFlow.update로 loadMore()을 수행하도록 수정
+- [x] 최신 uiState나 MutableStateFlow.update로 loadMore()을 수행하도록 수정
 - [ ] updateQuantity로 통합
 ### 셀프
 - [ ] Repository 간 의존 관계 분리
@@ -21,7 +21,7 @@
 - [x] IOException을 대응하는 로직 추가
 - [x] 불필요한 import 제거
 - [x] observeNetwork()에서 복구 시 loadRecentItems()도 호출하도록 수정
-- [ ] isLoading 관련 로직을 try-catch로 변경
+- [x] isLoading 관련 로직을 try-catch로 변경
 
 ## 3/4 단계 기능 요구 사항
 ### Room
