@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.remote.api
+package woowacourse.shopping.data.datasource.product
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,11 +9,11 @@ import woowacourse.shopping.data.remote.dto.ProductResponseDto
 import woowacourse.shopping.domain.exception.ProductException
 import java.io.IOException
 
-class OkHttpProductApi(
+class RemoteProductDataSource(
     private val client: OkHttpClient,
     private val baseUrlProvider: () -> String,
-    private val json: Json = Json{ignoreUnknownKeys = true}
-) : ProductApi {
+    private val json: Json = Json {ignoreUnknownKeys = true}
+): ProductDataSource {
     override suspend fun getProducts(): List<ProductResponseDto> =
         request("products"){ body ->
             json.decodeFromString(body)
