@@ -42,7 +42,7 @@ class CartItemDaoTest {
                 ),
             )
 
-            assert(cartDao.getCartItems().size == 1)
+            assert(cartDao.getCartItems(0, 1).size == 1)
         }
 
     @Test
@@ -57,7 +57,7 @@ class CartItemDaoTest {
 
             cartDao.update(cartItem.copy(quantity = 3))
 
-            assert(cartDao.getCartItems().first().quantity == 3)
+            assert(cartDao.getCartItems(0, 1).first().quantity == 3)
         }
 
     @Test
@@ -72,7 +72,7 @@ class CartItemDaoTest {
 
             cartDao.delete(productId = "1")
 
-            assert(cartDao.getCartItems().size == 0)
+            assert(cartDao.getCartItems(0, 10).size == 0)
         }
 
     @Test

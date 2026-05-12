@@ -7,8 +7,11 @@ import androidx.room.Update
 
 @Dao
 interface CartItemDao {
-    @Query("SELECT * from cartItems")
-    suspend fun getCartItems(): List<CartItemEntity>
+    @Query("SELECT * FROM cartItems LIMIT :count OFFSET :offset")
+    suspend fun getCartItems(
+        offset: Int,
+        count: Int,
+    ): List<CartItemEntity>
 
     @Insert
     suspend fun insert(cartItem: CartItemEntity)

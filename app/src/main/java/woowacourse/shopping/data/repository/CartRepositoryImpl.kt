@@ -31,12 +31,9 @@ class CartRepositoryImpl(
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {
-        val cartItems = cartDataSource.getCartItems()
+        val cartItems = cartDataSource.getCartItems(offset = (page - 1) * PAGE_SIZE, count = PAGE_SIZE)
 
-        val startIndex = (page - 1) * PAGE_SIZE
-        val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
-
-        return cartItems.subList(startIndex, endIndex).map {
+        return cartItems.map {
             it.toDomain()
         }
     }
