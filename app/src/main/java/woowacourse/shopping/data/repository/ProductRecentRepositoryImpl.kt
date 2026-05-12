@@ -1,6 +1,11 @@
 package woowacourse.shopping.data.repository
 
+import android.util.Log
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.RecentProductDao
 import woowacourse.shopping.data.local.RecentProductEntity
@@ -12,21 +17,27 @@ class ProductRecentRepositoryImpl(
     private val recentProductDao: RecentProductDao,
     private val dataSource: ProductRemoteDataSource,
 ) : ProductRecentRepository {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getRecentProducts(limit: Int): Flow<List<RecentProduct>> =
-        recentProductDao.getRecentProducts(limit).map { recentProducts ->
-            val ids = recentProducts.map { recent ->
-                recent.productId
+        recentProductDao.getRecentProducts(limit)
+            .flatMapLatest { recentProducts ->
+                val ids = recentProducts.map { recent ->
+                    recent.productId
+                }
+                val products = dataSource.getProductsByIds(ids)
+
+                val result = recentProducts.map { recentProducts ->
+                    RecentProduct(
+                        productId = recentProducts.productId,
+                        name = products.find { it.id == recentProducts.productId }?.name ?: "",
+                        imageUrl = products.find { it.id == recentProducts.productId }?.imageUrl
+                            ?: "",
+                        viewedAt = recentProducts.viewedAt,
+                    )
+                }
+                flowOf(result)
             }
-            val products = dataSource.getProductsByIds(ids)
-            recentProducts.map { recentProducts ->
-                RecentProduct(
-                    productId = recentProducts.productId,
-                    name = products.find { it.id == recentProducts.productId }?.name ?: "",
-                    imageUrl = products.find { it.id == recentProducts.productId }?.imageUrl ?: "",
-                    viewedAt = recentProducts.viewedAt,
-                )
-            }
-        }
 
     override suspend fun insertRecentProduct(productId: String) {
         recentProductDao.upsertRecentProduct(
