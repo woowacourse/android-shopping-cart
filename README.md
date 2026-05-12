@@ -2,7 +2,7 @@
 
 ## 1차 리팩토링
 ### 베르
-- [ ] 비동기 이미지 코드를 공통 컴포저블로 분리
+- [x] 비동기 이미지 코드를 공통 컴포저블로 분리
 - [ ] getRecentItems를 observable query로 변경
 - [x] 최신 uiState나 MutableStateFlow.update로 loadMore()을 수행하도록 수정
 - [ ] updateQuantity로 통합

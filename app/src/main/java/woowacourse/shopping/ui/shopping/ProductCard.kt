@@ -12,22 +12,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import woowacourse.shopping.ui.component.ProductAsyncImage
 import woowacourse.shopping.ui.component.QuantitySelector
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.ui.util.formattedPrice
@@ -58,12 +55,8 @@ fun ProductCard(
                     .aspectRatio(1f),
             contentAlignment = Alignment.BottomCenter,
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = "상품 이미지",
-                placeholder = rememberVectorPainter(Icons.Default.CloudSync),
-                error = rememberVectorPainter(Icons.Default.CloudOff),
-                fallback = rememberVectorPainter(Icons.Default.CloudOff),
+            ProductAsyncImage(
+                imageUrl = imageUrl,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )

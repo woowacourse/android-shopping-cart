@@ -11,23 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import woowacourse.shopping.ui.component.ProductAsyncImage
 import woowacourse.shopping.ui.model.ProductUiModel
 
 @Composable
@@ -73,12 +69,8 @@ private fun RecentItemCard(
                 .width(98.dp)
                 .clickable { onClick() },
     ) {
-        AsyncImage(
-            model = product.imageUrl,
-            contentDescription = "상품 이미지",
-            placeholder = rememberVectorPainter(Icons.Default.CloudSync),
-            error = rememberVectorPainter(Icons.Default.CloudOff),
-            fallback = rememberVectorPainter(Icons.Default.CloudOff),
+        ProductAsyncImage(
+            imageUrl = product.imageUrl,
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
