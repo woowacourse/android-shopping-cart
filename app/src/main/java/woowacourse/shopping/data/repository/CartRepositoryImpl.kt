@@ -59,9 +59,7 @@ class CartRepositoryImpl(
     }
 
     override suspend fun minusItemCount(productId: String) {
-        val item = cartDataSource.getCartItemById(productId = productId)
-
-        requireNotNull(item) { "카트에 아이템이 존재하지 않습니다." }
+        val item = cartDataSource.getCartItemById(productId = productId) ?: return
 
         if (item.quantity == 1) {
             cartDataSource.deleteItem(productId = productId)
