@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.PurchaseProduct
@@ -20,7 +22,7 @@ class PurchaseProductsTest {
             )
         val newPurchaseProducts = purchaseProducts.add(newPurchaseProduct)
 
-        assert(newPurchaseProducts.purchaseProducts.contains(newPurchaseProduct))
+        assertTrue(newPurchaseProducts.purchaseProducts.contains(newPurchaseProduct))
     }
 
     @Test
@@ -48,7 +50,7 @@ class PurchaseProductsTest {
                 updateAmount = 1,
             )
 
-        assert(updatedPurchaseProducts.purchaseProducts.find { it.isSameID(productsId) }?.count == 2)
+        assertEquals(2, updatedPurchaseProducts.purchaseProducts.find { it.isSameID(productsId) }?.count)
     }
 
     @Test
@@ -82,7 +84,7 @@ class PurchaseProductsTest {
 
         val updatedPurchaseProducts = purchaseProducts.removeProduct(product1Id)
 
-        assert(
+        assertTrue(
             updatedPurchaseProducts.purchaseProducts.contains(purchaseProduct2) &&
                 updatedPurchaseProducts.purchaseProducts.contains(purchaseProduct1).not(),
         )
@@ -108,7 +110,7 @@ class PurchaseProductsTest {
                 purchaseProducts = listOf(newPurchaseProduct),
             )
 
-        assert(purchaseProducts.totalPriceOfSpecificPurchaseProduct(productsId) == 3000)
+        assertEquals(3000, purchaseProducts.totalPriceOfSpecificPurchaseProduct(productsId))
     }
 
     @Test
@@ -153,7 +155,7 @@ class PurchaseProductsTest {
                 ),
             )
 
-        assert(purchaseProducts.totalCount() == 13)
+        assertEquals(13, purchaseProducts.totalCount())
     }
 
     @Test
@@ -177,7 +179,7 @@ class PurchaseProductsTest {
 
         val updatedPurchaseProducts = purchaseProducts.add(newPurchaseProduct)
 
-        assert(updatedPurchaseProducts.findById(productId)?.count == 2)
+        assertEquals(2, updatedPurchaseProducts.findById(productId)?.count)
     }
 
     @Test
@@ -199,7 +201,7 @@ class PurchaseProductsTest {
                 purchaseProducts = listOf(newPurchaseProduct),
             )
 
-        assert(purchaseProducts.isContain(productId))
+        assertTrue(purchaseProducts.isContain(productId))
     }
 
     @Test
@@ -221,6 +223,6 @@ class PurchaseProductsTest {
                 purchaseProducts = listOf(newPurchaseProduct),
             )
 
-        assert(purchaseProducts.totalCountOfSpecificPurchaseProduct(productId) == 1)
+        assertEquals(1, purchaseProducts.totalCountOfSpecificPurchaseProduct(productId))
     }
 }

@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Cart
@@ -41,9 +43,7 @@ class CartTest {
 
         val updatedCart = cart.updateCountWithId(targetId, 1)
 
-        assert(
-            updatedCart.findById(targetId)?.count == 2,
-        )
+        assertEquals(2, updatedCart.findById(targetId)?.count)
     }
 
     @Test
@@ -65,7 +65,7 @@ class CartTest {
 
         val updatedCart = cart.removeWithId(targetId)
 
-        assert(
+        assertTrue(
             updatedCart.purchaseProducts.purchaseProducts
                 .contains(newPurchaseProduct)
                 .not(),
@@ -90,7 +90,7 @@ class CartTest {
                     ),
             )
 
-        assert(cart.totalPriceOfSpecificPurchaseProduct(targetId) == 100000)
+        assertEquals(100000, cart.totalPriceOfSpecificPurchaseProduct(targetId))
     }
 
     @Test
@@ -109,7 +109,7 @@ class CartTest {
                     ),
             )
 
-        assert(cart.totalCountOfPurchaseProducts() == 30)
+        assertEquals(30, cart.totalCountOfPurchaseProducts())
     }
 
     @Test
@@ -136,7 +136,7 @@ class CartTest {
 
         val updatedCart = cart.add(purchaseProduct)
 
-        assert(updatedCart.findById(targetId)?.count == 2)
+        assertEquals(2, updatedCart.findById(targetId)?.count)
     }
 
     @Test
@@ -161,7 +161,7 @@ class CartTest {
                     ),
             )
 
-        assert(cart.isContain(targetId))
+        assertTrue(cart.isContain(targetId))
     }
 
     @Test
@@ -186,6 +186,6 @@ class CartTest {
                     ),
             )
 
-        assert(cart.totalCountOfSpecificPurchaseProduct(targetId) == 1)
+        assertEquals(1, cart.totalCountOfSpecificPurchaseProduct(targetId))
     }
 }
