@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.LastViewedProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 
@@ -19,7 +18,6 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
-    private val lastViewedProductRepository: LastViewedProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -60,7 +58,7 @@ class ProductDetailViewModel(
     ) {
         viewModelScope.launch {
             val currentProduct = productRepository.findProductById(productId) ?: return@launch
-            val previousProduct = lastViewedProductRepository.getLastViewedProduct()
+            val previousProduct = recentlyViewedProductRepository.getLastViewedProduct()
 
             _uiState.update {
                 it.copy(
@@ -76,7 +74,6 @@ class ProductDetailViewModel(
             }
 
             recentlyViewedProductRepository.saveViewedProduct(currentProduct)
-            lastViewedProductRepository.saveLastViewedProduct(currentProduct)
         }
     }
 }
@@ -85,7 +82,6 @@ class ProductDetailViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
-    private val lastViewedProductRepository: LastViewedProductRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
@@ -94,7 +90,6 @@ class ProductDetailViewModelFactory(
                 productRepository = productRepository,
                 cartRepository = cartRepository,
                 recentlyViewedProductRepository = recentlyViewedProductRepository,
-                lastViewedProductRepository = lastViewedProductRepository,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

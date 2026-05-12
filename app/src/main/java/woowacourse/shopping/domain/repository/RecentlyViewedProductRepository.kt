@@ -7,4 +7,6 @@ interface RecentlyViewedProductRepository {
     suspend fun saveViewedProduct(product: Product)
 
     suspend fun getRecentlyViewedProducts(): RecentlyViewedProducts
+
+    suspend fun getLastViewedProduct(): Product?
 }

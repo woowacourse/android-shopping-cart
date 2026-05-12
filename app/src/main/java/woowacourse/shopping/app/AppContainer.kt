@@ -5,7 +5,6 @@ import androidx.room.Room
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import woowacourse.shopping.data.local.database.ShoppingDatabase
-import woowacourse.shopping.data.local.datastore.dataStore
 import woowacourse.shopping.data.network.ConnectivityManagerNetworkMonitor
 import woowacourse.shopping.data.network.NetworkMonitor
 import woowacourse.shopping.data.remote.datasource.CartRemoteDataSource
@@ -13,11 +12,9 @@ import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpCartRemoteDataSource
 import woowacourse.shopping.data.remote.datasource.okhttp.OkHttpProductRemoteDataSource
 import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.LastViewedProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.LastViewedProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 
@@ -47,9 +44,6 @@ object AppContainer {
         private set
 
     lateinit var recentlyViewedProductRepository: RecentlyViewedProductRepository
-        private set
-
-    lateinit var lastViewedProductRepository: LastViewedProductRepository
         private set
 
     lateinit var networkMonitor: NetworkMonitor
@@ -96,12 +90,6 @@ object AppContainer {
         recentlyViewedProductRepository =
             RecentlyViewedProductRepositoryImpl(
                 dao = database.recentlyViewedProductDao(),
-            )
-
-        lastViewedProductRepository =
-            LastViewedProductRepositoryImpl(
-                dataStore = context.dataStore,
-                productRepository = productRepository,
             )
 
         networkMonitor = ConnectivityManagerNetworkMonitor(context)

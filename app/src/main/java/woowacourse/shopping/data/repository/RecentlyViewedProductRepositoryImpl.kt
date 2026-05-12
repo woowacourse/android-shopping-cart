@@ -29,4 +29,6 @@ class RecentlyViewedProductRepositoryImpl(
 
         return RecentlyViewedProducts(products)
     }
+
+    override suspend fun getLastViewedProduct(): Product? = dao.findLastViewedProduct()?.toDomain()
 }

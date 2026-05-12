@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.data.ProductFixture
 import woowacourse.shopping.data.repository.FakeCartRepository
-import woowacourse.shopping.data.repository.FakeLastViewedProductRepository
 import woowacourse.shopping.data.repository.FakeProductRepository
 import woowacourse.shopping.data.repository.FakeRecentlyViewedProductRepository
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Products
+import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
 import woowacourse.shopping.presentation.MainDispatcherRule
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,7 +87,7 @@ class ProductDetailViewModelTest {
     fun `상품을 조회하면 최근 본 상품에 기록한다`() =
         runTest {
             val recentlyViewedProductRepository = FakeRecentlyViewedProductRepository()
-            val viewModel = createViewModel(recentlyViewedPRepository = recentlyViewedProductRepository)
+            val viewModel = createViewModel(recentlyViewedProductRepository = recentlyViewedProductRepository)
             val product = ProductFixture.productList.first()
 
             viewModel.viewProduct(
@@ -104,8 +104,8 @@ class ProductDetailViewModelTest {
     @Test
     fun `상품을 조회하면 현재 상품을 마지막으로 본 상품으로 저장한다`() =
         runTest {
-            val lastViewedProductRepository = FakeLastViewedProductRepository()
-            val viewModel = createViewModel(lastViewedProductRepository = lastViewedProductRepository)
+            val recentlyViewedProductRepository = FakeRecentlyViewedProductRepository()
+            val viewModel = createViewModel(recentlyViewedProductRepository = recentlyViewedProductRepository)
             val product = ProductFixture.productList.first()
 
             viewModel.viewProduct(
@@ -115,7 +115,7 @@ class ProductDetailViewModelTest {
 
             advanceUntilIdle()
 
-            val lastViewedProduct = lastViewedProductRepository.getLastViewedProduct()
+            val lastViewedProduct = recentlyViewedProductRepository.getLastViewedProduct()
 
             assertThat(lastViewedProduct).isEqualTo(product)
         }
@@ -125,11 +125,17 @@ class ProductDetailViewModelTest {
         runTest {
             val previousProduct = ProductFixture.productList[0]
             val currentProduct = ProductFixture.productList[1]
-            val lastViewedProductRepository = FakeLastViewedProductRepository(previousProduct)
+            val recentlyViewedProductRepository =
+                FakeRecentlyViewedProductRepository(
+                    recentlyViewedProducts =
+                        RecentlyViewedProducts(
+                            productItems = listOf(previousProduct),
+                        ),
+                )
 
             val viewModel =
                 createViewModel(
-                    lastViewedProductRepository = lastViewedProductRepository,
+                    recentlyViewedProductRepository = recentlyViewedProductRepository,
                 )
 
             viewModel.viewProduct(
@@ -146,11 +152,17 @@ class ProductDetailViewModelTest {
         runTest {
             val previousProduct = ProductFixture.productList[0]
             val currentProduct = ProductFixture.productList[1]
-            val lastViewedProductRepository = FakeLastViewedProductRepository(previousProduct)
+            val recentlyViewedProductRepository =
+                FakeRecentlyViewedProductRepository(
+                    recentlyViewedProducts =
+                        RecentlyViewedProducts(
+                            productItems = listOf(previousProduct),
+                        ),
+                )
 
             val viewModel =
                 createViewModel(
-                    lastViewedProductRepository = lastViewedProductRepository,
+                    recentlyViewedProductRepository = recentlyViewedProductRepository,
                 )
 
             viewModel.viewProduct(
@@ -166,12 +178,8 @@ class ProductDetailViewModelTest {
     fun `현재 상품과 마지막으로 본 상품이 같으면 마지막으로 본 상품을 노출하지 않는다`() =
         runTest {
             val product = ProductFixture.productList[0]
-            val lastViewedProductRepository = FakeLastViewedProductRepository(product)
 
-            val viewModel =
-                createViewModel(
-                    lastViewedProductRepository = lastViewedProductRepository,
-                )
+            val viewModel = createViewModel()
 
             viewModel.viewProduct(
                 productId = product.productId,
@@ -184,8 +192,7 @@ class ProductDetailViewModelTest {
 
     private fun createViewModel(
         cartRepository: FakeCartRepository = FakeCartRepository(Cart()),
-        recentlyViewedPRepository: FakeRecentlyViewedProductRepository = FakeRecentlyViewedProductRepository(),
-        lastViewedProductRepository: FakeLastViewedProductRepository = FakeLastViewedProductRepository(),
+        recentlyViewedProductRepository: FakeRecentlyViewedProductRepository = FakeRecentlyViewedProductRepository(),
     ): ProductDetailViewModel =
         ProductDetailViewModel(
             productRepository =
@@ -193,7 +200,6 @@ class ProductDetailViewModelTest {
                     products = Products(ProductFixture.productList),
                 ),
             cartRepository = cartRepository,
-            recentlyViewedProductRepository = recentlyViewedPRepository,
-            lastViewedProductRepository = lastViewedProductRepository,
+            recentlyViewedProductRepository = recentlyViewedProductRepository,
         )
 }

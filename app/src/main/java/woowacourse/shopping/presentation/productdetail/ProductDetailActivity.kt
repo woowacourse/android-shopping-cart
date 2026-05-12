@@ -23,7 +23,6 @@ class ProductDetailActivity : ComponentActivity() {
             productRepository = AppContainer.productRepository,
             cartRepository = AppContainer.cartRepository,
             recentlyViewedProductRepository = AppContainer.recentlyViewedProductRepository,
-            lastViewedProductRepository = AppContainer.lastViewedProductRepository,
         )
     }
 

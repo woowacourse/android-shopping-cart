@@ -32,4 +32,12 @@ interface RecentlyViewedProductDao {
         """,
     )
     suspend fun deleteOverLimit()
+
+    @Query(
+        """
+            SELECT * FROM recently_viewed_products ORDER BY 
+            viewedAt DESC LIMIT 1
+        """,
+    )
+    suspend fun findLastViewedProduct(): RecentlyViewedProductEntity?
 }

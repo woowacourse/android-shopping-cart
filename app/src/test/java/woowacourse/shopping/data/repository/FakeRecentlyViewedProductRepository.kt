@@ -12,4 +12,6 @@ class FakeRecentlyViewedProductRepository(
     }
 
     override suspend fun getRecentlyViewedProducts(): RecentlyViewedProducts = recentlyViewedProducts
+
+    override suspend fun getLastViewedProduct(): Product? = recentlyViewedProducts.productItems.firstOrNull()
 }
