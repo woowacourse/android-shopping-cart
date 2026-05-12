@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,10 +16,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okio.IOException
 import woowacourse.shopping.data.local.entity.PurchaseProductEntity
 import woowacourse.shopping.data.local.repository.PurchaseProductsRepository
 import woowacourse.shopping.data.remote.repository.ProductRepository
@@ -34,7 +35,7 @@ class CartViewModel(
 
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
-    val savedItems: StateFlow<List<PurchaseProductEntity>?> = purchaseProductsRepository
+    val cartEntities: StateFlow<List<PurchaseProductEntity>?> = purchaseProductsRepository
         .getAll()
         .stateIn(
             scope = viewModelScope,
@@ -42,25 +43,31 @@ class CartViewModel(
             initialValue = emptyList(),
         )
 
-    val pagedCart: StateFlow<Cart> = combine(_currentPage, savedItems) {page, items ->
-        items?.drop(page * PAGE_SIZE)?.take(PAGE_SIZE) ?: emptyList()
-    }.flatMapLatest { entities ->
-        flow {
-            val purchaseProducts = coroutineScope {
-                entities.map { entity ->
-                    async {
-                        val product = productRepository.getProduct(entity.id)
-                        PurchaseProduct(product, entity.count)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pagedCart: StateFlow<Cart> =
+        combine(_currentPage, cartEntities) { page, entities ->
+            entities?.drop(page * PAGE_SIZE)?.take(PAGE_SIZE) ?: emptyList()
+        }.flatMapLatest { entities ->
+            flow {
+                try {
+                    val purchaseProducts = coroutineScope {
+                        entities.map { entity ->
+                            async {
+                                val product = productRepository.getProduct(entity.id)
+                                PurchaseProduct(product, entity.count)
+                            }
+                        }.awaitAll()
                     }
-                }.awaitAll()
+                    emit(Cart(PurchaseProducts(purchaseProducts)))
+                } catch (e: IOException){
+                    Log.e("Web Server Error", e.message!!)
+                }
             }
-            emit(Cart(PurchaseProducts(purchaseProducts)))
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Cart()
-    )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = Cart()
+        )
 
     val productCount: StateFlow<Int> =
         purchaseProductsRepository.getProductCount().stateIn(
@@ -71,9 +78,9 @@ class CartViewModel(
 
     init {
         viewModelScope.launch {
-            savedItems.collect { items ->
+            cartEntities.collect { items ->
                 val count = items?.size ?: 0
-                if(currentPage.value > 0 && count <= currentPage.value * PAGE_SIZE) {
+                if (currentPage.value > 0 && count <= currentPage.value * PAGE_SIZE) {
                     prev()
                 }
             }
