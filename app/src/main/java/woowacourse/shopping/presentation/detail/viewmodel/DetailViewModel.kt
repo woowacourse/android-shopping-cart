@@ -104,6 +104,7 @@ class DetailViewModel(
                     loadedProduct = it
                 }
             cartRepository.addItem(product.id, quantity)
+            _uiEvents.send(DetailEvent.NavigateToCart)
         }
     }
 }
@@ -112,4 +113,6 @@ sealed interface DetailEvent {
     data class ShowErrorToast(
         val message: String,
     ) : DetailEvent
+
+    data object NavigateToCart : DetailEvent
 }

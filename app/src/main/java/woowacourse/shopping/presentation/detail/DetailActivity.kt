@@ -51,6 +51,10 @@ class DetailActivity : ComponentActivity() {
                                 is DetailEvent.ShowErrorToast -> {
                                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                                 }
+                                is DetailEvent.NavigateToCart -> {
+                                    val intent = Intent(this@DetailActivity, CartActivity::class.java)
+                                    startActivity(intent)
+                                }
                             }
                         }
                     }
@@ -76,11 +80,7 @@ class DetailActivity : ComponentActivity() {
                                 finish()
                             },
                             onBack = { finish() },
-                            onAddToCart = {
-                                viewModel.addToCart(id, state.quantity)
-                                val intent = Intent(this, CartActivity::class.java)
-                                startActivity(intent)
-                            },
+                            onAddToCart = { viewModel.addToCart(id, state.quantity) },
                             onIncrease = { viewModel.increase() },
                             onDecrease = { viewModel.decrease() },
                         )
