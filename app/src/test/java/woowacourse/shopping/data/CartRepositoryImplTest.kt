@@ -107,24 +107,21 @@ class FakeCartDataSource : CartDataSource {
             return
         }
 
-        items[idx] = items[idx].copy(quantity = items[idx].quantity + cartItem.quantity)
+        items[idx] = cartItem
     }
 
     override suspend fun deleteItem(productId: String) {
         items.removeIf { it.productId == productId }
     }
 
-    override suspend fun updateItem(cartItem: CartItemEntity) {
-        val idx = items.indexOfFirst { it.productId == cartItem.productId }
-
-        require(idx != -1) { "카트에 존재하지 않는 상품입니다." }
-
-        items[idx] = cartItem
-    }
-
-    override suspend fun getCartItems(): List<CartItemEntity> = items
+    override suspend fun getCartItems(
+        offset: Int,
+        count: Int,
+    ): List<CartItemEntity> = items
 
     override suspend fun getCartItemById(productId: String): CartItemEntity? = items.firstOrNull { it.productId == productId }
 
     override suspend fun getTotalCount(): Int = items.size
+
+    override suspend fun getTotalItemCount(): Int = items.sumOf { it.quantity }
 }
