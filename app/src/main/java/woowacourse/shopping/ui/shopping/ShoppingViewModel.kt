@@ -43,6 +43,7 @@ class ShoppingViewModel(
 
                 if (isAvailable && _uiState.value.products.isEmpty()) {
                     loadMore()
+                    loadRecentItems()
                 }
             }
         }
