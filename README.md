@@ -8,7 +8,7 @@
 - [x] updateQuantity로 통합
 ### 셀프
 - [x] Repository 간 의존 관계 분리
-- [ ] CartPage 로직을 Cart로부터 분리 
+- [x] CartPage 로직을 Cart로부터 분리 
 ### Rabbit
 - [x] tie-breaker 추가
 - [x] 장바구니 매핑에서 ID 정합성 보호

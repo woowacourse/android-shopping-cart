@@ -15,6 +15,7 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.CartResult
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class CartViewModel(
@@ -116,5 +117,32 @@ class CartViewModel(
                     )
                 }
             }
-    }
+        }
 }
+
+private fun Cart.getPage(
+    page: Int,
+    pageSize: Int,
+): CartPage {
+    val lastPage =
+        if (items.isEmpty()) {
+            0
+        } else {
+            items.lastIndex / pageSize
+        }
+    val currentPage = page.coerceIn(0, lastPage)
+    val fromIndex = currentPage * pageSize
+    val toIndex = minOf(fromIndex + pageSize, items.size)
+
+    return CartPage(
+        items = items.subList(fromIndex, toIndex),
+        page = currentPage,
+        isCanMoveNext = toIndex < items.size,
+    )
+}
+
+private data class CartPage(
+    val items: List<CartItem>,
+    val page: Int,
+    val isCanMoveNext: Boolean,
+)
