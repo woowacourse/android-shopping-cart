@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Product
@@ -26,6 +25,7 @@ import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.common.component.recentlyviewed.RecentlyViewedSection
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
+import woowacourse.shopping.ui.theme.Gray1
 
 @Composable
 fun ShoppingBody(
@@ -60,7 +60,7 @@ fun ShoppingBody(
                         Modifier
                             .fillMaxWidth()
                             .height(14.dp)
-                            .background(color = Color(0xFFEBEBEB)),
+                            .background(color = Gray1),
                 )
             }
         }

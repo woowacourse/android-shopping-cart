@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.theme.Gray4
 
 @Composable
 fun QuantityStepper(
@@ -43,7 +44,7 @@ fun QuantityStepper(
         Icon(
             imageVector = Icons.Default.Remove,
             contentDescription = stringResource(R.string.content_description_decrease_quantity),
-            tint = Color(0xFF555555),
+            tint = Gray4,
             modifier =
                 Modifier
                     .size(20.dp)
@@ -55,7 +56,7 @@ fun QuantityStepper(
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = stringResource(R.string.content_description_increase_quantity),
-            tint = Color(0xFF555555),
+            tint = Gray4,
             modifier =
                 Modifier
                     .size(20.dp)

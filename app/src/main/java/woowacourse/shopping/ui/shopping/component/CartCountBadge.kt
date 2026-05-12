@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import woowacourse.shopping.ui.theme.BrandGreen
 
 @Composable
 fun CartCountBadge(
@@ -22,7 +23,7 @@ fun CartCountBadge(
             modifier
                 .size(20.dp)
                 .background(
-                    color = Color(0xFF04C09E),
+                    color = BrandGreen,
                     shape = CircleShape,
                 ),
         contentAlignment = Alignment.Center,

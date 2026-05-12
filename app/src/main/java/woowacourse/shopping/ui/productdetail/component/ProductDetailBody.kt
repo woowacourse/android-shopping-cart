@@ -15,15 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 
 @Composable
@@ -76,9 +75,8 @@ private fun ProductLabel(
     Column(modifier = modifier) {
         Text(
             text = product.name,
-            fontSize = 24.sp,
+            style = ShoppingTypography.detailTitle,
             color = Color.Black,
-            fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 18.dp, top = 16.dp, bottom = 17.dp),
@@ -93,9 +91,8 @@ private fun ProductLabel(
         ) {
             Text(
                 text = stringResource(R.string.price_format, formatted),
-                fontSize = 20.sp,
+                style = ShoppingTypography.detailPrice,
                 color = Color.Black,
-                fontWeight = FontWeight.W400,
             )
             if (quantity > 0) {
                 QuantityStepper(

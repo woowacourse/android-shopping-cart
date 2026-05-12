@@ -3,10 +3,11 @@ package woowacourse.shopping.ui.common.component.recentlyviewed
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.ShoppingTypography
 
 @Composable
 fun RecentlyViewedItem(
@@ -42,7 +43,7 @@ fun RecentlyViewedItem(
             AsyncImage(
                 model = product.imageUrl,
                 contentDescription = stringResource(R.string.content_description_image),
-                modifier = Modifier.matchParentSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
             )
         }
@@ -50,7 +51,7 @@ fun RecentlyViewedItem(
         Text(
             text = product.name,
             color = Color.Black,
-            fontSize = 12.sp,
+            style = ShoppingTypography.itemCaption,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 6.dp, end = 9.dp),

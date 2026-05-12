@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.common.component.cartcontrol.AddToCartButton
 import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
+import woowacourse.shopping.ui.theme.Gray4
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -54,7 +56,7 @@ fun ProductUnit(
             AsyncImage(
                 model = product.product.imageUrl,
                 contentDescription = stringResource(R.string.content_description_image),
-                modifier = Modifier.matchParentSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
             )
             if (product.isInCart) {
@@ -89,7 +91,7 @@ fun ProductUnit(
         )
         Text(
             text = stringResource(R.string.price_format, formatted),
-            color = Color.DarkGray,
+            color = Gray4,
             style = ShoppingTypography.productPrice,
             modifier = Modifier.padding(start = 6.dp),
         )

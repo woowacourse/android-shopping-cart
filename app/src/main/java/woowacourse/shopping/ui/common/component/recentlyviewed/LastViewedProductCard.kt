@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.theme.BrandGreen
+import woowacourse.shopping.ui.theme.Gray2
+import woowacourse.shopping.ui.theme.Gray4
 
 @Composable
 fun LastViewedProductCard(
@@ -38,7 +40,7 @@ fun LastViewedProductCard(
                     shape = RoundedCornerShape(5.dp),
                 ).border(
                     width = 1.dp,
-                    color = Color(0xFFAAAAAA),
+                    color = Gray2,
                     shape = RoundedCornerShape(5.dp),
                 ).clickable(onClick = onClick)
                 .padding(horizontal = 18.dp, vertical = 16.dp),
@@ -47,15 +49,14 @@ fun LastViewedProductCard(
         Column {
             Text(
                 text = stringResource(R.string.last_viewed_product_label),
-                color = Color(0xFF04C09E),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
+                color = BrandGreen,
+                style = ShoppingTypography.highlightedCaption,
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = name,
-                color = Color(0xFF555555),
-                fontSize = 18.sp,
+                color = Gray4,
+                style = ShoppingTypography.productName,
             )
         }
     }
