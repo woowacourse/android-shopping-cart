@@ -1,10 +1,10 @@
 package woowacourse.shopping.repository.cart
 
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.entity.CartItemEntity
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductWithQuantity
@@ -49,6 +49,7 @@ class RoomCartRepository(
     override suspend fun deleteProduct(productId: Uuid) =
         cartDao.deleteByProductId(productId = productId.toString())
 
+    @Transaction
     override suspend fun decreaseProduct(
         productId: Uuid,
         quantityToRemove: Int,
