@@ -13,7 +13,7 @@ interface CartRepository {
 
     suspend fun minusItemAmount(productId: String)
 
-    suspend fun getCartItemByPage(page: Int): CartItems
+    suspend fun getCartItemByPage(page: Int, pageSize: Int): CartItems
 
     fun getAllCartItems(): Flow<CartItems>
 }

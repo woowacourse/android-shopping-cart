@@ -27,14 +27,14 @@ class CartRepositoryImpl(
         cartDao.minusItem(productId, 1)
     }
 
-    override suspend fun getCartItemByPage(page: Int): CartItems {
+    override suspend fun getCartItemByPage(page: Int, pageSize: Int): CartItems {
         require(page > 0) { "-거절(사유: ${page}pg가 말이 되는가)-" }
 
-        val offset = (page - 1) * PAGE_SIZE
+        val offset = (page - 1) * pageSize
 
-        val result = cartDao.getCartItems(PAGE_SIZE + 1, offset)
+        val result = cartDao.getCartItems(pageSize + 1, offset)
 
-        return result.take(PAGE_SIZE).toDomain(result.size <= PAGE_SIZE)
+        return result.take(pageSize).toDomain(result.size <= pageSize)
     }
 
     override fun getAllCartItems(): Flow<CartItems> =
@@ -44,8 +44,4 @@ class CartRepositoryImpl(
                 isLast = true,
             )
         }
-
-    companion object {
-        private const val PAGE_SIZE = 5
-    }
 }

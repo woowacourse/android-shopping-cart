@@ -77,7 +77,7 @@ class CartViewModel(
         }
 
     private suspend fun refreshPage(page: Int) {
-        val cart = cartRepository.getCartItemByPage(page)
+        val cart = cartRepository.getCartItemByPage(page, PAGE_SIZE)
         val products = productRepository.getProductsByIds(cart.items.map { it.productId })
 
         val uiModels = cart.items.map { item ->
@@ -103,6 +103,9 @@ class CartViewModel(
     }
 
     companion object {
+
+        private const val PAGE_SIZE = 5
+
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as ShoppingApplication)
