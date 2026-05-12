@@ -1,9 +1,7 @@
 package woowacourse.shopping.model
 
-import java.util.UUID
-
 class Product(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
     val name: ProductName,
     val price: Money,
     val imageUrl: String,
@@ -14,4 +12,8 @@ class Product(
     }
 
     override fun hashCode(): Int = id.hashCode()
+
+    fun getName(): String = name.name
+
+    fun getPrice(): Int = price.amount
 }

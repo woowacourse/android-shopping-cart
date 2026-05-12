@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.detail
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,27 +14,25 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import woowacourse.shopping.ui.component.ProductAsyncImage
+import woowacourse.shopping.ui.component.QuantitySelector
 import woowacourse.shopping.ui.component.ShoppingAppBar
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Green40
@@ -43,24 +40,13 @@ import woowacourse.shopping.ui.util.formattedPrice
 
 @Composable
 fun DetailScreen(
-    id: String,
-    onNavigateToCart: () -> Unit,
-    onProductNotFound: () -> Unit,
-    onFailure: () -> Unit,
+    uiState: DetailUiState,
+    onCloseClick: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
+    onAddToCart: () -> Unit,
+    onRecentItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    val state =
-        remember(id) {
-            DetailStateHolder(
-                scope = scope,
-                id = id,
-                onProductNotFound = onProductNotFound,
-            )
-        }
-    val product = state.product
-
-    val activity = LocalActivity.current
     Scaffold(
         topBar = {
             ShoppingAppBar(
@@ -68,14 +54,12 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "뒤로 가기",
+                        contentDescription = "닫기",
                         tint = Color.White,
                         modifier =
                             Modifier
                                 .size(16.dp)
-                                .clickable {
-                                    activity?.finish()
-                                },
+                                .clickable { onCloseClick() },
                     )
                 },
             )
@@ -88,12 +72,7 @@ fun DetailScreen(
                         .fillMaxWidth()
                         .height(48.dp)
                         .background(Green40)
-                        .clickable {
-                            state.addToCart(
-                                onSuccess = onNavigateToCart,
-                                onAlreadyExists = onFailure,
-                            )
-                        },
+                        .clickable { onAddToCart() },
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -107,9 +86,26 @@ fun DetailScreen(
         modifier = modifier.statusBarsPadding(),
     ) { innerPadding ->
         DetailContent(
-            imageUrl = product.imageUrl,
-            productName = product.name,
-            price = product.price,
+            imageUrl = uiState.product.imageUrl,
+            productName = uiState.product.name,
+            quantity = uiState.quantity,
+            totalPrice = uiState.totalPrice,
+            onQuantityChange = onQuantityChange,
+            recentItem = {
+                if (uiState.recentItem != null) {
+                    RecentItemCard(
+                        name = uiState.recentItem.name,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 18.dp)
+                                .clickable {
+                                    onRecentItemClick(uiState.recentItem.id)
+                                },
+                    )
+                    Spacer(modifier = Modifier.height(34.dp))
+                }
+            },
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -119,19 +115,18 @@ fun DetailScreen(
 private fun DetailContent(
     imageUrl: String,
     productName: String,
-    price: Int,
+    quantity: Int,
+    totalPrice: Int,
+    onQuantityChange: (Int) -> Unit,
+    recentItem: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "상품 이미지",
-            placeholder = rememberVectorPainter(Icons.Default.CloudSync),
-            error = rememberVectorPainter(Icons.Default.CloudOff),
-            fallback = rememberVectorPainter(Icons.Default.CloudOff),
+        ProductAsyncImage(
+            imageUrl = imageUrl,
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
@@ -147,27 +142,26 @@ private fun DetailContent(
         )
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Gray40)
         Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
+                text = formattedPrice(totalPrice),
                 fontSize = 20.sp,
+                fontWeight = FontWeight.W400,
                 color = Color.Black,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 24.sp,
             )
-            Text(
-                text = formattedPrice(price),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 26.sp,
-                color = Color.Black,
+            QuantitySelector(
+                quantity = quantity,
+                onQuantityChange = onQuantityChange,
             )
         }
+        Spacer(modifier = Modifier.height(4.dp))
+        recentItem()
     }
 }
 
@@ -175,10 +169,11 @@ private fun DetailContent(
 @Composable
 private fun DetailScreenPreview() {
     DetailScreen(
-        id = "1",
-        onNavigateToCart = {},
-        onProductNotFound = {},
-        onFailure = {},
+        uiState = DetailUiState(),
+        onCloseClick = {},
+        onQuantityChange = {},
+        onRecentItemClick = {},
+        onAddToCart = {},
     )
 }
 
@@ -188,6 +183,9 @@ private fun DetailContentPreview() {
     DetailContent(
         imageUrl = "",
         productName = "Test",
-        price = 10000,
+        quantity = 1,
+        totalPrice = 1000,
+        onQuantityChange = {},
+        recentItem = {},
     )
 }

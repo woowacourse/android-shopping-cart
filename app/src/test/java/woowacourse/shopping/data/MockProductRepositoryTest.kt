@@ -3,9 +3,10 @@ package woowacourse.shopping.data
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.repository.MockProductRepository
 
 class MockProductRepositoryTest {
-    private val products = ProductData.products
+    private val products = productData()
     private val size = products.size
     private val repository = MockProductRepository(source = products)
 

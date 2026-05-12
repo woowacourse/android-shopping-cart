@@ -5,27 +5,29 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import woowacourse.shopping.ui.component.ProductAsyncImage
+import woowacourse.shopping.ui.component.QuantitySelector
 import woowacourse.shopping.ui.theme.Gray40
 import woowacourse.shopping.ui.theme.Gray50
 import woowacourse.shopping.ui.util.formattedPrice
@@ -33,9 +35,11 @@ import woowacourse.shopping.ui.util.formattedPrice
 @Composable
 fun CartCard(
     onDeleteItem: () -> Unit,
+    onQuantityChange: (Int) -> Unit,
     productName: String,
     imageUrl: String,
     price: Int,
+    quantity: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,24 +84,44 @@ fun CartCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = "상품 이미지",
-                placeholder = rememberVectorPainter(Icons.Default.CloudSync),
-                error = rememberVectorPainter(Icons.Default.CloudOff),
-                fallback = rememberVectorPainter(Icons.Default.CloudOff),
+            ProductAsyncImage(
+                imageUrl = imageUrl,
                 contentScale = ContentScale.Fit,
                 modifier =
                     Modifier
                         .width(136.dp),
             )
-            Text(
-                text = formattedPrice(price),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 26.sp,
-                color = Gray50,
-            )
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                QuantitySelector(
+                    quantity = quantity,
+                    onQuantityChange = onQuantityChange,
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = formattedPrice(price),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 26.sp,
+                    color = Gray50,
+                )
+            }
         }
     }
+}
+
+@Preview
+@Composable
+fun CartCardPreview() {
+    CartCard(
+        onDeleteItem = {},
+        onQuantityChange = {},
+        productName = "Test",
+        imageUrl = "Test",
+        price = 1000,
+        quantity = 1,
+    )
 }

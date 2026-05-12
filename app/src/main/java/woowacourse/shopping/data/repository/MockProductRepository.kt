@@ -1,12 +1,13 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import woowacourse.shopping.data.productData
 import woowacourse.shopping.model.Product
 
 class MockProductRepository(
-    private val source: List<Product> = ProductData.products,
+    private val source: List<Product> = productData(),
 ) : ProductRepository {
     override suspend fun getProductById(id: String): Product =
         requireNotNull(source.firstOrNull { it.id == id }) {

@@ -14,37 +14,12 @@ data class Cart(
         return copy(items = newItems)
     }
 
-    fun getPage(
-        page: Int,
-        pageSize: Int,
-    ): CartPage {
-        val lastPage =
-            if (items.isEmpty()) {
-                0
-            } else {
-                items.lastIndex / pageSize
-            }
-        val currentPage = page.coerceIn(0, lastPage)
-        val fromIndex = currentPage * pageSize
-        val toIndex = minOf(fromIndex + pageSize, items.size)
-
-        return CartPage(
-            items = items.subList(fromIndex, toIndex),
-            page = currentPage,
-            isCanMoveNext = toIndex < items.size,
-        )
-    }
-
     fun getTotalSize(): Int = items.size
 
-    fun calculateTotalPrice(): Money {
+    fun getTotalQuantity(): Int = items.sumOf { it.quantity }
+
+    fun calculateTotalPrice(): Int {
         val totalPrice = items.sumOf { it.getTotalPrice().amount }
-        return Money(totalPrice)
+        return totalPrice
     }
 }
-
-data class CartPage(
-    val items: List<CartItem>,
-    val page: Int,
-    val isCanMoveNext: Boolean,
-)
