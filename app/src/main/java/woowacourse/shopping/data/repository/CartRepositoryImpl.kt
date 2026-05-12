@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
-    override suspend fun isLastPage(page: Int): Boolean = page * PAGE_SIZE >= cartDataSource.getTotalCount()
+    override suspend fun isLastPage(page: Int): Boolean = page * PAGE_SIZE >= cartDataSource.getTotalItemCount()
 
     override suspend fun addItem(
         productId: String,
@@ -31,7 +31,8 @@ class CartRepositoryImpl(
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {
-        val cartItems = cartDataSource.getCartItems(offset = (page - 1) * PAGE_SIZE, count = PAGE_SIZE)
+        val cartItems =
+            cartDataSource.getCartItems(offset = (page - 1) * PAGE_SIZE, count = PAGE_SIZE)
 
         return cartItems.map {
             it.toDomain()

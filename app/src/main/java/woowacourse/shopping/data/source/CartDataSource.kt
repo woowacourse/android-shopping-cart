@@ -17,4 +17,6 @@ interface CartDataSource {
     suspend fun getCartItemById(productId: String): CartItemEntity?
 
     suspend fun getTotalCount(): Int
+
+    suspend fun getTotalItemCount(): Int
 }

@@ -27,4 +27,7 @@ interface CartItemDao {
 
     @Query("SELECT SUM(quantity) From cartItems ")
     suspend fun getTotalCount(): Int
+
+    @Query("SELECT COUNT(*) From cartItems ")
+    suspend fun getTotalItemCount(): Int
 }

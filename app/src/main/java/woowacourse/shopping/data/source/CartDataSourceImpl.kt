@@ -26,4 +26,6 @@ class CartDataSourceImpl(
     override suspend fun getCartItemById(productId: String): CartItemEntity? = dao.getCartItemById(productId = productId)
 
     override suspend fun getTotalCount(): Int = dao.getTotalCount()
+
+    override suspend fun getTotalItemCount(): Int = dao.getTotalItemCount()
 }
