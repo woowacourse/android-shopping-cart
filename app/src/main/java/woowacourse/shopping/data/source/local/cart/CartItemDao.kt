@@ -1,9 +1,8 @@
 package woowacourse.shopping.data.source.local.cart
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 
 @Dao
 interface CartItemDao {
@@ -13,11 +12,8 @@ interface CartItemDao {
         count: Int,
     ): List<CartItemEntity>
 
-    @Insert
-    suspend fun insert(cartItem: CartItemEntity)
-
-    @Update
-    suspend fun update(cartItem: CartItemEntity)
+    @Upsert
+    suspend fun upsert(cartItem: CartItemEntity)
 
     @Query("DELETE FROM cartItems WHERE product_id = :productId")
     suspend fun delete(productId: String)

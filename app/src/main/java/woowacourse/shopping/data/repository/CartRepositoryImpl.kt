@@ -15,15 +15,10 @@ class CartRepositoryImpl(
         productId: String,
         amount: Int,
     ) {
-        val item = cartDataSource.getCartItemById(productId = productId)
+        val quantity =
+            (cartDataSource.getCartItemById(productId = productId)?.quantity ?: 0) + amount
 
-        if (item == null) {
-            cartDataSource.add(CartItemEntity(productId = productId, quantity = amount))
-
-            return
-        }
-
-        cartDataSource.updateItem(cartItem = item.copy(quantity = item.quantity + amount))
+        cartDataSource.upsert(cartItem = CartItemEntity(productId = productId, quantity = quantity))
     }
 
     override suspend fun deleteItem(productId: String) {
@@ -51,12 +46,12 @@ class CartRepositoryImpl(
         val item = cartDataSource.getCartItemById(productId = product.id)
 
         if (item == null) {
-            cartDataSource.add(CartItemEntity(productId = product.id, quantity = 1))
+            cartDataSource.upsert(CartItemEntity(productId = product.id, quantity = 1))
 
             return
         }
 
-        cartDataSource.updateItem(cartItem = item.copy(quantity = item.quantity + 1))
+        cartDataSource.upsert(cartItem = item.copy(quantity = item.quantity + 1))
     }
 
     override suspend fun minusItemCount(productId: String) {
@@ -67,7 +62,7 @@ class CartRepositoryImpl(
             return
         }
 
-        cartDataSource.updateItem(cartItem = item.copy(quantity = item.quantity - 1))
+        cartDataSource.upsert(cartItem = item.copy(quantity = item.quantity - 1))
     }
 
     fun CartItemEntity.toDomain(): CartItem =

@@ -11,16 +11,12 @@ class CartDataSourceImpl(
         count: Int,
     ): List<CartItemEntity> = dao.getCartItems(offset = offset, count = count)
 
-    override suspend fun add(cartItem: CartItemEntity) {
-        dao.insert(cartItem = cartItem)
+    override suspend fun upsert(cartItem: CartItemEntity) {
+        dao.upsert(cartItem = cartItem)
     }
 
     override suspend fun deleteItem(productId: String) {
         dao.delete(productId = productId)
-    }
-
-    override suspend fun updateItem(cartItem: CartItemEntity) {
-        dao.update(cartItem = cartItem)
     }
 
     override suspend fun getCartItemById(productId: String): CartItemEntity? = dao.getCartItemById(productId = productId)

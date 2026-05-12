@@ -99,7 +99,7 @@ class CartRepositoryImplTest {
 class FakeCartDataSource : CartDataSource {
     var items = mutableListOf<CartItemEntity>()
 
-    override suspend fun add(cartItem: CartItemEntity) {
+    override suspend fun upsert(cartItem: CartItemEntity) {
         val idx = items.indexOfFirst { it.productId == cartItem.productId }
 
         if (idx == -1) {

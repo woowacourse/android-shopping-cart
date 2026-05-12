@@ -8,11 +8,9 @@ interface CartDataSource {
         count: Int,
     ): List<CartItemEntity>
 
-    suspend fun add(cartItem: CartItemEntity)
+    suspend fun upsert(cartItem: CartItemEntity)
 
     suspend fun deleteItem(productId: String)
-
-    suspend fun updateItem(cartItem: CartItemEntity)
 
     suspend fun getCartItemById(productId: String): CartItemEntity?
 

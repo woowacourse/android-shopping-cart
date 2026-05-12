@@ -35,7 +35,7 @@ class CartItemDaoTest {
     @Test
     fun `카트_아이템을_추가_할_수_있다`() =
         runBlocking {
-            cartDao.insert(
+            cartDao.upsert(
                 CartItemEntity(
                     productId = "1",
                     quantity = 1,
@@ -53,9 +53,9 @@ class CartItemDaoTest {
                 quantity = 1,
             )
 
-            cartDao.insert(cartItem)
+            cartDao.upsert(cartItem)
 
-            cartDao.update(cartItem.copy(quantity = 3))
+            cartDao.upsert(cartItem.copy(quantity = 3))
 
             assert(cartDao.getCartItems(0, 1).first().quantity == 3)
         }
@@ -63,7 +63,7 @@ class CartItemDaoTest {
     @Test
     fun `카트_아이템을_제거_할_수_있다`() =
         runBlocking {
-            cartDao.insert(
+            cartDao.upsert(
                 CartItemEntity(
                     productId = "1",
                     quantity = 1,
@@ -83,7 +83,7 @@ class CartItemDaoTest {
                 quantity = 1,
             )
 
-            cartDao.insert(cartItem)
+            cartDao.upsert(cartItem)
 
             assert(cartDao.getCartItemById("1") == cartItem)
         }
@@ -96,7 +96,7 @@ class CartItemDaoTest {
                 quantity = 1,
             )
 
-            cartDao.insert(cartItem)
+            cartDao.upsert(cartItem)
 
             assert(cartDao.getTotalCount() == 1)
         }
