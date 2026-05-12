@@ -15,20 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
+import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 
 @Composable
 fun ProductDetailBody(
     product: Product,
+    quantity: Int,
     modifier: Modifier = Modifier,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -37,10 +40,18 @@ fun ProductDetailBody(
         AsyncImage(
             model = product.imageUrl,
             contentDescription = stringResource(R.string.content_description_image),
-            modifier = Modifier.height(360.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(360.dp),
             contentScale = ContentScale.Crop,
         )
-        ProductLabel(product)
+        ProductLabel(
+            product = product,
+            quantity = quantity,
+            onIncreaseQuantity = onIncreaseQuantity,
+            onDecreaseQuantity = onDecreaseQuantity,
+        )
     }
 }
 
@@ -48,17 +59,24 @@ fun ProductDetailBody(
 @Composable
 private fun ProductLabel(
     product: Product,
+    quantity: Int,
     modifier: Modifier = Modifier,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
 ) {
-    val price = product.price.value
-    val formatted = String.format("%,d", price)
+    val totalPrice =
+        if (quantity == 0) {
+            product.price.value
+        } else {
+            product.price.value * quantity
+        }
+    val formatted = String.format("%,d", totalPrice)
 
     Column(modifier = modifier) {
         Text(
             text = product.name,
-            fontSize = 24.sp,
+            style = ShoppingTypography.detailTitle,
             color = Color.Black,
-            fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 18.dp, top = 16.dp, bottom = 17.dp),
@@ -72,17 +90,17 @@ private fun ProductLabel(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = stringResource(R.string.price_label),
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.W400,
-            )
-            Text(
                 text = stringResource(R.string.price_format, formatted),
-                fontSize = 20.sp,
+                style = ShoppingTypography.detailPrice,
                 color = Color.Black,
-                fontWeight = FontWeight.W400,
             )
+            if (quantity > 0) {
+                QuantityStepper(
+                    quantity = quantity,
+                    onIncreaseQuantity = onIncreaseQuantity,
+                    onDecreaseQuantity = onDecreaseQuantity,
+                )
+            }
         }
     }
 }
@@ -90,11 +108,21 @@ private fun ProductLabel(
 @Composable
 @Preview(showBackground = true, name = "상품 유닛")
 private fun ProductUnitPreview() {
-    ProductDetailBody(InMemoryProductRepository.APPLE)
+    ProductDetailBody(
+        product = InMemoryProductRepository.APPLE,
+        quantity = 0,
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+    )
 }
 
 @Composable
 @Preview(showBackground = true, name = "상품 이름만")
 private fun ProductLabelPreview() {
-    ProductLabel(product = InMemoryProductRepository.APPLE)
+    ProductLabel(
+        product = InMemoryProductRepository.APPLE,
+        quantity = 2,
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
+    )
 }

@@ -22,6 +22,8 @@ fun CartItemBody(
     totalPages: Int,
     modifier: Modifier = Modifier,
     onDeleteClick: (ProductId) -> Unit,
+    onIncreaseQuantity: (ProductId) -> Unit,
+    onDecreaseQuantity: (ProductId) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -30,10 +32,12 @@ fun CartItemBody(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(items = items, key = { it.productId }) { item ->
+        items(items = items, key = { it.productId.value.toString() }) { item ->
             CartItemUnit(
                 item = item,
                 onDeleteClick = { onDeleteClick(item.productId) },
+                onIncreaseQuantity = { onIncreaseQuantity(item.productId) },
+                onDecreaseQuantity = { onDecreaseQuantity(item.productId) },
             )
         }
 
@@ -74,6 +78,8 @@ private fun CartItemBodyPreview() {
                 ),
             ),
         onDeleteClick = {},
+        onIncreaseQuantity = {},
+        onDecreaseQuantity = {},
         showPagination = true,
         currentPage = 1,
         totalPages = 5,

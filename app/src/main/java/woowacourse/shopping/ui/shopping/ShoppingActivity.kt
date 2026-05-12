@@ -19,6 +19,11 @@ import woowacourse.shopping.ui.theme.ShoppingTheme
 class ShoppingActivity : ComponentActivity() {
     private val viewModel: ShoppingViewModel by viewModels()
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.reloadVisibleState()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,16 +34,23 @@ class ShoppingActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ShoppingScreen(
                         products = uiState.products,
+                        recentProducts = uiState.recentProducts,
+                        cartQuantity = uiState.cartQuantity,
                         hasNext = uiState.hasNext,
                         isLoading = uiState.isLoading,
-                        modifier= Modifier.padding(innerPadding),
+                        isNetworkConnected = uiState.isNetworkConnected,
+                        errorMessage = uiState.errorMessage,
+                        modifier = Modifier.padding(innerPadding),
                         onCartClick = {
                             startActivity(Intent(this, CartActivity::class.java))
                         },
                         onProductClick = {
-                            ProductDetailActivity.startActivity(this, it)
+                            ProductDetailActivity.startActivity(this, it.id)
                         },
                         onMoreClick = viewModel::loadMore,
+                        onAddToCart = viewModel::addToCart,
+                        onIncreaseQuantity = viewModel::increaseQuantity,
+                        onDecreaseQuantity = viewModel::decreaseQuantity,
                     )
                 }
             }

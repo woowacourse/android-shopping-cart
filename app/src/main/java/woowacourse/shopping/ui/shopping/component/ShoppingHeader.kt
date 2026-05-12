@@ -20,10 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun ShoppingHeader(
     modifier: Modifier = Modifier,
+    cartQuantity: Int,
     onCartClick: () -> Unit,
 ) {
     Row(
@@ -31,7 +33,7 @@ fun ShoppingHeader(
             modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(color = Color.DarkGray)
+                .background(color = ShoppingColors.Gray5)
                 .padding(start = 26.dp, end = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -41,18 +43,29 @@ fun ShoppingHeader(
             color = Color.White,
             style = ShoppingTypography.titleMedium,
         )
-
-        Icon(
-            imageVector = Icons.Default.ShoppingCart,
-            contentDescription = stringResource(R.string.content_description_cart),
+        Row(
             modifier = Modifier.clickable(onClick = onCartClick),
-            tint = Color.White,
-        )
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = stringResource(R.string.content_description_cart),
+                tint = Color.White,
+            )
+            if (cartQuantity > 0) {
+                CartCountBadge(
+                    quantity = cartQuantity,
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingHeaderPreview() {
-    ShoppingHeader(onCartClick = {})
+    ShoppingHeader(
+        cartQuantity = 3,
+        onCartClick = {},
+    )
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun CartHeader(
@@ -30,7 +31,7 @@ fun CartHeader(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(color = Color.DarkGray)
+                .background(color = ShoppingColors.Gray5)
                 .padding(start = 26.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

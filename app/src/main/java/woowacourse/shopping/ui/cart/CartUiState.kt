@@ -7,4 +7,6 @@ data class CartUiState(
     val hasPrevious: Boolean = false,
     val hasNext: Boolean = false,
     val isLoading: Boolean = false,
+    val isNetworkConnected: Boolean = true,
+    val errorMessage: String? = null,
 )
