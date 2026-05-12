@@ -122,7 +122,7 @@ class CartRepositoryTest {
 
             val quantity = repository.getCartItemQuantity(product.id)
 
-            assertThat(quantity).isEqualTo(1)
+            assertThat(quantity).isNull()
         }
 
     @Test

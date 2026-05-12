@@ -63,9 +63,7 @@ class CartRepository(
         cartItemDao.deleteById(id)
     }
 
-    suspend fun getCartItemQuantity(id: String): Int {
-        return cartItemDao.findById(id)?.quantity ?: 1
-    }
+    suspend fun getCartItemQuantity(id: String): Int? = cartItemDao.findById(id)?.quantity
 
     suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
 

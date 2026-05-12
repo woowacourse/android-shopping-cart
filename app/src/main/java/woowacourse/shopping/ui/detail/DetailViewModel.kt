@@ -43,7 +43,7 @@ class DetailViewModel(
                     } else {
                         recentItemRepository.getLastViewedItem()
                     }
-                val quantity = cartRepository.getCartItemQuantity(id)
+                val quantity = cartRepository.getCartItemQuantity(id) ?: 1
 
                 recentItemRepository.addRecentItem(product)
 
