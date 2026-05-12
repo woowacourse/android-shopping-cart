@@ -34,4 +34,15 @@ interface CartItemDao {
         """,
     )
     suspend fun delete(productId: String)
+
+    @Query(
+        """
+        UPDATE cart_items
+        SET quantity = quantity + :amount
+        WHERE productId = :productId
+        """)
+    suspend fun increaseQuantity(
+        productId: String,
+        amount: Int,
+    ): Int
 }

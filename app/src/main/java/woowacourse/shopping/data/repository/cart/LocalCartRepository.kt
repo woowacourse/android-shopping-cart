@@ -1,12 +1,7 @@
 package woowacourse.shopping.data.repository.cart
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import woowacourse.shopping.data.local.cart.CartItemDao
 import woowacourse.shopping.data.mapper.toCartItemEntity
 import woowacourse.shopping.data.mapper.toDomainCart
@@ -28,14 +23,13 @@ class LocalCartRepository(
         product: Product,
         quantity: Quantity,
     ) {
-        val existing = cartItemDao.getCartItem(product.id)
-        val nextQuantity =
-            if (existing == null) {
-                quantity
-            } else {
-                Quantity(existing.quantity + quantity.value)
-            }
-        cartItemDao.upsert(product.toCartItemEntity(nextQuantity))
+        val updatedRowCount = cartItemDao.increaseQuantity(
+            productId = product.id,
+            amount = quantity.value,
+        )
+        if (updatedRowCount == 0) {
+            cartItemDao.upsert(product.toCartItemEntity(quantity))
+        }
     }
 
     override suspend fun increase(productId: String) {
