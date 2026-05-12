@@ -25,7 +25,7 @@ class ProductListViewModel(
 
     private var currentPage = 0
     private val accumulatedProducts = mutableListOf<Product>()
-    private val canLoadMore = true
+    private var canLoadMore = true
     private var isLoading = false
     private var currentCart: Cart = Cart()
     private var recentProducts: List<Product> = emptyList()
@@ -86,9 +86,11 @@ class ProductListViewModel(
                 .onSuccess { newProducts ->
                     accumulatedProducts.addAll(newProducts)
                     currentPage++
+
+                    canLoadMore = newProducts.size == PAGE_SIZE
                     _uiState.value =
                         createSuccessUiState(
-                            canLoadMore = newProducts.size == PAGE_SIZE,
+                            canLoadMore = canLoadMore,
                             isLoadingMore = false,
                         )
                 }.onFailure { throwable ->
