@@ -14,7 +14,7 @@ class ProductRepository(
     private val client: OkHttpClient,
     private val baseUrl: String,
 ) {
-    private val json = Json { ignoreUnknownKeys }
+    private val json = Json
 
     suspend fun getProducts(
         page: Int,
