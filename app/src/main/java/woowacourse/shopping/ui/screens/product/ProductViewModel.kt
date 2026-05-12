@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -105,14 +107,18 @@ class ProductViewModel(
 
     private fun loadRecentProductUiState() {
         viewModelScope.launch {
-            val uiRecentProducts = recentProductIds.map { productId ->
-                val product = productRepository.getProductById(productId)
-                UiRecentProduct(
-                    id = productId,
-                    imageUrl = product.imageUrl,
-                    name = product.name,
-                )
-            }
+            val uiRecentProducts = recentProductIds
+                .map { productId ->
+                    async {
+                        val product = productRepository.getProductById(productId)
+                        UiRecentProduct(
+                            id = productId,
+                            imageUrl = product.imageUrl,
+                            name = product.name,
+                        )
+                    }
+                }.awaitAll()
+
             _uiState.update {
                 it.copy(
                     recentProducts = uiRecentProducts,
