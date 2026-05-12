@@ -66,7 +66,7 @@ class ProductViewModel(
 
     private fun loadProducts() =
         launchWithLoading {
-            val products = productRepository.getProducts(offset)
+            val products = productRepository.getProducts(offset, PAGE_SIZE)
             offset += products.items.size
 
             _uiState.update { state ->
@@ -113,7 +113,7 @@ class ProductViewModel(
         if (!_uiState.value.hasNext) return
         launchWithLoading {
             val newProducts =
-                productRepository.getProducts(offset)
+                productRepository.getProducts(offset, PAGE_SIZE)
             offset += newProducts.items.size
 
             val productItems = newProducts.items.map { it.toUiModel(cartState.value) }
@@ -153,6 +153,8 @@ class ProductViewModel(
 
     companion object {
         private const val RECENT_PRODUCT_LIMIT = 10
+        private const val PAGE_SIZE = 20
+
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as ShoppingApplication)

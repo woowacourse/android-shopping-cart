@@ -19,12 +19,11 @@ class ProductRepositoryImpl(
         return response.map { it.toDomain() }
     }
 
-    override suspend fun getProducts(offset: Int): Products {
-        val response = dataSource.getProducts(offset / PAGE_SIZE, PAGE_SIZE)
+    override suspend fun getProducts(
+        offset: Int,
+        pageSize: Int,
+    ): Products {
+        val response = dataSource.getProducts(offset / pageSize, pageSize)
         return response.toDomain()
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 20
     }
 }

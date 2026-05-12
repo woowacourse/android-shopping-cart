@@ -8,5 +8,8 @@ interface ProductRepository {
 
     suspend fun getProductsByIds(ids: List<String>): List<Product>
 
-    suspend fun getProducts(offset: Int): Products
+    suspend fun getProducts(
+        offset: Int,
+        pageSize: Int,
+    ): Products
 }
