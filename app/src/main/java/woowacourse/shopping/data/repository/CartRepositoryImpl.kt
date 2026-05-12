@@ -4,11 +4,12 @@ import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.mapper.toCartItemEntity
 import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.domain.model.cart.Cart
-import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class CartRepositoryImpl(
     private var cartDao: CartDao,
+    private val productRepository: ProductRepository,
 ) : CartRepository {
     override suspend fun getItems(): Cart = Cart(cartDao.findAll().map { it.toDomain() })
 
@@ -35,20 +36,19 @@ class CartRepositoryImpl(
     override suspend fun getTotalQuantity(): Int = cartDao.sumQuantity()
 
     override suspend fun increaseQuantity(
-        product: Product,
+        productId: Int,
         quantity: Int,
     ) {
-        val savedItem = cartDao.findByProductId(product.productId)
+        val savedItem = cartDao.findByProductId(productId)
 
-        val newQuantity =
-            if (savedItem == null) {
-                quantity
-            } else {
-                savedItem.quantity + quantity
-            }
-        cartDao.save(
-            product.toCartItemEntity(quantity = newQuantity),
-        )
+        if (savedItem != null) {
+            cartDao.save(savedItem.copy(quantity = savedItem.quantity + quantity))
+        } else {
+            val product =
+                productRepository.findProductById(productId)
+                    ?: throw Exception("Product not found")
+            cartDao.save(product.toCartItemEntity(quantity = quantity))
+        }
     }
 
     override suspend fun decreaseQuantity(productId: Int) {

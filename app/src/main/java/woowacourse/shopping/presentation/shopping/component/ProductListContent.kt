@@ -29,7 +29,7 @@ fun ProductListContent(
     hasNextPage: Boolean,
     onLoadMore: () -> Unit,
     onItemClick: (Product) -> Unit,
-    onQuantityIncrease: (Product) -> Unit,
+    onQuantityIncrease: (Int) -> Unit,
     onQuantityDecrease: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -82,7 +82,7 @@ private fun LazyGridScope.productItems(
     products: Products,
     productQuantities: Map<Int, Int>,
     onItemClick: (Product) -> Unit,
-    onQuantityIncrease: (Product) -> Unit,
+    onQuantityIncrease: (Int) -> Unit,
     onQuantityDecrease: (Int) -> Unit,
 ) {
     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -98,7 +98,7 @@ private fun LazyGridScope.productItems(
             product = product,
             quantity = productQuantities[product.productId] ?: 0,
             onClick = { onItemClick(product) },
-            onQuantityIncrease = { onQuantityIncrease(product) },
+            onQuantityIncrease = { onQuantityIncrease(product.productId) },
             onQuantityDecrease = { onQuantityDecrease(product.productId) },
             modifier =
                 Modifier.padding(

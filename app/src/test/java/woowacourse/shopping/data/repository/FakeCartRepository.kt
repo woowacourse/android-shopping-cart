@@ -1,11 +1,12 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.domain.model.cart.Cart
-import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class FakeCartRepository(
     private var cart: Cart = Cart(),
+    private val productRepository: ProductRepository = FakeProductRepository(),
 ) : CartRepository {
     override suspend fun getItems(): Cart = cart
 
@@ -27,9 +28,15 @@ class FakeCartRepository(
     override suspend fun getTotalQuantity(): Int = cart.getTotalQuantity()
 
     override suspend fun increaseQuantity(
-        product: Product,
+        productId: Int,
         quantity: Int,
     ) {
+        val cartItem = cart.cartItems.find { it.product.productId == productId }
+
+        val product =
+            cartItem?.product
+                ?: productRepository.findProductById(productId) ?: return
+
         cart = cart.increaseQuantity(product, quantity)
     }
 

@@ -90,6 +90,7 @@ object AppContainer {
         cartRepository =
             CartRepositoryImpl(
                 cartDao = database.cartDao(),
+                productRepository = productRepository,
             )
 
         recentlyViewedProductRepository =

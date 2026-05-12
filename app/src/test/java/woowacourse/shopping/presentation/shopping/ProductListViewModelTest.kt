@@ -7,11 +7,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.data.network.FakeNetworkMonitor
+import woowacourse.shopping.data.repository.FakeCartRepository
+import woowacourse.shopping.data.repository.FakeProductRepository
+import woowacourse.shopping.data.repository.FakeRecentlyViewedProductRepository
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.MainDispatcherRule
-import woowacourse.shopping.presentation.cart.FakeCartRepository
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductListViewModelTest {
@@ -47,11 +51,20 @@ class ProductListViewModelTest {
     @Test
     fun `상품 수량을 증가시키면 장바구니에 상품이 추가된다`() =
         runTest {
-            val viewModel = createViewModel()
+            val viewModel =
+                createViewModel(
+                    cartRepository =
+                        FakeCartRepository(
+                            productRepository =
+                                FakeProductRepository(
+                                    products = Products(ProductFixture.productList),
+                                ),
+                        ),
+                )
             val product = ProductFixture.productList.first()
 
             advanceUntilIdle()
-            viewModel.increaseQuantity(product)
+            viewModel.increaseQuantity(product.productId)
             advanceUntilIdle()
 
             val cartItem =
@@ -120,16 +133,25 @@ class ProductListViewModelTest {
         }
 
     private fun createViewModel(
-        cartRepository: FakeCartRepository = FakeCartRepository(),
+        cartRepository: CartRepository? = null,
         recentlyViewedProductRepository: FakeRecentlyViewedProductRepository = FakeRecentlyViewedProductRepository(),
-    ): ProductListViewModel =
-        ProductListViewModel(
+    ): ProductListViewModel {
+        val productRepository =
+            FakeProductRepository(
+                products = Products(ProductFixture.productList),
+            )
+        return ProductListViewModel(
             productRepository =
                 FakeProductRepository(
                     products = Products(ProductFixture.productList),
                 ),
-            cartRepository = cartRepository,
+            cartRepository =
+                cartRepository ?: FakeCartRepository(
+                    cart = Cart(),
+                    productRepository = productRepository,
+                ),
             recentlyViewedProductRepository = recentlyViewedProductRepository,
             networkMonitor = FakeNetworkMonitor(),
         )
+    }
 }

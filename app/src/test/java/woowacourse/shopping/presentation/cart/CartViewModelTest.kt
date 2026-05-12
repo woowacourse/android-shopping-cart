@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import woowacourse.shopping.data.repository.FakeCartRepository
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.presentation.MainDispatcherRule
 
@@ -71,7 +72,7 @@ class CartViewModelTest {
 
             val product = CartFixture.cartItems.first().product
 
-            viewModel.increaseQuantity(product)
+            viewModel.increaseQuantity(product.productId)
             advanceUntilIdle()
 
             val updateItem =

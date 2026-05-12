@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping
+package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.RecentlyViewedProducts

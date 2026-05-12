@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartViewModel(
@@ -47,9 +46,9 @@ class CartViewModel(
         }
     }
 
-    fun increaseQuantity(product: Product) {
+    fun increaseQuantity(productId: Int) {
         viewModelScope.launch {
-            cartRepository.increaseQuantity(product, 1)
+            cartRepository.increaseQuantity(productId, 1)
             refresh()
         }
     }

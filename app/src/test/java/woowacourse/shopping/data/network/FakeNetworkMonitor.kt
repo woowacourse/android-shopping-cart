@@ -1,9 +1,8 @@
-package woowacourse.shopping.presentation.shopping
+package woowacourse.shopping.data.network
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import woowacourse.shopping.data.network.NetworkMonitor
 
 class FakeNetworkMonitor : NetworkMonitor {
     private val _isOnline = MutableStateFlow(true)

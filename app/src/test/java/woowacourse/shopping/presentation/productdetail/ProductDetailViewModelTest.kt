@@ -8,12 +8,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.data.repository.FakeCartRepository
+import woowacourse.shopping.data.repository.FakeLastViewedProductRepository
+import woowacourse.shopping.data.repository.FakeProductRepository
+import woowacourse.shopping.data.repository.FakeRecentlyViewedProductRepository
 import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.presentation.MainDispatcherRule
-import woowacourse.shopping.presentation.cart.FakeCartRepository
-import woowacourse.shopping.presentation.shopping.FakeProductRepository
-import woowacourse.shopping.presentation.shopping.FakeRecentlyViewedProductRepository
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductDetailViewModelTest {
@@ -43,7 +44,13 @@ class ProductDetailViewModelTest {
     @Test
     fun `장바구니에 상품을 추가하면 선택 수량만큼 장바구니에 담긴다`() =
         runTest {
-            val cartRepository = FakeCartRepository()
+            val cartRepository =
+                FakeCartRepository(
+                    productRepository =
+                        FakeProductRepository(
+                            products = Products(ProductFixture.productList),
+                        ),
+                )
             val viewModel = createViewModel(cartRepository = cartRepository)
             val product = ProductFixture.productList.first()
 

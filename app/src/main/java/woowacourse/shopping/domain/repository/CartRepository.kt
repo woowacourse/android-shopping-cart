@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.cart.Cart
-import woowacourse.shopping.domain.model.product.Product
 
 interface CartRepository {
     suspend fun getItems(): Cart
@@ -16,7 +15,7 @@ interface CartRepository {
     suspend fun getTotalQuantity(): Int
 
     suspend fun increaseQuantity(
-        product: Product,
+        productId: Int,
         quantity: Int,
     )
 

@@ -47,7 +47,7 @@ class ProductDetailViewModel(
         viewModelScope.launch {
             val product = productRepository.findProductById(productId) ?: return@launch
             cartRepository.increaseQuantity(
-                product = product,
+                productId = product.productId,
                 quantity = _uiState.value.quantity,
             )
             _uiEvent.send(ProductDetailUiEvent.ShowMessage("장바구니에 상품을 담았습니다"))
