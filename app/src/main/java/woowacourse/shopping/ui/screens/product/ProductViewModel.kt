@@ -64,7 +64,8 @@ class ProductViewModel(
                 val nextProducts = productRepository.getProducts(products.size, PAGE_SIZE)
                 products = (products + nextProducts).distinctBy { it.id }
 
-                uiRecentProducts = recentProductRepository.getRecentProductIds()
+                uiRecentProducts = recentProductRepository
+                    .getRecentProductIds()
                     .map { productId ->
                         async {
                             val product = productRepository.getProductById(productId)
@@ -101,28 +102,24 @@ class ProductViewModel(
         }
     }
 
-    private fun loadProductUiState() {
-        viewModelScope.launch {
-            val totalSize = productRepository.getProductSize()
-            _uiState.update {
-                it.copy(
-                    products = products.map { product ->
-                        product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
-                    },
-                    hasNext = totalSize > products.size,
-                    totalCartCount = cartRepository.getCartItemCount(),
-                )
-            }
+    private suspend fun loadProductUiState() {
+        val totalSize = productRepository.getProductSize()
+        _uiState.update {
+            it.copy(
+                products = products.map { product ->
+                    product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
+                },
+                hasNext = totalSize > products.size,
+                totalCartCount = cartRepository.getCartItemCount(),
+            )
         }
     }
 
     private fun loadRecentProductUiState() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    recentProducts = uiRecentProducts,
-                )
-            }
+        _uiState.update {
+            it.copy(
+                recentProducts = uiRecentProducts,
+            )
         }
     }
 
