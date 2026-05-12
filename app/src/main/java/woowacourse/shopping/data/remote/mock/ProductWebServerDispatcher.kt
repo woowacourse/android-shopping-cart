@@ -12,7 +12,7 @@ import mockwebserver3.RecordedRequest
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import woowacourse.shopping.data.remote.mock.MockProducts.products
 
-class MockServerDispatcher : Dispatcher() {
+class ProductWebServerDispatcher : Dispatcher() {
     private val mockProducts = Json.parseToJsonElement(products).jsonArray
 
     override fun dispatch(request: RecordedRequest): MockResponse {

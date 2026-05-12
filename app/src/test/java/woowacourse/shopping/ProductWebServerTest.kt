@@ -5,10 +5,10 @@ import okhttp3.OkHttpClient
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.remote.mock.MockWebServer
-import woowacourse.shopping.data.remote.repository.WebServerRepository
+import woowacourse.shopping.data.remote.mock.ProductWebServer
+import woowacourse.shopping.data.remote.repository.ProductRepository
 
-class MockWebServerTest {
+class ProductWebServerTest {
     @Test
     fun `상품 목록을 페이지네이션을 적용해 불러올 수 있다`() =
         runBlocking {
@@ -53,20 +53,20 @@ class MockWebServerTest {
         }
 
     companion object {
-        private lateinit var repository: WebServerRepository
+        private lateinit var repository: ProductRepository
         private val client = OkHttpClient()
 
         @JvmStatic
         @BeforeAll
         fun setUp() {
-            MockWebServer.start()
-            repository = WebServerRepository(client, MockWebServer.baseUrl)
+            ProductWebServer.start()
+            repository = ProductRepository(client, ProductWebServer.baseUrl)
         }
 
         @JvmStatic
         @AfterAll
         fun tearDown() {
-            MockWebServer.stop()
+            ProductWebServer.stop()
         }
     }
 }
