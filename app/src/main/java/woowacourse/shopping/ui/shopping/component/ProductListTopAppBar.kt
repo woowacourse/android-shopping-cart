@@ -45,14 +45,20 @@ fun ProductListTopAppBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.shopping_cart_icon),
-                    contentDescription = stringResource(R.string.shopping_cart),
-                    modifier =
-                        Modifier
-                            .size(24.dp)
-                            .clickable { onClick() },
-                )
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable { onClick() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.shopping_cart_icon),
+                        contentDescription = stringResource(R.string.shopping_cart),
+                        modifier =
+                            Modifier
+                                .size(24.dp)
+                    )
+                }
                 if (totalProductQuantity > 0) {
                     Box(
                         modifier =
