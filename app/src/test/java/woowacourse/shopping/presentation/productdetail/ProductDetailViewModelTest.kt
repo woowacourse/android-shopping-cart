@@ -63,11 +63,7 @@ class ProductDetailViewModelTest {
             val cart = cartRepository.getItems()
 
             assertThat(cart.cartItems).hasSize(1)
-            assertThat(
-                cart.cartItems
-                    .first()
-                    .product.productId,
-            )
+            assertThat(cart.cartItems.first().quantity).isEqualTo(3)
         }
 
     @Test
