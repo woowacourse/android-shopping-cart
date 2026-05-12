@@ -56,7 +56,7 @@ fun CartItemCard(
 
             Icon(
                 painter = painterResource(R.drawable.ic_dismiss),
-                contentDescription = "$item.name 장바구니에서 제거",
+                contentDescription = "${item.name} 장바구니에서 제거",
                 modifier = Modifier
                     .size(40.dp)
                     .clickable(onClick = onDelete)
