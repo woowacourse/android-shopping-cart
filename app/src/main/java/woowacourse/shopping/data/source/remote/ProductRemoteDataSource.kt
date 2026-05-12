@@ -11,13 +11,14 @@ import okhttp3.Request
 import okhttp3.Response
 import woowacourse.shopping.data.source.remote.dto.ProductResponse
 import woowacourse.shopping.data.source.remote.mock.MockServer
+
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class ProductRemoteDataSource(
     private val client: OkHttpClient = HttpClient.instance,
-    private val baseUrl: String = MockServer.baseUrl,
+    private val baseUrlProvider: suspend () -> String = { MockServer.baseUrl() },
     private val json: Json = Json { ignoreUnknownKeys = true },
 ) {
     suspend fun fetchProducts(
@@ -25,7 +26,7 @@ class ProductRemoteDataSource(
         limit: Int,
     ): List<ProductResponse> {
         val url =
-            baseUrl
+            baseUrlProvider()
                 .toHttpUrl()
                 .newBuilder()
                 .addPathSegment("products")
@@ -38,7 +39,7 @@ class ProductRemoteDataSource(
 
     suspend fun fetchProductById(id: Long): ProductResponse {
         val url =
-            baseUrl
+            baseUrlProvider()
                 .toHttpUrl()
                 .newBuilder()
                 .addPathSegment("products")
