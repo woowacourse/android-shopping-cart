@@ -103,7 +103,7 @@ class ShoppingViewModelTest {
     ): ShoppingViewModel =
         ShoppingViewModel(
             productRepository = productRepository,
-            cartRepository = CartRepository(cartItemDao, productRepository),
+            cartRepository = CartRepository(cartItemDao),
             recentItemRepository = RecentItemRepository(recentItemDao, productRepository),
             networkObserver = networkObserver,
         )

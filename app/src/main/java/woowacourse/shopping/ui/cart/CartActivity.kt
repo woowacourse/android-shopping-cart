@@ -21,6 +21,7 @@ class CartActivity : ComponentActivity() {
         val appContainer = (application as ShoppingApplication).appContainer
         CartViewModel.provideFactory(
             cartRepository = appContainer.cartRepository,
+            productRepository = appContainer.productRepository,
         )
     }
 

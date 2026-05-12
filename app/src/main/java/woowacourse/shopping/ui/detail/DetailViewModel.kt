@@ -79,7 +79,7 @@ class DetailViewModel(
         viewModelScope.launch {
             try {
                 val product = productRepository.getProductById(id)
-                cartRepository.setQuantity(product, _uiState.value.quantity)
+                cartRepository.setQuantity(product.id, _uiState.value.quantity)
                 _event.send(DetailEvent.NavigateToCart)
             } catch (e: IllegalArgumentException) {
                 _event.send(DetailEvent.ShowAddCartFailureMessage)

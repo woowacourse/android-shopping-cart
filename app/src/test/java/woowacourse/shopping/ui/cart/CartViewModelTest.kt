@@ -30,7 +30,8 @@ class CartViewModelTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
 
-            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
+            val productRepository = FakeProductRepository(createProducts(size = 6))
+            val viewModel = CartViewModel(CartRepository(cartItemDao), productRepository)
             mainDispatcherExtension.advanceUntilIdle()
 
             val items = viewModel.uiState.value.items
@@ -44,7 +45,8 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
+            val productRepository = FakeProductRepository(createProducts(size = 6))
+            val viewModel = CartViewModel(CartRepository(cartItemDao), productRepository)
             mainDispatcherExtension.advanceUntilIdle()
 
             viewModel.nextPage()
@@ -61,7 +63,8 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
+            val productRepository = FakeProductRepository(createProducts(size = 6))
+            val viewModel = CartViewModel(CartRepository(cartItemDao), productRepository)
             mainDispatcherExtension.advanceUntilIdle()
             viewModel.nextPage()
 
@@ -78,7 +81,8 @@ class CartViewModelTest {
         runTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 6)
-            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 6))))
+            val productRepository = FakeProductRepository(createProducts(size = 6))
+            val viewModel = CartViewModel(CartRepository(cartItemDao), productRepository)
             mainDispatcherExtension.advanceUntilIdle()
             viewModel.nextPage()
 
@@ -97,7 +101,8 @@ class CartViewModelTest {
             val cartItemDao = TestCartItemDao()
             insertCartItems(cartItemDao, size = 2)
 
-            val viewModel = CartViewModel(CartRepository(cartItemDao, FakeProductRepository(createProducts(size = 2))))
+            val productRepository = FakeProductRepository(createProducts(size = 2))
+            val viewModel = CartViewModel(CartRepository(cartItemDao), productRepository)
             mainDispatcherExtension.advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.totalCartSize).isEqualTo(2)

@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.localdb.mapper.toDomain
 import woowacourse.shopping.data.network.NetworkObserver
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.CartResult
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.ui.model.mapper.toUiModel
 import java.io.IOException
 
@@ -52,7 +54,21 @@ class ShoppingViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.observeCart().collect { result ->
+            cartRepository.observeCartItems().collect { entities ->
+                val result =
+                    runCatching {
+                        Cart(
+                            items =
+                                entities.map { entity ->
+                                    val product = productRepository.getProductById(entity.id)
+                                    entity.toDomain(product)
+                                },
+                        )
+                    }.fold(
+                        onSuccess = { CartResult.Success(it) },
+                        onFailure = { CartResult.Failure(it) },
+                    )
+
                 when (result) {
                     is CartResult.Success -> {
                         val cart = result.cart
@@ -116,7 +132,7 @@ class ShoppingViewModel(
         viewModelScope.launch {
             if (productId !in _uiState.value.cartQuantities) {
                 val product = productRepository.getProductById(productId)
-                cartRepository.setQuantity(product, quantity = quantity)
+                cartRepository.setQuantity(product.id, quantity = quantity)
             } else {
                 cartRepository.updateQuantity(productId, quantity = quantity)
             }

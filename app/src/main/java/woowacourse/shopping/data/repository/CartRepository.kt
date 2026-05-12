@@ -1,50 +1,28 @@
 package woowacourse.shopping.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.localdb.dao.CartItemDao
 import woowacourse.shopping.data.localdb.entity.CartItemEntity
-import woowacourse.shopping.data.localdb.mapper.toDomain
-import woowacourse.shopping.model.Cart
-import woowacourse.shopping.model.Product
 
 class CartRepository(
     private val cartItemDao: CartItemDao,
-    private val productRepository: ProductRepository,
 ) {
-    fun observeCart(): Flow<CartResult> =
-        cartItemDao
-            .getAll()
-            .map { entities ->
-                runCatching {
-                    Cart(
-                        items =
-                            entities.map { entity ->
-                                val product = productRepository.getProductById(entity.id)
-                                entity.toDomain(product)
-                            },
-                    )
-                }.fold(
-                    onSuccess = { CartResult.Success(it) },
-                    onFailure = { CartResult.Failure(it) },
-                )
-            }
+    fun observeCartItems(): Flow<List<CartItemEntity>> = cartItemDao.getAll()
 
     suspend fun setQuantity(
-        product: Product,
+        id: String,
         quantity: Int,
     ) {
         require(quantity >= 0) { "Quantity must be 0 or greater." }
 
         if (quantity == 0) {
-            cartItemDao.deleteById(product.id)
+            cartItemDao.deleteById(id)
             return
         }
 
         val cartItem =
             CartItemEntity(
-                product.id,
+                id,
                 quantity,
                 System.currentTimeMillis(),
             )
@@ -73,14 +51,4 @@ class CartRepository(
     suspend fun getCartItemQuantity(id: String): Int? = cartItemDao.findById(id)?.quantity
 
     suspend fun getCartSize(): Int = cartItemDao.getTotalCount()
-
-    suspend fun getCartTotalPrice(): Result<Int> =
-        runCatching {
-            cartItemDao
-                .getAll()
-                .first()
-                .sumOf { entity ->
-                    productRepository.getProductById(entity.id).getPrice() * entity.quantity
-                }
-        }
 }

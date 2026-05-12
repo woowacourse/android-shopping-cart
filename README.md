@@ -7,7 +7,7 @@
 - [x] 최신 uiState나 MutableStateFlow.update로 loadMore()을 수행하도록 수정
 - [x] updateQuantity로 통합
 ### 셀프
-- [ ] Repository 간 의존 관계 분리
+- [x] Repository 간 의존 관계 분리
 - [ ] CartPage 로직을 Cart로부터 분리 
 ### Rabbit
 - [x] tie-breaker 추가

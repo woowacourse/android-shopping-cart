@@ -116,7 +116,7 @@ class DetailViewModelTest {
             id = id,
             hideRecentItem = hideRecentItem,
             productRepository = productRepository,
-            cartRepository = CartRepository(cartItemDao, productRepository),
+            cartRepository = CartRepository(cartItemDao),
             recentItemRepository = RecentItemRepository(recentItemDao, productRepository),
         )
 }

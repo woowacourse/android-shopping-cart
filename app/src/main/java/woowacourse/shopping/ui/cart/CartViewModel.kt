@@ -10,13 +10,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import woowacourse.shopping.data.localdb.mapper.toDomain
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.CartResult
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.ui.model.mapper.toUiModel
 
 class CartViewModel(
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
@@ -29,7 +32,21 @@ class CartViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.observeCart().collect { result ->
+            cartRepository.observeCartItems().collect { entities ->
+                val result =
+                    runCatching {
+                        Cart(
+                            items =
+                                entities.map { entity ->
+                                    val product = productRepository.getProductById(entity.id)
+                                    entity.toDomain(product)
+                                },
+                        )
+                    }.fold(
+                        onSuccess = { CartResult.Success(it) },
+                        onFailure = { CartResult.Failure(it) },
+                    )
+
                 when (result) {
                     is CartResult.Success -> {
                         cart = result.cart
@@ -87,11 +104,15 @@ class CartViewModel(
     }
 
     companion object {
-        fun provideFactory(cartRepository: CartRepository): ViewModelProvider.Factory =
+        fun provideFactory(
+            cartRepository: CartRepository,
+            productRepository: ProductRepository,
+        ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
                     CartViewModel(
                         cartRepository = cartRepository,
+                        productRepository = productRepository,
                     )
                 }
             }
