@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,16 +26,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
-import woowacourse.shopping.model.ShoppingCartItem
-import java.text.DecimalFormat
+import woowacourse.shopping.ui.DisplayText
+import woowacourse.shopping.ui.WonMoney
 
 @Composable
 fun ShoppingCartItems(
-    shoppingCartItem: ShoppingCartItem,
-    onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
+    title: String,
+    imageUrl: String,
+    quantity: Int,
+    onIncrementQuantity: () -> Unit,
+    onDecrementQuantity: () -> Unit,
+    displayableMoney: DisplayText,
+    onRemoveShoppingItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -51,11 +58,11 @@ fun ShoppingCartItems(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                shoppingCartItem.product.getTitle(),
+                title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -65,8 +72,8 @@ fun ShoppingCartItems(
                 contentDescription = stringResource(R.string.remove_item_description),
                 modifier =
                     Modifier
-                        .size(16.dp)
-                        .clickable { onRemoveShoppingItemClick(shoppingCartItem) },
+                        .size(13.dp)
+                        .clickable { onRemoveShoppingItemClick() },
             )
         }
         Row(
@@ -74,11 +81,10 @@ fun ShoppingCartItems(
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
             AsyncImage(
-                model = shoppingCartItem.product.imageUrl,
+                model = imageUrl,
                 contentDescription = stringResource(R.string.product_image_description),
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -88,9 +94,38 @@ fun ShoppingCartItems(
                         .padding(bottom = 8.dp)
                         .background(MaterialTheme.colorScheme.surfaceContainer),
             )
-            Text(
-                text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(shoppingCartItem.product.getPrice()),
-            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
+                NumberCounter(
+                    count = quantity,
+                    onIncrement = onIncrementQuantity,
+                    onDecrement = onDecrementQuantity,
+                    modifier = Modifier.width(120.dp),
+                )
+
+                Text(
+                    text = displayableMoney.display(),
+                )
+            }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ShoppingCartItemsPreview() {
+    ShoppingCartItems(
+        title = "동원 스위트콘",
+        imageUrl = "",
+        displayableMoney = WonMoney(99_800),
+        onRemoveShoppingItemClick = {},
+        quantity = 1,
+        onIncrementQuantity = {},
+        onDecrementQuantity = { },
+    )
 }

@@ -9,7 +9,7 @@ class ProductTest {
     fun `상품의 제목, 가격, 이미지, id가 같으면 같은 상품이다`() {
         val product =
             Product(
-                id = 1,
+                id = "1",
                 title = ProductTitle("동원 스위트콘"),
                 price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
@@ -21,14 +21,14 @@ class ProductTest {
     fun `상품의 id가 다르면 제목, 가격, 이미지가 같아도 다른 상품이다`() {
         val product =
             Product(
-                id = 1,
+                id = "1",
                 title = ProductTitle("동원 스위트콘"),
                 price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",
             )
         val differentPriceProduct =
             Product(
-                id = 2,
+                id = "2",
                 title = ProductTitle("동원 스위트콘"),
                 price = Price(20_560),
                 imageUrl = "https://www.coupang.com/vp/products/8402186124",

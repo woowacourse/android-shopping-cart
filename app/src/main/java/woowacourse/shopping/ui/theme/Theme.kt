@@ -12,6 +12,7 @@ private val CustomColorScheme =
         secondary = PurpleGrey80,
         tertiary = Pink80,
         surfaceContainer = Gray80,
+        surfaceBright = Gray40,
         onSurface = White,
         onSurfaceVariant = Gray80,
         onBackground = Black,

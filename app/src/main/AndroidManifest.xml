@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:name=".ShoppingApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,17 +17,17 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
-            android:name=".ShoppingCartActivity"
+            android:name=".shoppingcart.ShoppingCartActivity"
             android:exported="false"
             android:label="@string/title_activity_shopping_cart"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".DetailProductActivity"
+            android:name=".productdetail.DetailProductActivity"
             android:exported="false"
             android:label="@string/title_activity_detail_product"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".ProductListActivity"
+            android:name=".productlist.ProductListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

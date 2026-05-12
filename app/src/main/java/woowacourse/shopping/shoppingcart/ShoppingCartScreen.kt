@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package woowacourse.shopping.ui
+package woowacourse.shopping.shoppingcart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,28 +18,68 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Price
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductTitle
-import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.ui.WonMoney
 import woowacourse.shopping.ui.component.PageNavigation
 import woowacourse.shopping.ui.component.ShoppingCartItems
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun ShoppingCartScreen(
-    shoppingCartItems: List<ShoppingCartItem>,
+    shoppingCartViewModel: ShoppingCartViewModel =
+        viewModel(
+            factory =
+                ShoppingCartViewModel.factory(
+                    LocalContext.current.applicationContext as ShoppingApplication,
+                ),
+        ),
     onBackClick: () -> Unit,
-    onRemoveShoppingItemClick: (ShoppingCartItem) -> Unit,
+) {
+    val uiState by shoppingCartViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        shoppingCartViewModel.loadShoppingItems()
+    }
+
+    ShoppingCartContent(
+        shoppingCartItems = uiState.shoppingCartItems,
+        currentPage = uiState.currentPage,
+        canMoveToPreviousPage = uiState.canMoveToPreviousPage,
+        canMoveToNextPage = uiState.canMoveToNextPage,
+        onBackClick = onBackClick,
+        onRemoveShoppingItemClick = shoppingCartViewModel::removeShoppingItem,
+        onIncrementQuantityClick = { productId ->
+            shoppingCartViewModel.increaseItemQuantity(productId, 1)
+        },
+        onDecrementQuantityClick = { productId ->
+            shoppingCartViewModel.decreaseItemQuantity(productId, 1)
+        },
+        onBeforePageClick = shoppingCartViewModel::movePreviousPage,
+        onNextPageClick = shoppingCartViewModel::moveNextPage,
+    )
+}
+
+@Composable
+fun ShoppingCartContent(
+    shoppingCartItems: List<CartItemUiModel>,
     currentPage: Int,
     canMoveToPreviousPage: Boolean,
     canMoveToNextPage: Boolean,
+    onBackClick: () -> Unit,
+    onRemoveShoppingItemClick: (String) -> Unit,
+    onIncrementQuantityClick: (String) -> Unit,
+    onDecrementQuantityClick: (String) -> Unit,
     onBeforePageClick: () -> Unit,
     onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -70,11 +110,24 @@ fun ShoppingCartScreen(
             ) {
                 items(
                     items = shoppingCartItems,
-                    key = { it.id },
+                    key = { it.productId },
                 ) { shoppingCartItem ->
                     ShoppingCartItems(
-                        shoppingCartItem = shoppingCartItem,
-                        onRemoveShoppingItemClick = onRemoveShoppingItemClick,
+                        title = shoppingCartItem.title,
+                        imageUrl = shoppingCartItem.imageUrl,
+                        displayableMoney = shoppingCartItem.price,
+                        onRemoveShoppingItemClick = {
+                            onRemoveShoppingItemClick(
+                                shoppingCartItem.productId,
+                            )
+                        },
+                        quantity = shoppingCartItem.quantity,
+                        onIncrementQuantity = {
+                            onIncrementQuantityClick(shoppingCartItem.productId)
+                        },
+                        onDecrementQuantity = {
+                            onDecrementQuantityClick(shoppingCartItem.productId)
+                        },
                     )
                 }
             }
@@ -123,24 +176,35 @@ private fun ShoppingCartTopBar(
 @Preview(showBackground = true)
 private fun ShoppingCartScreenPreview() {
     AndroidShoppingTheme {
-        ShoppingCartScreen(
+        ShoppingCartContent(
             shoppingCartItems =
                 listOf(
-                    ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                    CartItemUiModel(
+                        productId = "1",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 0,
                     ),
-                    ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                    CartItemUiModel(
+                        productId = "2",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 1,
                     ),
-                    ShoppingCartItem(
-                        id = 1,
-                        product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
+                    CartItemUiModel(
+                        productId = "3",
+                        title = "동원 스위트콘",
+                        imageUrl = "",
+                        price = WonMoney(99_800),
+                        quantity = 2,
                     ),
                 ),
             onBackClick = { },
             onRemoveShoppingItemClick = { },
+            onIncrementQuantityClick = { },
+            onDecrementQuantityClick = { },
             currentPage = 0,
             canMoveToPreviousPage = false,
             canMoveToNextPage = true,
@@ -148,17 +212,4 @@ private fun ShoppingCartScreenPreview() {
             onNextPageClick = {},
         )
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun ShoppingCartItemsPreview() {
-    ShoppingCartItems(
-        shoppingCartItem =
-            ShoppingCartItem(
-                id = 1,
-                product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), ""),
-            ),
-        onRemoveShoppingItemClick = {},
-    )
 }
