@@ -19,7 +19,10 @@ interface CartRepository {
         quantityToAdd: Int,
     )
 
-    suspend fun deleteProduct(productId: Uuid)
+    suspend fun deleteProduct(
+        productId: Uuid,
+        quantityToRemove: Int
+    )
 
     suspend fun decreaseProduct(
         productId: Uuid,

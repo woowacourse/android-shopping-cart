@@ -49,23 +49,30 @@ class RoomCartRepository(
         cartDao.upsert(CartItemEntity(productId = productId, quantity = newQuantity))
     }
 
-    override suspend fun deleteProduct(productId: Uuid) =
-        cartDao.deleteByProductId(productId = productId.toString())
+    override suspend fun deleteProduct(
+        productId: Uuid,
+        quantityToRemove: Int
+    ) {
+        require(quantityToRemove > 0) { "감소 수량은 1 이상이어야 합니다." }
 
-    @Transaction
+        val decreased = cartDao.decreaseProduct(
+            productId = productId.toString(),
+            quantityToRemove = quantityToRemove
+        )
+        require(decreased) { "차감할 수량이 현재 수량보다 많을 수 없습니다." }
+    }
+
+
     override suspend fun decreaseProduct(
         productId: Uuid,
         quantityToRemove: Int,
     ) {
         require(quantityToRemove > 0) { "감소 수량은 1 이상이어야 합니다." }
-        val cartProductId = productId.toString()
-        val existing = cartDao.getByProductId(cartProductId) ?: return
-        val updatedQuantity = existing.quantity - quantityToRemove
 
-        if (updatedQuantity > 0) {
-            cartDao.updateQuantity(cartProductId, updatedQuantity)
-        } else {
-            cartDao.deleteByProductId(cartProductId)
-        }
+        val decreased = cartDao.decreaseProduct(
+            productId = productId.toString(),
+            quantityToRemove = quantityToRemove
+        )
+        require(decreased) { "차감할 수량이 현재 수량보다 많을 수 없습니다." }
     }
 }

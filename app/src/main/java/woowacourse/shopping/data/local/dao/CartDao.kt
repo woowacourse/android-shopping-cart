@@ -44,15 +44,12 @@ interface CartDao {
 
     @Query(
         """
-          UPDATE cart_items
-          SET quantity = quantity + :quantityToAdd
-          WHERE productId = :productId
-          """
+        UPDATE cart_items
+        SET quantity = quantity + :quantityToAdd
+        WHERE productId = :productId
+    """
     )
-    suspend fun increaseQuantity(
-        productId: String,
-        quantityToAdd: Int
-    ): Int
+    suspend fun increaseQuantity(productId: String, quantityToAdd: Int): Int
 
     @Query(
         """
@@ -81,22 +78,11 @@ interface CartDao {
         productId: String,
         quantityToRemove: Int
     ): Boolean {
-        val updated = decreaseQuantity(productId, quantityToRemove)
-        if (updated == 0) return false
+        val updated = decreaseQuantity(productId,quantityToRemove)
+        if(updated == 0) return false
 
         deleteIfZero(productId)
         return true
-    }
-
-    @Transaction
-    suspend fun addProduct(
-        productId: String,
-        quantityToAdd: Int,
-    ) {
-        val updated = increaseQuantity(productId, quantityToAdd)
-        if (updated == 0) {
-            upsert(CartItemEntity(productId, quantityToAdd))
-        }
     }
 }
 
