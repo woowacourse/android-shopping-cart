@@ -14,7 +14,10 @@ data class ProductWithQuantity(
 
     fun increaseQuantity(quantityToAdd: Int): ProductWithQuantity = copy(quantity = this.quantity + quantityToAdd)
 
-    fun decreaseQuantity(quantityToRemove: Int): ProductWithQuantity = copy(quantity = this.quantity - quantityToRemove)
+    fun decreaseQuantity(quantityToRemove: Int): ProductWithQuantity {
+        require(quantity >= quantityToRemove) { "차감할 수량이 현재 수량보다 많을 수 없습니다." }
+        return copy(quantity = this.quantity - quantityToRemove)
+    }
 
     val productId: Uuid
         get() = product.productId
