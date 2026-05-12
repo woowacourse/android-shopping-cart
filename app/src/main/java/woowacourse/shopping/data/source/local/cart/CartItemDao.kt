@@ -25,6 +25,6 @@ interface CartItemDao {
     @Query("SELECT * FROM cartItems WHERE product_id = :productId")
     suspend fun getCartItemById(productId: String): CartItemEntity?
 
-    @Query("SELECT COUNT(*) From cartItems")
+    @Query("SELECT SUM(quantity) From cartItems ")
     suspend fun getTotalCount(): Int
 }
