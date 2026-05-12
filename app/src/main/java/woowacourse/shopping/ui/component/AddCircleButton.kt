@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 
@@ -35,4 +36,10 @@ fun AddCircleButton(
             tint = Color(0xff555555),
         )
     }
+}
+
+@Composable
+@Preview
+private fun AddCircleButtonPreview() {
+    AddCircleButton(onClickAdd = {})
 }
