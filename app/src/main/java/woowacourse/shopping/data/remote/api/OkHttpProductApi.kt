@@ -1,13 +1,10 @@
 package woowacourse.shopping.data.remote.api
 
-import android.util.Log.e
-import androidx.core.os.requestProfiling
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import woowacourse.shopping.data.remote.dto.ProductResponseDto
 import woowacourse.shopping.domain.exception.ProductException
 import java.io.IOException
@@ -30,7 +27,6 @@ class OkHttpProductApi(
         }catch(e: ProductException.NotFound){
             null
         }
-
 
     private suspend fun <T> request(
         path: String,

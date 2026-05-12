@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.repository.cart
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.cart.CartItemDao
 import woowacourse.shopping.data.mapper.toCartItemEntity
@@ -18,6 +19,7 @@ class LocalCartRepository(
         cartItemDao
             .getCartItems()
             .map { it.toDomainCart() }
+
 
     override suspend fun addProduct(
         product: Product,
