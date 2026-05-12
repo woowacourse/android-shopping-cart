@@ -3,7 +3,6 @@ package woowacourse.shopping.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.CartDao
-import woowacourse.shopping.data.local.CartEntity
 import woowacourse.shopping.data.util.toDomain
 import woowacourse.shopping.domain.CartItems
 import woowacourse.shopping.domain.repository.CartRepository
@@ -15,14 +14,9 @@ class CartRepositoryImpl(
         productId: String,
         amount: Int,
     ) {
-        val item = cartDao.getCartItem(productId)
+        require(amount > 0) { "상품 추가 개수는 양수여야 합니다." }
 
-        if (item == null) {
-            cartDao.insert(CartEntity(productId, amount))
-            return
-        }
-
-        cartDao.update(CartEntity(productId, item.amount + amount))
+        cartDao.addItem(productId, amount)
     }
 
     override suspend fun deleteItem(productId: String) {
@@ -30,13 +24,7 @@ class CartRepositoryImpl(
     }
 
     override suspend fun minusItemAmount(productId: String) {
-        val item = cartDao.getCartItem(productId) ?: return
-
-        if (item.amount - 1 <= 0) {
-            deleteItem(productId)
-            return
-        }
-        cartDao.update(CartEntity(productId, item.amount - 1))
+        cartDao.minusItem(productId, 1)
     }
 
     override suspend fun getCartItemByPage(page: Int): CartItems {
