@@ -22,13 +22,14 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val product =
-            intent?.getParcelableExtra<Product>(IntentKeys.SELECTED_PRODUCT_KEY) ?: run {
+        val selectedProductId =
+            intent.getStringExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY) ?: run {
                 finish()
                 return
             }
 
-        val lastViewedProduct = intent?.getParcelableExtra<Product>(IntentKeys.LATEST_VIEWED_PRODUCT)
+        val lastViewedProductId =
+            intent.getStringExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY)
 
         enableEdgeToEdge()
         setContent {
@@ -36,37 +37,43 @@ class ProductDetailActivity : ComponentActivity() {
                 viewModel<ProductDetailViewModel>(
                     factory =
                         ProductDetailViewModelFactory(
-                            (application as ShoppingApplication).purchaseProductsRepository,
-                            (application as ShoppingApplication).recentlyViewedProductRepository,
+                            purchaseProductsRepository = (application as ShoppingApplication).purchaseProductsRepository,
+                            recentlyViewedProductRepository = (application as ShoppingApplication).recentlyViewedProductRepository,
+                            productRepository = (application as ShoppingApplication).productRepository,
+                            selectedProductId = selectedProductId,
+                            lastViewedProductId = lastViewedProductId,
                         ),
                 )
 
-            val count = viewModel.countState.collectAsStateWithLifecycle()
-
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ProductDetailScreen(
-                        product = product,
-                        count = count.value,
-                        lastViewedProduct = lastViewedProduct,
-                        onLastViewedClick = {
-                            viewModel.updateHistory(lastViewedProduct!!)
-                            val intent =
-                                Intent(this, ProductDetailActivity::class.java).apply {
-                                    putExtra(IntentKeys.SELECTED_PRODUCT_KEY, lastViewedProduct)
-                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    val count = viewModel.countState.collectAsStateWithLifecycle()
+                    val selectedProduct = viewModel.selectedProduct.collectAsStateWithLifecycle()
+                    val lastViewedProduct = viewModel.lastViewedProduct.collectAsStateWithLifecycle()
+                    selectedProduct.value?.let {
+                        ProductDetailScreen(
+                            product = it,
+                            count = count.value,
+                            lastViewedProduct = lastViewedProduct.value,
+                            onLastViewedClick = {
+                                val intent = Intent(this, ProductDetailActivity::class.java)
+                                lastViewedProduct.value?.run {
+                                    viewModel.updateHistory(it)
+                                    intent.putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, it.id)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intent)
                                 }
-                            startActivity(intent)
-                        },
-                        onAdd = { viewModel.addCount() },
-                        onMinus = { viewModel.minusCount() },
-                        onAddRequest = {
-                            viewModel.addPurchaseProduct(PurchaseProduct(product, count.value))
-                            finish()
-                        },
-                        onClose = { finish() },
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                            },
+                            onAdd = { viewModel.addCount() },
+                            onMinus = { viewModel.minusCount() },
+                            onAddRequest = {
+                                viewModel.addPurchaseProduct(PurchaseProduct(it, count.value))
+                                finish()
+                            },
+                            onClose = { finish() },
+                            modifier = Modifier.padding(innerPadding),
+                        )
+                    }
                 }
             }
         }
