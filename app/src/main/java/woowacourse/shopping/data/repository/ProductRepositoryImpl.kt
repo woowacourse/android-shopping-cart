@@ -23,7 +23,7 @@ class ProductRepositoryImpl(
         offset: Int,
         pageSize: Int,
     ): Products {
-        val response = dataSource.getProducts(offset / pageSize, pageSize)
+        val response = dataSource.getProducts(offset / pageSize + 1, pageSize)
         return response.toDomain()
     }
 }
