@@ -21,6 +21,7 @@ class CartViewModel(
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
     private var currentPage = 0
+    private var currentCart: Cart = Cart()
 
     init {
         observeCart()
@@ -28,10 +29,10 @@ class CartViewModel(
 
     private fun observeCart() {
         viewModelScope.launch {
-            cartRepository.cartFlow
-                .collect { cart ->
-                    updateUiState(cart)
-                }
+            cartRepository.cartFlow.collect { cart ->
+                currentCart = cart
+                updateUiState(cart)
+            }
         }
     }
 
@@ -57,14 +58,14 @@ class CartViewModel(
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasNext) return
         currentPage++
-        updateUiState(cartRepository.cartFlow.value)
+        updateUiState(currentCart)
     }
 
     fun goToPreviousPage() {
         val current = _uiState.value as? CartUiState.Success ?: return
         if (!current.hasPrevious) return
         currentPage--
-        updateUiState(cartRepository.cartFlow.value)
+        updateUiState(currentCart)
     }
 
     private fun updateUiState(cart: Cart) {

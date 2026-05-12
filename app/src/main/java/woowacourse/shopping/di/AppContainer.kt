@@ -21,9 +21,8 @@ class AppContainer(
         Room.databaseBuilder(
             context.applicationContext,
             ShoppingDatabase::class.java,
-            "shooping.db",
-        ).fallbackToDestructiveMigration(dropAllTables = true)
-            .build()
+            "shopping.db",
+        ).build()
 
     val productApi: ProductApi =
         OkHttpProductApi(

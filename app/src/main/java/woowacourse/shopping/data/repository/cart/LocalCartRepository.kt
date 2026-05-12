@@ -3,8 +3,8 @@ package woowacourse.shopping.data.repository.cart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import woowacourse.shopping.data.local.cart.CartItemDao
@@ -18,17 +18,11 @@ import woowacourse.shopping.domain.repository.CartRepository
 class LocalCartRepository(
     private val cartItemDao: CartItemDao,
 ) : CartRepository {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    override val cartFlow: StateFlow<Cart> =
+    override val cartFlow: Flow<Cart> =
         cartItemDao
             .getCartItems()
             .map { it.toDomainCart() }
-            .stateIn(
-                scope = scope,
-                started = SharingStarted.Eagerly,
-                initialValue = Cart(),
-            )
 
     override suspend fun addProduct(
         product: Product,
