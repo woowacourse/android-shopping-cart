@@ -1,11 +1,9 @@
-package woowacourse.shopping.data.remote
+package woowacourse.shopping.data.mock
 
-import android.R.attr.name
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.data.mock.MockProductSeedData
 import woowacourse.shopping.domain.product.Product
 
 object MockWebServerProvider {
@@ -28,16 +26,32 @@ object MockWebServerProvider {
 
     private fun createDispatcher(): Dispatcher =
         object : Dispatcher() {
+
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path ?: return notFound()
+
                 return when {
-                    path == "/products" -> jsonResponse(productsJson())
+                    path == "/products" -> {
+                        jsonResponse(
+                            MockProductResponseFactory.productsJson(
+                                MockProductSeedData.products,
+                            ),
+                        )
+                    }
+
                     path.startsWith("/products/") -> {
                         val id = path.removePrefix("/products/")
-                        val productJson = productJson(id) ?: return notFound()
-                        jsonResponse(productJson)
+
+                        val product =
+                            MockProductSeedData.products
+                                .firstOrNull { it.id == id }
+                                ?: return notFound()
+
+                        jsonResponse(
+                            MockProductResponseFactory.productJson(product),
+                        )
                     }
-                    path == "/cart-items" -> jsonResponse("[]")
+
                     else -> notFound()
                 }
             }
@@ -49,19 +63,7 @@ object MockWebServerProvider {
             .setResponseCode(200)
             .setBody(body)
 
-    private fun notFound(): MockResponse = MockResponse().setResponseCode(404)
-
-    private fun productsJson(): String = MockProductSeedData.products.joinToString(prefix = "[", postfix = "]") { productJson(it) }
-
-    private fun productJson(id: String): String? = MockProductSeedData.products.firstOrNull { it.id == id }?.let { productJson(it) }
-
-    private fun productJson(product:Product): String =
-        """
-        {
-            "id": "${product.id}",
-            "name": "${product.name.value}",
-            "price": ${product.price.value},
-            "imageUrl": "${product.imageUrl.value}"
-        }
-        """.trimIndent()
+    private fun notFound(): MockResponse =
+        MockResponse()
+            .setResponseCode(404)
 }

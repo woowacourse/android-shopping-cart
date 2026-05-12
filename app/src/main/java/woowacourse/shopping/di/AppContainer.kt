@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import woowacourse.shopping.data.local.ShoppingDatabase
 import woowacourse.shopping.data.remote.HttpClientProvider
-import woowacourse.shopping.data.remote.MockWebServerProvider
-import woowacourse.shopping.data.remote.api.ProductService
-import woowacourse.shopping.data.remote.api.ProductServiceImpl
+import woowacourse.shopping.data.mock.MockWebServerProvider
+import woowacourse.shopping.data.remote.api.ProductApi
+import woowacourse.shopping.data.remote.api.OkHttpProductApi
 import woowacourse.shopping.data.repository.cart.LocalCartRepository
 import woowacourse.shopping.data.repository.product.RemoteProductRepository
 import woowacourse.shopping.data.repository.recent.LocalRecentProductRepository
@@ -25,13 +25,13 @@ class AppContainer(
         ).fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 
-    val productService: ProductService =
-        ProductServiceImpl(
+    val productApi: ProductApi =
+        OkHttpProductApi(
             client = HttpClientProvider.okHttpClient,
             baseUrlProvider = { MockWebServerProvider.baseUrl },
         )
 
     val cartRepository :CartRepository = LocalCartRepository(database.cartItemDao())
-    val productRepository : ProductRepository = RemoteProductRepository(productService)
+    val productRepository : ProductRepository = RemoteProductRepository(productApi)
     val recentProductRepository : RecentProductRepository = LocalRecentProductRepository(database.recentProductDao())
 }

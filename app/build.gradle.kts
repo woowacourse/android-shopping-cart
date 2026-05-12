@@ -73,4 +73,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.okhttp.mockwebserver)
+    testImplementation("org.assertj:assertj-core:3.27.3")
 }
