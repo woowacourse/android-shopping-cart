@@ -75,7 +75,7 @@ class ProductDetailViewModel(
                 )
             }
 
-            recentlyViewedProductRepository.viewProduct(currentProduct)
+            recentlyViewedProductRepository.saveViewedProduct(currentProduct)
             lastViewedProductRepository.saveLastViewedProduct(currentProduct)
         }
     }

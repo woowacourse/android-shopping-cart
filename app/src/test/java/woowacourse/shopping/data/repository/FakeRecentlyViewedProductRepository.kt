@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 class FakeRecentlyViewedProductRepository(
     private var recentlyViewedProducts: RecentlyViewedProducts = RecentlyViewedProducts(),
 ) : RecentlyViewedProductRepository {
-    override suspend fun viewProduct(product: Product) {
+    override suspend fun saveViewedProduct(product: Product) {
         recentlyViewedProducts = recentlyViewedProducts.add(product)
     }
 

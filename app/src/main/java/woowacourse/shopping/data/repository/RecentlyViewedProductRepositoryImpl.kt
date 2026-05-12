@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.repository.RecentlyViewedProductRepository
 class RecentlyViewedProductRepositoryImpl(
     private val dao: RecentlyViewedProductDao,
 ) : RecentlyViewedProductRepository {
-    override suspend fun viewProduct(product: Product) {
+    override suspend fun saveViewedProduct(product: Product) {
         dao.save(
             RecentlyViewedProductEntity(
                 productId = product.productId,
