@@ -23,10 +23,12 @@ class RoomCartRepository(
     override fun getCartProducts(): Flow<List<ProductWithQuantity>> =
         cartDao.getCartProducts().map { rows ->
             rows.map { row ->
+                val parsedUuid = Uuid.parseOrNull(row.productId)
+                    ?: throw IllegalArgumentException("잘못된 productId 형식입니다.")
                 ProductWithQuantity(
                     product =
                         Product(
-                            productId = Uuid.parse(row.productId),
+                            productId = parsedUuid,
                             imageUrl = row.imageUrl,
                             productName = row.productName,
                             price = Price(row.price),
