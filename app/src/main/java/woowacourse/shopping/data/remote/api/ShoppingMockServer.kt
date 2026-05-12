@@ -28,7 +28,7 @@ object ShoppingMockServer {
                 }
                 path.startsWith("/products/") -> {
                     val id = path.substringAfterLast("/")
-                    val response = MockData.getProductResponse(id) ?: MockResponse.Builder().code(404).build()
+                    val response = MockData.getProductResponse(id) ?: return MockResponse.Builder().code(404).build()
                     MockResponse.Builder()
                         .code(200)
                         .body(gson.toJson(response))
