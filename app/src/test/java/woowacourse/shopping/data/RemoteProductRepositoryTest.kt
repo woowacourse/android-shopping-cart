@@ -6,6 +6,7 @@ import kotlinx.serialization.json.jsonArray
 import mockwebserver3.MockWebServer
 import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.RemoteProductRepository
@@ -32,6 +33,11 @@ class RemoteProductRepositoryTest {
                 baseUrl = server.url("/").toString(),
             )
         repository = RemoteProductRepository(dataSource)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        server.close()
     }
 
     @Test
