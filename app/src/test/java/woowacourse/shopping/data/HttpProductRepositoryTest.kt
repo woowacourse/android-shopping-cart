@@ -1,6 +1,7 @@
 package woowacourse.shopping.data
 
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.data.repository.HttpProductRepository
+import java.util.concurrent.TimeUnit
 
 class HttpProductRepositoryTest {
     private lateinit var server: MockWebServer
@@ -18,7 +20,15 @@ class HttpProductRepositoryTest {
     fun setUp() {
         server = MockWebServer()
         server.start()
-        repository = HttpProductRepository(server.url("/").toString())
+        repository =
+            HttpProductRepository(
+                baseUrl = server.url("/").toString(),
+                client =
+                    OkHttpClient
+                        .Builder()
+                        .callTimeout(10, TimeUnit.SECONDS)
+                        .build(),
+            )
     }
 
     @AfterEach

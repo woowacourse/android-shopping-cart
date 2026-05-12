@@ -15,7 +15,7 @@
 - [x] 최근 본 상품 매핑에서 ID 정합성 보호
 - [x] 상세 화면 기본 수량 로직과 장바구니 내 상품 수량 로직 간 분리
 - [x] 상품 조회 실패 시 가격을 0으로 처리하는 정책 수정
-- [ ] AppContainer 내 okHttpClient 생성 및 주입
+- [x] AppContainer 내 okHttpClient 생성 및 주입
 - [ ] require를 IOException으로 변경
 - [ ] recentItem.id == currentId 제외 조건을 View->ViewModel로 이전
 - [ ] IOException을 대응하는 로직 추가

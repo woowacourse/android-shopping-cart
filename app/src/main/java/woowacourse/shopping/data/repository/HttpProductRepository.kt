@@ -14,7 +14,7 @@ import woowacourse.shopping.model.ProductName
 
 class HttpProductRepository(
     private val baseUrl: String,
-    private val client: OkHttpClient = OkHttpClient(),
+    private val client: OkHttpClient,
 ) : ProductRepository {
     override suspend fun getProducts(
         offset: Int,
