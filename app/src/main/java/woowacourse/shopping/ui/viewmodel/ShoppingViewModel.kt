@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class ShoppingViewModel(
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    val cartedList: StateFlow<List<PurchaseProductEntity>?> =
+    val cartEntities: StateFlow<List<PurchaseProductEntity>?> =
         purchaseProductsRepository
             .getAll()
             .stateIn(
@@ -37,7 +38,7 @@ class ShoppingViewModel(
                 initialValue = emptyList(),
             )
 
-    val recentlyViewedList: StateFlow<List<RecentlyViewedProductEntity>?> =
+    val recentlyViewedEntities: StateFlow<List<RecentlyViewedProductEntity>?> =
         recentlyViewedProductRepository
             .getAll()
             .stateIn(
@@ -50,7 +51,7 @@ class ShoppingViewModel(
     val products: StateFlow<Products> = _products.asStateFlow()
 
     val cart: StateFlow<Cart> =
-        combine(cartedList, products) { entities, allProducts ->
+        combine(cartEntities, products) { entities, allProducts ->
             val purchaseProducts =
                 entities?.mapNotNull { entity ->
                     val product = allProducts.findWithId(entity.id)
@@ -64,7 +65,7 @@ class ShoppingViewModel(
         )
 
     val recentlyViewedProducts: StateFlow<Products> =
-        combine(recentlyViewedList, products) { entities, allProducts ->
+        combine(recentlyViewedEntities, products) { entities, allProducts ->
             val productList =
                 entities?.mapNotNull { entity ->
                     allProducts.findWithId(entity.id)
@@ -83,28 +84,19 @@ class ShoppingViewModel(
             initialValue = ""
         )
 
+    val totalCartCount: StateFlow<Int> = cartEntities
+        .map { entities -> entities?.sumOf { it.count } ?: 0 }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         fetchProducts()
-
-        viewModelScope.launch {
-            cartedList.collect { entities ->
-                entities?.forEach { entity ->
-                    if (_products.value.findWithId(entity.id) == null) {
-                        launch {
-                            try {
-                                val product = productRepository.getProduct(entity.id)
-                                _products.update { it + Products(listOf(product)) }
-                            } catch (e: Exception) {
-                                Log.e("Web Server Error", "${e.message}")
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     fun fetchProducts(page: Int = 0) {
@@ -147,8 +139,6 @@ class ShoppingViewModel(
             recentlyViewedProductRepository.updateList(product)
         }
     }
-
-    fun getLastViewedProductID() = recentlyViewedProductRepository.getLatestItem()
 
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()

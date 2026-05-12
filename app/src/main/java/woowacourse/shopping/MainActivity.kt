@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
                 val viewHistory by viewModel.recentlyViewedProducts.collectAsStateWithLifecycle()
                 val currentProducts by viewModel.products.collectAsStateWithLifecycle()
                 val lastViewedProduct by viewModel.lastViewProductId.collectAsStateWithLifecycle()
+                val totalCartCount by viewModel.totalCartCount.collectAsStateWithLifecycle()
                 val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
                 AndroidshoppingTheme {
@@ -84,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             onAddInCart = { viewModel.addPurchaseProduct(it) },
                             isContainedInCart = { cartState.isContain(it) },
                             specificProductCount = { cartState.totalCountOfSpecificPurchaseProduct(it) },
-                            totalCount = { cartState.totalCountOfPurchaseProducts() },
+                            totalCount = { totalCartCount },
                             isLoading = isLoading,
                         )
                     }
