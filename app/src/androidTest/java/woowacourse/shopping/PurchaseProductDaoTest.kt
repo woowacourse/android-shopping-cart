@@ -38,9 +38,6 @@ class PurchaseProductDaoTest {
             val entity =
                 PurchaseProductEntity(
                     id = "1",
-                    name = "딸기",
-                    price = 10000,
-                    imageUri = "uri",
                     count = 1,
                 )
 
@@ -50,6 +47,5 @@ class PurchaseProductDaoTest {
             // then
             val allProducts = dao.getAll().first()
             assert(allProducts.size == 1)
-            assert(allProducts[0].name == "딸기")
         }
 }

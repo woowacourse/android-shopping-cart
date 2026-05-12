@@ -11,41 +11,15 @@ import woowacourse.shopping.domain.PurchaseProducts
 class PurchaseProductsRepository(
     private val purchaseProductsDao: PurchaseProductsDao,
 ) {
-    fun getCart(): Flow<Cart> =
-        purchaseProductsDao
-            .getAll()
-            .map {
-                val domainItems = it.map { it.toPurchaseProductObject() }
-                Cart(PurchaseProducts(domainItems))
-            }
+    fun getAll() = purchaseProductsDao.getAll()
 
     suspend fun insert(purchaseProduct: PurchaseProduct) {
         val entityItem = purchaseProduct.toEntity()
         purchaseProductsDao.upsert(entityItem)
     }
 
-    fun findWithId(id: String): Flow<PurchaseProduct> = purchaseProductsDao.findWithId(id).map { it.toPurchaseProductObject() }
-
-    fun getTotalPriceOfSpecificPurchaseProduct(id: String) = purchaseProductsDao.getTotalPriceOfSpecificPurchaseProduct(id)
-
-    fun getTotalAmount() = purchaseProductsDao.getTotalAmount()
-
-    fun getCountOfSpecificPurchaseProduct(id: String) = purchaseProductsDao.getCountOfSpecificPurchaseProduct(id)
-
-    fun isContained(id: String) = purchaseProductsDao.isContained(id)
-
     fun getProductCount() = purchaseProductsDao.getProductCount()
 
-    fun partedProducts(
-        page: Int,
-        pageSize: Int,
-    ): Flow<Cart> {
-        val offset = page * pageSize
-        return purchaseProductsDao.getPartedPurchaseProducts(pageSize, offset).map {
-            val domainItems = it.map { it.toPurchaseProductObject() }
-            Cart(PurchaseProducts(domainItems))
-        }
-    }
 
     suspend fun updateCount(
         id: String,
@@ -63,9 +37,6 @@ private fun PurchaseProduct.toEntity(): PurchaseProductEntity {
     val product = this.product
     return PurchaseProductEntity(
         id = product.id,
-        name = product.name,
-        price = product.price,
-        imageUri = product.imageUri,
         count = count,
     )
 }

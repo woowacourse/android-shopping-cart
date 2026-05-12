@@ -11,28 +11,25 @@ import woowacourse.shopping.data.local.entity.PurchaseProductEntity
 @Dao
 interface PurchaseProductsDao {
     @Query("SELECT * FROM purchase_products")
-    fun getAll(): Flow<List<PurchaseProductEntity>>
+    fun getAll(): Flow<List<PurchaseProductEntity>?>
 
     @Query("SELECT * FROM purchase_products WHERE id = :id")
-    fun findWithId(id: String): Flow<PurchaseProductEntity>
-
-    @Insert
-    suspend fun insertAll(vararg purchaseProductEntity: PurchaseProductEntity)
+    fun findWithId(id: String): Flow<PurchaseProductEntity?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIgnore(entity: PurchaseProductEntity): Long
-
-    @Transaction
-    suspend fun upsert(entity: PurchaseProductEntity) {
-        val id = insertIgnore(entity)
-        if (id == -1L) updateCount(entity.id, entity.count)
-    }
 
     @Query("UPDATE purchase_products SET count = count + :delta WHERE id = :id")
     suspend fun updateCount(
         id: String,
         delta: Int,
     )
+
+    @Transaction
+    suspend fun upsert(entity: PurchaseProductEntity) {
+        val id = insertIgnore(entity)
+        if (id == -1L) updateCount(entity.id, entity.count)
+    }
 
     @Query("DELETE FROM purchase_products WHERE id = :id")
     suspend fun deleteWithId(id: String)
@@ -42,9 +39,6 @@ interface PurchaseProductsDao {
 
     @Query("SELECT count FROM purchase_products WHERE id = :id")
     fun getCountOfSpecificPurchaseProduct(id: String): Flow<Int>
-
-    @Query("SELECT price * count FROM purchase_products WHERE id = :productId")
-    fun getTotalPriceOfSpecificPurchaseProduct(productId: String): Flow<Int>
 
     @Query("SELECT * FROM purchase_products LIMIT :limit OFFSET :offset")
     fun getPartedPurchaseProducts(
