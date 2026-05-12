@@ -52,7 +52,7 @@ class DetailViewModel(
                     _uiState.value.copy(
                         product = product.toUiModel(),
                         quantity = quantity,
-                        recentItem = lastViewedItem?.toUiModel(),
+                        recentItem = lastViewedItem?.takeIf { it.id != id }?.toUiModel(),
                         totalPrice = product.getPrice() * quantity,
                     )
             } catch (e: IllegalArgumentException) {

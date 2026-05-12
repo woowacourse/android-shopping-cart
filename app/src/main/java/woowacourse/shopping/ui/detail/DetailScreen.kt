@@ -97,7 +97,7 @@ fun DetailScreen(
             onIncreaseQuantity = onIncreaseQuantity,
             onDecreaseQuantity = onDecreaseQuantity,
             recentItem = {
-                if (uiState.recentItem != null && uiState.recentItem.id != uiState.product.id) {
+                if (uiState.recentItem != null) {
                     RecentItemCard(
                         name = uiState.recentItem.name,
                         modifier =

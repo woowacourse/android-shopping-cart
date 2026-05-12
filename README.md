@@ -17,7 +17,7 @@
 - [x] 상품 조회 실패 시 가격을 0으로 처리하는 정책 수정
 - [x] AppContainer 내 okHttpClient 생성 및 주입
 - [x] require를 IOException으로 변경
-- [ ] recentItem.id == currentId 제외 조건을 View->ViewModel로 이전
+- [x] recentItem.id == currentId 제외 조건을 View->ViewModel로 이전
 - [x] IOException을 대응하는 로직 추가
 - [ ] 불필요한 import 제거
 - [ ] observeNetwork()에서 복구 시 loadRecentItems()도 호출하도록 수정
