@@ -25,7 +25,7 @@ import woowacourse.shopping.model.ProductId
 import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.common.component.recentlyviewed.RecentlyViewedSection
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
-import woowacourse.shopping.ui.theme.Gray1
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun ShoppingBody(
@@ -60,7 +60,7 @@ fun ShoppingBody(
                         Modifier
                             .fillMaxWidth()
                             .height(14.dp)
-                            .background(color = Gray1),
+                            .background(color = ShoppingColors.Gray1),
                 )
             }
         }

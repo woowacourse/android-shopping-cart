@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.theme.Gray4
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun AddToCartButton(
@@ -32,13 +32,13 @@ fun AddToCartButton(
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = Color.White,
-                contentColor = Gray4,
+                contentColor = ShoppingColors.Gray4,
             ),
     ) {
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = stringResource(R.string.cart_add_button),
-            tint = Gray4,
+            tint = ShoppingColors.Gray4,
             modifier = Modifier.size(40.dp),
         )
     }

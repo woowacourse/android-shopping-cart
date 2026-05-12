@@ -29,7 +29,7 @@ import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.common.component.cartcontrol.AddToCartButton
 import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
 import woowacourse.shopping.ui.shopping.ShoppingProductUiState
-import woowacourse.shopping.ui.theme.Gray4
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -91,7 +91,7 @@ fun ProductUnit(
         )
         Text(
             text = stringResource(R.string.price_format, formatted),
-            color = Gray4,
+            color = ShoppingColors.Gray4,
             style = ShoppingTypography.productPrice,
             modifier = Modifier.padding(start = 6.dp),
         )

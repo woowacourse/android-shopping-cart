@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
 import woowacourse.shopping.ui.ShoppingTypography
-import woowacourse.shopping.ui.theme.BrandGreen
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun CartAddButton(
@@ -27,7 +27,7 @@ fun CartAddButton(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(BrandGreen)
+                .background(ShoppingColors.BrandGreen)
                 .clickable(enabled = isEnabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

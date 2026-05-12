@@ -34,8 +34,7 @@ import woowacourse.shopping.repository.inmemory.InMemoryProductRepository
 import woowacourse.shopping.ui.ShoppingTypography
 import woowacourse.shopping.ui.cart.CartItemUiModel
 import woowacourse.shopping.ui.common.component.cartcontrol.QuantityStepper
-import woowacourse.shopping.ui.theme.Gray2
-import woowacourse.shopping.ui.theme.Gray4
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun CartItemUnit(
@@ -51,7 +50,7 @@ fun CartItemUnit(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(4.dp))
                 .background(Color.White)
-                .border(1.dp, Gray2, RoundedCornerShape(4.dp))
+                .border(1.dp, ShoppingColors.Gray2, RoundedCornerShape(4.dp))
                 .padding(18.dp),
     ) {
         NameAndCloseIcon(item = item, onClick = onDeleteClick)
@@ -81,7 +80,7 @@ private fun NameAndCloseIcon(
     ) {
         Text(
             text = item.name,
-            color = Gray4,
+            color = ShoppingColors.Gray4,
             style = ShoppingTypography.productName,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -90,7 +89,7 @@ private fun NameAndCloseIcon(
             imageVector = Icons.Default.Close,
             contentDescription = stringResource(R.string.content_description_close),
             modifier = Modifier.clickable(onClick = onClick),
-            tint = Gray2,
+            tint = ShoppingColors.Gray2,
         )
     }
 }
@@ -136,7 +135,7 @@ private fun ImageAndPrice(
             )
             Text(
                 text = stringResource(R.string.price_format, formatted),
-                color = Gray4,
+                color = ShoppingColors.Gray4,
                 style = ShoppingTypography.productPrice,
             )
         }

@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.theme.BrandGreen
+import woowacourse.shopping.ui.theme.ShoppingColors
 
 @Composable
 fun MoreButton(
@@ -23,7 +23,7 @@ fun MoreButton(
         onClick = onClick,
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = BrandGreen,
+                containerColor = ShoppingColors.BrandGreen,
                 contentColor = Color.White,
             ),
     ) {
