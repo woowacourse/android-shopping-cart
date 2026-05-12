@@ -3,10 +3,10 @@ package woowacourse.shopping.repository
 import android.content.Context
 import okhttp3.OkHttpClient
 import woowacourse.shopping.local.ShoppingDatabase
+import woowacourse.shopping.network.ConnectivityManagerNetworkMonitor
+import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.repository.http.HttpProductRepository
 import woowacourse.shopping.repository.http.ShoppingMockWebServer
-import woowacourse.shopping.repository.network.ConnectivityManagerNetworkMonitor
-import woowacourse.shopping.repository.network.NetworkMonitor
 import woowacourse.shopping.repository.room.RoomCartRepository
 import woowacourse.shopping.repository.room.RoomRecentProductRepository
 

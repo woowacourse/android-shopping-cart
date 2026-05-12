@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository.network
+package woowacourse.shopping.network
 
 import android.content.Context
 import android.net.ConnectivityManager

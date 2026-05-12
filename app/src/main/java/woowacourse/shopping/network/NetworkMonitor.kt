@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository.network
+package woowacourse.shopping.network
 
 import kotlinx.coroutines.flow.StateFlow
 
