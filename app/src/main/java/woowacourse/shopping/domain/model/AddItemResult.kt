@@ -5,5 +5,7 @@ sealed class AddItemResult {
         val cart: Cart,
     ) : AddItemResult()
 
-    data object DuplicateItem : AddItemResult()
+    data class Incremented(
+        val cart: Cart,
+    ) : AddItemResult()
 }

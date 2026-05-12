@@ -1,62 +1,59 @@
 package woowacourse.shopping.domain.model
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CartTest {
-    private val price = Money(10000)
-    private val product =
+    private val product1 =
         Product(
-            name = ProductName("상품"),
-            price = price,
-            imageUrl = "ds",
+            id = 1L,
+            name = ProductName("상품1"),
+            price = Money(5000),
+            imageUrl = "",
         )
-    private lateinit var cart: Cart
 
-    @BeforeEach
-    fun setUp() {
-        cart = (Cart().addItem(product) as AddItemResult.NewAdded).cart
+    private val product2 =
+        Product(
+            id = 2L,
+            name = ProductName("상품2"),
+            price = Money(1000),
+            imageUrl = "",
+        )
+
+    @Test
+    fun `빈 카트는 size는 0이다`() {
+        val cart = Cart()
+        assertThat(cart.size).isEqualTo(0)
     }
 
     @Test
-    fun `새로운 상품을 추가하면 NewAdded를 반환한다`() {
-        val newProduct =
-            Product(
-                name = ProductName("새로운 상품904"),
-                price = Money(10000),
-                imageUrl = "ds",
+    fun `빈 카트의 totalPrice는 0원이다`() {
+        val cart = Cart()
+        assertThat(cart.totalPrice).isEqualTo(Money(0))
+    }
+
+    @Test
+    fun `카트의 상품 품목이 2개 들어있다면 size는 2를 반환한다`() {
+        val cart =
+            Cart(
+                listOf(
+                    CartItem(product = product1, quantity = 1),
+                    CartItem(product = product2, quantity = 30),
+                ),
             )
-        val result = cart.addItem(newProduct)
-        assertThat(result).isInstanceOf(AddItemResult.NewAdded::class.java)
+        assertThat(cart.size).isEqualTo(2)
     }
 
     @Test
-    fun `이미 등록된 상품을 장바구니에 추가하면 DuplicateItem을 반환한다`() {
-        val result = cart.addItem(product)
-        assertThat(result).isInstanceOf(AddItemResult.DuplicateItem::class.java)
-    }
+    fun `totalPrice가 상품 전체의 가격을 계산한다`() {
+        val cart =
+            Cart(
+                listOf(
+                    CartItem(product = product1, quantity = 1),
+                    CartItem(product = product2, quantity = 30),
+                ),
+            )
 
-    @Test
-    fun `등록한 상품을 삭제하면 Success를 반환한다`() {
-        val result = cart.deleteItem(product.id)
-        assertThat(result).isInstanceOf(RemoveItemResult.Success::class.java)
-    }
-
-    @Test
-    fun `등록되지 않은 상품을 삭제하면 NotFoundItem을 반환한다`() {
-        val result = cart.deleteItem("등록되지 않은 아이템")
-        assertThat(result).isInstanceOf(RemoveItemResult.NotFoundItem::class.java)
-    }
-
-    @Test
-    fun `등록된 상품의 총 가격을 계산할 수 있다`() {
-        assertThat(cart.calculateTotalPrice()).isEqualTo(price)
-    }
-
-    @Test
-    fun `이미 등록된 상품을 추가하면 DuplicateItem을 발생한다`() {
-        val result = cart.addItem(product)
-        assertThat(result).isEqualTo(AddItemResult.DuplicateItem)
+        assertThat(cart.totalPrice).isEqualTo(Money(35000))
     }
 }

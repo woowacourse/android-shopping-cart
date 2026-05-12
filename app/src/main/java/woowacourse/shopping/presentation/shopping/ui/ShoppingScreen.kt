@@ -1,31 +1,20 @@
 package woowacourse.shopping.presentation.shopping.ui
 
-import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,28 +25,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.launch
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductData.products
 import woowacourse.shopping.presentation.common.ShoppingAppBar
 import woowacourse.shopping.presentation.common.model.ProductUiModel
-import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.shopping.model.ShoppingItemUiModel
+import woowacourse.shopping.presentation.shopping.model.ShoppingUiState
+import woowacourse.shopping.presentation.shopping.ui.components.CartIcon
+import woowacourse.shopping.presentation.shopping.ui.components.LoadButton
+import woowacourse.shopping.presentation.shopping.ui.components.ProductCard
+import woowacourse.shopping.presentation.shopping.ui.components.RecentSection
 
 @Composable
 fun ShoppingScreen(
+    uiState: ShoppingUiState,
     onNavigateToCart: () -> Unit,
+    onLoadMore: () -> Unit,
+    onIncrease: (Long) -> Unit,
+    onDecrease: (Long) -> Unit,
+    onUpsertRecentProduct: (Long) -> Unit,
+    onProductCardClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    val state =
-        rememberSaveable(saver = ShoppingStateHolder.Saver()) {
-            ShoppingStateHolder()
-        }
-
-    LaunchedEffect(Unit) {
-        state.initialize()
-    }
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             ShoppingAppBar(
                 contents = {
@@ -69,14 +59,10 @@ fun ShoppingScreen(
                         lineHeight = 24.sp,
                         modifier = Modifier.weight(1f),
                     )
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = stringResource(R.string.shopping_cart),
-                        tint = Color.White,
-                        modifier =
-                            Modifier
-                                .size(24.dp)
-                                .clickable { onNavigateToCart() },
+                    CartIcon(
+                        quantity = uiState.totalQuantity,
+                        isShowCartQuantityIcon = uiState.isShowCartQuantityIcon,
+                        onNavigateToCart = onNavigateToCart,
                     )
                 },
                 modifier = modifier.fillMaxWidth(),
@@ -91,15 +77,23 @@ fun ShoppingScreen(
                     .padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {
-            if (state.isLoading) CircularProgressIndicator()
+            if (uiState.isLoading) CircularProgressIndicator()
+            uiState.errorMessage?.let { errorMessage ->
+                Text(
+                    text = errorMessage,
+                    color = Color.Gray,
+                    fontSize = 18.sp,
+                )
+            }
             ShoppingContents(
-                products = state.products.toImmutableList(),
-                onLoad = {
-                    scope.launch {
-                        state.loadMore()
-                    }
-                },
-                isCanLoadMore = state.canLoadMore,
+                items = uiState.products.toImmutableList(),
+                onLoad = { onLoadMore() },
+                isCanLoadMore = uiState.canLoadMore,
+                onProductCardClick = { onProductCardClick(it) },
+                onIncrease = { onIncrease(it) },
+                onDecrease = { onDecrease(it) },
+                onUpsertRecentProduct = { onUpsertRecentProduct(it) },
+                recentProducts = uiState.recentProducts.toImmutableList(),
             )
         }
     }
@@ -107,12 +101,16 @@ fun ShoppingScreen(
 
 @Composable
 private fun ShoppingContents(
-    products: ImmutableList<ProductUiModel>,
+    items: ImmutableList<ShoppingItemUiModel>,
     onLoad: () -> Unit,
+    onProductCardClick: (Long) -> Unit,
+    onIncrease: (Long) -> Unit,
+    onDecrease: (Long) -> Unit,
+    onUpsertRecentProduct: (Long) -> Unit,
+    recentProducts: ImmutableList<ProductUiModel>,
     isCanLoadMore: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
     Column(
         modifier =
             modifier
@@ -126,17 +124,27 @@ private fun ShoppingContents(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(top = 20.dp),
         ) {
-            items(
-                items = products,
-                key = { product -> product.id },
-            ) { product ->
-                ProductCard(
+            item(
+                span = { GridItemSpan(2) },
+            ) {
+                RecentSection(
+                    recentProducts = recentProducts,
                     onClick = {
-                        activity?.startActivity(DetailActivity.newIntent(activity, product.id))
+                        onProductCardClick(it)
+                        onUpsertRecentProduct(it)
                     },
-                    imageUrl = product.imageUrl,
-                    productName = product.name,
-                    price = product.price,
+                )
+            }
+            items(
+                items = items,
+                key = { it.product.id },
+            ) { item ->
+                ProductCard(
+                    product = item.product,
+                    quantity = item.quantity,
+                    onClick = { onProductCardClick(item.product.id) },
+                    onIncrease = { onIncrease(item.product.id) },
+                    onDecrease = { onDecrease(item.product.id) },
                 )
             }
             if (isCanLoadMore) {
@@ -156,6 +164,12 @@ private fun ShoppingContents(
 @Composable
 private fun ShoppingScreenPreview() {
     ShoppingScreen(
+        uiState = ShoppingUiState(),
         onNavigateToCart = {},
+        onProductCardClick = {},
+        onDecrease = {},
+        onIncrease = {},
+        onLoadMore = {},
+        onUpsertRecentProduct = {},
     )
 }

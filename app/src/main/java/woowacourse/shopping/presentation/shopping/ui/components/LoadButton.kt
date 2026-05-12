@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping.ui
+package woowacourse.shopping.presentation.shopping.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
