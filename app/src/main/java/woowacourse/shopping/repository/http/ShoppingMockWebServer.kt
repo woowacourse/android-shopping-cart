@@ -42,8 +42,8 @@ object ShoppingMockWebServer {
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val url = request.requestUrl ?: return notFound()
 
-                    return when (url.encodedPath) {
-                        "/products" -> {
+                    return when {
+                        url.encodedPath == "/products" -> {
                             val startIndex = url.queryParameter("startIndex")?.toIntOrNull() ?: 0
                             val pageSize = url.queryParameter("pageSize")?.toIntOrNull() ?: mockProducts.size
 
@@ -53,8 +53,8 @@ object ShoppingMockWebServer {
                                 .setBody(fetchProducts(startIndex, pageSize).toJsonArray().toString())
                         }
 
-                        "/product" -> {
-                            val productId = url.queryParameter("id")?.toIntOrNull() ?: return notFound()
+                        url.pathSegments.size == 2 && url.pathSegments.first() == "products" -> {
+                            val productId = url.pathSegments.last().toIntOrNull() ?: return notFound()
                             val product = mockProducts.firstOrNull { it.id == productId } ?: return notFound()
 
                             MockResponse()
@@ -63,19 +63,7 @@ object ShoppingMockWebServer {
                                 .setBody(product.toJsonObject().toString())
                         }
 
-                        else -> {
-                            if (url.pathSegments.size == 2 && url.pathSegments.first() == "products") {
-                                val productId = url.pathSegments.last().toIntOrNull() ?: return notFound()
-                                val product = mockProducts.firstOrNull { it.id == productId } ?: return notFound()
-
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(200)
-                                    .setBody(product.toJsonObject().toString())
-                            } else {
-                                notFound()
-                            }
-                        }
+                        else -> notFound()
                     }
                 }
             }
