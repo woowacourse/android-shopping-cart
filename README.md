@@ -10,7 +10,7 @@
 - [ ] Repository 간 의존 관계 분리
 - [ ] CartPage 로직을 Cart로부터 분리 
 ### Rabbit
-- [ ] tie-breaker 추가
+- [x] tie-breaker 추가
 - [ ] 장바구니 매핑에서 ID 정합성 보호
 - [ ] 최근 본 상품 매핑에서 ID 정합성 보호
 - [ ] 상세 화면 기본 수량 로직과 장바구니 내 상품 수량 로직 간 분리

@@ -11,7 +11,7 @@ interface RecentItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: RecentItemEntity)
 
-    @Query("SELECT * FROM recent_items ORDER BY timestamp DESC LIMIT 10")
+    @Query("SELECT * FROM recent_items ORDER BY timestamp DESC, id DESC LIMIT 10")
     suspend fun getRecentItems(): List<RecentItemEntity>
 
     @Query("SELECT * FROM recent_items WHERE id = :id")
@@ -20,7 +20,7 @@ interface RecentItemDao {
     @Query(
         """
         DELETE FROM recent_items
-        WHERE id NOT IN (SELECT id FROM recent_items ORDER BY timestamp DESC LIMIT 10)
+        WHERE id NOT IN (SELECT id FROM recent_items ORDER BY timestamp DESC, id DESC LIMIT 10)
     """,
     )
     suspend fun deleteOldItem()
@@ -28,7 +28,7 @@ interface RecentItemDao {
     @Query(
         """
             SELECT * FROM recent_items
-            ORDER BY timestamp DESC
+            ORDER BY timestamp DESC, id DESC
             LIMIT 1
         """,
     )
