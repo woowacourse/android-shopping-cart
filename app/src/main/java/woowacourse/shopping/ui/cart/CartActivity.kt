@@ -14,7 +14,6 @@ import woowacourse.shopping.ShoppingApplication
 
 
 class CartActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
