@@ -10,7 +10,7 @@ import woowacourse.shopping.data.remote.dto.WebServerResponse
 import woowacourse.shopping.data.remote.dto.toObject
 import woowacourse.shopping.domain.Product
 
-class WebServerRepository(
+class ProductRepository(
     private val client: OkHttpClient,
     private val baseUrl: String,
 ) {
