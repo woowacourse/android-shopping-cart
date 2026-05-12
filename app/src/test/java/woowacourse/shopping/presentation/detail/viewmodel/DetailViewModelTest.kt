@@ -49,7 +49,7 @@ class DetailViewModelTest {
         }
 
     @Test
-    fun `loadProduct는 장바구니에 담긴 상품 수량을 uiState에 업데이트 한다`() =
+    fun `loadProduct는 장바구니에 담긴 상품 수량과 관계 없이 수량을 1 반환한다`() =
         runTest {
             cartRepository.addItem(1L, 3)
 
@@ -57,7 +57,7 @@ class DetailViewModelTest {
             val state = viewModel.uiState.value
 
             assertThat(state).isInstanceOf(DetailUiState.Success::class.java)
-            if (state is DetailUiState.Success) assertThat(state.quantity).isEqualTo(3)
+            if (state is DetailUiState.Success) assertThat(state.quantity).isEqualTo(1)
         }
 
     @Test
