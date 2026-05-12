@@ -34,10 +34,18 @@ class ShoppingViewModel(
         loadProducts()
     }
 
-    fun reload() {
+    fun reloadVisibleState() {
         if (_uiState.value.isLoading) return
         viewModelScope.launch {
-            refreshProducts()
+            runCatching {
+                refreshRecentProducts()
+                refreshCartState()
+            }.onFailure { throwable ->
+                _uiState.value =
+                    _uiState.value.copy(
+                        errorMessage = throwable.message,
+                    )
+            }
         }
     }
 
@@ -53,30 +61,14 @@ class ShoppingViewModel(
         runCatching {
             val visibleProducts = productRepository.getProducts(0, visibleCount).toList()
             val hasNext = productRepository.hasNext(visibleProducts.count() - 1)
-            val cartItems = cartRepository.getCartItems(0, cartRepository.count())
-            val cartQuantity = cartItems.sumOf { it.quantity }
-            val recentProducts = recentProductRepository.getRecentProducts(RECENT_PRODUCT_LIMIT)
-            val recentProductsById = productRepository.findAllByIds(recentProducts.map { it.productId }.toSet())
-            val restoredRecentProducts =
-                RecentViewedProductsMapper.toProducts(
-                    recentProducts = recentProducts,
-                    productsById = recentProductsById,
-                )
-
-            val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
-            val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
-
-            val products =
-                ShoppingProductUiStateMapper.toUiStates(
-                    products = visibleProducts,
-                    quantityByProductId = quantityByProductId,
-                )
+            val cartState = createCartState(visibleProducts)
+            val restoredRecentProducts = getRecentProducts()
 
             _uiState.value =
                 ShoppingUiState(
-                    products = products,
+                    products = cartState.products,
                     recentProducts = restoredRecentProducts,
-                    cartQuantity = cartQuantity,
+                    cartQuantity = cartState.cartQuantity,
                     hasNext = hasNext,
                     isLoading = false,
                     isNetworkConnected = _uiState.value.isNetworkConnected,
@@ -90,6 +82,60 @@ class ShoppingViewModel(
                 )
         }
     }
+
+    private suspend fun refreshRecentProducts() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                recentProducts = getRecentProducts(),
+                errorMessage = null,
+            )
+        }
+    }
+
+    private suspend fun refreshCartState() {
+        val visibleProducts = _uiState.value.products.map { it.product }
+        val cartState = createCartState(visibleProducts)
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                products = cartState.products,
+                cartQuantity = cartState.cartQuantity,
+                errorMessage = null,
+            )
+        }
+    }
+
+    private suspend fun getRecentProducts() =
+        recentProductRepository
+            .getRecentProducts(RECENT_PRODUCT_LIMIT)
+            .let { recentProducts ->
+                val recentProductsById = productRepository.findAllByIds(recentProducts.map { it.productId }.toSet())
+                RecentViewedProductsMapper.toProducts(
+                    recentProducts = recentProducts,
+                    productsById = recentProductsById,
+                )
+            }
+
+    private suspend fun createCartState(visibleProducts: List<woowacourse.shopping.model.Product>): ShoppingCartState {
+        val cartItems = cartRepository.getCartItems(0, cartRepository.count())
+        val cartQuantity = cartItems.sumOf { it.quantity }
+        val visibleCartItems = cartRepository.getCartItemsByProductIds(visibleProducts.map { it.id }.toSet())
+        val quantityByProductId = visibleCartItems.associate { it.productId to it.quantity }
+
+        return ShoppingCartState(
+            products =
+                ShoppingProductUiStateMapper.toUiStates(
+                    products = visibleProducts,
+                    quantityByProductId = quantityByProductId,
+                ),
+            cartQuantity = cartQuantity,
+        )
+    }
+
+    private data class ShoppingCartState(
+        val products: List<ShoppingProductUiState>,
+        val cartQuantity: Int,
+    )
 
     fun loadMore() {
         val currentState = _uiState.value

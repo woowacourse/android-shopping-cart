@@ -21,7 +21,7 @@ class ShoppingActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.reload()
+        viewModel.reloadVisibleState()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
