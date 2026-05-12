@@ -44,12 +44,12 @@ class ProductWebServerDispatcher : Dispatcher() {
                 if (product != null) {
                     success(Json.encodeToString(product))
                 } else {
-                    notFount()
+                    notFound()
                 }
             }
 
             else -> {
-                notFount()
+                notFound()
             }
         }
     }
@@ -62,7 +62,7 @@ class ProductWebServerDispatcher : Dispatcher() {
             .body(body)
             .build()
 
-    private fun notFount(): MockResponse =
+    private fun notFound(): MockResponse =
         MockResponse
             .Builder()
             .code(404)
