@@ -4,12 +4,12 @@ import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.ProductItems
 
 interface ProductRepository {
-    fun getProducts(
+    suspend fun getProducts(
         page: Int,
         pageSize: Int = 20,
     ): ProductItems
 
-    fun getProductCount(): Int
+    suspend fun getProductCount(): Int
 
-    fun getProduct(id: String): Product?
+    suspend fun getProduct(id: String): Product?
 }

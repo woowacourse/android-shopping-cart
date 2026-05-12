@@ -22,15 +22,23 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.core.designsystem.component.AppImage
+import woowacourse.shopping.core.designsystem.component.OfflineBanner
+import woowacourse.shopping.core.designsystem.component.QuantityStepper
 import woowacourse.shopping.feature.productDetail.component.AddCartButton
 import woowacourse.shopping.feature.productDetail.component.ProductDetailTopAppBar
+import woowacourse.shopping.feature.productDetail.component.RecentProductSummary
 import woowacourse.shopping.feature.productDetail.model.ProductInfo
 
 @Composable
 fun ProductDetailScreen(
     productInfo: ProductInfo?,
+    previousProductName: String?,
+    isOnline: Boolean,
     onCloseClick: () -> Unit,
+    onRecentProductClick: () -> Unit,
     onAddCartClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -39,14 +47,16 @@ fun ProductDetailScreen(
                 .fillMaxSize()
                 .background(Color.White),
     ) {
+        if (!isOnline) {
+            OfflineBanner()
+        }
         ProductDetailTopAppBar(onClick = onCloseClick)
 
         AppImage(
             imageUrl = productInfo?.productImageUrl ?: "",
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
         )
 
         Spacer(Modifier.height(16.dp))
@@ -81,19 +91,28 @@ fun ProductDetailScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
+                text = productInfo?.formattedPrice ?: "",
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W400,
                 maxLines = 1,
             )
 
-            Text(
-                text = productInfo?.price ?: "",
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.W400,
-                maxLines = 1,
+            QuantityStepper(
+                onPlusClick = onIncreaseClick,
+                onMinusClick = onDecreaseClick,
+                quantity = productInfo?.formattedQuantity ?: "0",
+            )
+        }
+
+        if (previousProductName != null) {
+            RecentProductSummary(
+                productName = previousProductName,
+                onClick = onRecentProductClick,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
             )
         }
 
@@ -108,17 +127,12 @@ fun ProductDetailScreen(
 private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productInfo = ProductInfo.PREVIEW,
+        previousProductName = "이전 상품",
+        isOnline = true,
         onCloseClick = {},
+        onRecentProductClick = {},
         onAddCartClick = {},
-    )
-}
-
-@Preview
-@Composable
-private fun ProductDetailScreenLoadingPreview() {
-    ProductDetailScreen(
-        productInfo = null,
-        onCloseClick = {},
-        onAddCartClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }

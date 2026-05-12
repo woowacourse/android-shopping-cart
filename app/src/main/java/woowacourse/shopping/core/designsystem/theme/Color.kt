@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val Color.Companion.LightGreen: Color
     get() = Color(0xFF04C09E)
+
+val Color.Companion.ExtraLightGray: Color
+    get() = Color(0xFFEBEBEB)

@@ -6,46 +6,132 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.domain.model.Quantity
+import woowacourse.shopping.domain.model.cart.CartItem
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.feature.products.model.ShoppingProductInfo
 import woowacourse.shopping.feature.products.model.toUiModel
 
 class ProductsStateHolder(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) {
-    private val totalCount = productRepository.getProductCount()
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var totalCount = 0
     private var pageCount = 0
 
     var products by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
         private set
 
+    var recentProducts by mutableStateOf(emptyList<ShoppingProductInfo>().toImmutableList())
+        private set
+
     var isLastPage by mutableStateOf(false)
         private set
 
+    var formattedCartItemCount by mutableStateOf("0")
+        private set
+
     init {
-        getProducts()
+        scope.launch {
+            totalCount = withContext(Dispatchers.IO) { productRepository.getProductCount() }
+            getProducts()
+        }
+
+        cartRepository.getCartItems()
+            .onEach { items ->
+                refreshAllQuantities()
+                formattedCartItemCount = items.size.toString()
+            }
+            .launchIn(scope)
+
+        recentProductRepository.getRecentProducts()
+            .onEach { items ->
+                recentProducts = items.map { it.toUiModel() }.toImmutableList()
+            }
+            .launchIn(scope)
     }
 
     fun getProducts(pageSize: Int = 20) {
-        val currentProducts =
-            productRepository
-                .getProducts(pageCount, pageSize)
-                .items
-                .map { it.toUiModel() }
-                .toImmutableList()
+        scope.launch {
+            val currentProducts = withContext(Dispatchers.IO) {
+                productRepository
+                    .getProducts(pageCount, pageSize)
+                    .items
+                    .map { product ->
+                        val quantity = cartRepository.getCartItem(product.id).first()?.quantity?.value ?: 0
+                        product.toUiModel().copy(formattedQuantity = quantity.toString())
+                    }
+                    .toImmutableList()
+            }
 
-        if (currentProducts.isNotEmpty()) {
-            products = (products + currentProducts).toImmutableList()
-            pageCount++
+            if (currentProducts.isNotEmpty()) {
+                products = (products + currentProducts).toImmutableList()
+                pageCount++
+            }
+
+            isLastPage = products.size >= totalCount
         }
+    }
 
-        isLastPage = products.size >= totalCount
+    fun onAddClick(productId: String) {
+        scope.launch(Dispatchers.IO) {
+            val product = productRepository.getProduct(productId) ?: return@launch
+            cartRepository.updateCart(CartItem(product, Quantity(1)))
+        }
+    }
+
+    fun onIncreaseClick(productId: String) {
+        scope.launch(Dispatchers.IO) {
+            cartRepository.increaseCartItemQuantity(productId)
+        }
+    }
+
+    fun onDecreaseClick(productId: String) {
+        scope.launch(Dispatchers.IO) {
+            val currentCartItem = cartRepository.getCartItem(productId).first() ?: return@launch
+            if (currentCartItem.quantity.value <= 1) {
+                cartRepository.deleteCartItem(productId)
+            } else {
+                cartRepository.decreaseCartItemQuantity(productId)
+            }
+        }
+    }
+
+    fun refreshAllQuantities() {
+        scope.launch {
+            products = withContext(Dispatchers.IO) {
+                products.map { product ->
+                    val quantity = cartRepository.getCartItem(product.id).first()?.quantity?.value ?: 0
+                    product.copy(formattedQuantity = quantity.toString())
+                }.toImmutableList()
+            }
+        }
     }
 }
 
 @Composable
-fun retainProductsStateHolder(): ProductsStateHolder =
-    retain {
-        ProductsStateHolder(ProductRepositoryImpl)
+fun retainProductsStateHolder(): ProductsStateHolder {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    return retain {
+        val application = context.applicationContext as woowacourse.shopping.ShoppingApplication
+        ProductsStateHolder(
+            ProductRepositoryImpl,
+            woowacourse.shopping.data.repository.CartRepositoryImpl(application.database.cartDao()),
+            RecentProductRepositoryImpl(application.database.recentProductDao(), ProductRepositoryImpl),
+        )
     }
+}

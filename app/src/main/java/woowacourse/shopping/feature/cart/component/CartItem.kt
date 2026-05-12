@@ -26,12 +26,16 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.core.designsystem.component.AppImage
 
+import woowacourse.shopping.core.designsystem.component.QuantityStepper
+
 @Composable
 fun CartItem(
     productName: String,
     productUrl: String,
-    price: String,
+    formattedQuantity: String,
     onClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,10 +84,10 @@ fun CartItem(
                         .aspectRatio(136f / 72f),
             )
 
-            Text(
-                text = price,
-                color = Color.Black,
-                fontSize = 16.sp,
+            QuantityStepper(
+                onPlusClick = onIncreaseClick,
+                onMinusClick = onDecreaseClick,
+                quantity = formattedQuantity,
             )
         }
     }
@@ -95,7 +99,9 @@ private fun CartItemPreview() {
     CartItem(
         productName = "리자몽",
         productUrl = "",
-        price = "10,000원",
+        formattedQuantity = "1",
         onClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
     )
 }

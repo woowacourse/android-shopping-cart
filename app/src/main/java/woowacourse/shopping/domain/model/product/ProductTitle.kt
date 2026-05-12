@@ -1,5 +1,8 @@
 package woowacourse.shopping.domain.model.product
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 @JvmInline
 value class ProductTitle(
     val value: String,

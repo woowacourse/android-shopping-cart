@@ -1,5 +1,8 @@
 package woowacourse.shopping.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 @JvmInline
 value class Price(
     val value: Int,

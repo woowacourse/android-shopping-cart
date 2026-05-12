@@ -10,7 +10,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.core.designsystem.theme.AndroidshoppingTheme
 
 class ProductDetailActivity : ComponentActivity() {
@@ -18,6 +21,7 @@ class ProductDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val productId = intent.getStringExtra(PRODUCT_ID)
+        val isFromRecent = intent.getBooleanExtra(IS_FROM_RECENT, false)
         if (productId.isNullOrBlank()) {
             showErrorAndFinish()
             return
@@ -27,12 +31,23 @@ class ProductDetailActivity : ComponentActivity() {
         setContent {
             AndroidshoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val stateHolder = retainProductDetailStateHolder(productId)
+                    val stateHolder = retainProductDetailStateHolder(productId, isFromRecent)
+                    val isOnline by ShoppingApplication.instance.isOnline.collectAsState()
 
                     ProductDetailScreen(
                         productInfo = stateHolder.productInfo,
+                        previousProductName = if (stateHolder.shouldShowRecentSummary) stateHolder.previousProduct?.productTitle?.value else null,
+                        isOnline = isOnline,
                         onCloseClick = { finish() },
-                        onAddCartClick = stateHolder::addToCart,
+                        onRecentProductClick = {
+                            stateHolder.previousProduct?.id?.let { id ->
+                                startActivity(newIntent(this, id, isFromRecent = true))
+                                finish()
+                            }
+                        },
+                        onAddCartClick = stateHolder::onAddClick,
+                        onIncreaseClick = stateHolder::onIncreaseClick,
+                        onDecreaseClick = stateHolder::onDecreaseClick,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
@@ -47,14 +62,16 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         private const val PRODUCT_ID = "product_id"
+        private const val IS_FROM_RECENT = "is_from_recent"
 
         fun newIntent(
             context: Context,
             productId: String,
+            isFromRecent: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
+                putExtra(IS_FROM_RECENT, isFromRecent)
             }
     }
 }
-

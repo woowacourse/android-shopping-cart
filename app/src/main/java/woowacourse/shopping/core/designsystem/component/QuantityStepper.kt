@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.cart.component
+package woowacourse.shopping.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,26 +20,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.core.designsystem.theme.LightGreen
 
 @Composable
-fun CartPageButton(
-    onNextClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    pageText: String,
+fun QuantityStepper(
+    onPlusClick: () -> Unit,
+    onMinusClick: () -> Unit,
+    quantity: String,
     modifier: Modifier = Modifier,
-    isPreviousEnabled: Boolean = true,
-    isNextEnabled: Boolean = true,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MovePageButton(
-            enabled = isPreviousEnabled,
-            onClick = onPreviousClick,
-            text = "<",
-            contentDescription = "이전 페이지 이동 버튼",
+        QuantityStepperButton(
+            enabled = true,
+            onClick = onMinusClick,
+            text = "-",
+            contentDescription = "상품 수량 감소 버튼",
             buttonShape =
                 RoundedCornerShape(
                     topStart = 4.dp,
@@ -49,15 +46,16 @@ fun CartPageButton(
                 ),
         )
         Text(
-            text = pageText,
+            text = quantity,
             fontSize = 22.sp,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .background(Color.White)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
         )
-        MovePageButton(
-            enabled = isNextEnabled,
-            onClick = onNextClick,
-            text = ">",
-            contentDescription = "다음 페이지 이동 버튼",
+        QuantityStepperButton(
+            onClick = onPlusClick,
+            text = "+",
+            contentDescription = "상품 수량 증가 버튼",
             buttonShape =
                 RoundedCornerShape(
                     topStart = 0.dp,
@@ -70,7 +68,7 @@ fun CartPageButton(
 }
 
 @Composable
-private fun MovePageButton(
+private fun QuantityStepperButton(
     text: String,
     buttonShape: RoundedCornerShape,
     contentDescription: String,
@@ -83,7 +81,7 @@ private fun MovePageButton(
             modifier
                 .clip(
                     shape = buttonShape,
-                ).background(if (enabled) Color.LightGreen else Color.Gray)
+                ).background(Color.White)
                 .clickable(
                     enabled = enabled,
                     onClick = onClick,
@@ -91,12 +89,12 @@ private fun MovePageButton(
                 .semantics {
                     this.contentDescription = contentDescription
                     role = Role.Button
-               },
+                },
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = Color.Black,
             fontSize = 22.sp,
             fontWeight = FontWeight.W500,
         )
@@ -105,11 +103,10 @@ private fun MovePageButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun CartPageButtonPreview() {
-    CartPageButton(
-        onPreviousClick = {},
-        onNextClick = {},
-        pageText = "1",
-        isPreviousEnabled = false,
+private fun QuantityStepperPreview() {
+    QuantityStepper(
+        onMinusClick = {},
+        onPlusClick = {},
+        quantity = "1",
     )
 }
