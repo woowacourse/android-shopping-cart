@@ -10,6 +10,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.local.AppDatabase
@@ -17,6 +19,7 @@ import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
@@ -39,8 +42,18 @@ class ProductDetailViewModel(
 
     private var currentProduct: Product? = null
 
+    private var cart = Cart()
+
     init {
+        observeCart()
         loadProduct()
+    }
+
+    private fun observeCart() {
+        cartRepository.getCart()
+            .onEach { cartItems ->
+                cart = Cart(cartItems)
+            }.launchIn(viewModelScope)
     }
 
     private fun loadProduct() {
@@ -77,8 +90,9 @@ class ProductDetailViewModel(
         val product = currentProduct ?: return
         val quantity = Quantity(_uiState.value.selectedQuantity)
 
+        val updatedItem = cart.plusProduct(product, quantity).findCartItemById(productId) ?: return
         viewModelScope.launch {
-            cartRepository.addCartItem(product, quantity)
+            cartRepository.updateCartItem(updatedItem)
         }
     }
 

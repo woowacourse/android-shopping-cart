@@ -16,6 +16,8 @@ class Cart(val cartItems: List<CartItem> = emptyList()) {
         return findCartItem.product
     }
 
+    fun findCartItemById(productId: String): CartItem? = cartItems.find { it.hasProductId(productId) }
+
     fun getQuantity(product: Product): Quantity? {
         val findItem = cartItems.find { it.hasProduct(product) } ?: return null
         return findItem.quantity

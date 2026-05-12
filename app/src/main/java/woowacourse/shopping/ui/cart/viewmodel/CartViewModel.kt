@@ -45,15 +45,23 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun incrementQuantity(productId: String) {
         val product = cart.findProductById(productId) ?: return
+        val updatedItem = cart.plusProduct(product, Quantity(1)).findCartItemById(productId) ?: return
+
         viewModelScope.launch {
-            cartRepository.addCartItem(product, Quantity(1))
+            cartRepository.updateCartItem(updatedItem)
         }
     }
 
     fun decrementQuantity(productId: String) {
         val product = cart.findProductById(productId) ?: return
+        val updatedItem = cart.minusProduct(product, Quantity(1)).findCartItemById(productId)
+
         viewModelScope.launch {
-            cartRepository.decreaseCartItem(product, Quantity(1))
+            if (updatedItem == null) {
+                cartRepository.deleteCartItem(productId)
+            } else {
+                cartRepository.updateCartItem(updatedItem)
+            }
         }
     }
 

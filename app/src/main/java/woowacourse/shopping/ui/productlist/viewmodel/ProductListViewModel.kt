@@ -89,15 +89,23 @@ class ProductListViewModel(
 
     fun addCartItem(productId: String) {
         val product = _products.find { it.hasId(productId) } ?: return
+        val updatedItem = cart.plusProduct(product, Quantity(1)).findCartItemById(productId) ?: return
+
         viewModelScope.launch {
-            cartRepository.addCartItem(product, Quantity(1))
+            cartRepository.updateCartItem(updatedItem)
         }
     }
 
     fun removeCartItem(productId: String) {
         val product = _products.find { it.hasId(productId) } ?: return
+        val updatedItem = cart.minusProduct(product, Quantity(1)).findCartItemById(productId)
+
         viewModelScope.launch {
-            cartRepository.decreaseCartItem(product, Quantity(1))
+            if (updatedItem == null) {
+                cartRepository.deleteCartItem(productId)
+            } else {
+                cartRepository.updateCartItem(updatedItem)
+            }
         }
     }
 
