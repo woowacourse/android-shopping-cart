@@ -30,14 +30,17 @@ fun CartScreen(
         containerColor = Color.White,
     ) { innerPadding ->
         CartBody(
-            viewModel = viewModel,
+            visibleProducts = viewModel.visibleProducts(),
+            totalProductCount = viewModel.cartProducts.size,
+            currentPageIndex = viewModel.currentPageIndex,
+            canNavigateToLeft = viewModel.canNavigateToLeft(),
+            canNavigateToRight = viewModel.canNavigateToRight(),
+            onIncreaseProduct = viewModel::addProduct,
+            onDecreaseProduct = viewModel::decraseProduct,
             innerPadding = innerPadding,
-            onDeleteProduct = { id ->
-                viewModel.deleteProduct(id)
-//                val updatedProducts = viewModel.getCartProducts()
-//                    if (updatedProducts.isEmpty()) 0 else (updatedProducts.size - 1) / CART_PAGE_SIZE
-                // viewModel.adjustCurrentPage()
-            },
+            onDeleteProduct = viewModel::deleteProduct,
+            onMoveToPreviousPage = viewModel::moveToPreviousPage,
+            onMoveToNextPage = viewModel::moveToNextPage,
             modifier = modifier,
         )
     }
