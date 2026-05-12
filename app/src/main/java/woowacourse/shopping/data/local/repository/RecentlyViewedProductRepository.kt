@@ -10,26 +10,11 @@ import woowacourse.shopping.domain.Products
 class RecentlyViewedProductRepository(
     private val recentlyViewedProductDao: RecentlyViewedProductDao,
 ) {
-    fun getAll(): Flow<Products> =
-        recentlyViewedProductDao.getAll().map {
-            val items = it?.map { it.toObject() } ?: emptyList()
-            Products(items)
-        }
+    fun getAll(): Flow<List<RecentlyViewedProductEntity>?> = recentlyViewedProductDao.getAll()
 
     suspend fun updateList(product: Product) {
-        recentlyViewedProductDao.enqueueAndLimit10(product.toEntity())
+        recentlyViewedProductDao.enqueueAndLimit10(RecentlyViewedProductEntity(product.id))
     }
 
-    fun getLatestItem(): Flow<Product?> =
-        recentlyViewedProductDao.getLatestItem().map {
-            it?.toObject()
-        }
+    fun getLatestItem(): Flow<String?> = recentlyViewedProductDao.getLatestItemId()
 }
-
-private fun Product.toEntity() =
-    RecentlyViewedProductEntity(
-        id = id,
-        name = name,
-        price = price,
-        imageUri = imageUri,
-    )
