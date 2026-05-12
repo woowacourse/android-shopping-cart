@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.remote.mock.ProductWebServer
 import woowacourse.shopping.data.remote.repository.ProductRepository
+import woowacourse.shopping.data.remote.repository.ProductRepositoryImpl
 
 class ProductWebServerTest {
     @Test
@@ -68,7 +69,7 @@ class ProductWebServerTest {
 
             ProductWebServer.isReady.first { it == true }
 
-            repository = ProductRepository(client, ProductWebServer.baseUrl)
+            repository = ProductRepositoryImpl(client, ProductWebServer.baseUrl)
         }
     }
 
