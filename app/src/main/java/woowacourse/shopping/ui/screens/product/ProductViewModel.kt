@@ -40,7 +40,7 @@ class ProductViewModel(
 ) : ViewModel() {
     private var products: List<Product> = emptyList()
 
-    private var recentProductIds: List<String> = emptyList()
+    private var uiRecentProducts: List<UiRecentProduct> = emptyList()
 
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
@@ -63,7 +63,18 @@ class ProductViewModel(
             try {
                 val nextProducts = productRepository.getProducts(products.size, PAGE_SIZE)
                 products = (products + nextProducts).distinctBy { it.id }
-                recentProductIds = recentProductRepository.getRecentProductIds()
+
+                uiRecentProducts = recentProductRepository.getRecentProductIds()
+                    .map { productId ->
+                        async {
+                            val product = productRepository.getProductById(productId)
+                            UiRecentProduct(
+                                id = product.id,
+                                imageUrl = product.imageUrl,
+                                name = product.name,
+                            )
+                        }
+                    }.awaitAll()
 
                 loadProductUiState()
                 loadRecentProductUiState()
@@ -107,18 +118,6 @@ class ProductViewModel(
 
     private fun loadRecentProductUiState() {
         viewModelScope.launch {
-            val uiRecentProducts = recentProductIds
-                .map { productId ->
-                    async {
-                        val product = productRepository.getProductById(productId)
-                        UiRecentProduct(
-                            id = productId,
-                            imageUrl = product.imageUrl,
-                            name = product.name,
-                        )
-                    }
-                }.awaitAll()
-
             _uiState.update {
                 it.copy(
                     recentProducts = uiRecentProducts,
