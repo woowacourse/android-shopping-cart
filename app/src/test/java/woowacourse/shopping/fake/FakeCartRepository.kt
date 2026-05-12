@@ -20,7 +20,7 @@ class FakeCartRepository(
         return Cart(cartItems)
     }
 
-    override suspend fun getTotalCartSize(): Int = items.values.size
+    override suspend fun getTotalCartSize(): Int = items.values.sum()
 
     override suspend fun addItem(
         id: Long,
