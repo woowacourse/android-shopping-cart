@@ -8,7 +8,7 @@ class RecentProductRepositoryImpl(
 ) : RecentProductRepository {
     override suspend fun getRecentProductIds(): List<String> = dataSource.getRecentProductIds().map { it.productId }
 
-    override suspend fun getLastViewProductId(): String? = dataSource.getRecentProductIds().firstOrNull()?.productId
+    override suspend fun getLastViewProductId(): String? = dataSource.getLastViewProductId()?.productId
 
     override suspend fun addRecentProductId(productId: String) {
         dataSource.addRecentProductId(productId = productId)
