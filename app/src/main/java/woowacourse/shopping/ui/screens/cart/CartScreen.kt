@@ -78,10 +78,10 @@ fun CartScreen(
                         curPage = uiState.curPage,
                         isLastPage = uiState.isLast,
                         onPrevClick = {
-                            viewModel.getPrevPage()
+                            viewModel.loadPrevPage()
                         },
                         onNextClick = {
-                            viewModel.getNextPage()
+                            viewModel.loadNextPage()
                         },
                         modifier = Modifier
                             .fillMaxWidth()

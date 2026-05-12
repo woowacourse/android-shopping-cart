@@ -47,11 +47,11 @@ class CartViewModel(
     fun deleteCartItem(productId: String) {
         viewModelScope.launch {
             cartRepository.deleteItem(productId = productId)
-            updateCartItems()
+            loadCartUiState()
         }
     }
 
-    fun getPrevPage() {
+    fun loadPrevPage() {
         if (_uiState.value.curPage == 1) return
 
         viewModelScope.launch {
@@ -71,7 +71,7 @@ class CartViewModel(
         }
     }
 
-    fun getNextPage() {
+    fun loadNextPage() {
         if (_uiState.value.isLast) return
 
         viewModelScope.launch {
@@ -91,7 +91,7 @@ class CartViewModel(
         }
     }
 
-    private suspend fun updateCartItems() {
+    private suspend fun loadCartUiState() {
         _uiState.update {
             it.copy(
                 cartItems = cartRepository
@@ -104,7 +104,7 @@ class CartViewModel(
         }
 
         if (_uiState.value.cartItems.isEmpty()) {
-            getPrevPage()
+            loadPrevPage()
         }
     }
 
@@ -112,7 +112,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.plusItemCount(product)
 
-            updateCartItems()
+            loadCartUiState()
         }
     }
 
@@ -120,7 +120,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.minusItemCount(productId)
 
-            updateCartItems()
+            loadCartUiState()
         }
     }
 
