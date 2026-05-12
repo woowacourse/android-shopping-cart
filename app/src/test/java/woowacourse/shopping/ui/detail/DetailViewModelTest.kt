@@ -124,6 +124,7 @@ class DetailViewModelTest {
 private class FakeProductRepository(
     private val products: List<Product>,
     private val failOnGetProductById: Boolean = false,
+    private val getProductByIdException: Exception? = null,
 ) : ProductRepository {
     override suspend fun getProducts(
         offset: Int,
@@ -131,6 +132,7 @@ private class FakeProductRepository(
     ): ImmutableList<Product> = products.drop(offset).take(limit).toImmutableList()
 
     override suspend fun getProductById(id: String): Product {
+        getProductByIdException?.let { throw it }
         if (failOnGetProductById) throw IllegalArgumentException("상품 조회 실패")
         return products.firstOrNull { it.id == id } ?: throw IllegalArgumentException("상품 없음")
     }

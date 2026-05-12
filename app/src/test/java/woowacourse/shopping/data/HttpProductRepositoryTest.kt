@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.data.repository.HttpProductRepository
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class HttpProductRepositoryTest {
@@ -110,7 +111,7 @@ class HttpProductRepositoryTest {
         runTest {
             server.enqueue(MockResponse().setResponseCode(500))
 
-            assertThrows<IllegalArgumentException> {
+            assertThrows<IOException> {
                 repository.getProducts(offset = 0, limit = 20)
             }
         }
@@ -120,7 +121,7 @@ class HttpProductRepositoryTest {
         runTest {
             server.enqueue(MockResponse().setResponseCode(404))
 
-            assertThrows<IllegalArgumentException> {
+            assertThrows<IOException> {
                 repository.getProductById("-1")
             }
         }

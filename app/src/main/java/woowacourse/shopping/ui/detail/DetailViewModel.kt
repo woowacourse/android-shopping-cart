@@ -15,6 +15,7 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentItemRepository
 import woowacourse.shopping.ui.model.mapper.toUiModel
+import java.io.IOException
 
 class DetailViewModel(
     private val id: String,
@@ -57,6 +58,9 @@ class DetailViewModel(
             } catch (e: IllegalArgumentException) {
                 _event.send(DetailEvent.ShowProductNotFoundMessage)
                 _event.send(DetailEvent.NavigateBack)
+            } catch (e: IOException) {
+                _event.send(DetailEvent.ShowProductLoadFailureMessage)
+                _event.send(DetailEvent.NavigateBack)
             }
         }
     }
@@ -88,6 +92,8 @@ class DetailViewModel(
                 cartRepository.addItem(product, _uiState.value.quantity)
                 _event.send(DetailEvent.NavigateToCart)
             } catch (e: IllegalArgumentException) {
+                _event.send(DetailEvent.ShowAddCartFailureMessage)
+            } catch (e: IOException) {
                 _event.send(DetailEvent.ShowAddCartFailureMessage)
             }
         }

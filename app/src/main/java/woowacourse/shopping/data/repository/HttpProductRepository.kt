@@ -11,6 +11,7 @@ import org.json.JSONObject
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductName
+import java.io.IOException
 
 class HttpProductRepository(
     private val baseUrl: String,
@@ -29,7 +30,9 @@ class HttpProductRepository(
         val responseBody =
             withContext(Dispatchers.IO) {
                 client.newCall(request).execute().use { response ->
-                    require(response.isSuccessful) { "상품 목록 조회에 실패했습니다." }
+                    if (!response.isSuccessful) {
+                        throw IOException("상품 목록 조회에 실패했습니다. code=${response.code}")
+                    }
                     response.body.string()
                 }
             }
@@ -53,7 +56,9 @@ class HttpProductRepository(
         val responseBody =
             withContext(Dispatchers.IO) {
                 client.newCall(request).execute().use { response ->
-                    require(response.isSuccessful) { "상품 조회에 실패했습니다." }
+                    if (!response.isSuccessful) {
+                        throw IOException("상품 조회에 실패했습니다. code=${response.code}")
+                    }
                     response.body.string()
                 }
             }

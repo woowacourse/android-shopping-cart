@@ -7,5 +7,7 @@ sealed interface DetailEvent {
 
     data object ShowProductNotFoundMessage : DetailEvent
 
+    data object ShowProductLoadFailureMessage : DetailEvent
+
     data object ShowAddCartFailureMessage : DetailEvent
 }

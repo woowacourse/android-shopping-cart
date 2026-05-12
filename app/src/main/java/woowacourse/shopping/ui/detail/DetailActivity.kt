@@ -65,6 +65,15 @@ class DetailActivity : ComponentActivity() {
                                     ).show()
                             }
 
+                            DetailEvent.ShowProductLoadFailureMessage -> {
+                                Toast
+                                    .makeText(
+                                        this@DetailActivity,
+                                        "상품 정보를 불러오지 못했습니다.",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+
                             DetailEvent.ShowAddCartFailureMessage -> {
                                 Toast
                                     .makeText(
