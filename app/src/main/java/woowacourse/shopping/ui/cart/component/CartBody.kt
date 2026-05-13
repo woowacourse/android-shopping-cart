@@ -9,41 +9,48 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import woowacourse.shopping.domain.CART_PAGE_SIZE
-import woowacourse.shopping.domain.PageRequest
-import woowacourse.shopping.domain.ProductAndCount
-import woowacourse.shopping.domain.toPage
-import woowacourse.shopping.ui.cart.state.CartState
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductWithQuantity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartBody(
-    state: CartState,
+    visibleProducts: List<ProductWithQuantity>,
+    totalProductCount: Int,
+    currentPageIndex: Int,
+    canNavigateToLeft: Boolean,
+    canNavigateToRight: Boolean,
+    onIncreaseProduct: (Product) -> Unit,
+    onDecreaseProduct: (Uuid) -> Unit,
     innerPadding: PaddingValues,
-    cartItems: List<ProductAndCount>,
     onDeleteProduct: (Uuid) -> Unit,
-    modifier: Modifier,
+    onMoveToPreviousPage: () -> Unit,
+    onMoveToNextPage: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.padding(innerPadding)) {
         Column {
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
-                items(state.visibleProducts(cartItems)) { productAndCount ->
+                items(visibleProducts) { productWithQuantity ->
                     CartItem(
-                        productAndCount = productAndCount,
+                        productWithQuantity = productWithQuantity,
+                        onIncrease = { onIncreaseProduct(productWithQuantity.product) },
+                        onDecrease = { onDecreaseProduct(productWithQuantity.product.productId) },
                         onDelete = onDeleteProduct,
                     )
                 }
             }
-            if (cartItems.size > CART_PAGE_SIZE) {
+            if (totalProductCount > CART_PAGE_SIZE) {
                 Pagination(
-                    pageMoveToLeft = { state.canNavigateToLeft() },
-                    pageMoveToLeftButtonEnabled = state.canNavigateToLeft(),
-                    currentPageIndex = state.currentPageIndex,
-                    pageMoveToRight = { state.canNavigateToRight(cartItems) },
-                    pageMoveToRightButtonEnabled = state.currentPageIndex < state.lastPageIndex(cartItems),
+                    pageMoveToLeft = onMoveToPreviousPage,
+                    pageMoveToLeftButtonEnabled = canNavigateToLeft,
+                    currentPageIndex = currentPageIndex,
+                    pageMoveToRight = onMoveToNextPage,
+                    pageMoveToRightButtonEnabled = canNavigateToRight,
                 )
             }
         }

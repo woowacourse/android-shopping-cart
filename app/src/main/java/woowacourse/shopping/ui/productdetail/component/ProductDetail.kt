@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productdetail.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
@@ -20,9 +21,13 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.theme.dividerColor
 import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun ProductDetail(
     product: Product,
+    quantity: Int,
+    increaseQuantity: () -> Unit,
+    decreaseQuantity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -31,7 +36,8 @@ fun ProductDetail(
             contentDescription = product.productName,
             modifier =
                 Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
         )
         Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
             Text(
@@ -45,6 +51,9 @@ fun ProductDetail(
 
         ProductPrice(
             price = product.price.value,
+            quantity = quantity,
+            increaseQuantity = { increaseQuantity() },
+            decreaseQuantity = { decreaseQuantity() },
         )
     }
 }
@@ -57,5 +66,8 @@ private fun ProductDetailPreview() {
 
     ProductDetail(
         product = ProductFixture.productList(packageName).last(),
+        quantity = 1,
+        increaseQuantity = {},
+        decreaseQuantity = {},
     )
 }
