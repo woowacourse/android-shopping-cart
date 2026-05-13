@@ -33,6 +33,8 @@ class ProductDetailViewModel(
 
     init {
         viewModelScope.launch {
+            val previousProduct = recentProductRepository.getMostRecentProduct()
+
             addRecentProducts(product.id)
 
             name = product.name.value
@@ -40,7 +42,7 @@ class ProductDetailViewModel(
             price = product.price.value
             quantity = 1
             minusEnabled = false
-            latestProduct = recentProductRepository.getMostRecentProduct()
+            latestProduct = previousProduct
             isLastRecentlyProduct = (latestProduct?.id ?: product.id) == product.id
 
             _uiState.update {
@@ -58,32 +60,33 @@ class ProductDetailViewModel(
     }
 
     fun changeProduct() {
-        addRecentProducts(_uiState.value.latestProduct!!.id)
+        viewModelScope.launch {
+            addRecentProducts(_uiState.value.latestProduct!!.id)
 
-        isLastRecentlyProduct = true
-        minusEnabled = false
-        quantity = 1
-        product = _uiState.value.latestProduct!!
-        name = product.name.value
-        imageUrl = product.imageUrl.value
-        price = product.price.value
+            isLastRecentlyProduct = true
+            minusEnabled = false
+            quantity = 1
+            product = _uiState.value.latestProduct ?: return@launch
+            name = product.name.value
+            imageUrl = product.imageUrl.value
+            price = product.price.value
 
-        _uiState.update {
-            it.copy(
-                productName = name,
-                productImageUrl = imageUrl,
-                productPrice = price,
-                quantity = quantity,
-                minusEnabled = minusEnabled,
-                isLastRecentlyProduct = isLastRecentlyProduct,
-            )
+            _uiState.update {
+                it.copy(
+                    productName = name,
+                    productImageUrl = imageUrl,
+                    productPrice = price,
+                    quantity = quantity,
+                    minusEnabled = minusEnabled,
+                    isLastRecentlyProduct = isLastRecentlyProduct,
+                )
+            }
         }
+
     }
 
-    fun addRecentProducts(productId: String) {
-        viewModelScope.launch {
-            recentProductRepository.addRecentProduct(productId)
-        }
+    suspend fun addRecentProducts(productId: String) {
+        recentProductRepository.addRecentProduct(productId)
     }
 
     fun addToCart() {

@@ -145,6 +145,6 @@
 - [x] 변수명 명확하게 변경하기
 - [x] var vs val
 - [] ProductListActivity의 비동기함수 처리 순서에 대한 수정하기
-- [] init에서 순서가 엮일 수 있는 문제 수정하기
+- [x] init에서 순서가 엮일 수 있는 문제 수정하기
 - [] TargetQuantity의 의미는?
 - [] DB에서 장바구니 아이템을 가져오는 로직 수정하기
