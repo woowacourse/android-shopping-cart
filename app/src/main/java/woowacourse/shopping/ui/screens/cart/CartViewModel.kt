@@ -144,9 +144,9 @@ class CartViewModel(
             initializer {
                 val app = this[APPLICATION_KEY] as ShoppingApplication
                 CartViewModel(
-                    cartRepository = app.cartRepository,
-                    productRepository = app.productRepository,
-                    networkMonitor = app.networkMonitor,
+                    cartRepository = app.appContainer.cartRepository,
+                    productRepository = app.appContainer.productRepository,
+                    networkMonitor = app.appContainer.networkMonitor,
                 )
             }
         }

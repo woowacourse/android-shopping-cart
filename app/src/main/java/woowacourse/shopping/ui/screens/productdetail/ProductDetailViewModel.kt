@@ -111,10 +111,10 @@ class ProductDetailViewModel(
                 initializer {
                     val app = this[APPLICATION_KEY] as ShoppingApplication
                     ProductDetailViewModel(
-                        productRepository = app.productRepository,
-                        cartRepository = app.cartRepository,
-                        recentProductRepository = app.recentProductRepository,
-                        networkMonitor = app.networkMonitor,
+                        productRepository = app.appContainer.productRepository,
+                        cartRepository = app.appContainer.cartRepository,
+                        recentProductRepository = app.appContainer.recentProductRepository,
+                        networkMonitor = app.appContainer.networkMonitor,
                         targetProductId = productId,
                     )
                 }
