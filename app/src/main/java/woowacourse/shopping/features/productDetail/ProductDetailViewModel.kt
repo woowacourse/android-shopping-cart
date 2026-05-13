@@ -28,7 +28,7 @@ class ProductDetailViewModel(
     private var price = 0
     private var quantity = 0
     private var minusEnabled = false
-    private var isLatestProduct = true
+    private var isLastRecentlyProduct = true
     private var latestProduct: Product? = null
 
     init {
@@ -41,7 +41,7 @@ class ProductDetailViewModel(
             quantity = 1
             minusEnabled = false
             latestProduct = recentProductRepository.getMostRecentProduct()
-            isLatestProduct = (latestProduct?.id ?: product.id) == product.id
+            isLastRecentlyProduct = (latestProduct?.id ?: product.id) == product.id
 
             _uiState.update {
                 ProductDetailUiState(
@@ -51,7 +51,7 @@ class ProductDetailViewModel(
                     quantity = quantity,
                     minusEnabled = minusEnabled,
                     latestProduct = latestProduct,
-                    isLastProduct = isLatestProduct,
+                    isLastRecentlyProduct = isLastRecentlyProduct,
                 )
             }
         }
@@ -60,7 +60,7 @@ class ProductDetailViewModel(
     fun changeProduct() {
         addRecentProducts(_uiState.value.latestProduct!!.id)
 
-        isLatestProduct = true
+        isLastRecentlyProduct = true
         minusEnabled = false
         quantity = 1
         product = _uiState.value.latestProduct!!
@@ -75,7 +75,7 @@ class ProductDetailViewModel(
                 productPrice = price,
                 quantity = quantity,
                 minusEnabled = minusEnabled,
-                isLastProduct = isLatestProduct,
+                isLastRecentlyProduct = isLastRecentlyProduct,
             )
         }
     }

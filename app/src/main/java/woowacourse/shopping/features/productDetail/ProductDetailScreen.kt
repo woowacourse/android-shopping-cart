@@ -80,7 +80,7 @@ fun ProductDetailScreen(
             imageUrl = uiState.productImageUrl,
             productName = uiState.productName,
             latestProductName = uiState.latestProduct?.name?.value ?: "",
-            isLatestProduct = uiState.isLastProduct,
+            isLatestProduct = uiState.isLastRecentlyProduct,
             onLatestProductClick = { onLatestProductClick(uiState.latestProduct!!) },
             price = uiState.productPrice,
             minusEnabled = uiState.minusEnabled,

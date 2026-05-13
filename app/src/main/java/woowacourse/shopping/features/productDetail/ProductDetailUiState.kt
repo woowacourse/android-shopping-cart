@@ -9,5 +9,5 @@ data class ProductDetailUiState(
     val quantity: Int = 1,
     val minusEnabled: Boolean = false,
     val latestProduct: Product? = null,
-    val isLastProduct: Boolean = true,
+    val isLastRecentlyProduct: Boolean = true,
 )
