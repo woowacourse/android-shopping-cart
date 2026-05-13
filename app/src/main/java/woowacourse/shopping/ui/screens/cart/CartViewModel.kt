@@ -95,7 +95,7 @@ class CartViewModel(
 
             try {
                 action()
-            }catch (e: CancellationException) {
+            } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e("CartViewModel", e.message.toString())
@@ -106,7 +106,6 @@ class CartViewModel(
     }
 
     companion object {
-
         private const val PAGE_SIZE = 5
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {

@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.remote.dto.ProductDto
 import woowacourse.shopping.data.remote.dto.ProductsResponseDto
+
 class ProductRemoteDataSourceImpl(
     private val baseUrl: String,
 ) : ProductRemoteDataSource {

@@ -27,7 +27,10 @@ class CartRepositoryImpl(
         cartDao.minusItem(productId, 1)
     }
 
-    override suspend fun getCartItemByPage(page: Int, pageSize: Int): CartItems {
+    override suspend fun getCartItemByPage(
+        page: Int,
+        pageSize: Int,
+    ): CartItems {
         require(page > 0) { "-거절(사유: ${page}pg가 말이 되는가)-" }
 
         val offset = (page - 1) * pageSize
