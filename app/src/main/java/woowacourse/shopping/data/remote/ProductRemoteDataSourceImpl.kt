@@ -6,19 +6,22 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.remote.dto.ProductDto
 import woowacourse.shopping.data.remote.dto.ProductsResponseDto
-
 class ProductRemoteDataSourceImpl(
     private val baseUrl: String,
 ) : ProductRemoteDataSource {
     private val client = OkHttpClient
         .Builder()
-        .addInterceptor(
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            },
-        ).build()
+        .apply {
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+                addInterceptor(loggingInterceptor)
+            }
+        }.build()
 
     private val json = Json { ignoreUnknownKeys = true }
 
