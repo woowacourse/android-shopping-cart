@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.screens.product
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +43,10 @@ fun ProductCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            onClick = onClick,
+        ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box {
@@ -120,7 +125,7 @@ private fun ProductCardPreview() {
     ProductCard(
         imageUrl =
             "https://cdn.eyesmag.com/content/uploads/posts/2024/10/23/shutterstock_250" +
-                "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
+                    "0953971-3c494ea8-0ac0-4f8d-a962-e47db09215a0.jpg",
         name = "고양이",
         price = Price(999999999),
         onClick = { },
