@@ -3,10 +3,12 @@ package woowacourse.shopping.features.productList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,6 +18,8 @@ import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import woowacourse.shopping.domain.product.repository.ProductRepository
+import woowacourse.shopping.features.productDetail.ParcelProduct
+import woowacourse.shopping.features.productDetail.toParcelProduct
 
 class ProductListViewModel(
     networkMonitor: NetworkMonitor,
@@ -32,12 +36,14 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
 
+    private val _uiEvent = Channel<ProductUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
+
     private var totalProductCount = 0
     private var productUiList = emptyList<ProductUiModel>()
     private var isLastPage = false
     private var pageCount = 0
     private var totalCartItemCount = 0
-    var isHasProductId = false
 
     init {
         moreProducts()
@@ -185,15 +191,26 @@ class ProductListViewModel(
 
     fun isExistProduct(productUiModel: ProductUiModel): Boolean = productUiModel.quantity > 0
 
-    fun isHasProductId(productId: String) {
+    fun isHasProductId(productUi: ProductUiModel) {
         viewModelScope.launch {
-            isHasProductId = productRepository.isProductExist(productId)
+            val exist = productRepository.isProductExist(productUi.id)
+            if (exist) {
+                _uiEvent.send(ProductUiEvent.NextPage(productUi.toProduct().toParcelProduct()))
+            } else {
+                _uiEvent.send(ProductUiEvent.ShowToast("상품이 존재하지 않습니다."))
+            }
         }
     }
 
     companion object {
         const val PAGE_SIZE = 20
     }
+}
+
+sealed interface ProductUiEvent {
+    data class ShowToast(val message: String) : ProductUiEvent
+
+    data class NextPage(val parcelProduct: ParcelProduct) : ProductUiEvent
 }
 
 class ProductListViewModelFactory(

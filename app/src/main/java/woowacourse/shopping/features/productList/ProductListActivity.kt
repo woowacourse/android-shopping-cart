@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
@@ -46,6 +47,24 @@ class ProductListActivity : ComponentActivity() {
                     viewModel.loadRecentProducts()
                 }
 
+                LaunchedEffect(Unit) {
+                    viewModel.uiEvent.collect {
+                        when (it) {
+                            is ProductUiEvent.ShowToast -> {
+                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                            }
+                            is ProductUiEvent.NextPage -> {
+                                val detailIntent =
+                                    ProductDetailActivity.newIntent(
+                                        this@ProductListActivity,
+                                        it.parcelProduct,
+                                    )
+                                startActivity(detailIntent)
+                            }
+                        }
+                    }
+                }
+
                 ProductListScreen(
                     viewModel = viewModel,
                     modifier = Modifier.padding(innerPadding),
@@ -62,18 +81,8 @@ class ProductListActivity : ComponentActivity() {
                     onDecrementClick = {
                         viewModel.minusCartItem(it)
                     },
-                    onProductClick = { productUi ->
-                        viewModel.isHasProductId(productUi.id)
-                        if (!viewModel.isHasProductId) {
-                            Toast.makeText(context, "상품이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
-                            return@ProductListScreen
-                        }
-                        val detailIntent =
-                            ProductDetailActivity.newIntent(
-                                this,
-                                productUi.toProduct().toParcelProduct(),
-                            )
-                        startActivity(detailIntent)
+                    onProductClick = {
+                        viewModel.isHasProductId(it)
                     },
                     loadProducts = {
                         viewModel.moreProducts()
