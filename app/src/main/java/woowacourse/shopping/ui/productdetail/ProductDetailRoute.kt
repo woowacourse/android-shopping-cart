@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.ui.productdetail.state.UiEvent
 import woowacourse.shopping.ui.productdetail.viewmodel.ProductDetailViewModel
 
 @Composable
@@ -17,6 +18,19 @@ fun ProductDetailRoute(
 ) {
     val context = LocalContext.current
     val uiState by productDetailViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        productDetailViewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+                is UiEvent.CartAddSuccess -> {
+                    onNavigateToHome()
+                }
+            }
+        }
+    }
 
     LaunchedEffect(uiState.isError) {
         if (uiState.isError) {
@@ -36,7 +50,6 @@ fun ProductDetailRoute(
             onCloseClick = onNavigateToHome,
             onAddToCartClick = {
                 productDetailViewModel.addCartItem()
-                onNavigateToHome()
             },
 
             isLatestProduct = uiState.latestProduct == null,

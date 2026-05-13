@@ -7,11 +7,13 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.local.AppDatabase
@@ -28,6 +30,7 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.LatestProductUiModel
 import woowacourse.shopping.ui.productdetail.state.ProductDetailUiState
+import woowacourse.shopping.ui.productdetail.state.UiEvent
 
 class ProductDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -40,20 +43,13 @@ class ProductDetailViewModel(
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
+
     private var currentProduct: Product? = null
 
-    private var cart = Cart()
-
     init {
-        observeCart()
         loadProduct()
-    }
-
-    private fun observeCart() {
-        cartRepository.getCart()
-            .onEach { cartItems ->
-                cart = Cart(cartItems)
-            }.launchIn(viewModelScope)
     }
 
     private fun loadProduct() {
@@ -98,23 +94,36 @@ class ProductDetailViewModel(
         val product = currentProduct ?: return
         val quantity = Quantity(_uiState.value.selectedQuantity)
 
-        val updatedItem = cart.plusProduct(product, quantity).findCartItemById(productId) ?: return
         viewModelScope.launch {
-            cartRepository.updateCartItem(updatedItem)
+            try {
+                val currentCartItems = cartRepository.getCart().first()
+
+                val updatedCart = Cart(currentCartItems).plusProduct(product, quantity)
+                val updatedItem = updatedCart.findCartItemById(product.id) ?: return@launch
+                cartRepository.updateCartItem(updatedItem)
+                _uiEvent.send(UiEvent.ShowToast("장바구니에 담았습니다!"))
+                _uiEvent.send(UiEvent.CartAddSuccess)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiEvent.send(UiEvent.ShowToast("장바구니 담기에 실패했습니다."))
+            }
         }
     }
 
     fun increment() {
+        val product = currentProduct ?: return
         _uiState.update { state ->
             val count = state.selectedQuantity + 1
             state.copy(
                 selectedQuantity = count,
-                product = toDetailProductUiModel(currentProduct!!, Quantity(count)),
+                product = toDetailProductUiModel(product, Quantity(count)),
             )
         }
     }
 
     fun decrement() {
+        val product = currentProduct ?: return
         _uiState.update { state ->
             if (state.selectedQuantity == 1) {
                 state
@@ -122,7 +131,7 @@ class ProductDetailViewModel(
                 val count = state.selectedQuantity - 1
                 state.copy(
                     selectedQuantity = count,
-                    product = toDetailProductUiModel(currentProduct!!, Quantity(count)),
+                    product = toDetailProductUiModel(product, Quantity(count)),
                 )
             }
         }
