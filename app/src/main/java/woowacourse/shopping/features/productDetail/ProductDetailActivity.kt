@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.core.content.IntentCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.data.DataProvider.getCartRepository
 import woowacourse.shopping.data.DataProvider.getRecentProductRepository
@@ -19,7 +20,7 @@ class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val parcelProduct = intent.getParcelableExtra<ParcelProduct>("PRODUCT")
+        val parcelProduct = IntentCompat.getParcelableExtra<ParcelProduct>(intent, "PRODUCT", ParcelProduct::class.java)
 
         setContent {
             if (parcelProduct == null) {

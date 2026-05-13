@@ -141,7 +141,7 @@
 
 ## 수정해야 할 목록
 
-- [] getParcelableExtra 변경하기
+- [x] getParcelableExtra 변경하기
 - [x] 변수명 명확하게 변경하기
 - [x] var vs val
 - [] ProductListActivity의 비동기함수 처리 순서에 대한 수정하기
