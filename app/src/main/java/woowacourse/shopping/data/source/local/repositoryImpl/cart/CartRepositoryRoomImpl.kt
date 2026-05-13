@@ -42,28 +42,20 @@ class CartRepositoryRoomImpl(
 
     override suspend fun addCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ) {
-        val currentQuantity = getQuantity(cartItem)
-        val newQuantity = currentQuantity + targetQuantity
         cartDao.insert(
-            cartItem
-                .copy(
-                    quantity = CartItemQuantity(newQuantity),
-                ).toEntity(),
+            cartItem.increaseQuantity().toEntity(),
         )
     }
 
     override suspend fun minusCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ) {
-        val currentQuantity = getQuantity(cartItem)
-        val newQuantity = currentQuantity - targetQuantity
-        if (newQuantity <= 0) {
+        val newCartItem = cartItem.decreaseQuantity()
+        if (newCartItem.quantity.value <= 0) {
             removeCartItem(cartItem)
         } else {
-            cartDao.updateQuantity(cartItem.product.id, newQuantity)
+            cartDao.updateQuantity(newCartItem.product.id, newCartItem.quantity.value)
         }
     }
 

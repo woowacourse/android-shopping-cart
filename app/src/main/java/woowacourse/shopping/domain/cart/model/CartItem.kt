@@ -8,9 +8,9 @@ data class CartItem(
 ) {
     fun isSameCartItem(targetCartItem: CartItem): Boolean = product.id == targetCartItem.product.id
 
-    fun increaseQuantity(targetQuantity: Int): CartItem = copy(quantity = CartItemQuantity(quantity.value + targetQuantity))
+    fun increaseQuantity(): CartItem = copy(quantity = CartItemQuantity(quantity.value + 1))
 
-    fun decreaseQuantity(targetQuantity: Int): CartItem = copy(quantity = CartItemQuantity(quantity.value - targetQuantity))
+    fun decreaseQuantity(): CartItem = copy(quantity = CartItemQuantity(quantity.value - 1))
 
     fun getCartItemTotalPrice(): Int = product.price.value * quantity.value
 }

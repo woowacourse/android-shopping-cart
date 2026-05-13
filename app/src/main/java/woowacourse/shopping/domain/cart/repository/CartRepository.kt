@@ -14,12 +14,10 @@ interface CartRepository {
 
     suspend fun addCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     )
 
     suspend fun minusCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     )
 
     suspend fun removeCartItem(cartItem: CartItem)

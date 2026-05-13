@@ -91,8 +91,8 @@ class ProductDetailViewModel(
 
     fun addToCart() {
         viewModelScope.launch {
-            val cartItem = CartItem(product = product, quantity = CartItemQuantity(1))
-            cartRepository.addCartItem(cartItem, quantity)
+            val cartItem = CartItem(product = product, quantity = CartItemQuantity(quantity))
+            cartRepository.addCartItem(cartItem)
         }
     }
 

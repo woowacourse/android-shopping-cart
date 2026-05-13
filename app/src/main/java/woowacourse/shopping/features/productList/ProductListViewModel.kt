@@ -145,9 +145,8 @@ class ProductListViewModel(
                 cartItem =
                     CartItem(
                         product = productUiModel.toProduct(),
-                        quantity = CartItemQuantity(1),
+                        quantity = CartItemQuantity(productUiModel.quantity),
                     ),
-                targetQuantity = 1,
             )
             loadProductUiList()
         }
@@ -164,9 +163,8 @@ class ProductListViewModel(
                     cartItem =
                         CartItem(
                             product = productUiModel.toProduct(),
-                            quantity = CartItemQuantity(1),
+                            quantity = CartItemQuantity(productUiModel.quantity),
                         ),
-                    targetQuantity = 1,
                 )
             }
             loadProductUiList()
@@ -178,7 +176,7 @@ class ProductListViewModel(
             cartRepository.removeCartItem(
                 CartItem(
                     product = productUiModel.toProduct(),
-                    quantity = CartItemQuantity(1),
+                    quantity = CartItemQuantity(productUiModel.quantity),
                 ),
             )
             loadProductUiList()

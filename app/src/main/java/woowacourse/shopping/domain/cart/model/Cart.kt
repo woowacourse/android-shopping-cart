@@ -7,13 +7,11 @@ data class Cart(
 
     fun addCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
-    ): Cart = copy(cartItems = cartItems.addCartItem(cartItem, targetQuantity))
+    ): Cart = copy(cartItems = cartItems.addCartItem(cartItem))
 
     fun minusCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
-    ): Cart = copy(cartItems = cartItems.minusCartItem(cartItem, targetQuantity))
+    ): Cart = copy(cartItems = cartItems.minusCartItem(cartItem))
 
     fun removeCartItem(cartItem: CartItem): Cart = copy(cartItems = cartItems.removeCartItem(cartItem))
 

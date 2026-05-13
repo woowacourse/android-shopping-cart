@@ -68,14 +68,14 @@ class CartViewModel(
 
     fun increaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.addCartItem(cartItemUiModel.toCartItem(), 1)
+            cartRepository.addCartItem(cartItemUiModel.toCartItem())
             loadCartPage()
         }
     }
 
     fun decreaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.minusCartItem(cartItemUiModel.toCartItem(), 1)
+            cartRepository.minusCartItem(cartItemUiModel.toCartItem())
             loadCartPage()
         }
     }

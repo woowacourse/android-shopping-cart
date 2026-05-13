@@ -7,16 +7,15 @@ class CartItems(
 
     fun addCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ): CartItems =
         if (!searchCartItem(cartItem)) {
-            CartItems(_value = value + cartItem.increaseQuantity(targetQuantity))
+            CartItems(_value = value + cartItem.increaseQuantity())
         } else {
             CartItems(
                 _value =
                     value.map {
                         if (it.isSameCartItem(cartItem)) {
-                            it.increaseQuantity(targetQuantity)
+                            it.increaseQuantity()
                         } else {
                             it
                         }
@@ -26,13 +25,12 @@ class CartItems(
 
     fun minusCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ): CartItems =
         CartItems(
             _value =
                 value.map {
                     if (it.isSameCartItem(cartItem)) {
-                        it.decreaseQuantity(targetQuantity)
+                        it.decreaseQuantity()
                     } else {
                         it
                     }

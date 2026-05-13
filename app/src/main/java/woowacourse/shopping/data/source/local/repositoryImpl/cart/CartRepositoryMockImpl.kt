@@ -18,16 +18,14 @@ class CartRepositoryMockImpl : CartRepository {
 
     override suspend fun addCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ) {
-        cart = cart.addCartItem(cartItem, targetQuantity)
+        cart = cart.addCartItem(cartItem)
     }
 
     override suspend fun minusCartItem(
         cartItem: CartItem,
-        targetQuantity: Int,
     ) {
-        cart = cart.minusCartItem(cartItem, targetQuantity)
+        cart = cart.minusCartItem(cartItem)
     }
 
     override suspend fun removeCartItem(cartItem: CartItem) {
