@@ -3,15 +3,18 @@ package woowacourse.shopping.ui.component.topbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,10 +24,10 @@ import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 
 @Composable
-fun MainTapBar(
+fun MainTopBar(
     title: String,
-    iconResources: Int,
     onIconClick: () -> Unit,
+    count: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -42,24 +45,49 @@ fun MainTapBar(
             color = Color.White,
         )
 
-        Icon(
-            painter = painterResource(iconResources),
-            contentDescription = "$title 화면 메뉴 버튼",
-            tint = Color.White,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onIconClick),
+        Row(
+            modifier = Modifier.clickable(onClick = onIconClick),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_cart),
+                contentDescription = "$title 화면 메뉴 버튼",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(24.dp),
+            )
+            if (count > 0) {
+                CountBadge(count)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CountBadge(count: Int) {
+    Box(
+        modifier = Modifier
+            .size(20.dp)
+            .clip(shape = CircleShape)
+            .background(Color(0xFF04C09E)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = count.toString(),
+            fontSize = 14.sp,
+            color = Color.White,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MainTapBarPreview() {
-    MainTapBar(
+private fun MainTopBarPreview() {
+    MainTopBar(
         title = "안녕하세요 볼트입니다",
-        iconResources = R.drawable.ic_cart,
         onIconClick = { },
+        count = 1,
         modifier = Modifier.fillMaxWidth(),
     )
 }

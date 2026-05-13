@@ -1,43 +1,50 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.source.CartDataSource
-import woowacourse.shopping.data.source.CartDataSourceImpl
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Product
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import woowacourse.shopping.data.local.CartDao
+import woowacourse.shopping.data.util.toDomain
+import woowacourse.shopping.domain.CartItems
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
-    private val cartDataSource: CartDataSource = CartDataSourceImpl,
+    private val cartDao: CartDao,
 ) : CartRepository {
-    private val cartItems
-        get() = cartDataSource.items
-
-    private val totalPage
-        get() = ((cartItems.size + PAGE_SIZE - 1) / PAGE_SIZE).coerceAtLeast(1)
-
-    override fun isLastPage(page: Int) = page == totalPage
-
-    override fun addItem(
-        product: Product,
+    override suspend fun addItem(
+        productId: String,
         amount: Int,
     ) {
-        cartDataSource.add(CartItem(product, amount))
+        require(amount > 0) { "상품 추가 개수는 양수여야 합니다." }
+
+        cartDao.addItem(productId, amount)
     }
 
-    override fun deleteItem(id: String) {
-        cartDataSource.deleteItem(id)
+    override suspend fun deleteItem(productId: String) {
+        cartDao.deleteItem(productId)
     }
 
-    override suspend fun getCartItemByPage(page: Int): List<CartItem> {
-        require(page in 1..totalPage) { "-거절(사유: ${page}pg가 말이 되는가)-" }
-
-        val startIndex = (page - 1) * PAGE_SIZE
-        val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
-
-        return cartItems.subList(startIndex, endIndex)
+    override suspend fun minusItemAmount(productId: String) {
+        cartDao.minusItem(productId, 1)
     }
 
-    companion object {
-        private const val PAGE_SIZE = 5
+    override suspend fun getCartItemByPage(
+        page: Int,
+        pageSize: Int,
+    ): CartItems {
+        require(page > 0) { "-거절(사유: ${page}pg가 말이 되는가)-" }
+
+        val offset = (page - 1) * pageSize
+
+        val result = cartDao.getCartItems(pageSize + 1, offset)
+
+        return result.take(pageSize).toDomain(result.size <= pageSize)
     }
+
+    override fun getAllCartItems(): Flow<CartItems> =
+        cartDao.getAllCartItems().map { result ->
+            CartItems(
+                items = result.map { it.toDomain() },
+                isLast = true,
+            )
+        }
 }

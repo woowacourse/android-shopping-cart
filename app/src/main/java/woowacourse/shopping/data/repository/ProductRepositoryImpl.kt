@@ -1,29 +1,29 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.source.ProductDataSource
-import woowacourse.shopping.data.source.ProductDataSourceImpl
+import woowacourse.shopping.data.remote.ProductRemoteDataSource
+import woowacourse.shopping.data.util.toDomain
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.math.min
 
 class ProductRepositoryImpl(
-    productDataSource: ProductDataSource = ProductDataSourceImpl,
+    private val dataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    private val products = productDataSource.products
-    private var offset = 0
-    override val hasNext get() = offset < products.size
-
-    override fun getProductById(id: String): Product =
-        products.firstOrNull { it.id == id }
-            ?: throw IllegalArgumentException("존재하지 않는 상품입니다. 삐용삐용")
-
-    override suspend fun getProducts(): List<Product> {
-        val fromIndex = offset
-        offset = min(offset + PAGE_SIZE, products.size)
-        return products.subList(fromIndex, offset)
+    override suspend fun getProductById(id: String): Product {
+        val response = dataSource.getProductById(id)
+        return response.toDomain()
     }
 
-    companion object {
-        private const val PAGE_SIZE = 20
+    override suspend fun getProductsByIds(ids: List<String>): List<Product> {
+        val response = dataSource.getProductsByIds(ids)
+        return response.map { it.toDomain() }
+    }
+
+    override suspend fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): Products {
+        val response = dataSource.getProducts(page, pageSize)
+        return response.toDomain()
     }
 }

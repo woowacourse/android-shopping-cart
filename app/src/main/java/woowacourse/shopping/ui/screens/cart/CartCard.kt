@@ -26,12 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import woowacourse.shopping.R
+import woowacourse.shopping.ui.component.AmountController
 
 @Composable
 fun CartItemCard(
-    imageUrl: String,
-    name: String,
-    price: Int,
+    item: CartUiModel,
+    onClickMinus: () -> Unit,
+    onClickPlus: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,14 +49,14 @@ fun CartItemCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = name,
+                text = item.name,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W700,
             )
 
             Icon(
                 painter = painterResource(R.drawable.ic_dismiss),
-                contentDescription = "$name 장바구니에서 제거",
+                contentDescription = "${item.name} 장바구니에서 제거",
                 modifier = Modifier
                     .size(40.dp)
                     .clickable(onClick = onDelete)
@@ -70,19 +71,30 @@ fun CartItemCard(
             verticalAlignment = Alignment.Bottom,
         ) {
             AsyncImage(
-                model = imageUrl,
-                contentDescription = "$name 상품 이미지",
+                model = item.imageUrl,
+                contentDescription = "$item.name 상품 이미지",
                 modifier = Modifier
                     .width(136.dp)
                     .height(72.dp),
                 contentScale = ContentScale.Crop,
             )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                AmountController(
+                    amount = item.cartAmount,
+                    onClickMinus = { onClickMinus() },
+                    onClickAdd = { onClickPlus() },
+                    modifier = Modifier.width(126.dp),
+                )
 
-            Text(
-                text = "${"%,d".format(price)}원",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W400,
-            )
+                Text(
+                    text = item.price,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                )
+            }
         }
     }
 }
@@ -91,10 +103,16 @@ fun CartItemCard(
 @Composable
 private fun CartItemCardPreview() {
     CartItemCard(
-        imageUrl = "",
-        name = "우주선",
-        price = 10_000_000,
+        item = CartUiModel(
+            id = "1",
+            imageUrl = "",
+            name = "우주선",
+            price = "10,000,000원",
+            cartAmount = "1",
+        ),
         onDelete = { },
         modifier = Modifier.padding(5.dp),
+        onClickMinus = { },
+        onClickPlus = { },
     )
 }
