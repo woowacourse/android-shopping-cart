@@ -6,6 +6,7 @@ import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
 import woowacourse.shopping.model.ShoppingCartItem
+import woowacourse.shopping.model.ShoppingItem
 
 class ShoppingCartPageStateHolderTest {
     private val product = Product(1, ProductTitle("동원 스위트콘"), Price(99_800), "")
@@ -16,7 +17,10 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem(index.toLong(), product)
+                    ShoppingCartItem(
+                        index.toLong(),
+                        ShoppingItem(product = product, quantity = 1),
+                    )
                 },
             )
         shoppingCartPageStateHolder.canMoveToNextPage() shouldBe true
@@ -37,7 +41,10 @@ class ShoppingCartPageStateHolderTest {
         val shoppingCartPageStateHolder =
             ShoppingCartPageStateHolder(
                 List(6) { index ->
-                    ShoppingCartItem(index.toLong(), product)
+                    ShoppingCartItem(
+                        index.toLong(),
+                        ShoppingItem(product = product, quantity = 1),
+                    )
                 },
             )
         while (shoppingCartPageStateHolder.canMoveToNextPage()) {

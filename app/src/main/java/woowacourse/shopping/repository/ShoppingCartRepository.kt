@@ -1,12 +1,13 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun add(product: Product)
+    suspend fun addIfAbsent(productId: Long)
 
-    fun remove(shoppingCartItem: ShoppingCartItem)
+    suspend fun remove(shoppingCartItem: ShoppingCartItem)
 
-    fun getShoppingItems(): List<ShoppingCartItem>
+    suspend fun getShoppingItems(): List<ShoppingCartItem>
+
+    suspend fun removeByProductId(productId: Long): Boolean
 }

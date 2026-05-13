@@ -9,8 +9,8 @@ class ShoppingCartItemTest {
 
     @Test
     fun `같은 상품이라도 쇼핑 카트 아이템 id가 다르면 별개로 취급한다`() {
-        val shoppingCartItem = ShoppingCartItem(1, product)
-        val differentIdShoppingCartItem = ShoppingCartItem(2, product)
+        val shoppingCartItem = ShoppingCartItem(1, ShoppingItem(product = product, quantity = 1))
+        val differentIdShoppingCartItem = ShoppingCartItem(2, ShoppingItem(product = product, quantity = 1))
 
         shoppingCartItem shouldNotBe differentIdShoppingCartItem
         shoppingCartItem.hashCode() shouldNotBe differentIdShoppingCartItem.hashCode()
@@ -18,9 +18,15 @@ class ShoppingCartItemTest {
 
     @Test
     fun `다른 상품이라도 쇼핑 카트 아이템 id가 같으면 동일하다고 취급한다`() {
-        val shoppingCartItem = ShoppingCartItem(1, product)
+        val shoppingCartItem = ShoppingCartItem(1, ShoppingItem(product = product, quantity = 1))
         val differentProductShoppingCartItem =
-            ShoppingCartItem(1, Product(2, ProductTitle("동원 참치"), Price(9_980), "..."))
+            ShoppingCartItem(
+                1,
+                ShoppingItem(
+                    product = Product(2, ProductTitle("동원 참치"), Price(9_980), "..."),
+                    quantity = 1,
+                ),
+            )
         shoppingCartItem shouldBe differentProductShoppingCartItem
         shoppingCartItem.hashCode() shouldBe differentProductShoppingCartItem.hashCode()
     }

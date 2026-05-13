@@ -5,6 +5,8 @@ package woowacourse.shopping.ui
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,28 +30,41 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductTitle
+import woowacourse.shopping.model.ShoppingItem
+import woowacourse.shopping.ui.component.ProductQuantityBox
 import woowacourse.shopping.ui.theme.AndroidShoppingTheme
 
 @Composable
 fun DetailProductScreen(
-    product: Product,
+    quantity: Int,
+    quantityPrice: Int,
+    shoppingItem: ShoppingItem,
+    lastViewedShoppingItem: ShoppingItem?,
     onAddToCartClick: () -> Unit,
+    onLastViewedProductClick: (Long) -> Unit,
     onBackClick: () -> Unit,
+    onQuantityPlusClick: () -> Unit,
+    onQuantityMinusClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val product = shoppingItem.getProduct()
     Scaffold(
         topBar = {
             DetailProductTopBar(
@@ -88,14 +105,31 @@ fun DetailProductScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.price_label),
+                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(quantityPrice),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
-                Text(
-                    text = DecimalFormat(stringResource(R.string.price_format_pattern)).format(product.getPrice()),
-                    color = MaterialTheme.colorScheme.onBackground,
+                ProductQuantityBox(
+                    onQuantityPlusClick = onQuantityPlusClick,
+                    onQuantityMinusClick = onQuantityMinusClick,
+                    quantity = quantity,
+                    modifier =
+                        Modifier
+                            .padding(
+                                start = 7.5.dp,
+                                top = 8.dp,
+                            ).width(104.dp),
+                )
+            }
+            if (lastViewedShoppingItem != null &&
+                lastViewedShoppingItem.getProductId() != shoppingItem.getProductId()
+            ) {
+                LastViewedProductSection(
+                    shoppingItem = lastViewedShoppingItem,
+                    onLastViewedProductClick = onLastViewedProductClick,
+                    modifier = Modifier.padding(16.dp),
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -110,6 +144,40 @@ fun DetailProductScreen(
                 Text(stringResource(R.string.add_to_cart_button_text))
             }
         }
+    }
+}
+
+@Composable
+private fun LastViewedProductSection(
+    shoppingItem: ShoppingItem,
+    onLastViewedProductClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val product = shoppingItem.getProduct()
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(8.dp))
+                .clickable { onLastViewedProductClick(product.id) }
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.last_viewed_product_title),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+        )
+
+        Text(
+            text = product.getTitle(),
+            fontSize = 20.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
     }
 }
 
@@ -141,18 +209,57 @@ private fun DetailProductTopBar(
 
 @Composable
 @Preview(showBackground = true)
+private fun LastViewedProductSectionPreview() {
+    LastViewedProductSection(
+        shoppingItem =
+            ShoppingItem(
+                product =
+                    Product(
+                        id = 2,
+                        title = ProductTitle("오리온 카스타드"),
+                        price = Price(4_800),
+                        imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+                    ),
+                quantity = 0,
+            ),
+        onLastViewedProductClick = {},
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
 private fun DetailProductScreenPreview() {
     AndroidShoppingTheme {
         DetailProductScreen(
-            product =
-                Product(
-                    id = 1,
-                    title = ProductTitle("동원 스위트콘"),
-                    price = Price(99_800),
-                    imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+            shoppingItem =
+                ShoppingItem(
+                    product =
+                        Product(
+                            id = 1,
+                            title = ProductTitle("동원 스위트콘"),
+                            price = Price(99_800),
+                            imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+                        ),
+                    quantity = 0,
+                ),
+            lastViewedShoppingItem =
+                ShoppingItem(
+                    product =
+                        Product(
+                            id = 1,
+                            title = ProductTitle("동원 스위트콘"),
+                            price = Price(99_800),
+                            imageUrl = "https://img.dongwonmall.com/dwmall/static_root/model_img/main/153/15327_1_a.jpg?f=webp&q=80",
+                        ),
+                    quantity = 0,
                 ),
             onAddToCartClick = {},
+            onLastViewedProductClick = {},
             onBackClick = {},
+            quantity = 0,
+            quantityPrice = 0,
+            onQuantityPlusClick = {},
+            onQuantityMinusClick = {},
         )
     }
 }

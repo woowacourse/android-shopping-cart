@@ -1,85 +1,116 @@
-# android-shopping-cart
+# Android Shopping Cart
 
-## 1단계 구현할 기능 목록
+# 🚀 3단계 - 상태 관리 | 4단계 - HTTP Client
+## 핵심 기능
 
-### 구현할 기능 목록
+- 상품 목록 조회 및 페이지 로드
+- 상품 수량 `+/-` 조작
+- 장바구니 담기/삭제
+- 상품 목록, 상세, 장바구니 간 수량 동기화(SSOT)
+- 최근 본 상품(최신순, 최대 10개) 관리
+- 네트워크 상태 변경 감지 및 UI 배너 표시
+- 앱 재시작 이후 장바구니/최근 방문 데이터 유지
 
-- [x] 피그마 디자인에 맞게 UI를 구성한다
-- [x] 상품의 동등성은 제목, 가격, 이미지가 아닌 id로 결정된다
-  - 제목, 가격, 이미지 주소가 변해도 id가 같으면 같은 상품이다
-- [x] 같은 상품이라도 쇼핑 카트 아이템 id가 다르면 별개로 취급한다
-- [x] 다른 상품이라도 쇼핑 카트 아이템 id가 같으면 동일하다고 취급한다
-- [x] 장바구니에 상품을 추가할 수 있다
-- [x] 장바구니에 존재하는 상품을 삭제할 수 있다
-- [x] 장바구니에 존재하지 않은 상품을 삭제하려고하면 예외를 반환한다
-- [x] 장바구니에 존재하는 상품을 표시한다
-- [x] 상품 가격은 음수일 수 없다
-- [x] 상품 제목은 비어있을 수 없다
+## 미션 요구사항 반영
 
-## 2단계 구현할 기능 목록
+- 로컬 데이터 유지를 위해 Room 사용
+- HTTP Client(OkHttp) 구현
+- MockWebServer 기반 테스트 서버 구성
+- 네트워크 상태 변경 시스템 이벤트 감지 후 UI 반영
 
-- [x] 상품 목록에서 더보기 버튼을 눌러 추가 로드
-  - [x] 더보기 버튼을 상품 목록에 추가
-  - [x] 버튼을 클릭하면 상품 목록이 더 표시된다
-  - [x] 상품 목록은 20개로 제한된다
+## 패키지 구조
 
-- [x] 장바구니 목록에서 페이지네이션 구현
-  - [x] 1번 페이지에서 이전 페이지로의 이동 버튼은 비활성화된다
-  - [x] 마지막 페이지에서 다음 페이지로의 이동 버튼은 비활성화된다
-  - [x] 페이지가 하나뿐인경우 이전, 다음 버튼이 모두 비활성화된다
-
-### UI 테스트
-
-#### 상품 목록
-
-- [x] 상품 목록에서 동원 스위트콘 상품을 클릭하는 경우 동원 스위트콘 상품의 상세 화면가 표시된다
-```gherkin
-Scenario: 상품 목록에서 동원 스위트콘 상품을 클릭하는 경우
-    Given 동원 스위트콘 상품이 표시되어 있는 상태
-    When 동원 스위트콘 상품을 클릭한다
-    Then 동원 스위트콘 상품의 상세 화면이 표시된다
+```text
+app/src/main/java/woowacourse/shopping
+├─ ShoppingApplication.kt
+├─ activity
+│  ├─ ProductListActivity.kt
+│  ├─ DetailProductActivity.kt
+│  └─ ShoppingCartActivity.kt
+├─ ui
+│  ├─ ProductListScreen.kt
+│  ├─ DetailProductScreen.kt
+│  ├─ ShoppingCartScreen.kt
+│  ├─ component
+│  └─ pagination
+├─ viewmodel
+│  ├─ ProductListViewModel.kt
+│  ├─ DetailProductViewModel.kt
+│  └─ ShoppingCartItemViewModel.kt
+├─ repository
+│  ├─ ShoppingItemRepository.kt
+│  ├─ ShoppingCartRepository.kt
+│  ├─ RoomShoppingItemRepository.kt
+│  └─ RoomShoppingCartRepository.kt
+├─ backend
+│  ├─ MockProductSeedData.kt
+│  ├─ MockShoppingBackendServer.kt
+│  ├─ ProductBackendDataSource.kt
+│  ├─ OkHttpProductBackendDataSource.kt
+│  └─ ShoppingItemsRemoteSyncer.kt
+├─ network
+│  ├─ NetworkStatusMonitor.kt
+│  └─ AndroidNetworkStatusMonitor.kt
+├─ storage
+│  ├─ room
+│  │  ├─ ShoppingDatabase.kt
+│  │  ├─ shoppingItem
+│  │  │  ├─ ShoppingItemEntity.kt
+│  │  │  └─ ShoppingItemDao.kt
+│  │  └─ shoppingcart
+│  │     ├─ ShoppingCartEntity.kt
+│  │     ├─ ShoppingCartItemRow.kt
+│  │     └─ ShoppingCartDao.kt
+│  └─ datastore
+│     ├─ VisitStore.kt
+│     └─ DataStoreVisitStore.kt
+└─ model
+   ├─ Product.kt
+   ├─ ProductTitle.kt
+   ├─ Price.kt
+   ├─ ShoppingItem.kt
+   └─ ShoppingCartItem.kt
 ```
 
-- [x] 상품 목록 화면에서 장바구니 아이콘을 클릭하는 경우 장바구니 화면으로 이동한다
-```gherkin
-Scenario: 상품 목록 화면에서 장바구니 아이콘을 클릭하는 경우
-    Given 상품 목록 화면에 있는 상태
-    When 장바구니 아이콘을 클릭한다
-    Then 장바구니 화면으로 이동한다
-```
+## 화면별 동작 규칙
 
-#### 상품 상세
+### 상품 목록
 
-- [x] 상품 상세 화면에서 취소 버튼을 클릭하는 경우 상품 목록 화면으로 이동한다
-```gherkin
-Scenario: 상품 상세 화면에서 취소 버튼을 클릭하는 경우
-    Given 동원 스위트콘 상세 화면에 있는 상태
-    When 취소 버튼을 클릭한다
-    Then 상품 목록 화면으로 이동한다
-```
+- 상품은 20개 단위 페이지로 표시
+- 수량이 0이면 장바구니 추가 버튼 노출
+- 수량이 1 이상이면 `+/-` 컨트롤 노출
+- 상단 장바구니 아이콘 배지는 전체 수량 합 표시
 
-- [x] 상품 상세 화면에서 장바구니 담기를 클릭하는 경우 장바구니에 추가되고 상품 목록 화면으로 이동한다
-```gherkin
-Scenario: 상품 상세 화면에서 장바구니 담기를 클릭하는 경우
-    Given 동원 스위트콘 상세 화면에 있는 상태
-    When 장바구니 담기를 클릭한다
-    Then 장바구니에 추가되고 상품 목록 화면으로 이동한다
-```
+### 상품 상세
 
-#### 장바구니
+- 기본 선택 수량: 1
+- `+/-`는 상세의 선택 수량만 변경
+- `장바구니에 담기` 클릭 시에만 실제 수량 반영
+- 최근 본 상품 영역은 "현재 상품과 다른 마지막 방문 상품 1개"만 노출
 
-- [x] 장바구니 화면에서 뒤로가기 버튼을 클릭하는 경우 상품 목록 화면으로 이동한다
-```gherkin
-Scenario: 장바구니 화면에서 뒤로가기 버튼을 클릭하는 경우
-    Given 장바구니 화면에 있는 상태
-    When 뒤로가기 버튼을 클릭한다
-    Then 상품 목록 화면으로 이동한다
-```
+### 장바구니
 
-- [x] 장바구니 화면에서 동원 스위트콘 상품 삭제 버튼을 클릭하는 경우 동원 스위트콘이 사라진다
-```gherkin
-Scenario: 장바구니 화면에서 동원 스위트콘 상품 삭제 버튼을 클릭하는 경우 
-    Given 장바구니 화면에 동원 스위트콘이 표시되어 있는 상태
-    When 동원 스위트콘의 삭제 버튼을 클릭한다
-    Then 장바구니 화면에서 동원 스위트콘이 사라진다
-```
+- 페이지당 5개 노출
+- `+/-` 조작 시 상품 목록/상세와 동일 수량으로 즉시 동기화
+- 수량이 0이 되면 장바구니에서 제거
+- 항목 삭제 시 해당 상품 수량도 0으로 초기화
+
+## 체크리스트
+
+### 3단계
+
+- [x] 상품 목록에서 `+` 버튼 클릭 시 장바구니 수량 증가
+- [x] 목록/상세/장바구니 간 수량 동기화
+- [x] 수량 0이면 장바구니 항목 제거
+- [x] 수량 음수 방지
+- [x] 재시작 이후 수량 유지
+- [x] 공통 수량 컴포넌트 동작
+- [x] 장바구니 `x` 삭제 동작
+
+### 4단계
+
+- [x] 최근 본 상품 최신순 정렬, 최대 10개 유지
+- [x] 상세 화면에서 마지막 방문 상품 1개 표시
+- [x] 마지막 방문 상품 선택 시 해당 영역에서 제외
+- [x] 마지막 방문 상품 상세에서 뒤로 가기 시 상품 목록 이동
+- [x] 재시작 후 최근 방문/장바구니 데이터 유지

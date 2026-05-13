@@ -16,6 +16,7 @@ private val CustomColorScheme =
         onSurfaceVariant = Gray80,
         onBackground = Black,
         background = White,
+        outline = Gray40,
     )
 
 @Composable

@@ -15,4 +15,7 @@
     <string name="next_page_description">다음 페이지</string>
     <string name="more_button_text">더보기</string>
     <string name="price_format_pattern">#,###원</string>
+    <string name="recent_viewed_section_title">최근 본 상품</string>
+    <string name="last_viewed_product_title">마지막으로 본 상품</string>
+    <string name="network_disconnected_message">네트워크 연결이 끊어졌습니다.</string>
 </resources>
