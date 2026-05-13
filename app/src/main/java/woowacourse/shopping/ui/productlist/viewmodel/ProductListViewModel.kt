@@ -11,11 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.local.AppDatabase
-import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
@@ -146,17 +142,13 @@ class ProductListViewModel(
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
-                val database = AppDatabase.getDatabase(context)
+                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as ShoppingApplication
+                val container = application.container
 
-                val dataSource = ProductRemoteDataSource()
-                val productRepository = ProductRepositoryImpl(dataSource)
-                val cartRepository = CartRepositoryImpl(database.cartDao())
-                val recentProductRepository = RecentProductRepositoryImpl(database.recentProductDao())
                 ProductListViewModel(
-                    productRepository = productRepository,
-                    cartRepository = cartRepository,
-                    recentProductRepository = recentProductRepository,
+                    productRepository = container.productRepository,
+                    cartRepository = container.cartRepository,
+                    recentProductRepository = container.recentProductRepository,
                 )
             }
         }

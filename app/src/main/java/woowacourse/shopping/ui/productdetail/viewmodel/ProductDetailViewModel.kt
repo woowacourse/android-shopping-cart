@@ -16,11 +16,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.local.AppDatabase
-import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
@@ -159,20 +155,14 @@ class ProductDetailViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
-                val database = AppDatabase.getDatabase(context)
-                val dataSource = ProductRemoteDataSource()
+                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as ShoppingApplication
+                val container = application.container
 
-                val productRepository = ProductRepositoryImpl(dataSource)
-                val cartRepository = CartRepositoryImpl(database.cartDao())
-                val recentProductRepository = RecentProductRepositoryImpl(database.recentProductDao())
-
-                val savedStateHandle = createSavedStateHandle()
                 ProductDetailViewModel(
-                    savedStateHandle = savedStateHandle,
-                    productRepository = productRepository,
-                    cartRepository = cartRepository,
-                    recentProductRepository = recentProductRepository,
+                    savedStateHandle = createSavedStateHandle(),
+                    productRepository = container.productRepository,
+                    cartRepository = container.cartRepository,
+                    recentProductRepository = container.recentProductRepository,
                 )
             }
         }

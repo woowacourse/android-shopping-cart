@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.cart.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -11,8 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.local.AppDatabase
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Quantity
@@ -123,11 +123,12 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
-                val database = AppDatabase.getDatabase(context)
+                val application = this[APPLICATION_KEY] as ShoppingApplication
+                val container = application.container
 
-                val cartRepository = CartRepositoryImpl(database.cartDao())
-                CartViewModel(cartRepository)
+                CartViewModel(
+                    cartRepository = container.cartRepository,
+                )
             }
         }
     }

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".ShoppingApplication"
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,7 +27,7 @@
             android:label="@string/title_activity_cart"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.productlist.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

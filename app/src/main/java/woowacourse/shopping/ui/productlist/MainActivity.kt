@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.productlist
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import woowacourse.shopping.data.remote.api.ShoppingMockServer
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.productlist.ProductListRoute
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +21,7 @@ class MainActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 ProductListRoute(
                     onNavigateToDetail = { id ->
-                        startActivity(ProductDetailActivity.newIntent(this, id))
+                        startActivity(ProductDetailActivity.Companion.newIntent(this, id))
                     },
                     onNavigateToCart = {
                         startActivity(Intent(this, CartActivity::class.java))
