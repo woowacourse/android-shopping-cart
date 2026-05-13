@@ -11,23 +11,14 @@ class RecentProductSourceImpl(
     override suspend fun addRecentProductId(productId: String) {
         val viewTime = System.currentTimeMillis()
 
-        if (getRecentProductIds().count { it.productId == productId } > 0) {
-            dao.update(
-                recentProduct = RecentProductEntity(
-                    productId = productId,
-                    viewTime = viewTime,
-                ),
-            )
-
-            return
-        }
-
-        dao.insert(
+        dao.upsert(
             recentProduct = RecentProductEntity(
                 productId = productId,
                 viewTime = viewTime,
             ),
         )
+
+        dao.deleteOldItems()
     }
 
     override suspend fun getLastViewProductId(): RecentProductEntity? = getRecentProductIds().firstOrNull()
