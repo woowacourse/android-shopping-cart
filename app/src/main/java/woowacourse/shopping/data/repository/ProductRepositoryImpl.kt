@@ -8,8 +8,8 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(private val remoteDataSource: ProductRemoteDataSource) : ProductRepository {
-    override suspend fun getProducts(): List<Product> = remoteDataSource.getProducts().map { response ->
-        response.toProduct()
+    override suspend fun getProducts(): Result<List<Product>> = remoteDataSource.getProducts().map { response ->
+        response.map { it.toProduct() }
     }
 
     override suspend fun getProduct(id: String): Result<Product?> = try {

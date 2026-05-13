@@ -65,12 +65,14 @@ class ProductListViewModel(
 
     private fun loadInitData() {
         viewModelScope.launch {
-            try {
-                allProducts = productRepository.getProducts()
-                fetchProducts()
-            } catch (e: Exception) {
-                println("ProductListViewModel Exception: $e.message")
-            }
+            productRepository.getProducts()
+                .onSuccess { products ->
+                    allProducts = products
+                    fetchProducts()
+                }
+                .onFailure { exception ->
+                    _uiState.update { it.copy(isError = true, errorMessage = exception.message) }
+                }
         }
     }
 

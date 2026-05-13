@@ -13,16 +13,18 @@ class ProductRemoteDataSource {
     private val client = NetworkConfig.okHttpClient
     private val gson = Gson()
 
-    suspend fun getProducts(): List<ProductResponse> = withContext(Dispatchers.IO) {
-        val request = Request.Builder()
-            .url("${ShoppingMockServer.BASE_URL}products")
-            .build()
+    suspend fun getProducts(): Result<List<ProductResponse>> = withContext(Dispatchers.IO) {
+        runCatching {
+            val request = Request.Builder()
+                .url("${ShoppingMockServer.BASE_URL}products")
+                .build()
 
-        client.newCall(request).execute().use { response ->
-            if (response.isSuccessful.not()) throw Exception("상품 목록 로드 실패: $response")
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful.not()) throw Exception("상품 목록 로드 실패: $response")
 
-            val body = response.body.string()
-            gson.fromJson(body, Array<ProductResponse>::class.java).toList()
+                val body = response.body.string()
+                gson.fromJson(body, Array<ProductResponse>::class.java).toList()
+            }
         }
     }
 
