@@ -6,17 +6,15 @@ import woowacourse.shopping.domain.model.cart.CartItem
 import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class CartItemTest {
     @Test
     fun `선택한 상품의 수량을 늘릴 수 있다`() {
         val cartItem = CartItem(createProduct(), 1)
 
-        val newCartItem = cartItem.increaseQuantity()
+        val newCartItem = cartItem.increaseQuantity(1)
 
-        assertThat(newCartItem.count).isEqualTo(2)
+        assertThat(newCartItem.quantity).isEqualTo(2)
     }
 
     @Test
@@ -25,7 +23,7 @@ class CartItemTest {
 
         val newCartItem = cartItem.decreaseQuantity()
 
-        assertThat(newCartItem.count).isEqualTo(0)
+        assertThat(newCartItem.quantity).isEqualTo(0)
     }
 
     @Test
@@ -34,13 +32,13 @@ class CartItemTest {
 
         val newCartItem = cartItem.decreaseQuantity()
 
-        assertThat(newCartItem.count).isEqualTo(0)
+        assertThat(newCartItem.quantity).isEqualTo(0)
     }
 
     @OptIn(ExperimentalUuidApi::class)
     private fun createProduct(): Product =
         Product(
-            productId = Uuid.random(),
+            productId = 1,
             imageUrl = "",
             productName = "동원 스위트콘",
             price = Price(99800),

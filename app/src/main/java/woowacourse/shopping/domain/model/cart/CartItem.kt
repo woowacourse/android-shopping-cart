@@ -1,19 +1,17 @@
 package woowacourse.shopping.domain.model.cart
 
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 data class CartItem(
     val product: Product,
-    val count: Int,
+    val quantity: Int,
 ) {
-    fun increaseQuantity(): CartItem = copy(count = count + 1)
+    fun increaseQuantity(quantityToAdd: Int): CartItem = copy(quantity = quantity + quantityToAdd)
 
     fun decreaseQuantity(): CartItem =
-        if (count == 0) {
+        if (quantity == 0) {
             this
         } else {
-            copy(count = count - 1)
+            copy(quantity = quantity - 1)
         }
 }

@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.shopping.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +20,10 @@ import woowacourse.shopping.presentation.theme.topAppBarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListTopAppBar(onClick: () -> Unit) {
+fun ProductListTopAppBar(
+    totalQuantity: Int,
+    onClick: () -> Unit,
+) {
     TopAppBar(
         title = {
             Text(
@@ -27,15 +31,27 @@ fun ProductListTopAppBar(onClick: () -> Unit) {
             )
         },
         actions = {
-            Image(
-                painter = painterResource(id = R.drawable.shopping_cart_icon),
-                contentDescription = "shoppingCart",
-                modifier =
-                    Modifier
-                        .padding(20.dp)
-                        .size(24.dp)
-                        .clickable { onClick() },
-            )
+            Row(
+                modifier = Modifier.padding(end = 16.dp),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.shopping_cart_icon),
+                    contentDescription = "shoppingCart",
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .clickable { onClick() },
+                )
+                if (totalQuantity > 0) {
+                    QuantityLabel(
+                        quantity = totalQuantity,
+                        modifier =
+                            Modifier
+                                .padding(start = 4.dp)
+                                .size(24.dp),
+                    )
+                }
+            }
         },
         colors =
             TopAppBarDefaults.topAppBarColors(
@@ -48,5 +64,8 @@ fun ProductListTopAppBar(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun ProductListTopAppBarPreview() {
-    ProductListTopAppBar(onClick = {})
+    ProductListTopAppBar(
+        totalQuantity = 0,
+        onClick = {},
+    )
 }

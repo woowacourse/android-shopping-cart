@@ -1,50 +1,63 @@
 package woowacourse.shopping.presentation.cart.screen
 
+import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.app.AppContainer
-import woowacourse.shopping.presentation.cart.CartStateHolder
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import woowacourse.shopping.presentation.cart.CartUiEvent
+import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.presentation.cart.component.CartContent
 import woowacourse.shopping.presentation.cart.component.CartScaffold
-import kotlin.uuid.ExperimentalUuidApi
+import woowacourse.shopping.presentation.cart.component.DeleteProductDialog
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    stateHolder: CartStateHolder,
+    viewModel: CartViewModel,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val deleteProductId = uiState.deleteProductId
+
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is CartUiEvent.ShowMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     CartScaffold(
         onBack = onBack,
         modifier = modifier,
     ) {
         CartContent(
-            cart = stateHolder.cart,
-            currentPage = stateHolder.currentPage,
-            hasMoreItems = stateHolder.hasMoreItems,
-            onPreviousPageClick = { stateHolder.goToPreviousPage() },
-            onNextPageClick = { stateHolder.goToNextPage() },
-            hasPreviousPage = stateHolder.hasPreviousPage,
-            hasNextPage = stateHolder.hasNextPage,
-            onDelete = { productId -> stateHolder.deleteProduct(productId) },
+            cart = uiState.cart,
+            currentPage = uiState.currentPage,
+            hasMoreItems = viewModel.hasMoreItems,
+            onPreviousPageClick = viewModel::goToPreviousPage,
+            onNextPageClick = viewModel::goToNextPage,
+            hasPreviousPage = viewModel.hasPreviousPage,
+            hasNextPage = viewModel.hasNextPage,
+            onDelete = viewModel::showDeleteDialog,
+            onQuantityIncrease = viewModel::increaseQuantity,
+            onQuantityDecrease = viewModel::decreaseQuantity,
         )
     }
-}
 
-@OptIn(ExperimentalUuidApi::class)
-@Preview
-@Composable
-private fun CartScreenPreview() {
-    CartScreen(
-        stateHolder =
-            CartStateHolder(
-                cartRepository = AppContainer.cartRepository,
-                initialPageIndex = 1,
-                onPageIndexChanged = {},
-            ),
-        onBack = {},
-    )
+    if (deleteProductId != null) {
+        DeleteProductDialog(
+            onDismissRequest = viewModel::dismissDeleteDialog,
+            onConfirm = { viewModel.deleteProduct(deleteProductId) },
+            onDismiss = viewModel::dismissDeleteDialog,
+        )
+    }
 }

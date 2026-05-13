@@ -1,25 +1,29 @@
 package woowacourse.shopping.domain.model.cart
 
 import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Cart(
     val cartItems: List<CartItem> = emptyList(),
 ) {
-    fun addProductToCart(product: Product): Cart {
+    fun getTotalQuantity(): Int = cartItems.sumOf { it.quantity }
+
+    fun increaseQuantity(
+        product: Product,
+        quantity: Int,
+    ): Cart {
+        if (quantity <= 0) return this
+
         val exists = cartItems.any { product.productId == it.product.productId }
 
         if (!exists) {
-            return copy(cartItems = cartItems + CartItem(product, 1))
+            return copy(cartItems = cartItems + CartItem(product, quantity))
         }
 
         return copy(
             cartItems =
                 cartItems.map {
                     if (product.productId == it.product.productId) {
-                        it.increaseQuantity()
+                        it.increaseQuantity(quantity)
                     } else {
                         it
                     }
@@ -27,7 +31,31 @@ data class Cart(
         )
     }
 
-    fun deleteProductFromCart(productId: Uuid): Cart =
+    fun decreaseQuantity(productId: Int): Cart {
+        val cartItem = cartItems.find { it.product.productId == productId } ?: return this
+
+        if (cartItem.quantity == 1) {
+            return copy(
+                cartItems =
+                    cartItems.filterNot {
+                        it.product.productId == productId
+                    },
+            )
+        }
+
+        return copy(
+            cartItems =
+                cartItems.map {
+                    if (it.product.productId == productId) {
+                        it.decreaseQuantity()
+                    } else {
+                        it
+                    }
+                },
+        )
+    }
+
+    fun deleteProduct(productId: Int): Cart =
         copy(
             cartItems =
                 cartItems.filterNot {

@@ -1,22 +1,25 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.cart.Cart
-import woowacourse.shopping.domain.model.product.Product
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface CartRepository {
-    fun getItems(): Cart
+    suspend fun getItems(): Cart
 
-    fun getPagingItems(
+    suspend fun getPagingItems(
         page: Int,
         pageSize: Int,
     ): Cart
 
-    fun getTotalItemCount(): Int
+    suspend fun getTotalItemCount(): Int
 
-    fun addProduct(product: Product)
+    suspend fun getTotalQuantity(): Int
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun deleteProduct(productId: Uuid)
+    suspend fun increaseQuantity(
+        productId: Int,
+        quantity: Int,
+    )
+
+    suspend fun decreaseQuantity(productId: Int)
+
+    suspend fun deleteProduct(productId: Int)
 }

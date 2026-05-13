@@ -10,16 +10,20 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProductListScaffold(
+    totalQuantity: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
             ProductListTopAppBar(
+                totalQuantity = totalQuantity,
                 onClick = onClick,
             )
         },
+        snackbarHost = snackbarHostState,
         containerColor = Color.White,
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {
@@ -32,6 +36,7 @@ fun ProductListScaffold(
 @Composable
 fun ProductListScaffoldPreview() {
     ProductListScaffold(
+        totalQuantity = 0,
         onClick = {},
         content = {},
     )

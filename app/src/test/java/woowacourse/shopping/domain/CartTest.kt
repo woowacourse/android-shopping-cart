@@ -6,13 +6,12 @@ import woowacourse.shopping.domain.model.cart.Cart
 import woowacourse.shopping.domain.model.product.Price
 import woowacourse.shopping.domain.model.product.Product
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class CartTest {
     @OptIn(ExperimentalUuidApi::class)
     val product =
         Product(
-            productId = Uuid.random(),
+            productId = 1,
             imageUrl = "",
             productName = "동원 스위트콘",
             price = Price(99800),
@@ -22,7 +21,7 @@ class CartTest {
     fun `장바구니에 상품을 추가할 수 있다`() {
         val cart = Cart()
 
-        val newCart = cart.addProductToCart(product)
+        val newCart = cart.increaseQuantity(product, 1)
 
         assertThat(newCart.cartItems.size).isEqualTo(1)
     }
@@ -31,7 +30,7 @@ class CartTest {
     fun `각 상품에 대한 정보를 정상적으로 받아온다`() {
         val cart = Cart()
 
-        val newCart = cart.addProductToCart(product)
+        val newCart = cart.increaseQuantity(product, 1)
 
         assertThat(newCart.cartItems[0].product).isEqualTo(product)
     }

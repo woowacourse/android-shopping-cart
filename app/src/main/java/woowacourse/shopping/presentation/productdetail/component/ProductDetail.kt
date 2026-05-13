@@ -17,12 +17,13 @@ import coil.compose.AsyncImage
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.productdetail.model.ProductUiModel
 import woowacourse.shopping.presentation.theme.dividerColor
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun ProductDetail(
     product: ProductUiModel,
+    quantity: Int,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -43,23 +44,28 @@ fun ProductDetail(
         }
         HorizontalDivider(color = dividerColor, thickness = 1.dp)
 
-        ProductPrice(
+        ProductPriceAndQuantity(
             price = product.price,
+            quantity = quantity,
+            onIncrease = onQuantityIncrease,
+            onDecrease = onQuantityDecrease,
         )
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ProductDetailPreview() {
     ProductDetail(
         product =
             ProductUiModel(
-                productId = Uuid.random(),
+                productId = 1,
                 imageUrl = "android.resource://woowacourse.shopping/${R.drawable.product_image7}",
                 productName = "[든든] 동원 스위트콘",
                 price = 99800,
             ),
+        quantity = 1,
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

@@ -6,37 +6,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.activity.viewModels
 import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.presentation.cart.screen.CartScreen
 import woowacourse.shopping.presentation.theme.androidshoppingTheme
-import kotlin.uuid.ExperimentalUuidApi
 
 class CartActivity : ComponentActivity() {
-    @OptIn(ExperimentalUuidApi::class)
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            cartRepository = AppContainer.cartRepository,
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        @OptIn(ExperimentalUuidApi::class)
         setContent {
             androidshoppingTheme {
-                var pageIndex by rememberSaveable { mutableStateOf(0) }
-
-                val stateHolder =
-                    remember {
-                        CartStateHolder(
-                            cartRepository = AppContainer.cartRepository,
-                            initialPageIndex = pageIndex,
-                            onPageIndexChanged = { pageIndex = it },
-                        )
-                    }
                 CartScreen(
-                    stateHolder = stateHolder,
+                    viewModel = viewModel,
                     onBack = { finish() },
                 )
             }
@@ -44,7 +33,6 @@ class CartActivity : ComponentActivity() {
     }
 
     companion object {
-        @OptIn(ExperimentalUuidApi::class)
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

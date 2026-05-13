@@ -6,12 +6,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import woowacourse.shopping.app.AppContainer
 import woowacourse.shopping.domain.model.cart.Cart
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun CartContent(
     cart: Cart,
@@ -21,7 +17,9 @@ fun CartContent(
     onNextPageClick: () -> Unit,
     hasPreviousPage: Boolean,
     hasNextPage: Boolean,
-    onDelete: (Uuid) -> Unit,
+    onDelete: (Int) -> Unit,
+    onQuantityIncrease: (Int) -> Unit,
+    onQuantityDecrease: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -30,10 +28,15 @@ fun CartContent(
         LazyColumn(
             modifier = Modifier.weight(1f),
         ) {
-            items(cart.cartItems) { cartItem ->
+            items(
+                items = cart.cartItems,
+                key = { cartItem -> cartItem.product.productId },
+            ) { cartItem ->
                 CartProductItem(
                     cartItem = cartItem,
-                    onDelete = onDelete,
+                    onDelete = { onDelete(cartItem.product.productId) },
+                    onQuantityIncrease = { onQuantityIncrease(cartItem.product.productId) },
+                    onQuantityDecrease = { onQuantityDecrease(cartItem.product.productId) },
                 )
             }
         }
@@ -49,12 +52,11 @@ fun CartContent(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun CartContentPreview() {
     CartContent(
-        cart = AppContainer.cartRepository.getItems(),
+        cart = Cart(),
         currentPage = 1,
         hasMoreItems = true,
         onPreviousPageClick = {},
@@ -62,5 +64,7 @@ fun CartContentPreview() {
         hasPreviousPage = true,
         hasNextPage = true,
         onDelete = {},
+        onQuantityIncrease = {},
+        onQuantityDecrease = {},
     )
 }

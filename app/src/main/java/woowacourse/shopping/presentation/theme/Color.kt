@@ -17,3 +17,5 @@ val dividerColor = Color(0xFFAAAAAA)
 val buttonColor = Color(0xFF04C09E)
 
 val cartPageButtonColor = Color(0xFF04C09E)
+
+val homeDividerColor = Color(0xFFEBEBEB)

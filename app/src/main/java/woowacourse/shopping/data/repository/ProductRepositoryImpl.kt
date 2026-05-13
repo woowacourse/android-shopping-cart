@@ -1,42 +1,78 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.ProductFixture
+import woowacourse.shopping.data.remote.datasource.ProductRemoteDataSource
+import woowacourse.shopping.data.remote.exception.NetworkException
+import woowacourse.shopping.data.remote.mapper.toDomain
+import woowacourse.shopping.domain.exception.ShoppingException
 import woowacourse.shopping.domain.model.product.Product
 import woowacourse.shopping.domain.model.product.Products
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class ProductRepositoryImpl(
-    private val products: Products,
+    private val productRemoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override fun getProducts(): Products = products
+    private var cachedProducts: Products? = null
 
-    override fun getPagingProducts(
+    override suspend fun getProducts(): Products {
+        cachedProducts?.let { return it }
+        return try {
+            val remoteProducts =
+                Products(
+                    productRemoteDataSource.getProducts().map { it.toDomain() },
+                )
+
+            cachedProducts = remoteProducts
+            remoteProducts
+        } catch (e: NetworkException) {
+            throw when (e.code) {
+                404 -> ShoppingException.NotFoundException("상품을 찾을 수 없습니다.")
+                in 500..599 -> ShoppingException.ServerException("서버 오류가 발생했습니다.")
+                else -> ShoppingException.ConnectionException("네트워크 오류가 발생했습니다.")
+            }
+        } catch (e: Exception) {
+            throw ShoppingException.ConnectionException(e.message.toString())
+        }
+    }
+
+    override suspend fun getPagingProducts(
         page: Int,
         pageSize: Int,
     ): Products {
         if (page < 0 || pageSize <= 0) return Products()
 
+        val products = getProducts().productItems
         val fromIndex = page * pageSize
 
-        if (fromIndex >= products.productItems.size) {
+        if (fromIndex >= products.size) {
             return Products()
         }
 
-        val toIndex = min(fromIndex + pageSize, products.productItems.size)
-        return Products(products.productItems.subList(fromIndex, toIndex))
+        val toIndex = min(fromIndex + pageSize, products.size)
+        return Products(products.subList(fromIndex, toIndex))
     }
 
-    override fun hasNextPage(
+    override suspend fun hasNextPage(
         currentPage: Int,
         pageSize: Int,
     ): Boolean {
+        val products = getProducts().productItems
         val nextPageStartIndex = (currentPage + 1) * pageSize
-        return nextPageStartIndex < products.productItems.size
+        return nextPageStartIndex < products.size
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    override fun findProductById(productId: Uuid): Product? = ProductFixture.productList.firstOrNull { it.productId == productId }
+    override suspend fun findProductById(productId: Int): Product? =
+        try {
+            productRemoteDataSource
+                .getProduct(productId)
+                .toDomain()
+        } catch (e: NetworkException) {
+            throw when (e.code) {
+                404 -> ShoppingException.NotFoundException("상품을 찾을 수 없습니다.")
+                in 500..599 -> ShoppingException.ServerException("서버 오류가 발생했습니다.")
+                else -> ShoppingException.ConnectionException("네트워크 오류가 발생했습니다.")
+            }
+        } catch (e: Exception) {
+            throw ShoppingException.ConnectionException(e.message.toString())
+        }
 }
