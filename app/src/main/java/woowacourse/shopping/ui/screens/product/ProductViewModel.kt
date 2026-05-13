@@ -33,7 +33,7 @@ class ProductViewModel(
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
 
-    private var offset = 0
+    private var page = 0
     private val cartState: StateFlow<CartItems> = cartRepository
         .getAllCartItems()
         .stateIn(
@@ -67,8 +67,8 @@ class ProductViewModel(
 
     private fun loadProducts() =
         launchWithLoading {
-            val products = productRepository.getProducts(offset, PAGE_SIZE)
-            offset += products.items.size
+            val products = productRepository.getProducts(page, PAGE_SIZE)
+            page++
 
             _uiState.update { state ->
                 state.copy(
@@ -113,9 +113,8 @@ class ProductViewModel(
     fun getMoreProducts() {
         if (!_uiState.value.hasNext) return
         launchWithLoading {
-            val newProducts =
-                productRepository.getProducts(offset, PAGE_SIZE)
-            offset += newProducts.items.size
+            val newProducts = productRepository.getProducts(page, PAGE_SIZE)
+            page++
 
             val productItems = newProducts.items.map { it.toUiModel(cartState.value) }
             _uiState.update {

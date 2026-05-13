@@ -9,7 +9,7 @@ interface ProductRepository {
     suspend fun getProductsByIds(ids: List<String>): List<Product>
 
     suspend fun getProducts(
-        offset: Int,
+        page: Int,
         pageSize: Int,
     ): Products
 }

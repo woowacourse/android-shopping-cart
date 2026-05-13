@@ -20,10 +20,10 @@ class ProductRepositoryImpl(
     }
 
     override suspend fun getProducts(
-        offset: Int,
+        page: Int,
         pageSize: Int,
     ): Products {
-        val response = dataSource.getProducts(offset / pageSize + 1, pageSize)
+        val response = dataSource.getProducts(page, pageSize)
         return response.toDomain()
     }
 }

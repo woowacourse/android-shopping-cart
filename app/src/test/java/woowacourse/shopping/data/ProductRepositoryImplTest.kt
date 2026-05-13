@@ -30,6 +30,6 @@ class ProductRepositoryImplTest {
         runTest {
             val productRepository = ProductRepositoryImpl(FakeProductDataSource())
 
-            productRepository.getProducts(offset = 20).hasNext shouldEqual false
+            productRepository.getProducts(page = 1, pageSize = 20).hasNext shouldEqual false
         }
 }
