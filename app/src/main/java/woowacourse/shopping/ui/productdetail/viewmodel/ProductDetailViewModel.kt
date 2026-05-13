@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -58,31 +59,40 @@ class ProductDetailViewModel(
 
     private fun loadProduct() {
         viewModelScope.launch {
-            val product = productRepository.getProduct(productId)
+            productRepository.getProduct(productId)
+                .onSuccess { product ->
+                    if (product == null) {
+                        _uiState.update { it.copy(isError = true) }
+                        return@launch
+                    }
 
-            if (product == null) {
-                _uiState.update { it.copy(isError = true) }
-                return@launch
-            }
+                    handleProductSuccess(product)
+                }
+                .onFailure { exception ->
+                    Log.e("DetailViewModel", "상품 로드 실패: ${exception.message}", exception)
+                    _uiState.update { it.copy(isError = true) }
+                }
+        }
+    }
 
-            currentProduct = product
+    private suspend fun handleProductSuccess(product: Product) {
+        currentProduct = product
 
-            val recentProduct = recentProductRepository.getRecentProducts().first()
-            val latestProduct = recentProduct.firstOrNull()
+        val recentProducts = recentProductRepository.getRecentProducts().firstOrNull() ?: emptyList()
+        val latestProduct = recentProducts.firstOrNull()
 
-            val latestProductUiModel = if (latestProduct != null && latestProduct.id != productId) {
-                toLatestProductUiModel(latestProduct)
-            } else null
+        val latestProductUiModel = latestProduct
+            ?.takeIf { it.id != productId }
+            ?.let { toLatestProductUiModel(it) }
 
-            recentProductRepository.addRecentProduct(product)
+        recentProductRepository.addRecentProduct(product)
 
-            _uiState.update { state ->
-                state.copy(
-                    product = toDetailProductUiModel(product, Quantity(state.selectedQuantity)),
-                    latestProduct = latestProductUiModel,
-                    isError = false,
-                )
-            }
+        _uiState.update { state ->
+            state.copy(
+                isError = false,
+                product = toDetailProductUiModel(product, Quantity(state.selectedQuantity)),
+                latestProduct = latestProductUiModel,
+            )
         }
     }
 

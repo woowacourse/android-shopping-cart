@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.repository
 
+import kotlinx.coroutines.CancellationException
 import woowacourse.shopping.data.remote.model.ProductResponse
 import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
 import woowacourse.shopping.domain.Money
@@ -11,11 +12,13 @@ class ProductRepositoryImpl(private val remoteDataSource: ProductRemoteDataSourc
         response.toProduct()
     }
 
-    override suspend fun getProduct(id: String): Product? = try {
-        remoteDataSource.getProduct(id).toProduct()
+    override suspend fun getProduct(id: String): Result<Product?> = try {
+        val productResponse = remoteDataSource.getProduct(id)
+        Result.success(productResponse.toProduct())
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
-        println("ProductRepository Exception: $e.message")
-        null
+        Result.failure(e)
     }
 
     private fun ProductResponse.toProduct(): Product = Product(
