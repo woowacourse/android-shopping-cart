@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productdetail.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -69,8 +68,7 @@ class ProductDetailViewModel(
                     handleProductSuccess(product)
                 }
                 .onFailure { exception ->
-                    Log.e("DetailViewModel", "상품 로드 실패: ${exception.message}", exception)
-                    _uiState.update { it.copy(isError = true) }
+                    _uiState.update { it.copy(isError = true, errorMessage = exception.message) }
                 }
         }
     }
