@@ -44,7 +44,7 @@ class CartRepositoryRoomImpl(
         cartItem: CartItem,
         targetQuantity: Int,
     ) {
-        var currentQuantity = getQuantity(cartItem)
+        val currentQuantity = getQuantity(cartItem)
         val newQuantity = currentQuantity + targetQuantity
         cartDao.insert(
             cartItem
@@ -58,7 +58,7 @@ class CartRepositoryRoomImpl(
         cartItem: CartItem,
         targetQuantity: Int,
     ) {
-        var currentQuantity = getQuantity(cartItem)
+        val currentQuantity = getQuantity(cartItem)
         val newQuantity = currentQuantity - targetQuantity
         if (newQuantity <= 0) {
             removeCartItem(cartItem)

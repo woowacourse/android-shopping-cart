@@ -143,7 +143,7 @@
 
 - [] getParcelableExtra 변경하기
 - [] 변수명 명확하게 변경하기
-- [] var vs val
+- [x] var vs val
 - [] ProductListActivity의 비동기함수 처리 순서에 대한 수정하기
 - [] init에서 순서가 엮일 수 있는 문제 수정하기
 - [] TargetQuantity의 의미는?
