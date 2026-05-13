@@ -21,7 +21,6 @@ import woowacourse.shopping.data.DataProvider.getRecentProductRepository
 import woowacourse.shopping.data.DataProvider.productRepository
 import woowacourse.shopping.features.cart.CartActivity
 import woowacourse.shopping.features.productDetail.ProductDetailActivity
-import woowacourse.shopping.features.productDetail.toParcelProduct
 
 class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +52,7 @@ class ProductListActivity : ComponentActivity() {
                             is ProductUiEvent.ShowToast -> {
                                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                             }
+
                             is ProductUiEvent.NextPage -> {
                                 val detailIntent =
                                     ProductDetailActivity.newIntent(

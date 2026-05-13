@@ -113,25 +113,24 @@ class ProductListViewModel(
     fun loadProductUiList() {
         viewModelScope.launch {
             totalCartItemCount = cartRepository.getTotalCartItemCount()
+            val cart = cartRepository.getCart()
 
             val updatedList =
                 productUiList.map { productUiModel ->
-                    productUiModel.copy(
-                        quantity =
-                            cartRepository.getQuantity(
-                                CartItem(
-                                    product = productUiModel.toProduct(),
-                                    quantity = CartItemQuantity(1),
-                                ),
-                            ),
-                        isExistProductToCart =
-                            cartRepository.isCartItemExist(
-                                CartItem(
-                                    product = productUiModel.toProduct(),
-                                    quantity = CartItemQuantity(1),
-                                ),
-                            ),
-                    )
+                    val cartItem = CartItem(productUiModel.toProduct(), quantity = CartItemQuantity(0))
+                    val curQuantity = cart.getQuantity(cartItem)
+
+                    if (curQuantity > 0) {
+                        productUiModel.copy(
+                            quantity = curQuantity,
+                            isExistProductToCart = true,
+                        )
+                    } else {
+                        productUiModel.copy(
+                            quantity = 0,
+                            isExistProductToCart = false,
+                        )
+                    }
                 }
 
             productUiList = updatedList
@@ -151,7 +150,7 @@ class ProductListViewModel(
                 cartItem =
                     CartItem(
                         product = productUiModel.toProduct(),
-                        quantity = CartItemQuantity(productUiModel.quantity),
+                        quantity = CartItemQuantity(1),
                     ),
             )
             loadProductUiList()
@@ -169,7 +168,7 @@ class ProductListViewModel(
                     cartItem =
                         CartItem(
                             product = productUiModel.toProduct(),
-                            quantity = CartItemQuantity(productUiModel.quantity),
+                            quantity = CartItemQuantity(1),
                         ),
                 )
             }

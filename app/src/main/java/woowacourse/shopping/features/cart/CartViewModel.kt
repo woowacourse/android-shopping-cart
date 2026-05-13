@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.cart.model.Cart
 import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.cart.model.CartItems
 import woowacourse.shopping.domain.cart.repository.CartRepository
 import kotlin.math.ceil
@@ -68,14 +69,14 @@ class CartViewModel(
 
     fun increaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.addCartItem(cartItemUiModel.toCartItem())
+            cartRepository.addCartItem(cartItemUiModel.toCartItem().copy(quantity = CartItemQuantity(1)))
             loadCartPage()
         }
     }
 
     fun decreaseCartItem(cartItemUiModel: CartItemUiModel) {
         viewModelScope.launch {
-            cartRepository.minusCartItem(cartItemUiModel.toCartItem())
+            cartRepository.minusCartItem(cartItemUiModel.toCartItem().copy(quantity = CartItemQuantity(1)))
             loadCartPage()
         }
     }
