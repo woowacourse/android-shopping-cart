@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import woowacourse.shopping.data.local.CartDao
 import woowacourse.shopping.data.local.CartEntity
 
-class FakeCartDao : CartDao {
+class FakeCartDao : CartDao() {
     private val items = mutableListOf<CartEntity>()
 
     override fun getAllCartItems(): Flow<List<CartEntity>> = flow { emit(items.toList()) }

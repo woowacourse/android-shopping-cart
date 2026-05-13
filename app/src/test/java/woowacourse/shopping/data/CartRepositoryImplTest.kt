@@ -19,7 +19,7 @@ class CartRepositoryImplTest {
     @Test
     fun `장바구니가 비어있을 때 1페이지를 조회하면 빈 리스트를 반환한다`() {
         runTest {
-            cartRepository.getCartItemByPage(1).items.size shouldEqual 0
+            cartRepository.getCartItemByPage(1, 20).items.size shouldEqual 0
         }
     }
 
@@ -27,7 +27,7 @@ class CartRepositoryImplTest {
     fun `존재하지 않는 페이지 조회 시 예외가 발생한다`() {
         runTest {
             assertThrows<IllegalArgumentException> {
-                cartRepository.getCartItemByPage(0)
+                cartRepository.getCartItemByPage(0, 20)
             }
         }
     }
@@ -38,7 +38,7 @@ class CartRepositoryImplTest {
             repeat(5) {
                 cartRepository.addItem(productId = "$it", amount = 1)
             }
-            cartRepository.getCartItemByPage(1).isLast shouldEqual true
+            cartRepository.getCartItemByPage(1, 20).isLast shouldEqual true
         }
     }
 
@@ -47,7 +47,7 @@ class CartRepositoryImplTest {
         runTest {
             cartRepository.addItem(productId = "1", amount = 1)
 
-            cartRepository.getCartItemByPage(1).items.size shouldEqual 1
+            cartRepository.getCartItemByPage(1, 20).items.size shouldEqual 1
         }
 
     @Test
@@ -57,7 +57,7 @@ class CartRepositoryImplTest {
             cartRepository.addItem(productId = "1", amount = 1)
 
             cartRepository
-                .getCartItemByPage(1)
+                .getCartItemByPage(1, 20)
                 .items
                 .first { it.productId == "1" }
                 .amount shouldEqual 2
@@ -69,6 +69,6 @@ class CartRepositoryImplTest {
             cartRepository.addItem(productId = "1", amount = 1)
             cartRepository.deleteItem(productId = "1")
 
-            cartRepository.getCartItemByPage(1).items.firstOrNull { it.productId == "1" } shouldBe null
+            cartRepository.getCartItemByPage(1, 20).items.firstOrNull { it.productId == "1" } shouldBe null
         }
 }
