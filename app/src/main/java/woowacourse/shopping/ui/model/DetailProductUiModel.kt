@@ -12,7 +12,7 @@ data class DetailProductUiModel(
     companion object {
         fun of(
             name: String,
-            price: Int,
+            price: Long,
             imageUrl: String,
             id: String,
             quantity: Int,

@@ -11,7 +11,7 @@ object MockData {
         ProductResponse(
             id = i,
             name = "품목$i",
-            price = (i * 1_000),
+            price = (i * 1_000).toLong(),
             imageUrl = "$IMAGE_BASE_URL${(i - 1) % 5}$IMAGE_URL_SUFFIX",
         )
     }

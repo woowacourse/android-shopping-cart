@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class RecentProductEntity(
     @PrimaryKey val productId: String,
     val name: String,
-    val price: Int,
+    val price: Long,
     val imageUrl: String,
     val viewedAt: Long = System.currentTimeMillis(),
 )
