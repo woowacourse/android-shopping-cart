@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
@@ -41,6 +43,7 @@ android {
         unitTests.all {
             it.useJUnitPlatform()
         }
+        unitTests.isReturnDefaultValues = true
     }
 }
 
@@ -55,6 +58,15 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation("io.coil-kt.coil3:coil-compose:3.4.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
+    implementation(libs.androidx.room.runtime)
+    testImplementation("androidx.room:room-testing:2.8.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    implementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.androidx.espresso.core)

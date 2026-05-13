@@ -3,29 +3,21 @@ package woowacourse.shopping
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.Products
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.data.remote.mock.ProductWebServer
 import woowacourse.shopping.ui.component.screen.CatalogScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
+import woowacourse.shopping.ui.viewmodel.ShoppingViewModel
+import woowacourse.shopping.ui.viewmodel.ShoppingViewModelFactory
 import kotlin.jvm.java
-import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,75 +25,72 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            var cart by rememberSaveable { mutableStateOf(Cart()) }
-            var currentIndex by rememberSaveable { mutableIntStateOf(0) }
-            var currentProducts by rememberSaveable { mutableStateOf(Products()) }
+            val isServerReady by ProductWebServer.isReady.collectAsStateWithLifecycle()
 
-            LaunchedEffect(currentIndex) {
-                currentProducts += loadProducts(currentIndex, MAX_PRODUCT)
-            }
-
-            val startForProductDetailResult =
-                rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.StartActivityForResult(),
-                ) { result ->
-                    if (result.resultCode == RESULT_OK) {
-                        val product = result.data?.getParcelableExtra<Product>(IntentKeys.STORED_PRODUCT_KEY)
-                        if (product != null) {
-                            cart = cart.addProduct(product)
-                        }
-                    }
-                }
-
-            val startForCartResult =
-                rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.StartActivityForResult(),
-                ) { result ->
-                    if (result.resultCode == RESULT_OK) {
-                        val updatedCart = result.data?.getParcelableExtra<Cart>(IntentKeys.CART_KEY)
-                        if (updatedCart != null) {
-                            cart = updatedCart
-                        }
-                    }
-                }
-
-            AndroidshoppingTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CatalogScreen(
-                        catalog = currentProducts,
-                        onItemClick = { product ->
-                            val intent =
-                                Intent(this, ProductDetailActivity::class.java).apply {
-                                    putExtra(IntentKeys.SELECTED_PRODUCT_KEY, product)
-                                }
-                            startForProductDetailResult.launch(intent)
-                        },
-                        onCartClick = {
-                            val intent =
-                                Intent(this, CartActivity::class.java).apply {
-                                    putExtra(IntentKeys.CART_KEY, cart)
-                                }
-                            startForCartResult.launch(intent)
-                        },
-                        onLoadClick = {
-                            currentIndex++
-                        },
-                        modifier = Modifier.padding(innerPadding),
+            if (isServerReady) {
+                val viewModel: ShoppingViewModel =
+                    viewModel<ShoppingViewModel>(
+                        factory =
+                            ShoppingViewModelFactory(
+                                (application as ShoppingApplication).purchaseProductsRepository,
+                                (application as ShoppingApplication).recentlyViewedProductRepository,
+                                (application as ShoppingApplication).productRepository,
+                            ),
                     )
+                val cartState by viewModel.cart.collectAsStateWithLifecycle()
+                val viewHistory by viewModel.recentlyViewedProducts.collectAsStateWithLifecycle()
+                val currentProducts by viewModel.products.collectAsStateWithLifecycle()
+                val lastViewedProduct by viewModel.lastViewProductId.collectAsStateWithLifecycle()
+                val totalCartCount by viewModel.totalCartCount.collectAsStateWithLifecycle()
+                val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+                AndroidshoppingTheme {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        CatalogScreen(
+                            catalog = currentProducts,
+                            recentlyViewedProducts = viewHistory,
+                            onRecentlyViewedClick = { product ->
+                                viewModel.updateHistory(product)
+                                val intent =
+                                    Intent(this, ProductDetailActivity::class.java).apply {
+                                        putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct)
+                                    }
+                                startActivity(intent)
+                            },
+                            onItemClick = { product ->
+                                viewModel.updateHistory(product)
+                                val intent =
+                                    Intent(this, ProductDetailActivity::class.java).apply {
+                                        putExtra(IntentKeys.SELECTED_PRODUCT_ID_KEY, product.id)
+                                        putExtra(IntentKeys.LATEST_VIEWED_PRODUCT_ID_KEY, lastViewedProduct)
+                                    }
+                                startActivity(intent)
+                            },
+                            onCartClick = {
+                                val intent = Intent(this, CartActivity::class.java)
+                                startActivity(intent)
+                            },
+                            onLoadClick = {
+                                viewModel.loadMore()
+                            },
+                            modifier = Modifier.padding(innerPadding),
+                            onAdd = { id, updateAmount ->
+                                viewModel.updateCountWithID(id, updateAmount)
+                            },
+                            onMinus = { id, updateAmount ->
+                                viewModel.updateCountWithID(id, updateAmount)
+                            },
+                            onDelete = { viewModel.removeWithID(it) },
+                            onAddInCart = { viewModel.addPurchaseProduct(it) },
+                            isContainedInCart = { cartState.isContain(it) },
+                            specificProductCount = { cartState.totalCountOfSpecificPurchaseProduct(it) },
+                            totalCount = { totalCartCount },
+                            isLoading = isLoading,
+                        )
+                    }
                 }
             }
         }
-    }
-
-    suspend fun loadProducts(
-        currentIndex: Int,
-        size: Int,
-    ): Products {
-        delay(2.seconds)
-        return MockCatalog.loadMoreProducts(currentIndex, size)
-    }
-
-    companion object {
-        const val MAX_PRODUCT = 20
     }
 }

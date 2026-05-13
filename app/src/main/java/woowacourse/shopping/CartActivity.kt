@@ -2,23 +2,18 @@ package woowacourse.shopping
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Products
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ui.component.screen.CartScreen
-import woowacourse.shopping.ui.stateholder.CartStateHolder
+import woowacourse.shopping.ui.viewmodel.CartViewModel
+import woowacourse.shopping.ui.viewmodel.CartViewModelFactory
 
 class CartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,46 +21,46 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val stateHolder = rememberSaveable(saver = CartStateHolder.Saver) { CartStateHolder(0) }
-            var cart by rememberSaveable {
-                mutableStateOf(
-                    intent.getParcelableExtra<Cart>(IntentKeys.CART_KEY)!!,
+            val viewModel: CartViewModel =
+                viewModel<CartViewModel>(
+                    factory =
+                        CartViewModelFactory(
+                            (application as ShoppingApplication).purchaseProductsRepository,
+                            (application as ShoppingApplication).productRepository
+                        ),
                 )
-            }
-            var displayedProducts by remember { mutableStateOf(Products()) }
 
-            LaunchedEffect(cart, stateHolder.currentPage) {
-                displayedProducts = cart.getPartedItem(stateHolder.currentPage, PAGE_SIZE)
-            }
-
-            BackHandler {
-                intent.putExtra(IntentKeys.CART_KEY, cart)
-                setResult(RESULT_OK, intent)
-                finish()
-            }
+            val pagedCart by viewModel.pagedCart.collectAsStateWithLifecycle()
+            val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
+            val isPageable by viewModel.isPageable.collectAsStateWithLifecycle()
+            val nextEnable by viewModel.nextEnable.collectAsStateWithLifecycle()
+            val prevEnable by viewModel.prevEnable.collectAsStateWithLifecycle()
 
             Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
                 CartScreen(
-                    cart = displayedProducts,
+                    cart = pagedCart.purchaseProducts,
                     onClose = {
-                        intent.putExtra(IntentKeys.CART_KEY, cart)
-                        setResult(RESULT_OK, intent)
                         finish()
                     },
-                    onDelete = { id ->
-                        cart = cart.removeProduct(id)
-                        if (stateHolder.isEmptyPage(cart.size(), PAGE_SIZE)) stateHolder.onPrevious()
+                    onAdd = { id, updateAmount ->
+                        viewModel.updateCountWithID(id, updateAmount)
                     },
-                    currentPage = stateHolder.currentPage,
+                    onMinus = { id, updateAmount ->
+                        viewModel.updateCountWithID(id, updateAmount)
+                    },
+                    onDelete = { id ->
+                        viewModel.removeWithID(id)
+                    },
+                    currentPage = currentPage,
                     onPrevious = {
-                        stateHolder.onPrevious()
+                        viewModel.prev()
                     },
                     onNext = {
-                        stateHolder.onNext(cart.size())
+                        viewModel.next()
                     },
-                    previousEnable = stateHolder.checkPreviousAvailable(),
-                    nextEnable = stateHolder.checkNextAvailable(cart.size()),
-                    isPageable = cart.size() > PAGE_SIZE,
+                    previousEnable = prevEnable,
+                    nextEnable = nextEnable,
+                    isPageable = isPageable,
                     modifier =
                         Modifier
                             .fillMaxSize()
@@ -74,13 +69,4 @@ class CartActivity : ComponentActivity() {
             }
         }
     }
-
-    companion object {
-        const val PAGE_SIZE = 5
-    }
 }
-
-private suspend fun Cart.getPartedItem(
-    page: Int,
-    pageSize: Int,
-): Products = products.getPartedItem(page, pageSize)

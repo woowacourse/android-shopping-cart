@@ -32,19 +32,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.PurchaseProduct
+import woowacourse.shopping.domain.PurchaseProducts
 import woowacourse.shopping.ui.component.frame.CommonFrame
 import woowacourse.shopping.ui.component.item.CartItem
-import java.util.UUID
 
 @Composable
 fun CartScreen(
-    cart: Products,
+    cart: PurchaseProducts,
     currentPage: Int,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onClose: () -> Unit,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     isPageable: Boolean,
     previousEnable: Boolean,
     nextEnable: Boolean,
@@ -55,6 +57,8 @@ fun CartScreen(
         bodyContent = {
             CartBody(
                 cart = cart,
+                onAdd = onAdd,
+                onMinus = onMinus,
                 onDelete = onDelete,
                 currentPage = currentPage,
                 onPrevious = onPrevious,
@@ -100,9 +104,11 @@ private fun CartHeader(
 
 @Composable
 private fun CartBody(
-    cart: Products,
+    cart: PurchaseProducts,
     currentPage: Int,
-    onDelete: (UUID) -> Unit,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     onPrevious: () -> Unit = {},
     onNext: () -> Unit = {},
     isPageable: Boolean,
@@ -119,10 +125,12 @@ private fun CartBody(
                 ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val products = cart.products
+        val products = cart.purchaseProducts
         products.forEach {
             CartItem(
                 product = it,
+                onAdd = onAdd,
+                onMinus = onMinus,
                 onDelete = onDelete,
                 modifier = Modifier.padding(top = 24.dp),
             )
@@ -213,43 +221,64 @@ private fun CartScreenPreview() {
     CartScreen(
         currentPage = 0,
         onClose = {},
+        onAdd = { id, type -> },
+        onMinus = { id, type -> },
         onDelete = {},
         onPrevious = {},
         onNext = {},
         previousEnable = false,
         nextEnable = false,
         cart =
-            Products(
+            PurchaseProducts(
                 listOf(
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
-                    Product(
-                        imageUri = "uri",
-                        name = "무엘사",
-                        price = 10000000,
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
+                    ),
+                    PurchaseProduct(
+                        Product(
+                            imageUri = "uri",
+                            name = "무엘사",
+                            price = 10000000,
+                        ),
                     ),
                 ),
             ),

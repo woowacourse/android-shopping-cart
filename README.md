@@ -1,91 +1,180 @@
 # android-shopping-cart
 
-## 기능 구현 목록
+## 도메인
 
-### 도메인
+### PurchaseProduct
 
-#### Product
+- [x] `Product`객체 1개를 갖는다
+- [x] `Product`를 구입할 개수인 `count` 필드를 갖는다
+- [x] 구매할 개수를 변경할 수 있다
+- [x] 구매할 개수는 1 미만일 수 없다
+- [x] 구매할 개수에 따른 금액을 계산할 수 있다
 
-- [x] 상품은 id를 갖는다
-- [x] 이미지 uri를 문자로 갖는다
-- [x] 상품은 이름과 가격을 갖는다
-- [x] 가격은 0 초과 이어야 한다
+### PurchaseProducts
 
-#### CartProducts
+- [x] 여러개의 `PurchaseProduct`를 갖는다
+- [x] `PurchaseProduct`를 추가할 수 있다
+- [x] 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
+- [x] 특정 `PurchaseProduct`를 제거할 수 있다
+- [x] 특정 `PurchaseProduct`의 총 가격을 알 수 있다
+- [x] `PurchaseProduct`의 `count`의 총합을 알 수 있다
+- [x] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
+- [x] 특정한 ID를 갖는 `PurchaseProduct`가 이미 담겨있는지 알 수 있다
+- [x] 특정한 ID를 갖는 `PurchaseProduct`의 `count`를 알 수 있다
 
-- [x] 카트에 넣은 상품들의 목록을 갖는다
-- [x] 상품을 추가하거나 제거할 수 있다
-- [x] 상품을 `id`로 검색 한다
+### Cart
 
-#### Cart
+- [x] `PurchaseProducts`를 갖는다
+- [x] `PurchaseProduct`를 추가할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`의 `count`를 변경할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`를 제거할 수 있다
+- [x] `ID`를 통해 특정 `PurchaseProduct`의 총 가격을 알 수 있다
+- [x] `Cart`에 담긴 `PurchaseProduct`의 count의 총합을 알 수 있다
+- [x] 동일한 `ID`를 갖는 `PurchaseProduct`가 추가되면 기존에 담겨있던 객체의 `Count`가 증가된다
+- [x] 특정한 ID를 갖는 `PurchaseProduct`가 이미 담겨있는지 알 수 있다
+- [x] 특정한 ID를 갖는 `PurchaseProduct`의 `count`를 알 수 있다
 
-- [x] 사용자가 선택한 상품을 갖는다
-- [x] 사용자가 선택한 상품을 추가할 수 있다
-- [x] 사용자가 선택한 상품을 제거할 수 있다
+## UI
 
-### UI
+### CartCountLabel
 
-#### CatalogScreen
+- [x] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합을 표시한다
+- [x] `Cart`에 담긴 `PurchaseProduct`의 `count` 총합 변경이 반영된다
 
-- [x] LazyVerticalGrid를 사용한다
-- [x] 카트 아이콘을 클릭하면 CartScreen으로 이동한다
-- [x] 상품 목록에서 스크롤을 20개 했을 때 더보기 버튼을 눌러 추가 20개를 로드할 수 있다
-    - [x] 비동기로 데이터를 가지고 온다
+### CirclePlusBtn
 
-**ShoppingItem**
-- [x] 아이템을 클릭하면 해당 Item의 ProductDetailScreen으로 이동한다
-- [x] 이미지 로딩으로 Coil을 사용한다
+- [x] 버튼을 클릭하면 `Cart`에 `PurchaseProduct`가 추가된다 
+- [x] 버튼을 클릭하면 `QuantitySelector` 컴포저블을 표시한다
 
-#### ProductDetailScreen
+### QuantitySelector
 
-- [x] 카트에 담기 버튼을 클릭하면 해당 Item을 카트에 추가한다
-- [x] 카트에 담았다면 상품 목록 화면으로 돌아간다
-- [x] `x` 버튼을 누르면 ProductDetailScreen 으로 돌아간다
-- [x] 이미지 로딩으로 Coil을 사용한다
+- [x] `PurchaseProduct`의 `count`를 표시한다.
+- [x] `+`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 증가한다
+- [x] `-`버튼을 누르면 해당하는 `PurchaseProduct`의 `count`가 `1` 감소한다
+- [x] 해당하는 `PurchaseProduct`의 `count`가 `1`인 상태에서 `-`를 누르면 해당 `PurchaseProduct`를 카트에서 제거한다
 
-#### CartScreen
+## viewModel
 
-- [x] 뒤로가기 버튼을 누르면 ProductDetailScreen 으로 돌아간다
-- [x] 담긴 아이템의 개수가 5개 이하일 경우 페이지네이션 버튼이 뜨지 않는다
-- [x] 담긴 아이템의 개수가 5개 초과일 경우 페이지네이션 버튼이 뜬다
-- [x] 한 화면에서 최대 5개의 아이템을 스크롤하여 보여줄 수 있다
-- [x] 페이지 개수를 계산한다
-- [x] 맨 처음 페이지일 경우 이전 버튼을 비활성화 한다
-- [x] 마지막 페이지일 경우 다음 버튼을 비활성화 한다
-  **CartItem**
-- [x] `x` 버튼을 누르면 해당 CartItem이 Cart에서 제거된다
-- [x] 이미지 로딩으로 Coil을 사용한다
+### ShoppingViewModel
 
-### 추후 추가 기능
+- [x] ROOM db에 상품을 저장할 수 있다
+- [x] 장바구니에 이미 담긴 상품이면 count를 update한다
+- [x] 장바구니에 담겨있는 상품을 제거할 수 있다
+- [x] 전체 상품 목록을 불러온다
+- [x] 불러올 상품 목록에 loadMore를 적용한다
+- [x] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
 
-- [ ] 데이터 로드 전략에서 상품 목록을 더이상 불러올 게 없다면 버튼 비활성화
-- [ ] 카트에 담기 성공했다면 "장바구니에 담았습니다" Snackbar를 노출한다
+### ProductDetailViewModel
 
-## 2차 피드백 구현 사항
+- [x] 장바구니에 담을 수량을 조절할 수 있다
+- [x] 장바구니에 담기 버튼을 누르면 ROOM DB에 해당 상품과 수량 정보를 저장한다
+- [x] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
+
+### CartViewModel
+
+- [x] ROOM db에서 화면에 표시할 상품에 pagination을 적용해 불러온다
+- [x] 특정 상품의 count를 변경하면 ROOM db에 반영된다
+- [x] 특정 상품을 삭제하면 ROOM db에서 삭제된
+- [x] ViewModel 인스턴스 주입을 위한 팩토리 클래스 정의
+
+## ROOM DB
+
+### DataBase
+
+- [x] PurchaseProductDao 인스턴스 선언
+- [x] DataBase 인스턴스 필드 선언
+- [x] DataBase 인스턴스 반환 함수 정의
+
+### PurchaseProductEntity
+
+- [x] 도메인 객체에 대한 테이블 정의
+  - [x] 상품 ID Column
+  - [x] 상품 이름 Column
+  - [x] 상품 가격 Column
+  - [x] 상품 이미지 Uri Column
+  - [x] 상품 수량 Column
+- [x] Entity를 도메인 객체로 변환할 수 있다
+
+### PurchaseProductsDao
+
+- [x] DB에 저장된 전체 장바구니 목록을 불러올 수 있다
+- [x] 상품 ID로 특정 장바구니 목록을 불러올 수 있다
+- [x] DB에 상품을 추가할 수 있다
+- [x] 특정 상품의 수량을 변경할 수 있다
+- [x] 특정 상품을 DB에서 제거할 수 있다
+- [x] 상품 수량의 총합을 알 수 있다
+- [x] 특정 상품의 수량을 알 수 있다
+- [x] 특정 상품의 수량에 따른 총 금액을 알 수 있다
+- [x] 전체 장바구니 목록에 pagination을 적용해 일부만 불러올 수 있다
+- [x] 상품의 개수를 할 수 있다
+- [x] id를 통해 특정 상품이 담겨있는지 확인할 수 있다
+
+### PurchaseProductsRepository
+
+- [x] 전체 장바구니 목록을 불러올 수 있다
+- [x] 장바구니에 상품을 추가할 수 있다
+- [x] 장바구니에 담긴 상품의 수량을 변경할 수 있다
+- [x] DB에 저장된 목록의 개수를 읽어올 수 있다
+- [x] DB의 전체 목록에 pagination을 적용해 일부 목록만 불러올 수 있다
+- [x] 특정 상품을 ID로 조회힐 수 있다
+- [x] 특정 상품의 수량에 따른 총 금액을 조회할 수 있다
+- [x] 장바구니에 담긴 상품 수량의 충합을 알 수 있다
+- [x] 특정 상품의 수량을 조회할 수 있다
+- [x] 장바구니에 담긴 상품을 제거할 수 있다
+- [x] 도메인 객체를 Entity로 변환할 수 있다
+
+## Application
+
+### ShoppingApplication
+
+- [x] ROOM DB 인스턴스 초기화
+- [x] Repository 인스턴스 초기화
+
+--- 
+
+## UI
+
+### RecentlyViewedProducts
+
+- [x] 최근 본 상품을 최대 10개 까지 표시한다
+- [x] LazyRow를 통해 스크롤할 수 있다
+- [x] 표시된 상품을 클릭하면 해당 상품의 ProductDetailScreen으로 이동한다
+
+### RecentlyViewedProductItem
+
+- [x] 상품의 이미지를 표시한다
+- [x] 상품의이름을 표시한다
+
+### LastViewedProduct
+
+- [x] 가장 마지막에 본 상품의 이름을 표시한다
+- [x] 클릭 시 해당 상품의 ProductDetailScreen으로 이동한다
 
 ### ProductDetailActivity
 
-- [x] invalidProduct() 함수 제거
-- [x] intent에 담긴 Product가 null이라면 Activity 종료 로직 추가
+- [x] 가장 마지막으로 본 상품의 상품 정보 페이지에서 뒤로가기를 누르면 MainActivity로 이동한다
 
-### CartRepository 제거
+## ROOM db
 
-- [x] MainActivity와 CartActivity가 Cart객체 자체를 주고 받도록 수정
+### RecentlyViewedProductEntity
 
-### CartStateHolder
+- [x] 도메인 객체에 대한 Column 정의
+    - [x] 도메인 객체에 대한 테이블 정의
+    - [x] 상품 ID Column
+    - [x] 상품 이름 Column
+    - [x] 상품 가격 Column
+    - [x] 상품 이미지 Uri Column
+- [x] Entity를 Domain 객체로 변환할 수 있다
 
-- [x] @Parcelable 어노테이션 제거 및 Saver 패턴 적용
+### RecentlyViewedProductDao
 
-### MainActivity
+- [x] db에 저장된 전체 목록을 조화할 수 있다
+- [x] 상품은 최대 10개가지 저장된다
+- [x] 10개가 저장된 상태로 새로운 Entity가 들어오면 가장 오래 저장되어 있던 데이터를 제거한다
+- [x] 가장 마지막에 저장된 상품을 조회할 수 있다
+- [x] 동일한 상품이 입력되면 조회 시간을 업데이트 한다
 
-- [x] LaunchedEffect를 통한 비동기 데이터 로딩 적용
+## MockWebServer
 
-### CartActivity
-
-- [x] Cart 객체를 주고 받도록 수정
-- [x] 이중 CoroutineScope 제거
-- [x] LaunchedEffect를 통한 비동기 데이터 로딩 적용
-
-### MockCatalog
-
-- [x] loadMoreProducts 함수 suspend 키워드 제거
+- [x] `/products` url을 통해 일정 범위의 데이터를 조화할 수 있다
+- [x] `/products/id`를 통해 특정 item을 조회할 수 있다

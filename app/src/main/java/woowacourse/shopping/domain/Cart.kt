@@ -2,21 +2,27 @@ package woowacourse.shopping.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
 
 @Parcelize
 class Cart(
-    val products: Products = Products(),
+    val purchaseProducts: PurchaseProducts = PurchaseProducts(),
 ) : Parcelable {
-    fun addProduct(product: Product): Cart {
-        val product = products.add(product)
-        return Cart(product)
-    }
+    fun add(purchaseProduct: PurchaseProduct) = Cart(purchaseProducts.add(purchaseProduct))
 
-    fun removeProduct(id: UUID): Cart {
-        val product = products.remove(id)
-        return Cart(product)
-    }
+    fun updateCountWithId(
+        id: String,
+        updateAmount: Int,
+    ) = Cart(purchaseProducts.updateCountWithUuid(id, updateAmount))
 
-    fun size() = products.size()
+    fun removeWithId(id: String) = Cart(purchaseProducts.removeProduct(id))
+
+    fun totalPriceOfSpecificPurchaseProduct(id: String) = purchaseProducts.totalPriceOfSpecificPurchaseProduct(id)
+
+    fun totalCountOfPurchaseProducts() = purchaseProducts.totalCount()
+
+    fun totalCountOfSpecificPurchaseProduct(id: String) = purchaseProducts.totalCountOfSpecificPurchaseProduct(id)
+
+    fun isContain(id: String) = purchaseProducts.isContain(id)
+
+    fun findById(id: String) = purchaseProducts.findById(id)
 }

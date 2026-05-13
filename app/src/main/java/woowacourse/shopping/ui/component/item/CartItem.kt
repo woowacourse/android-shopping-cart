@@ -2,9 +2,11 @@ package woowacourse.shopping.ui.component.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,12 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Product
-import java.util.UUID
+import woowacourse.shopping.domain.PurchaseProduct
 
 @Composable
 fun CartItem(
-    product: Product,
-    onDelete: (UUID) -> Unit,
+    product: PurchaseProduct,
+    onAdd: (String, Int) -> Unit,
+    onMinus: (String, Int) -> Unit,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
@@ -53,7 +57,7 @@ fun CartItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ProductName(product.name)
+                ProductName(product.name())
                 CloseBtn(
                     product = product,
                     onClick = onDelete,
@@ -68,10 +72,24 @@ fun CartItem(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 ProductImage(
-                    product.imageUri,
+                    product.imageUri(),
                     modifier = Modifier.size(width = 136.dp, height = 72.dp),
                 )
-                ProductPrice(product.price)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    QuantitySelector(
+                        count = product.count,
+                        onAdd = { onAdd(product.id(), 1) },
+                        onMinus = { onMinus(product.id(), -1) },
+                        onDelete = { onDelete(product.id()) },
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                    )
+                    ProductPrice(
+                        product.price(),
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                    )
+                }
             }
         }
     }
@@ -94,8 +112,8 @@ private fun ProductName(
 
 @Composable
 private fun CloseBtn(
-    product: Product,
-    onClick: (UUID) -> Unit,
+    product: PurchaseProduct,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Icon(
@@ -105,7 +123,7 @@ private fun CloseBtn(
             modifier
                 .size(16.dp)
                 .clickable(
-                    onClick = { onClick(product.uuid) },
+                    onClick = { onClick(product.id()) },
                 ),
     )
 }
@@ -127,11 +145,15 @@ private fun ProductPrice(
 @Composable
 private fun CartItemPreview() {
     CartItem(
-        Product(
-            imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
-            name = "진짜진짜정말정말매우매우긴상품명입니다",
-            price = 1000000000,
+        PurchaseProduct(
+            Product(
+                imageUri = "https://media.sodagift.com/img/image/1734582680547.jpg",
+                name = "진짜진짜정말정말매우매우긴상품명입니다",
+                price = 30000,
+            ),
         ),
-        {},
+        onAdd = { id, type -> },
+        onMinus = { id, type -> },
+        onDelete = { },
     )
 }
