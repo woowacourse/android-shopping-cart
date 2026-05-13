@@ -22,6 +22,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRecentRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ui.screens.util.toUiModel
+import kotlin.coroutines.cancellation.CancellationException
 
 class ProductViewModel(
     private val productRepository: ProductRepository,
@@ -143,6 +144,8 @@ class ProductViewModel(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 action()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("ProductViewModel", e.message.toString())
             } finally {

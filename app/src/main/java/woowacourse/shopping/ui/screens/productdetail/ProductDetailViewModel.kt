@@ -16,6 +16,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRecentRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.coroutines.cancellation.CancellationException
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -73,6 +74,8 @@ class ProductDetailViewModel(
 
             try {
                 action()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("ProductDetailViewModel", e.message.toString())
             } finally {
