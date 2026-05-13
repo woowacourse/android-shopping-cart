@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -60,7 +61,6 @@ fun MainTopBar(
             if (cartProductCount > 0) {
                 Box(
                     modifier = Modifier
-                        .size(20.dp)
                         .clip(CircleShape)
                         .background(Color(0xFF04C09E)),
                 ) {
@@ -69,7 +69,9 @@ fun MainTopBar(
                         fontWeight = FontWeight.Medium,
                         fontSize = 14.sp,
                         color = Color.White,
-                        modifier = Modifier.align(alignment = Alignment.Center),
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp, vertical = 1.dp)
+                            .align(alignment = Alignment.Center),
                     )
                 }
             }
