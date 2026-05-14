@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertNull
 import woowacourse.shopping.data.remote.api.ShoppingMockServer
 import woowacourse.shopping.data.remote.source.ProductRemoteDataSource
 import woowacourse.shopping.domain.Money
@@ -18,9 +17,7 @@ class ProductRepositoryImplTest {
     @BeforeEach
     fun setUp() {
         ShoppingMockServer.start()
-
-        val dataSource = ProductRemoteDataSource()
-        repository = ProductRepositoryImpl(dataSource)
+        repository = ProductRepositoryImpl(ProductRemoteDataSource())
     }
 
     @AfterEach
@@ -30,9 +27,12 @@ class ProductRepositoryImplTest {
 
     @Test
     fun `모든 상품 목록을 조회하면 상품 도메인 모델로 반환한다`() = runBlocking {
-        val products = repository.getProducts()
+        val result = repository.getProducts(1, 5)
+        assertEquals(true, result.isSuccess)
 
-        assertEquals(35, products.size)
+        val products = result.getOrNull()
+        assertNotNull(products)
+        assertEquals(5, products.size)
 
         assertEquals("품목1", products[0].name)
         assertEquals(Money(1000), products[0].price)
@@ -42,9 +42,11 @@ class ProductRepositoryImplTest {
     @Test
     fun `특정 상품을 조회하면 상품 도메인 모델로 반환한다`() = runBlocking {
         val targetId = "1"
+        val result = repository.getProduct(targetId)
 
-        val product = repository.getProduct(targetId)
+        assertEquals(true, result.isSuccess)
 
+        val product = result.getOrNull()
         assertNotNull(product)
         assertEquals("품목1", product.name)
         assertEquals(Money(1000), product.price)
@@ -52,10 +54,10 @@ class ProductRepositoryImplTest {
     }
 
     @Test
-    fun `존재하지 않는 상품을 조회하면 null을 반환한다`() = runBlocking {
+    fun `존재하지 않는 상품을 조회하면 fail을 반환한다`() = runBlocking {
         val targetId = "-11111"
 
-        val product = repository.getProduct(targetId)
-        assertNull(product)
+        val result = repository.getProduct(targetId)
+        assertEquals(true, result.isFailure)
     }
 }
