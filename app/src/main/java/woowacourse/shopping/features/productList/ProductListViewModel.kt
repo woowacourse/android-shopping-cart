@@ -73,6 +73,7 @@ class ProductListViewModel(
 
     fun moreProducts() {
         viewModelScope.launch {
+            val cart = cartRepository.getCart()
             val moreProducts =
                 productRepository
                     .getPagedProducts(page = pageCount, pageSize = PAGE_SIZE)
@@ -82,20 +83,8 @@ class ProductListViewModel(
                             name = product.name.value,
                             price = product.price.value,
                             imageUrl = product.imageUrl.value,
-                            quantity =
-                                cartRepository.getQuantity(
-                                    CartItem(
-                                        product = product,
-                                        quantity = CartItemQuantity(1),
-                                    ),
-                                ),
-                            isExistProductToCart =
-                                cartRepository.isCartItemExist(
-                                    CartItem(
-                                        product = product,
-                                        quantity = CartItemQuantity(1),
-                                    ),
-                                ),
+                            quantity = cart.getQuantity(CartItem(product, quantity = CartItemQuantity(1))),
+                            isExistProductToCart = cart.searchCartItem(CartItem(product, quantity = CartItemQuantity(1))),
                         )
                     }
             productUiList += moreProducts
