@@ -87,4 +87,6 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.mockwebserver3)
     implementation(libs.converter.gson)
+
+    implementation(libs.androidx.compose.material.icons.extended)
 }

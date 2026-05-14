@@ -56,7 +56,7 @@ fun SingleProductItem(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
-                        .height(42.dp)
+                        .height(52.dp)
                         .padding(vertical = 8.dp, horizontal = 14.dp),
                 )
             }
