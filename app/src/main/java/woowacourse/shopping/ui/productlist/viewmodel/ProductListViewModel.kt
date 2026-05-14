@@ -66,10 +66,11 @@ class ProductListViewModel(
 
     private fun loadInitData() {
         viewModelScope.launch {
-            productRepository.getProducts(page = 1, size = PAGE_SIZE)
+            productRepository.getProducts(page = currentPage, size = PAGE_SIZE)
                 .onSuccess { products ->
                     _products.addAll(products)
-                    fetchProducts()
+                    currentPage++
+                    syncUiState(products.size < PAGE_SIZE)
                 }
                 .onFailure { exception ->
                     _uiState.update { it.copy(isError = true, errorMessage = exception.message) }

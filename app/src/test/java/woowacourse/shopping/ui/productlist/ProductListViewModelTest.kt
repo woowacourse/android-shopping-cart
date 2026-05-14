@@ -1,9 +1,11 @@
 package woowacourse.shopping.ui.productlist
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Money
@@ -23,6 +26,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.productlist.viewmodel.ProductListViewModel
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ProductListViewModelTest {
 
     private lateinit var viewModel: ProductListViewModel
@@ -117,8 +121,11 @@ class ProductListViewModelTest {
     fun `장바구니 상품을 제거하면 상품이 감소된다`() = runTest {
         advanceUntilIdle()
 
-        val product = productRepository.getProduct("1")!!
-        cartRepository.addCartItem(product, Quantity(2))
+        val product = productRepository.getProduct("1").getOrNull()
+
+        assertNotNull(product)
+
+        cartRepository.updateCartItem(CartItem(product, Quantity(2)))
         advanceUntilIdle()
 
         viewModel.removeCartItem("1")
@@ -134,52 +141,41 @@ class MockProductRepository : ProductRepository {
         Product(
             id = "$it",
             name = "상품$it",
-            price = Money(it * 1000),
+            price = Money((it * 1000).toLong()),
             imageUrl = "",
         )
     }
 
-    override suspend fun getProducts(): List<Product> = products
+    override suspend fun getProducts(
+        page: Int,
+        size: Int,
+    ): Result<List<Product>> {
+        val fromIndex = (page - 1) * size
+        if (fromIndex >= products.size) return Result.success(emptyList())
+        val toIndex = minOf(fromIndex + size, products.size)
+        return Result.success(products.subList(fromIndex, toIndex))
+    }
 
-    override suspend fun getProduct(id: String): Product? = products.find { it.hasId(id) }
+    override suspend fun getProduct(id: String): Result<Product> = Result.success(products[id.toInt() - 1])
 }
 
 class MockCartRepository : CartRepository {
     private val cartItems = MutableStateFlow<List<CartItem>>(emptyList())
 
     override fun getCart(): Flow<List<CartItem>> = cartItems
-
-    override suspend fun addCartItem(
-        product: Product,
-        quantity: Quantity,
-    ) {
-        val findItem = cartItems.value.find { it.hasProduct(product) }
-
-        if (findItem != null) {
-            cartItems.value = cartItems.value.map {
-                if (it.hasProduct(product)) it.increase(quantity) else it
+    override suspend fun updateCartItem(cartItem: CartItem) {
+        cartItems.update { items ->
+            if (items.any { it.hasProduct(cartItem.product) }) {
+                items.map { if (it.hasProduct(cartItem.product)) cartItem else it }
+            } else {
+                items + cartItem
             }
-        } else {
-            cartItems.value += CartItem(product, quantity)
-        }
-    }
-
-    override suspend fun decreaseCartItem(
-        product: Product,
-        quantity: Quantity,
-    ) {
-        cartItems.value = cartItems.value.map {
-            if (it.product == product) it.decrease(quantity) else it
-        }
-
-        cartItems.value = cartItems.value.filter {
-            it.quantity.count != 0
         }
     }
 
     override suspend fun deleteCartItem(productId: String) {
         cartItems.value = cartItems.value.filter {
-            it.hasProductId(productId)
+            it.hasProductId(productId).not()
         }
     }
 }
