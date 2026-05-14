@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.screens.productdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,50 +62,66 @@ fun ProductDetailScreen(
         modifier = Modifier
             .systemBarsPadding(),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-        ) {
-            ShoppingImage(
-                imageUrl = product.imageUrl,
-                contentDescription = "${product.name} 이미지",
-                contentScale = ContentScale.Fit,
+        if (uiState.isError) {
+            Text(
+                text = "상품 불러오기를 실패했습니다.",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+            )
+
+            Text(
+                text = "재시도하기",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Blue,
+                modifier = Modifier.clickable { viewModel.loadProduct() },
+            )
+        } else {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-            )
+                    .padding(innerPadding)
+                    .fillMaxWidth(),
+            ) {
+                ShoppingImage(
+                    imageUrl = product.imageUrl,
+                    contentDescription = "${product.name} 이미지",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ProductInfoText(
-                name = product.name,
-                price = product.price,
-                quantity = uiState.quantity,
-                onPlusClick = { viewModel.plusCartCount() },
-                onMinusClick = { viewModel.minusCartCount() },
-            )
+                ProductInfoText(
+                    name = product.name,
+                    price = product.price,
+                    quantity = uiState.quantity,
+                    onPlusClick = { viewModel.plusCartCount() },
+                    onMinusClick = { viewModel.minusCartCount() },
+                )
 
-            Spacer(modifier = Modifier.height(29.dp))
+                Spacer(modifier = Modifier.height(29.dp))
 
-            uiState.recentProduct?.let {
-                if (productId != it.id) {
-                    LastViewProductCard(
-                        name = it.name,
-                        onClick = { onLastViewProductClick(it.id) },
-                        modifier = Modifier
-                            .padding(horizontal = 18.dp)
-                            .fillMaxWidth(),
-                    )
+                uiState.recentProduct?.let {
+                    if (productId != it.id) {
+                        LastViewProductCard(
+                            name = it.name,
+                            onClick = { onLastViewProductClick(it.id) },
+                            modifier = Modifier
+                                .padding(horizontal = 18.dp)
+                                .fillMaxWidth(),
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                AddCartButton(
+                    onClick = { viewModel.addToCart() },
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            AddCartButton(
-                onClick = { viewModel.addToCart() },
-                modifier = Modifier.fillMaxWidth(),
-            )
         }
     }
 }

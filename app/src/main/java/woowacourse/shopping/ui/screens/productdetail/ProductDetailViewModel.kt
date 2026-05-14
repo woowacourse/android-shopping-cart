@@ -24,6 +24,7 @@ data class ProductDetailUiState(
     val recentProduct: UiLastViewProduct? = null,
     val isNetworkConnected: Boolean = true,
     val quantity: Int = 1,
+    val isError: Boolean = false,
 )
 
 class ProductDetailViewModel(
@@ -47,10 +48,15 @@ class ProductDetailViewModel(
         addRecentProductId(targetProductId)
     }
 
-    private fun loadProduct() {
+    fun loadProduct() {
         viewModelScope.launch {
-            val product = productRepository.getProductById(targetProductId)
-            _uiState.update { it.copy(product = product) }
+            runCatching {
+                productRepository.getProductById(targetProductId)
+            }.onSuccess { product ->
+                _uiState.update { it.copy(product = product, isError = false) }
+            }.onFailure {
+                _uiState.update { it.copy(product = null, isError = true) }
+            }
         }
     }
 
@@ -61,10 +67,14 @@ class ProductDetailViewModel(
             val recentProduct = if (id == null) {
                 null
             } else {
-                UiLastViewProduct(
-                    id = id,
-                    name = productRepository.getProductById(id).name,
-                )
+                try {
+                    UiLastViewProduct(
+                        id = id,
+                        name = productRepository.getProductById(id).name,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
             }
 
             _uiState.update {
