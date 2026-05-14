@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Money
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
@@ -42,7 +43,7 @@ class CartViewModelTest {
         advanceUntilIdle()
 
         val product = Product("상품1", Money(1000), "", "1")
-        cartRepository.addCartItem(product, Quantity(1))
+        cartRepository.updateCartItem(CartItem(product, Quantity(1)))
         advanceUntilIdle()
 
         viewModel.incrementQuantity("1")
@@ -59,7 +60,7 @@ class CartViewModelTest {
         advanceUntilIdle()
 
         val product = Product("상품1", Money(1000), "", "1")
-        cartRepository.addCartItem(product, Quantity(2))
+        cartRepository.updateCartItem(CartItem(product, Quantity(2)))
         advanceUntilIdle()
 
         viewModel.decrementQuantity("1")
@@ -76,7 +77,7 @@ class CartViewModelTest {
         advanceUntilIdle()
 
         val product = Product("상품1", Money(1000), "", "1")
-        cartRepository.addCartItem(product, Quantity(1))
+        cartRepository.updateCartItem(CartItem(product, Quantity(1)))
         advanceUntilIdle()
 
         viewModel.decrementQuantity("1")
