@@ -44,7 +44,7 @@ class ProductDetailViewModel(
             }
         }
         loadProduct()
-        loadLastViewProduct()
+        observeLastViewProduct()
         addRecentProductId(targetProductId)
     }
 
@@ -60,28 +60,30 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun loadLastViewProduct() {
+    private fun observeLastViewProduct() {
         viewModelScope.launch {
-            val id = recentProductRepository.getLastViewProductId()
+            recentProductRepository
+                .getLastViewProductId()
+                .collect { id ->
+                    val recentProduct = if (id == null) {
+                        null
+                    } else {
+                        try {
+                            UiLastViewProduct(
+                                id = id,
+                                name = productRepository.getProductById(id).name,
+                            )
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
 
-            val recentProduct = if (id == null) {
-                null
-            } else {
-                try {
-                    UiLastViewProduct(
-                        id = id,
-                        name = productRepository.getProductById(id).name,
-                    )
-                } catch (_: Exception) {
-                    null
+                    _uiState.update {
+                        it.copy(
+                            recentProduct = recentProduct,
+                        )
+                    }
                 }
-            }
-
-            _uiState.update {
-                it.copy(
-                    recentProduct = recentProduct,
-                )
-            }
         }
     }
 

@@ -1,9 +1,11 @@
 package woowacourse.shopping.domain.repository
 
-interface RecentProductRepository {
-    suspend fun getRecentProductIds(): List<String>
+import kotlinx.coroutines.flow.Flow
 
-    suspend fun getLastViewProductId(): String?
+interface RecentProductRepository {
+    fun getRecentProductIds(): Flow<List<String>>
+
+    fun getLastViewProductId(): Flow<String?>
 
     suspend fun addRecentProductId(productId: String)
 }

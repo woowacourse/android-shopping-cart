@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,8 +38,6 @@ class ProductViewModel(
 ) : ViewModel() {
     private var products: List<Product> = emptyList()
 
-    private var uiRecentProducts: List<UiRecentProduct> = emptyList()
-
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
 
@@ -51,8 +47,8 @@ class ProductViewModel(
                 _uiState.update { it.copy(isNetworkConnected = isConnected) }
             }
         }
-
         loadProducts()
+        observeLastViewProduct()
     }
 
     fun loadProducts() {
@@ -64,21 +60,7 @@ class ProductViewModel(
                 val nextProducts = productRepository.getProducts(products.size, PAGE_SIZE)
                 products = (products + nextProducts).distinctBy { it.id }
 
-                uiRecentProducts = recentProductRepository
-                    .getRecentProductIds()
-                    .map { productId ->
-                        async {
-                            val product = productRepository.getProductById(productId)
-                            UiRecentProduct(
-                                id = product.id,
-                                imageUrl = product.imageUrl,
-                                name = product.name,
-                            )
-                        }
-                    }.awaitAll()
-
                 loadProductUiState()
-                loadRecentProductUiState()
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
@@ -115,11 +97,25 @@ class ProductViewModel(
         }
     }
 
-    private fun loadRecentProductUiState() {
-        _uiState.update {
-            it.copy(
-                recentProducts = uiRecentProducts,
-            )
+    private fun observeLastViewProduct() {
+        viewModelScope.launch {
+            recentProductRepository
+                .getRecentProductIds()
+                .collect { ids ->
+                    val recentProducts = ids.map { id ->
+                        val product = productRepository.getProductById(id)
+
+                        UiRecentProduct(
+                            id = product.id,
+                            imageUrl = product.imageUrl,
+                            name = product.name,
+                        )
+                    }
+
+                    _uiState.update {
+                        it.copy(recentProducts = recentProducts)
+                    }
+                }
         }
     }
 
