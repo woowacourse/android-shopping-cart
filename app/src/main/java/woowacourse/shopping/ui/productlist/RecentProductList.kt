@@ -68,6 +68,7 @@ private fun RecentProductItem(
             fontSize = 12.sp,
             fontWeight = W700,
             overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
         )
     }
 }
