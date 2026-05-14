@@ -14,10 +14,13 @@ class ProductRemoteDataSource {
     private val client = NetworkConfig.okHttpClient
     private val gson = Gson()
 
-    suspend fun getProducts(): Result<List<ProductResponse>> = withContext(Dispatchers.IO) {
+    suspend fun getProducts(
+        page: Int,
+        size: Int,
+    ): Result<List<ProductResponse>> = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
-                .url("${ShoppingMockServer.BASE_URL}products")
+                .url("${ShoppingMockServer.BASE_URL}products?page=$page&size=$size")
                 .build()
 
             client.newCall(request).execute().use { response ->

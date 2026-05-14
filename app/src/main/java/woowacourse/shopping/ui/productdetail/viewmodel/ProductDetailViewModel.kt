@@ -25,8 +25,8 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.LatestProductUiModel
+import woowacourse.shopping.ui.productdetail.state.ProductDetailUiEvent
 import woowacourse.shopping.ui.productdetail.state.ProductDetailUiState
-import woowacourse.shopping.ui.productdetail.state.UiEvent
 
 class ProductDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -39,7 +39,7 @@ class ProductDetailViewModel(
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<UiEvent>()
+    private val _uiEvent = Channel<ProductDetailUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     private var currentProduct: Product? = null
@@ -97,12 +97,12 @@ class ProductDetailViewModel(
                 val updatedCart = Cart(currentCartItems).plusProduct(product, quantity)
                 val updatedItem = updatedCart.findCartItemById(product.id) ?: return@launch
                 cartRepository.updateCartItem(updatedItem)
-                _uiEvent.send(UiEvent.ShowToast("장바구니에 담았습니다!"))
-                _uiEvent.send(UiEvent.CartAddSuccess)
+                _uiEvent.send(ProductDetailUiEvent.ShowToast("장바구니에 담았습니다!"))
+                _uiEvent.send(ProductDetailUiEvent.CartAddSuccess)
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {
-                _uiEvent.send(UiEvent.ShowToast("장바구니 담기에 실패했습니다."))
+                _uiEvent.send(ProductDetailUiEvent.ShowToast("장바구니 담기에 실패했습니다."))
             }
         }
     }

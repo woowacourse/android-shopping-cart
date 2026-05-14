@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingApplication
@@ -20,6 +22,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.model.DetailProductUiModel
 import woowacourse.shopping.ui.model.SimpleProductUiModel
+import woowacourse.shopping.ui.productlist.state.ProductListUiEvent
 import woowacourse.shopping.ui.productlist.state.ProductListUiState
 
 class ProductListViewModel(
@@ -30,8 +33,10 @@ class ProductListViewModel(
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var allProducts = listOf<Product>()
+    private val _uiEvent = Channel<ProductListUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
+    private var currentPage = 1
     private val _products = mutableListOf<Product>()
     private var cart = Cart()
 
@@ -61,28 +66,48 @@ class ProductListViewModel(
 
     private fun loadInitData() {
         viewModelScope.launch {
-            productRepository.getProducts()
+            productRepository.getProducts(page = 1, size = PAGE_SIZE)
                 .onSuccess { products ->
-                    allProducts = products
+                    _products.addAll(products)
                     fetchProducts()
                 }
                 .onFailure { exception ->
                     _uiState.update { it.copy(isError = true, errorMessage = exception.message) }
+                    _uiEvent.send(ProductListUiEvent.ShowToast("상품 로드에 실패했습니다."))
                 }
         }
     }
 
     fun fetchProducts(pageSize: Int = PAGE_SIZE) {
         require(pageSize > 0) { "PAGE_SIZE의 크기는 0보다 커야한다" }
-        if (isEndList()) return
 
-        val fromIndex = _products.size
-        val toIndex = minOf(fromIndex + pageSize, allProducts.size)
+        if (_uiState.value.isLoading || _uiState.value.isEnd) return
 
-        _products.addAll(
-            allProducts.subList(fromIndex, toIndex),
-        )
-        syncUiState()
+        _uiState.update { it.copy(isLoading = true) }
+
+        viewModelScope.launch {
+            productRepository.getProducts(page = currentPage, size = pageSize)
+                .onSuccess { newProducts ->
+                    _products.addAll(newProducts)
+
+                    val isEndOfList = newProducts.size < pageSize
+
+                    if (!isEndOfList) {
+                        currentPage++
+                    }
+
+                    syncUiState(isEndOfList)
+                }
+                .onFailure { exception ->
+                    _uiState.update {
+                        it.copy(
+                            isError = true,
+                            errorMessage = exception.message,
+                            isLoading = false,
+                        )
+                    }
+                }
+        }
     }
 
     fun addCartItem(productId: String) {
@@ -107,13 +132,13 @@ class ProductListViewModel(
         }
     }
 
-    private fun syncUiState() {
+    private fun syncUiState(isEnd: Boolean) {
         _uiState.update { state ->
             state.copy(
                 products = _products.map { product ->
                     toDetailProductUiModel(product, cart.getQuantity(product) ?: Quantity(0))
                 },
-                isEnd = isEndList(),
+                isEnd = isEnd,
             )
         }
     }
@@ -134,8 +159,6 @@ class ProductListViewModel(
         imageUrl = product.imageUrl,
         title = product.name,
     )
-
-    private fun isEndList(): Boolean = allProducts.isNotEmpty() && _products.size >= allProducts.size
 
     companion object {
         private const val PAGE_SIZE = 20

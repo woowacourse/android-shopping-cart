@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.ui.productdetail.state.UiEvent
+import woowacourse.shopping.ui.productdetail.state.ProductDetailUiEvent
 import woowacourse.shopping.ui.productdetail.viewmodel.ProductDetailViewModel
 
 @Composable
@@ -22,10 +22,10 @@ fun ProductDetailRoute(
     LaunchedEffect(Unit) {
         productDetailViewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.ShowToast -> {
+                is ProductDetailUiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
-                is UiEvent.CartAddSuccess -> {
+                is ProductDetailUiEvent.CartAddSuccess -> {
                     onNavigateToHome()
                 }
             }

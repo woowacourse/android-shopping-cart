@@ -7,6 +7,7 @@ import mockwebserver3.MockWebServer
 import mockwebserver3.RecordedRequest
 import woowacourse.shopping.constants.MockData
 import woowacourse.shopping.constants.MockData.MOCK_PRODUCTS_LIST
+import woowacourse.shopping.data.remote.model.ProductResponse
 
 object ShoppingMockServer {
     private var mockWebServer: MockWebServer? = null
@@ -18,11 +19,16 @@ object ShoppingMockServer {
     private val dispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
             val path = request.target
+
+            val basePath = path.substringBefore("?")
+
             return when {
-                path == "/products" -> {
+                basePath == "/products" -> {
+                    val products = getPagedProducts(path)
+
                     MockResponse.Builder()
                         .code(200)
-                        .body(gson.toJson(MOCK_PRODUCTS_LIST))
+                        .body(gson.toJson(products))
                         .addHeader("Content-Type", "application/json")
                         .build()
                 }
@@ -37,6 +43,20 @@ object ShoppingMockServer {
                 }
                 else -> MockResponse.Builder().code(404).build()
             }
+        }
+    }
+
+    private fun getPagedProducts(path: String): List<ProductResponse> {
+        val page = Regex("page=(\\d+)").find(path)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+        val size = Regex("size=(\\d+)").find(path)?.groupValues?.get(1)?.toIntOrNull() ?: 20
+
+        val fromIndex = (page - 1) * size
+
+        return if (fromIndex < MOCK_PRODUCTS_LIST.size) {
+            val toIndex = minOf(fromIndex + size, MOCK_PRODUCTS_LIST.size)
+            MOCK_PRODUCTS_LIST.subList(fromIndex, toIndex)
+        } else {
+            emptyList()
         }
     }
 

@@ -7,7 +7,10 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(private val remoteDataSource: ProductRemoteDataSource) : ProductRepository {
-    override suspend fun getProducts(): Result<List<Product>> = remoteDataSource.getProducts().map { response ->
+    override suspend fun getProducts(
+        page: Int,
+        size: Int,
+    ): Result<List<Product>> = remoteDataSource.getProducts(page = page, size = size).map { response ->
         response.map { it.toProduct() }
     }
 
