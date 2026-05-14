@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.source
 
+import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
 interface CartDataSource {
@@ -14,7 +15,7 @@ interface CartDataSource {
 
     suspend fun getCartItemById(productId: String): CartItemEntity?
 
-    suspend fun getTotalCount(): Int
+    fun getTotalCount(): Flow<Int>
 
-    suspend fun getTotalItemCount(): Int
+    fun getTotalItemCount(): Flow<Int>
 }

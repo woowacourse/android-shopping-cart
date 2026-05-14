@@ -3,6 +3,7 @@ package woowacourse.shopping.data.source.local.cart
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartItemDao {
@@ -22,8 +23,8 @@ interface CartItemDao {
     suspend fun getCartItemById(productId: String): CartItemEntity?
 
     @Query("SELECT SUM(quantity) From cartItems ")
-    suspend fun getTotalCount(): Int
+    fun getTotalCount(): Flow<Int>
 
     @Query("SELECT COUNT(*) From cartItems ")
-    suspend fun getTotalItemCount(): Int
+    fun getTotalItemCount(): Flow<Int>
 }

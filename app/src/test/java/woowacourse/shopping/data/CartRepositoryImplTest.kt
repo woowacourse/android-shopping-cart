@@ -121,7 +121,7 @@ class FakeCartDataSource : CartDataSource {
 
     override suspend fun getCartItemById(productId: String): CartItemEntity? = items.firstOrNull { it.productId == productId }
 
-    override suspend fun getTotalCount(): Int = items.size
+    override fun getTotalCount(): Int = items.size
 
-    override suspend fun getTotalItemCount(): Int = items.sumOf { it.quantity }
+    override fun getTotalItemCount(): Int = items.sumOf { it.quantity }
 }

@@ -1,5 +1,7 @@
 package woowacourse.shopping.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import woowacourse.shopping.data.source.CartDataSource
 import woowacourse.shopping.data.source.local.cart.CartItemEntity
 import woowacourse.shopping.domain.CartItem
@@ -9,7 +11,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
-    override suspend fun isLastPage(page: Int): Boolean = page * PAGE_SIZE >= cartDataSource.getTotalItemCount()
+    override suspend fun isLastPage(page: Int): Boolean = page * PAGE_SIZE >= cartDataSource.getTotalItemCount().first()
 
     override suspend fun addItem(
         productId: String,
@@ -34,7 +36,7 @@ class CartRepositoryImpl(
         }
     }
 
-    override suspend fun getCartItemCount(): Int = cartDataSource.getTotalCount()
+    override fun getCartItemCount(): Flow<Int> = cartDataSource.getTotalCount()
 
     override suspend fun getItemCount(productId: String): Int =
         cartDataSource

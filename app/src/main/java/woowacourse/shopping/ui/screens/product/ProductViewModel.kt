@@ -49,6 +49,7 @@ class ProductViewModel(
         }
         loadProducts()
         observeLastViewProduct()
+        observeCartCount()
     }
 
     fun loadProducts() {
@@ -92,7 +93,6 @@ class ProductViewModel(
                     product.toUiModel(cartQuantity = cartRepository.getItemCount(product.id))
                 },
                 hasNext = totalSize > products.size,
-                totalCartCount = cartRepository.getCartItemCount(),
             )
         }
     }
@@ -114,6 +114,18 @@ class ProductViewModel(
 
                     _uiState.update {
                         it.copy(recentProducts = recentProducts)
+                    }
+                }
+        }
+    }
+
+    private fun observeCartCount() {
+        viewModelScope.launch {
+            cartRepository
+                .getCartItemCount()
+                .collect { count ->
+                    _uiState.update {
+                        it.copy(totalCartCount = count)
                     }
                 }
         }

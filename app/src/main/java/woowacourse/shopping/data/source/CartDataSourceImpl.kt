@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.source
 
+import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.source.local.cart.CartItemDao
 import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
@@ -21,7 +22,7 @@ class CartDataSourceImpl(
 
     override suspend fun getCartItemById(productId: String): CartItemEntity? = dao.getCartItemById(productId = productId)
 
-    override suspend fun getTotalCount(): Int = dao.getTotalCount()
+    override fun getTotalCount(): Flow<Int> = dao.getTotalCount()
 
-    override suspend fun getTotalItemCount(): Int = dao.getTotalItemCount()
+    override fun getTotalItemCount(): Flow<Int> = dao.getTotalItemCount()
 }

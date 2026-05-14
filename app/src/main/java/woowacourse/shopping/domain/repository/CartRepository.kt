@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 
@@ -21,5 +22,5 @@ interface CartRepository {
 
     suspend fun minusItemCount(productId: String)
 
-    suspend fun getCartItemCount(): Int
+    fun getCartItemCount(): Flow<Int>
 }
