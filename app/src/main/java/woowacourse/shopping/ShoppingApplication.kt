@@ -9,10 +9,12 @@ import woowacourse.shopping.di.AppContainer
 import kotlin.concurrent.thread
 
 class ShoppingApplication : Application() {
+    lateinit var appContainer: AppContainer
+
     override fun onCreate() {
         super.onCreate()
         startMockWebServer()
-        AppContainer.init(this)
+        appContainer = AppContainer(this)
     }
 
     private fun startMockWebServer() {

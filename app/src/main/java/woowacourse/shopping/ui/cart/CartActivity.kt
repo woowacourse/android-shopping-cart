@@ -11,12 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.di.AppContainer
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.common.theme.ShoppingTheme
 
 class CartActivity : ComponentActivity() {
-    val cartRepo = AppContainer.cartRepository
-    val pageSize = 5
+    private val pageSize = 5
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +24,15 @@ class CartActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val container = (application as ShoppingApplication).appContainer
+
                     val viewModel: CartViewModel =
                         viewModel(
                             factory =
                                 object : ViewModelProvider.Factory {
                                     override fun <T : ViewModel> create(modelClass: Class<T>): T =
                                         CartViewModel(
-                                            cartRepo = cartRepo,
+                                            cartRepo = container.cartRepository,
                                             pageSize = pageSize,
                                         ) as T
                                 },

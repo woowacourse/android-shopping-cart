@@ -11,33 +11,26 @@ import woowacourse.shopping.data.repository.remote.NetworkProductRepository
 import woowacourse.shopping.data.repository.room.RoomCartRepository
 import woowacourse.shopping.data.repository.room.RoomRecentProductRepository
 
-object AppContainer {
-    private lateinit var database: Database
+class AppContainer(context: Context) {
+    private val database = Room
+        .databaseBuilder(
+            context.applicationContext,
+            Database::class.java,
+            "shopping-db",
+        ).fallbackToDestructiveMigration(false)
+        .build()
+    private val networkClient = NetworkClient()
 
-    val networkClient = NetworkClient()
     val productRepository: ProductRepository =
         NetworkProductRepository(networkClient = networkClient)
-    val cartRepository: CartRepository by lazy {
+    val cartRepository: CartRepository =
         RoomCartRepository(
             cartDao = database.cartDao(),
             productRepository = productRepository,
         )
-    }
-    val recentProductRepository: RecentProductRepository by lazy {
+    val recentProductRepository: RecentProductRepository =
         RoomRecentProductRepository(
             recentProductDao = database.recentProductDao(),
             productRepository = productRepository,
         )
-    }
-
-    fun init(context: Context) {
-        database =
-            Room
-                .databaseBuilder(
-                    context.applicationContext,
-                    Database::class.java,
-                    "shopping-db",
-                ).fallbackToDestructiveMigration(false)
-                .build()
-    }
 }

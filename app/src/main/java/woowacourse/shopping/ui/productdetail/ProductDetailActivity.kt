@@ -15,15 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import woowacourse.shopping.di.AppContainer
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.common.theme.ShoppingTheme
 import java.util.UUID
 
 class ProductDetailActivity : ComponentActivity() {
-    val productRepo = AppContainer.productRepository
-    val cartRepo = AppContainer.cartRepository
-    val recentProductRepo = AppContainer.recentProductRepository
-
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +39,14 @@ class ProductDetailActivity : ComponentActivity() {
                                         modelClass: Class<T>,
                                         extras: CreationExtras,
                                     ): T {
+                                        val container = (application as ShoppingApplication).appContainer
                                         val savedStateHandle = extras.createSavedStateHandle()
 
                                         return ProductDetailViewModel(
                                             savedStateHandle = savedStateHandle,
-                                            productRepo = productRepo,
-                                            cartRepo = cartRepo,
-                                            recentProductRepo = recentProductRepo,
+                                            productRepo = container.productRepository,
+                                            cartRepo = container.cartRepository,
+                                            recentProductRepo = container.recentProductRepository,
                                             productId = UUID.fromString(receivedProductId),
                                         ) as T
                                     }

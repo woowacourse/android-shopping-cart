@@ -12,17 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.remote.NetworkMonitor
-import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.theme.ShoppingTheme
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class ShoppingActivity : ComponentActivity() {
-    val productRepo = AppContainer.productRepository
-    val cartRepo = AppContainer.cartRepository
-    val recentProductRepo = AppContainer.recentProductRepository
-    val loadSize = 20
+    private val loadSize = 20
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +28,7 @@ class ShoppingActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val container = (application as ShoppingApplication).appContainer
                     val viewModel: ShoppingViewModel =
                         viewModel(
                             factory =
@@ -38,9 +36,9 @@ class ShoppingActivity : ComponentActivity() {
                                     override fun <T : ViewModel> create(modelClass: Class<T>): T =
                                         ShoppingViewModel(
                                             networkMonitor = NetworkMonitor(applicationContext),
-                                            productRepo = productRepo,
-                                            cartRepo = cartRepo,
-                                            recentProductRepo = recentProductRepo,
+                                            productRepo = container.productRepository,
+                                            cartRepo = container.cartRepository,
+                                            recentProductRepo = container.recentProductRepository,
                                             loadSize = loadSize,
                                         ) as T
                                 },
