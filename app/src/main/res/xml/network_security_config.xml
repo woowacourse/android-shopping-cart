@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Android 9 이상 기본 구성-->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- http 통신  localhost 호출만 허락-->
+    <!-- cleartextTrafficPermitted를 false로 하면 https로만 통신 허락-->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

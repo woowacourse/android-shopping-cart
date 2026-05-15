@@ -1,16 +1,20 @@
 package woowacourse.shopping.domain
 
-class CartItem(val product: Product, private val quantity: Quantity) {
-    fun hasProduct(targetProduct: Product): Boolean = this.product == targetProduct
+data class CartItem(
+    val product: Product,
+    val quantity: Quantity,
+) {
+    val totalPrice: Money = product.calPrice(quantity)
 
     fun hasProductId(targetId: String): Boolean = product.hasId(targetId)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CartItem) return false
+    fun hasProduct(targetProduct: Product): Boolean = product == targetProduct
 
-        return this.product == other.product
-    }
+    fun isSameQuantity(otherQuantity: Quantity): Boolean = this.quantity == otherQuantity
 
-    override fun hashCode(): Int = product.hashCode()
+    fun isQuantityLessThan(otherQuantity: Quantity): Boolean = quantity.isLessThan(otherQuantity)
+
+    fun increase(quantity: Quantity): CartItem = this.copy(quantity = this.quantity + quantity)
+
+    fun decrease(quantity: Quantity): CartItem = this.copy(quantity = this.quantity - quantity)
 }

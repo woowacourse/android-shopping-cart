@@ -28,11 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.state.ProductUiModel
+import woowacourse.shopping.ui.model.DetailProductUiModel
 
 @Composable
 fun CartScreen(
-    cartItems: List<ProductUiModel>,
+    cartItems: List<DetailProductUiModel>,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onCloseClick: () -> Unit,
     onDelete: (String) -> Unit,
     page: Int,
@@ -76,6 +78,8 @@ fun CartScreen(
                     onRightClick = onRightClick,
                     isLeftEnable = isLeftEnable,
                     isRightEnable = isRightEnable,
+                    onIncrement = onIncrement,
+                    onDecrement = onDecrement,
                     modifier = Modifier.padding(innerPadding),
                 )
             }
@@ -85,8 +89,10 @@ fun CartScreen(
 
 @Composable
 private fun CartListContent(
-    cartItems: List<ProductUiModel>,
+    cartItems: List<DetailProductUiModel>,
     page: Int,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
     onDelete: (String) -> Unit,
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
@@ -103,6 +109,8 @@ private fun CartListContent(
             cartItems = cartItems,
             modifier = Modifier.weight(1f),
             onDelete = onDelete,
+            onIncrement = onIncrement,
+            onDecrement = onDecrement,
         )
         Spacer(modifier = Modifier.height(40.dp))
         PageNavigator(
@@ -152,7 +160,12 @@ private fun PageNavigator(
 }
 
 @Composable
-private fun PageButton(text: String, onClick: () -> Unit, isEnable: Boolean, modifier: Modifier = Modifier) {
+private fun PageButton(
+    text: String,
+    onClick: () -> Unit,
+    isEnable: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onClick,
         enabled = isEnable,
@@ -174,7 +187,13 @@ private fun PageButton(text: String, onClick: () -> Unit, isEnable: Boolean, mod
 }
 
 @Composable
-private fun CartItemList(cartItems: List<ProductUiModel>, onDelete: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun CartItemList(
+    cartItems: List<DetailProductUiModel>,
+    onIncrement: (String) -> Unit,
+    onDecrement: (String) -> Unit,
+    onDelete: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -192,13 +211,19 @@ private fun CartItemList(cartItems: List<ProductUiModel>, onDelete: (String) -> 
                 onDelete = {
                     onDelete(it.id)
                 },
+                quantity = it.quantity,
+                onIncrement = { onIncrement(it.id) },
+                onDecrement = { onDecrement(it.id) },
             )
         }
     }
 }
 
 @Composable
-private fun EmptyCartView(message: String, modifier: Modifier = Modifier) {
+private fun EmptyCartView(
+    message: String,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center,
@@ -223,6 +248,8 @@ private fun EmptyCartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = true,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
 
@@ -231,11 +258,12 @@ private fun EmptyCartScreenPreview() {
 private fun CartScreenPreview() {
     CartScreen(
         cartItems = listOf(
-            ProductUiModel.of(
-                name = "카트 상품 1",
-                price = 1000,
-                imageUrl = "",
+            DetailProductUiModel(
                 id = "1",
+                imageUrl = "",
+                title = "카트 상품1",
+                price = "1000원",
+                quantity = 1,
             ),
         ),
         onCloseClick = {},
@@ -245,6 +273,8 @@ private fun CartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = false,
+        onIncrement = {},
+        onDecrement = {},
     )
 }
 
@@ -253,11 +283,12 @@ private fun CartScreenPreview() {
 private fun InvalidPageCartScreenPreview() {
     CartScreen(
         cartItems = listOf(
-            ProductUiModel.of(
-                name = "카트 상품 1",
-                price = 1000,
-                imageUrl = "",
+            DetailProductUiModel(
                 id = "1",
+                imageUrl = "",
+                title = "카트 상품1",
+                price = "1000원",
+                quantity = 1,
             ),
         ),
         onCloseClick = {},
@@ -267,5 +298,7 @@ private fun InvalidPageCartScreenPreview() {
         onRightClick = {},
         isLeftEnable = false,
         isRightEnable = false,
+        onIncrement = {},
+        onDecrement = {},
     )
 }

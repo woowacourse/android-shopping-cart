@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.productlist
 
-import android.R.attr.text
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -17,15 +18,49 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.ui.common.AddCartButton
+import woowacourse.shopping.ui.common.QuantityCounter
 
 @Composable
-fun SingleProductItem(imageUrl: String, title: String, price: String, modifier: Modifier = Modifier) {
+fun SingleProductItem(
+    imageUrl: String,
+    title: String,
+    price: String,
+    quantity: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier.fillMaxWidth()) {
-        PreviewableAsyncImage(
-            imageUrl = imageUrl,
-            description = title,
-            modifier = Modifier.aspectRatio(1f),
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            PreviewableAsyncImage(
+                imageUrl = imageUrl,
+                description = title,
+                modifier = Modifier.aspectRatio(1f),
+            )
+
+            if (quantity == 0) {
+                AddCartButton(
+                    onIncrement = onIncrement,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp),
+                )
+            } else {
+                QuantityCounter(
+                    quantity = quantity,
+                    onIncrement = onIncrement,
+                    onDecrement = onDecrement,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(52.dp)
+                        .padding(vertical = 8.dp, horizontal = 14.dp),
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(9.dp))
         Text(
             text = title,
@@ -56,5 +91,24 @@ private fun PreviewSingleProduct() {
         modifier = Modifier
             .width(160.dp)
             .padding(horizontal = 16.dp),
+        quantity = 0,
+        onIncrement = {},
+        onDecrement = {},
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewSingleProductWithQuantity() {
+    SingleProductItem(
+        imageUrl = "asd",
+        title = "Pet보틀-정사각형 50000ml",
+        price = "12,000원",
+        modifier = Modifier
+            .width(160.dp)
+            .padding(horizontal = 16.dp),
+        quantity = 1,
+        onIncrement = {},
+        onDecrement = {},
     )
 }

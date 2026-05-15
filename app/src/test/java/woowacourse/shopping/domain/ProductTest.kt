@@ -28,15 +28,8 @@ class ProductTest {
             imageUrl = "",
         )
 
-        val other = Product(
-            id = "1",
-            name = "임시2",
-            price = Money(2000),
-            imageUrl = "",
-        )
-
         // when : 동일한 id 상품을 입력받아 비교할 때
-        val result = product == other
+        val result = product.hasId("1")
 
         // then : true를 반환한다
         assertEquals(true, result)
@@ -52,15 +45,8 @@ class ProductTest {
             imageUrl = "",
         )
 
-        val other = Product(
-            id = "2",
-            name = "임시",
-            price = Money(1000),
-            imageUrl = "",
-        )
-
         // when : 다른 상품을 입력받아 비교할 때
-        val result = product == other
+        val result = product.hasId("2")
 
         // then : false를 반환한다
         assertEquals(false, result)

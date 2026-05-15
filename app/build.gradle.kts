@@ -3,6 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
+    id("com.google.devtools.ksp")
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
@@ -36,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     testOptions {
         unitTests.all {
@@ -53,12 +59,34 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.core.ktx)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.mockwebserver3)
+    implementation(libs.converter.gson)
+
+    implementation(libs.androidx.compose.material.icons.extended)
 }

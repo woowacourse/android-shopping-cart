@@ -2,56 +2,124 @@ package woowacourse.shopping.domain
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class CartTest {
-    @Test
-    fun `상품을 추가하면 추가된 Cart 를 반환한다`() {
-        // given : 상품과 Cart가 주어진다
-        val product = normalProduct("임시")
-        val cartItem = CartItem(product, Quantity(1))
-        val cart = Cart()
+    private val productA = Product(
+        name = "상품A",
+        price = Money(2000),
+        imageUrl = "",
+        id = "1",
+    )
 
-        // when : 상품을 Cart에 추가하면
-        val newCart = cart.plusCartItem(cartItem)
-
-        // then : 상품이 추가된 Cart가 반환된다
-        val result = newCart.isContains(product)
-        assertEquals(result, true)
-    }
-
-    @Test
-    fun `product가 존재한다면 true를 반환한다`() {
-        // given : 상품과 Cart가 주어진다
-        val product = normalProduct("임시")
-        val cartItem = CartItem(product, Quantity(1))
-        val cart = Cart(listOf(cartItem))
-
-        // when : 상품이 존재하는지 확인할 때
-        val result = cart.isContains(product)
-
-        // then : true가 반환된다
-        assertEquals(result, true)
-    }
-
-    @Test
-    fun `product가 존재하지 않는다면 false를 반환한다`() {
-        // given : 상품과 Cart, 다른 상품이 주어진다
-        val product = normalProduct("임시")
-        val cartItem = CartItem(product, Quantity(1))
-        val cart = Cart(listOf(cartItem))
-
-        val otherProduct = normalProduct("임시2")
-
-        // when : 상품이 존재하는지 확인할 때
-        val result = cart.isContains(otherProduct)
-
-        // then : false가 반환된다
-        assertEquals(result, false)
-    }
-
-    private fun normalProduct(title: String): Product = Product(
-        name = title,
+    private val productB = Product(
+        name = "상품B",
         price = Money(1000),
         imageUrl = "",
+        id = "2",
     )
+
+    private val quantity1 = Quantity(1)
+    private val quantity2 = Quantity(2)
+
+    private val testCart = Cart(
+        cartItems = listOf(
+            CartItem(
+                product = productA,
+                quantity = quantity1,
+            ),
+        ),
+    )
+
+    @Test
+    fun `Cart에 상품을 존재한다면 true를 반환한다`() {
+        val result = testCart.contains(productA)
+
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `Cart에 상품을 존재하지 않는다면 false를 반환한다`() {
+        val result = testCart.contains(productB)
+
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `Cart에 입력받은 상품의 Quantity를 반환한다`() {
+        val result = testCart.getQuantity(productA)
+
+        assertEquals(Quantity(1), result)
+    }
+
+    @Test
+    fun `Cart에 입력받은 상품이 없다면 null을 반환한다`() {
+        val result = testCart.getQuantity(productB)
+
+        assertEquals(null, result)
+    }
+
+    @Test
+    fun `새로운 상품을 추가하면 Cart에 새로운 상품이 추가된 Cart를 반환한다`() {
+        val cart = Cart()
+        val newCart = cart.plusProduct(productA, quantity1)
+
+        val isExistResult = newCart.contains(productA)
+        val quantityResult = newCart.getQuantity(productA)
+
+        assertEquals(true, isExistResult)
+        assertEquals(Quantity(1), quantityResult)
+    }
+
+    @Test
+    fun `이미 존재하는 상품을 추가하면 수량이 합쳐진 Cart 를 반환한다`() {
+        val cart = Cart().plusProduct(productA, quantity1)
+        val newCart = cart.plusProduct(productA, quantity2)
+
+        val isExistResult = newCart.contains(productA)
+        val quantityResult = newCart.getQuantity(productA)
+
+        assertEquals(1, cart.cartItems.size)
+        assertEquals(1, newCart.cartItems.size)
+        assertEquals(true, isExistResult)
+        assertEquals(Quantity(3), quantityResult)
+    }
+
+    @Test
+    fun `삭제 수량이 보유 수량과 같으면 해당 상품이 제거된 Cart 를 반환한다`() {
+        val cart = Cart().plusProduct(productA, quantity2)
+        val newCart = cart.minusProduct(productA, quantity2)
+
+        val isExistResult = newCart.contains(productA)
+
+        assertEquals(0, newCart.cartItems.size)
+        assertEquals(false, isExistResult)
+    }
+
+    @Test
+    fun `삭제 수량이 보유 수량보다 적으면 수량이 줄어든 Cart 를 반환한다`() {
+        val cart = Cart().plusProduct(productA, quantity2)
+        val newCart = cart.minusProduct(productA, quantity1)
+
+        val isExistResult = newCart.contains(productA)
+        val quantityResult = newCart.getQuantity(productA)
+
+        assertEquals(1, newCart.cartItems.size)
+        assertEquals(true, isExistResult)
+        assertEquals(Quantity(1), quantityResult)
+    }
+
+    @Test
+    fun `삭제 수량이 보유 수량보다 많으면 예외를 발생시킨다`() {
+        val cart = Cart().plusProduct(productA, quantity1)
+
+        assertThrows<IllegalArgumentException> { cart.minusProduct(productA, quantity2) }
+    }
+
+    @Test
+    fun `Cart에 없는 상품을 삭제하려고하면 예외를 발생시킨다`() {
+        val cart = Cart().plusProduct(productA, quantity1)
+
+        assertThrows<IllegalArgumentException> { cart.minusProduct(productB, quantity1) }
+    }
 }
