@@ -1,4 +1,4 @@
-package woowacourse.shopping.network
+package woowacourse.shopping.data.remote
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

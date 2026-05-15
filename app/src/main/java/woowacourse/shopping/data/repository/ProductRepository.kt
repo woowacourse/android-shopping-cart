@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository
+package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.model.Product
 import java.util.UUID

@@ -23,7 +23,7 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.common.component.QuantityControlButton
 import woowacourse.shopping.ui.common.component.ShoppingImage
-import woowacourse.shopping.ui.shopping.ProductUiModel
+import woowacourse.shopping.ui.common.model.ProductUiModel
 
 @SuppressLint("DefaultLocale")
 @Composable

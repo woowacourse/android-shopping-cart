@@ -1,11 +1,11 @@
-package woowacourse.shopping.repository.room
+package woowacourse.shopping.data.repository.room
 
-import woowacourse.shopping.local.dao.RecentProductDao
-import woowacourse.shopping.local.entity.RecentProductEntity
+import woowacourse.shopping.data.local.dao.RecentProductDao
+import woowacourse.shopping.data.local.entity.RecentProductEntity
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
-import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.repository.RecentProductRepository
+import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.RecentProductRepository
 import java.util.UUID
 
 class RoomRecentProductRepository(

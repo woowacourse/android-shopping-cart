@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.data.remote.NetworkMonitor
 import woowacourse.shopping.di.AppContainer
-import woowacourse.shopping.network.NetworkMonitor
 import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.common.theme.ShoppingTheme
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class ShoppingActivity : ComponentActivity() {
     val productRepo = AppContainer.productRepository

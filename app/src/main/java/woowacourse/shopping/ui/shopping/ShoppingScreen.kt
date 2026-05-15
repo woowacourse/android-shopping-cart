@@ -26,6 +26,7 @@ import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
 import woowacourse.shopping.ui.common.component.ShoppingLoading
+import woowacourse.shopping.ui.common.model.ProductUiModel
 import woowacourse.shopping.ui.shopping.component.ProductGroup
 import woowacourse.shopping.ui.shopping.component.RecentProductGroup
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader

@@ -1,12 +1,12 @@
-package woowacourse.shopping.repository.room
+package woowacourse.shopping.data.repository.room
 
-import woowacourse.shopping.local.dao.CartDao
-import woowacourse.shopping.local.entity.CartEntity
+import woowacourse.shopping.data.local.dao.CartDao
+import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 
 class RoomCartRepository(
     private val cartDao: CartDao,

@@ -1,9 +1,9 @@
-package woowacourse.shopping.repository.inmemory
+package woowacourse.shopping.data.repository.inmemory
 
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepository
 
 class InMemoryCartRepository(
     cartItems: List<CartItem> = emptyList(),

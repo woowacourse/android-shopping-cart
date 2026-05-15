@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.shopping.ProductUiModel
+import woowacourse.shopping.ui.common.model.ProductUiModel
 
 @Composable
 fun ProductGroup(

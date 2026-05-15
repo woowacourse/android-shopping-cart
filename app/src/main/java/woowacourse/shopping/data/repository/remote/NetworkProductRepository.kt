@@ -1,11 +1,11 @@
-package woowacourse.shopping.repository.network
+package woowacourse.shopping.data.repository.remote
 
 import org.json.JSONArray
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.remote.NetworkClient
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.network.NetworkClient
-import woowacourse.shopping.repository.ProductRepository
 import java.util.UUID
 
 class NetworkProductRepository(

@@ -1,6 +1,6 @@
 @file:Suppress("NonAsciiCharacters")
 
-package woowacourse.shopping.repository.inmemory
+package woowacourse.shopping.data.repository.inmemory
 
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.ui.common.paging.Pager
 
 class CartViewModel(
