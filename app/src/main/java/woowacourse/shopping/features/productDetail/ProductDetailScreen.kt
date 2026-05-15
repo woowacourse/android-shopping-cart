@@ -2,6 +2,8 @@ package woowacourse.shopping.features.productDetail
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,26 +29,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import woowacourse.shopping.domain.product.model.Product
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_ADD_BUTTON_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.PRODUCT_DETAIL_BACKGROUND_COLOR
+import woowacourse.shopping.features.generalComponent.QuantityControlRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    productName: String,
-    productPrice: Int,
-    productImageUrl: String,
     onAddToCartClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
+    onLatestProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ProductDetailViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
 
     Column(
@@ -67,9 +77,16 @@ fun ProductDetailScreen(
                 Modifier
                     .background(Color.White)
                     .weight(1f),
-            imageUrl = productImageUrl,
-            productName = productName,
-            price = productPrice,
+            imageUrl = uiState.productImageUrl,
+            productName = uiState.productName,
+            latestProductName = uiState.latestProduct?.name?.value ?: "",
+            isLatestProduct = uiState.isLastRecentlyProduct,
+            onLatestProductClick = { onLatestProductClick(uiState.latestProduct!!) },
+            price = uiState.productPrice,
+            minusEnabled = uiState.minusEnabled,
+            productQuantity = uiState.quantity,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
         )
 
         CardAddButton(
@@ -119,6 +136,13 @@ private fun ProductDetailContent(
     imageUrl: String,
     productName: String,
     price: Int,
+    latestProductName: String,
+    isLatestProduct: Boolean,
+    productQuantity: Int,
+    minusEnabled: Boolean,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
+    onLatestProductClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -142,7 +166,47 @@ private fun ProductDetailContent(
             color = Color.Black,
             thickness = 1.dp,
         )
-        ProductPriceSection(price = price, modifier = Modifier)
+        ProductPriceSection(
+            price = price,
+            minusEnabled = minusEnabled,
+            productQuantity = productQuantity,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 14.dp)
+                    .fillMaxWidth(),
+        )
+        if (!isLatestProduct) {
+            Column(
+                modifier =
+                    Modifier
+                        .clip(shape = RoundedCornerShape(10.dp))
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
+                        .clickable {
+                            onLatestProductClick()
+                        },
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    "마지막으로 본 상품",
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color.Green,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    latestProductName,
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color.LightGray,
+                    fontSize = 18.sp,
+                )
+            }
+        }
     }
 }
 
@@ -159,8 +223,7 @@ private fun ProductImageSection(
             imageUrl = imageUrl,
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(40.dp),
+                    .fillMaxSize(),
         )
     }
 }
@@ -173,7 +236,7 @@ private fun ProductNameSection(
     Text(
         text = productName,
         modifier = modifier,
-        fontSize = 20.sp,
+        fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         color = Color.Black,
     )
@@ -182,26 +245,28 @@ private fun ProductNameSection(
 @Composable
 private fun ProductPriceSection(
     price: Int,
+    productQuantity: Int,
+    minusEnabled: Boolean,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier =
-            modifier
-                .padding(horizontal = 16.dp, vertical = 14.dp)
-                .fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = "가격",
-            fontSize = 18.sp,
-            color = Color.Black,
-        )
         Text(
             text = formatPrice(price),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = Color.Black,
+        )
+        QuantityControlRow(
+            quantity = productQuantity,
+            minusEnabled = minusEnabled,
+            onIncrementClick = onIncreaseClick,
+            onDecrementClick = onDecreaseClick,
         )
     }
 }
@@ -215,6 +280,7 @@ private fun ProductImage(
         modifier = modifier,
         model = imageUrl,
         contentDescription = "상품 이미지",
+        contentScale = ContentScale.Crop,
     )
 }
 
@@ -245,13 +311,9 @@ private fun CardAddButton(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        productName = "케로로",
-        productPrice = 10000,
-        productImageUrl =
-            """
-            https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=
-            http://t1.daumcdn.net/brunch/service/user/cnoC/image/81kyXbEZD1IOwgNjto1sFm7PPfI"
-            """.trimIndent(),
         onAddToCartClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
+        onLatestProductClick = {},
     )
 }

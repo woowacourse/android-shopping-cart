@@ -5,11 +5,45 @@ class CartItems(
 ) {
     private val value: List<CartItem> = _value.toList()
 
-    fun addCartItem(cartItem: CartItem): CartItems = CartItems(value + cartItem)
+    fun addCartItem(
+        cartItem: CartItem,
+    ): CartItems =
+        if (!searchCartItem(cartItem)) {
+            CartItems(_value = value + cartItem.increaseQuantity())
+        } else {
+            CartItems(
+                _value =
+                    value.map {
+                        if (it.isSameCartItem(cartItem)) {
+                            it.increaseQuantity()
+                        } else {
+                            it
+                        }
+                    },
+            )
+        }
 
-    fun removeCartItem(cartItem: CartItem): CartItems = CartItems(value.filter { !it.isSameCartItem(cartItem) })
+    fun minusCartItem(
+        cartItem: CartItem,
+    ): CartItems =
+        CartItems(
+            _value =
+                value.map {
+                    if (it.isSameCartItem(cartItem)) {
+                        it.decreaseQuantity()
+                    } else {
+                        it
+                    }
+                },
+        )
+
+    fun removeCartItem(cartItem: CartItem): CartItems = CartItems(_value = value.filter { !it.isSameCartItem(cartItem) })
 
     fun searchCartItem(cartItem: CartItem): Boolean = value.any { it.isSameCartItem(cartItem) }
+
+    fun getTotalCartItemCount(): Int = value.sumOf { it.quantity.value }
+
+    fun getQuantity(cartItem: CartItem): Int = value.find { it.isSameCartItem(cartItem) }?.quantity?.value ?: 0
 
     fun subList(
         fromIndex: Int,

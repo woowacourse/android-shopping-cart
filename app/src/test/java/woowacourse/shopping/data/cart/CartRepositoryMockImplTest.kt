@@ -1,8 +1,11 @@
 package woowacourse.shopping.data.cart
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.source.local.repositoryImpl.cart.CartRepositoryMockImpl
 import woowacourse.shopping.domain.cart.model.CartItem
+import woowacourse.shopping.domain.cart.model.CartItemQuantity
 import woowacourse.shopping.domain.product.model.ImageUrl
 import woowacourse.shopping.domain.product.model.Price
 import woowacourse.shopping.domain.product.model.Product
@@ -11,27 +14,31 @@ import woowacourse.shopping.domain.product.model.ProductName
 class CartRepositoryMockImplTest {
     @Test
     fun `장바구니에 상품을 추가할 수 있다`() {
-        val cartRepository = CartRepositoryMockImpl()
+        runBlocking {
+            val cartRepository = CartRepositoryMockImpl()
 
-        cartRepository.addCartItem(cartItem1)
-        val updatedCart = cartRepository.getCart()
+            cartRepository.addCartItem(cartItem1, 0)
+            val updatedCart = cartRepository.getCart()
 
-        updatedCart.getPage(0, 5) shouldBe listOf(cartItem1)
+            updatedCart.getPage(0, 5) shouldBe listOf(cartItem1)
+        }
     }
 
     @Test
     fun `장바구니에 상품을 제거할 수 있다`() {
-        val cartRepository = CartRepositoryMockImpl()
+        runBlocking {
+            val cartRepository = CartRepositoryMockImpl()
 
-        cartRepository.addCartItem(cartItem1)
-        cartRepository.addCartItem(cartItem2)
-        cartRepository.addCartItem(cartItem3)
+            cartRepository.addCartItem(cartItem1, 0)
+            cartRepository.addCartItem(cartItem2, 0)
+            cartRepository.addCartItem(cartItem3, 0)
 
-        cartRepository.removeCartItem(cartItem2)
+            cartRepository.removeCartItem(cartItem2)
 
-        val updatedCart = cartRepository.getCart()
+            val updatedCart = cartRepository.getCart()
 
-        updatedCart.getPage(0, 5) shouldBe listOf(cartItem1, cartItem3)
+            updatedCart.getPage(0, 5) shouldBe listOf(cartItem1, cartItem3)
+        }
     }
 
     private val cartItem1 =
@@ -42,6 +49,7 @@ class CartRepositoryMockImplTest {
                     price = Price(3000),
                     imageUrl = ImageUrl("https://velog.io"),
                 ),
+            quantity = CartItemQuantity(1),
         )
 
     private val cartItem2 =
@@ -52,6 +60,7 @@ class CartRepositoryMockImplTest {
                     price = Price(1000),
                     imageUrl = ImageUrl("https://naver.com"),
                 ),
+            quantity = CartItemQuantity(2),
         )
 
     private val cartItem3 =
@@ -62,15 +71,6 @@ class CartRepositoryMockImplTest {
                     price = Price(2000),
                     imageUrl = ImageUrl("https://google.com"),
                 ),
-        )
-
-    private val cartItem4 =
-        CartItem(
-            product =
-                Product(
-                    name = ProductName("우아한스무디"),
-                    price = Price(1000),
-                    imageUrl = ImageUrl("https://daum.net"),
-                ),
+            quantity = CartItemQuantity(3),
         )
 }

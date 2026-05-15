@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,29 +36,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import woowacourse.shopping.domain.cart.model.CartItem
 import woowacourse.shopping.features.constant.Format.formatPrice
 import woowacourse.shopping.features.constant.ShoppingColor.APP_BAR_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_ACTIVE_COLOR
 import woowacourse.shopping.features.constant.ShoppingColor.CART_PAGE_BUTTON_INACTIVE_COLOR
+import woowacourse.shopping.features.generalComponent.QuantityControlRow
 
 @Composable
 fun CartScreen(
-    cartItems: List<CartItem>,
-    totalPages: Int,
-    currentPage: Int,
-    hasPrevious: Boolean,
-    hasNext: Boolean,
+    isMinusEnabled: (CartItemUiModel) -> Boolean,
     goToPreviousPage: () -> Unit,
     goToNextPage: () -> Unit,
-    removeCartItem: (CartItem) -> Unit,
+    removeCartItem: (CartItemUiModel) -> Unit,
+    increaseCartItem: (CartItemUiModel) -> Unit,
+    decreaseCartItem: (CartItemUiModel) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: CartViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
 
     Column(
@@ -75,30 +77,28 @@ fun CartScreen(
             },
         )
 
-        LazyColumn(
+        CartItemLazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 4.dp),
-        ) {
-            items(cartItems) { cartItem ->
-                CartItemCard(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                    cartItem = cartItem,
-                    onRemoveClick = {
-                        removeCartItem(cartItem)
-                    },
-                )
-            }
-        }
+            pageCartItems = uiState.pageCartItems,
+            isMinusEnabled = {
+                isMinusEnabled(it)
+            },
+            removeCartItem = {
+                removeCartItem(it)
+            },
+            increaseCartItem = {
+                increaseCartItem(it)
+            },
+            decreaseCartItem = {
+                decreaseCartItem(it)
+            },
+        )
 
-        if (totalPages > 1) {
+        if (uiState.totalPageCount > 1) {
             PageNavigator(
-                currentPage = currentPage,
-                hasPrevious = hasPrevious,
-                hasNext = hasNext,
+                currentPage = uiState.currentPage,
+                hasPrevious = !uiState.isFirstPage,
+                hasNext = !uiState.isLastPage,
                 onPreviousClick = { goToPreviousPage() },
                 onNextClick = { goToNextPage() },
                 modifier =
@@ -148,9 +148,59 @@ private fun CartTopAppBar(
 }
 
 @Composable
+private fun CartItemLazyColumn(
+    pageCartItems: List<CartItemUiModel>,
+    isMinusEnabled: (CartItemUiModel) -> Boolean,
+    removeCartItem: (CartItemUiModel) -> Unit,
+    increaseCartItem: (CartItemUiModel) -> Unit,
+    decreaseCartItem: (CartItemUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(bottom = 4.dp),
+    ) {
+        items(
+            items = pageCartItems,
+            key = { item -> item.id },
+        ) { cartItem ->
+            CartItemCard(
+                modifier =
+                    Modifier
+                        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                        .fillMaxWidth(),
+                cartItemName = cartItem.name,
+                cartItemImageUrl = cartItem.imageUrl,
+                cartItemQuantity = cartItem.quantity,
+                cartItemPrice = cartItem.getTotalPrice(),
+                isMinusEnabled = {
+                    isMinusEnabled(cartItem)
+                },
+                onRemoveClick = {
+                    removeCartItem(cartItem)
+                },
+                onIncreaseClick = {
+                    increaseCartItem(cartItem)
+                },
+                onDecreaseClick = {
+                    decreaseCartItem(cartItem)
+                },
+            )
+        }
+    }
+}
+
+@Composable
 private fun CartItemCard(
-    cartItem: CartItem,
+    cartItemName: String,
+    cartItemImageUrl: String,
+    cartItemQuantity: Int,
+    cartItemPrice: Int,
+    isMinusEnabled: () -> Boolean,
     onRemoveClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -162,13 +212,14 @@ private fun CartItemCard(
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top,
             ) {
                 Text(
-                    text = cartItem.product.name.value,
+                    text = cartItemName,
                     modifier = Modifier.weight(1f),
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
@@ -185,25 +236,34 @@ private fun CartItemCard(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(6.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom,
             ) {
                 ProductImage(
-                    imageUrl = cartItem.product.imageUrl.value,
+                    imageUrl = cartItemImageUrl,
                     modifier = Modifier.size(width = 72.dp, height = 64.dp),
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = formatPrice(cartItem.product.price.value),
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
+                Column(
+                    modifier = Modifier,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    QuantityControlRow(
+                        quantity = cartItemQuantity,
+                        minusEnabled = isMinusEnabled(),
+                        onIncrementClick = onIncreaseClick,
+                        onDecrementClick = onDecreaseClick,
+                    )
+                    Text(
+                        text = formatPrice(cartItemPrice),
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                    )
+                }
             }
         }
     }
@@ -271,6 +331,7 @@ private fun ProductImage(
             modifier
                 .background(Color(0xFFF1F1F1))
                 .border(1.dp, Color(0xFFE4E4E4)),
+        contentScale = ContentScale.Crop,
     )
 }
 
@@ -278,13 +339,11 @@ private fun ProductImage(
 @Composable
 private fun CartScreenPreview() {
     CartScreen(
-        cartItems = emptyList(),
-        totalPages = 0,
-        currentPage = 0,
-        hasPrevious = false,
-        hasNext = false,
         goToPreviousPage = {},
         goToNextPage = {},
         removeCartItem = {},
+        increaseCartItem = {},
+        decreaseCartItem = {},
+        isMinusEnabled = { true },
     )
 }
