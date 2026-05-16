@@ -1,5 +1,7 @@
 package woowacourse.shopping.data.repository.room
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.repository.CartRepository
@@ -7,6 +9,7 @@ import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
+import java.util.UUID
 
 class RoomCartRepository(
     private val cartDao: CartDao,
@@ -53,6 +56,13 @@ class RoomCartRepository(
 
     override suspend fun getQuantity(item: Product): Int? =
         cartDao.getQuantity(item.id)
+
+    override fun observeQuantityMap(): Flow<Map<UUID, Int>> =
+        cartDao.observeAll().map { entities ->
+            entities.associate { entity ->
+                Pair(entity.productId, entity.quantity)
+            }
+        }
 
     private suspend fun toCartItems(): List<CartItem> {
         val cartEntities = cartDao.getAll()

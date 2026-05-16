@@ -3,6 +3,7 @@ package woowacourse.shopping.data.local.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 import woowacourse.shopping.data.local.entity.CartEntity
 import java.util.UUID
 
@@ -28,4 +29,7 @@ interface CartDao {
 
     @Query("SELECT quantity FROM cart_items WHERE productId = :id")
     suspend fun getQuantity(id: UUID): Int?
+
+    @Query("SELECT * FROM cart_items")
+    fun observeAll(): Flow<List<CartEntity>>
 }

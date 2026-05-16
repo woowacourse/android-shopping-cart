@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -14,6 +16,7 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Products
 import woowacourse.shopping.ui.common.model.ProductUiModel
 import woowacourse.shopping.ui.common.paging.Pager
 import java.util.UUID
@@ -59,6 +62,25 @@ class ShoppingViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
+
+        cartRepo.observeQuantityMap()
+            .onEach { quantityMap ->
+                _uiState.update { state ->
+                    state.copy(
+                        visibleProducts = state.visibleProducts.map { uiModel ->
+                            uiModel.copy(quantity = quantityMap[uiModel.product.id] ?: 0)
+                        },
+                        cartCount = quantityMap.values.sum()
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+
+        recentProductRepo.observeRecent()
+            .onEach { products ->
+                _uiState.update { it.copy(recentProducts = Products(products)) }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun increase(product: Product) {
@@ -124,25 +146,6 @@ class ShoppingViewModel(
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
-            }
-        }
-    }
-
-    fun syncCartState() {
-        viewModelScope.launch {
-            val cartItems = cartRepo.getAllCartItems()
-            val totalCartCount = cartItems.items.sumOf { it.quantity }
-            val recentProducts = recentProductRepo.getRecentProducts()
-
-            _uiState.update { state ->
-                val currentProducts = state.visibleProducts.map { it.product }
-                val updatedUiModels = mapToProductUiModels(currentProducts)
-
-                state.copy(
-                    visibleProducts = updatedUiModels,
-                    cartCount = totalCartCount,
-                    recentProducts = recentProducts,
-                )
             }
         }
     }

@@ -31,6 +31,6 @@ class AppContainer(context: Context) {
     val recentProductRepository: RecentProductRepository =
         RoomRecentProductRepository(
             recentProductDao = database.recentProductDao(),
-            productRepository = productRepository,
+            productRepo = productRepository,
         )
 }
