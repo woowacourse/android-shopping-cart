@@ -72,8 +72,15 @@ class ProductDetailViewModel(
 
     fun addToCart() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        if(current.isAddingToCart)  return
         viewModelScope.launch {
+            _uiState.value = current.copy(isAddingToCart = true)
+
             cartRepository.addProduct(current.product, Quantity(current.selectedQuantity))
+
+            val updated = _uiState.value as? ProductDetailUiState.Success ?: return@launch
+
+            _uiState.value = updated.copy(isAddingToCart = false)
         }
     }
 

@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
+import android.R.attr.onClick
 import android.annotation.SuppressLint
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
@@ -97,13 +98,13 @@ fun ProductDetailScreen(
                 )
 
                 CardAddButton(
-                    modifier =
-                        Modifier
+                    modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
                     onAddToCartClick = {
                         onAddToCartClick()
                     },
+                    isAddingToCart = !state.isAddingToCart,
                 )
             }
 
@@ -187,6 +188,7 @@ private fun ProductDetailContent(
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
     onLastViewedProductClick: (Product) -> Unit,
+
 ) {
     Column(
         modifier = modifier,
@@ -415,9 +417,11 @@ private fun ProductImage(
 private fun CardAddButton(
     modifier: Modifier = Modifier,
     onAddToCartClick: () -> Unit,
+    isAddingToCart: Boolean,
 ) {
     Button(
         modifier = modifier,
+        enabled = !isAddingToCart,
         onClick = onAddToCartClick,
         colors =
             ButtonDefaults.buttonColors(
@@ -437,7 +441,7 @@ private fun CardAddButton(
 @SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
-fun ProductDetailScreenPreview() {
+private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         viewModel =
             ProductDetailViewModel(
@@ -451,3 +455,4 @@ fun ProductDetailScreenPreview() {
         onLastViewedProductClick = {},
     )
 }
+
