@@ -18,7 +18,13 @@ class LocalRecentProductRepository(
             recentProducts.map { it.toDomain() }
         }
 
-    override suspend fun getMostRecentProduct(): Product? = recentProductDataSource.getMostRecentProduct()?.toDomain()
+    override suspend fun getMostRecentProduct(product: Product): Product?{
+        val recentProduct = recentProductDataSource.getMostRecentProduct()?.toDomain()
+        if (recentProduct != null && !recentProduct.isSameProduct(product)) {
+            return recentProduct
+        }
+        return null
+    }
 
     override suspend fun save(product: Product) {
         recentProductDataSource.upsert(product.toRecentProductEntity(currentTimeMillis()))

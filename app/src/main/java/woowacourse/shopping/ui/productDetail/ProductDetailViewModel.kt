@@ -36,9 +36,9 @@ class ProductDetailViewModel(
                 .onSuccess { product ->
                     _uiState.value =
                         if (product != null) {
-                            val mostRecentProduct: Product? = recentProductRepository.getMostRecentProduct()
+                            val mostRecentProduct: Product? = recentProductRepository.getMostRecentProduct(product)
                             val lastViewedProduct =
-                                if (openedFromLastViewed || product.isSameProduct(mostRecentProduct)) {
+                                if (openedFromLastViewed) {
                                     null
                                 } else {
                                     mostRecentProduct
