@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.repository.inmemory
 
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.data.repository.CartRepository
 
 class InMemoryCartRepository(
     cartItems: List<CartItem> = emptyList(),
@@ -12,42 +12,11 @@ class InMemoryCartRepository(
 
     override suspend fun getAllCartItems(): Cart = Cart(value)
 
-    override suspend fun add(
+    override suspend fun setQuantity(
         item: Product,
-        quantity: Int,
+        quantity: Int
     ) {
-        require(quantity > 0) { "장바구니에 추가하는 수량($quantity)은 1 이상의 정수여야 합니다." }
-        val existingIndex = value.indexOfFirst { it.product.id == item.id }
-
-        if (existingIndex != -1) {
-            val existingItem = value[existingIndex]
-            value[existingIndex] = existingItem.copy(quantity = quantity)
-        } else {
-            value.add(CartItem(product = item, quantity = quantity))
-        }
-    }
-
-    override suspend fun increase(item: Product) {
-        val existingIndex = value.indexOfFirst { it.product.id == item.id }
-
-        if (existingIndex != -1) {
-            val existingItem = value[existingIndex]
-            value[existingIndex] = existingItem.copy(quantity = existingItem.quantity + 1)
-        } else {
-            value.add(CartItem(product = item, quantity = 1))
-        }
-    }
-
-    override suspend fun decrease(item: Product) {
-        val existingIndex = value.indexOfFirst { it.product.id == item.id }
-        if (existingIndex < 0) return
-
-        val cartItem = value[existingIndex]
-        if (cartItem.quantity > 1) {
-            value[existingIndex] = cartItem.copy(quantity = cartItem.quantity - 1)
-        } else {
-            value.removeAt(existingIndex)
-        }
+        TODO("Not yet implemented")
     }
 
     override suspend fun delete(item: Product) {
@@ -68,4 +37,8 @@ class InMemoryCartRepository(
     }
 
     override suspend fun getSize(): Int = value.size
+
+    override suspend fun getQuantity(item: Product): Int? {
+        TODO("Not yet implemented")
+    }
 }

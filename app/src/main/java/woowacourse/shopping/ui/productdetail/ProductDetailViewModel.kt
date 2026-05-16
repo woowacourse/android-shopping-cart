@@ -30,24 +30,25 @@ class ProductDetailViewModel(
 
     fun increase() {
         _uiState.update {
-            it.copy(selectedQuantity = it.selectedQuantity + 1)
+            it.copy(quantity = it.quantity + 1)
         }
     }
 
     fun decrease() {
         _uiState.update {
-            it.copy(selectedQuantity = maxOf(1, it.selectedQuantity - 1))
+            it.copy(quantity = maxOf(1, it.quantity - 1))
         }
     }
 
     fun addToCart() {
-        val currentState = _uiState.value
-        val productToSave = currentState.product ?: return
+        val product = _uiState.value.product ?: return
+        val quantity = _uiState.value.quantity
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                cartRepo.add(productToSave, quantity = currentState.selectedQuantity)
+                val existingQuantity = cartRepo.getQuantity(product) ?: 0
+                cartRepo.setQuantity(product, existingQuantity + quantity)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
@@ -60,14 +61,13 @@ class ProductDetailViewModel(
             try {
                 val product = productRepo.findProduct(productId)
                 val bannerProduct =
-                    recentProductRepo
-                        .getLastViewedProduct()
+                    recentProductRepo.getLastViewedProduct()
                         ?.takeIf { !isFromBanner && it.id != productId }
 
                 _uiState.update {
                     it.copy(
                         product = product,
-                        selectedQuantity = 1,
+                        quantity = 1,
                         lastViewedProduct = bannerProduct,
                     )
                 }

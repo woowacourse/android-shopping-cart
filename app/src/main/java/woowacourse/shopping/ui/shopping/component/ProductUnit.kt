@@ -53,7 +53,7 @@ fun ProductUnit(
 
             if (model.isAddedToCart) {
                 QuantityControlButton(
-                    count = model.cartQuantity,
+                    count = model.quantity,
                     onIncreaseClick = { onIncreaseClick(product) },
                     onDecreaseClick = { onDecreaseClick(product) },
                     modifier =
@@ -103,7 +103,7 @@ private fun ProductUnitPreview() {
                     price = Money(1000),
                     imageUrl = "",
                 ),
-            cartQuantity = 2,
+            quantity = 2,
         )
     ProductUnit(
         model = product,

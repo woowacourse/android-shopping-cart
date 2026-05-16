@@ -62,49 +62,35 @@ class ShoppingViewModel(
     }
 
     fun increase(product: Product) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                cartRepo.increase(product)
+        val currentQuantity = currentQuantityOf(product.id) ?: return
+        val newQuantity = currentQuantity + 1
 
-                _uiState.update { state ->
-                    val updatedProducts =
-                        state.visibleProducts.map { uiModel ->
-                            if (uiModel.product.id == product.id) {
-                                uiModel.copy(cartQuantity = uiModel.cartQuantity + 1)
-                            } else {
-                                uiModel
-                            }
-                        }
-                    val cartCount = state.cartCount + 1
-                    state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
-                }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+        updateQuantity(product, currentQuantity, newQuantity)
+
+        viewModelScope.launch {
+            try {
+                cartRepo.setQuantity(product, newQuantity)
+            } catch (_: Exception) {
+                rollBack(product, currentQuantity)
             }
         }
     }
 
-    fun decrease(product: Product) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                cartRepo.decrease(product)
 
-                _uiState.update { state ->
-                    val updatedProducts =
-                        state.visibleProducts.map { uiModel ->
-                            if (uiModel.product.id == product.id) {
-                                uiModel.copy(cartQuantity = maxOf(0, uiModel.cartQuantity - 1))
-                            } else {
-                                uiModel
-                            }
-                        }
-                    val cartCount = maxOf(0, state.cartCount - 1)
-                    state.copy(visibleProducts = updatedProducts, cartCount = cartCount)
-                }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+    fun decrease(product: Product) {
+        val currentQuantity = currentQuantityOf(product.id) ?: return
+        if (currentQuantity <= 0) return
+
+        val newQuantity = currentQuantity - 1
+
+        updateQuantity(product, currentQuantity, newQuantity)
+
+        viewModelScope.launch {
+            try {
+                if (newQuantity <= 0) cartRepo.delete(product)
+                else cartRepo.setQuantity(product, newQuantity)
+            } catch (_: Exception) {
+                rollBack(product, currentQuantity)
             }
         }
     }
@@ -161,6 +147,28 @@ class ShoppingViewModel(
         }
     }
 
+    private fun currentQuantityOf(productId: UUID): Int? =
+        _uiState.value.visibleProducts
+            .find { it.product.id == productId }
+            ?.quantity
+
+    private fun updateQuantity(product: Product, oldQuantity: Int, newQuantity: Int) {
+        _uiState.update { state ->
+            state.copy(
+                visibleProducts = state.visibleProducts.map { uiModel ->
+                    if (uiModel.product.id == product.id) uiModel.copy(quantity = newQuantity)
+                    else uiModel
+                },
+                cartCount = state.cartCount + (newQuantity - oldQuantity)
+            )
+        }
+    }
+
+    private fun rollBack(product: Product, originalQuantity: Int) {
+        val current = currentQuantityOf(product.id) ?: return
+        updateQuantity(product, current, originalQuantity)
+    }
+
     private suspend fun mapToProductUiModels(products: List<Product>): List<ProductUiModel> {
         val cartItems = cartRepo.getAllCartItems()
         val cartQuantityMap: Map<UUID, Int> =
@@ -170,7 +178,7 @@ class ShoppingViewModel(
         return products.map { product ->
             ProductUiModel(
                 product = product,
-                cartQuantity = cartQuantityMap[product.id] ?: 0,
+                quantity = cartQuantityMap[product.id] ?: 0,
             )
         }
     }

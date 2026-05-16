@@ -1,9 +1,8 @@
 package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import woowacourse.shopping.data.local.entity.CartEntity
 import java.util.UUID
 
@@ -12,17 +11,11 @@ interface CartDao {
     @Query("SELECT * FROM cart_items")
     suspend fun getAll(): List<CartEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(cartEntity: CartEntity)
-
-    @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
-    suspend fun updateQuantity(
-        productId: UUID,
-        quantity: Int,
-    )
+    @Upsert
+    suspend fun upsert(cartEntity: CartEntity)
 
     @Query("DELETE FROM cart_items WHERE productId = :id")
-    suspend fun deleteById(id: UUID)
+    suspend fun delete(id: UUID)
 
     @Query("SELECT * FROM cart_items WHERE productId = :id")
     suspend fun getCartItemById(id: UUID): CartEntity?
@@ -32,4 +25,7 @@ interface CartDao {
 
     @Query("SELECT COUNT(*) FROM cart_items")
     suspend fun getSize(): Int
+
+    @Query("SELECT quantity FROM cart_items WHERE productId = :id")
+    suspend fun getQuantity(id: UUID): Int?
 }

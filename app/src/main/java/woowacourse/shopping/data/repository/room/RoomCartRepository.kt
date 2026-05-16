@@ -2,11 +2,11 @@ package woowacourse.shopping.data.repository.room
 
 import woowacourse.shopping.data.local.dao.CartDao
 import woowacourse.shopping.data.local.entity.CartEntity
+import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.data.repository.ProductRepository
 
 class RoomCartRepository(
     private val cartDao: CartDao,
@@ -17,42 +17,15 @@ class RoomCartRepository(
         return Cart(cartItems)
     }
 
-    override suspend fun add(
+    override suspend fun setQuantity(
         item: Product,
-        quantity: Int,
+        quantity: Int
     ) {
-        val currentEntity = cartDao.getCartItemById(item.id)
-        if (currentEntity != null) {
-            cartDao.updateQuantity(item.id, currentEntity.quantity + quantity)
-        } else {
-            cartDao.insert(CartEntity(item.id, quantity))
-        }
-    }
-
-    override suspend fun increase(item: Product) {
-        val currentEntity = cartDao.getCartItemById(item.id)
-
-        if (currentEntity != null) {
-            cartDao.updateQuantity(productId = item.id, currentEntity.quantity + 1)
-        } else {
-            cartDao.insert(CartEntity(item.id, 1))
-        }
-    }
-
-    override suspend fun decrease(item: Product) {
-        val currentEntity = cartDao.getCartItemById(item.id)
-
-        if (currentEntity != null) {
-            if (currentEntity.quantity > 1) {
-                cartDao.updateQuantity(item.id, currentEntity.quantity - 1)
-            } else {
-                cartDao.deleteById(item.id)
-            }
-        }
+        cartDao.upsert(CartEntity(item.id, quantity))
     }
 
     override suspend fun delete(item: Product) {
-        cartDao.deleteById(item.id)
+        cartDao.delete(item.id)
     }
 
     override suspend fun getPagedItems(
@@ -70,13 +43,16 @@ class RoomCartRepository(
             if (product != null) {
                 CartItem(product = product, quantity = entity.quantity)
             } else {
-                cartDao.deleteById(entity.productId)
+                cartDao.delete(entity.productId)
                 null
             }
         }
     }
 
     override suspend fun getSize(): Int = cartDao.getSize()
+
+    override suspend fun getQuantity(item: Product): Int? =
+        cartDao.getQuantity(item.id)
 
     private suspend fun toCartItems(): List<CartItem> {
         val cartEntities = cartDao.getAll()
@@ -88,7 +64,7 @@ class RoomCartRepository(
                 if (product != null) {
                     CartItem(product = product, quantity = entity.quantity)
                 } else {
-                    cartDao.deleteById(entity.productId)
+                    cartDao.delete(entity.productId)
                     null
                 }
             }

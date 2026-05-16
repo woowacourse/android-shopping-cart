@@ -6,9 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.common.paging.Pager
+import java.util.UUID
 
 class CartViewModel(
     private val cartRepo: CartRepository,
@@ -23,26 +24,24 @@ class CartViewModel(
     }
 
     fun increase(product: Product) {
+        val currentQuantity = currentQuantityOf(product.id) ?: return
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
             try {
-                cartRepo.increase(product)
-                loadData()
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
-            }
+                updateQuantity(product = product, quantity = currentQuantity + 1)
+            } finally { }
         }
     }
 
     fun decrease(product: Product) {
+        val currentQuantity = currentQuantityOf(product.id) ?: return
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
             try {
-                cartRepo.decrease(product)
-                loadData()
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
-            }
+                if (currentQuantity <= 1) {
+                    cartRepo.delete(product)
+                    refreshData()
+                }
+                else updateQuantity(product = product, quantity = currentQuantity - 1)
+            } finally { }
         }
     }
 
@@ -51,7 +50,7 @@ class CartViewModel(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 cartRepo.delete(product)
-                loadData()
+                refreshData()
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
@@ -73,6 +72,14 @@ class CartViewModel(
             _uiState.update { it.copy(currentPage = currentPage - 1) }
             loadData()
         }
+    }
+
+    private fun currentQuantityOf(productId: UUID): Int? =
+        _uiState.value.pagedItems.find { it.product.id == productId }?.quantity
+
+    private suspend fun updateQuantity(product: Product, quantity: Int) {
+        cartRepo.setQuantity(item = product, quantity = quantity)
+        refreshData()
     }
 
     private fun loadData() {

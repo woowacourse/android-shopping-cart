@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.repository.inmemory
 
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
-import woowacourse.shopping.data.repository.ProductRepository
 import java.util.UUID
 
 class InMemoryProductRepository(

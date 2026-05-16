@@ -7,14 +7,7 @@ import woowacourse.shopping.model.Product
 interface CartRepository {
     suspend fun getAllCartItems(): Cart
 
-    suspend fun add(
-        item: Product,
-        quantity: Int,
-    )
-
-    suspend fun increase(item: Product)
-
-    suspend fun decrease(item: Product)
+    suspend fun setQuantity(item: Product, quantity: Int)
 
     suspend fun delete(item: Product)
 
@@ -24,4 +17,6 @@ interface CartRepository {
     ): List<CartItem>
 
     suspend fun getSize(): Int
+
+    suspend fun getQuantity(item: Product): Int?
 }
