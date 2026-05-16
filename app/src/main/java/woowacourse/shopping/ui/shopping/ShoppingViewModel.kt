@@ -40,47 +40,9 @@ class ShoppingViewModel(
             )
 
     init {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                val initialProducts = productRepo.getProducts(0, loadSize)
-                val uiModels = mapToProductUiModels(initialProducts)
-
-                val hasNextPage = productRepo.hasNext(initialProducts.lastIndex)
-                val totalSize = productRepo.getSize()
-                val recentProducts = recentProductRepo.getRecentProducts()
-
-                _uiState.update {
-                    it.copy(
-                        visibleProducts = uiModels,
-                        hasNext = hasNextPage,
-                        sizeInRepo = totalSize,
-                        recentProducts = recentProducts,
-                    )
-                }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
-            }
-        }
-
-        cartRepo.observeQuantityMap()
-            .onEach { quantityMap ->
-                _uiState.update { state ->
-                    state.copy(
-                        visibleProducts = state.visibleProducts.map { uiModel ->
-                            uiModel.copy(quantity = quantityMap[uiModel.product.id] ?: 0)
-                        },
-                        cartCount = quantityMap.values.sum()
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-
-        recentProductRepo.observeRecent()
-            .onEach { products ->
-                _uiState.update { it.copy(recentProducts = Products(products)) }
-            }
-            .launchIn(viewModelScope)
+        initialize()
+        observeCart()
+        observeRecentProducts()
     }
 
     fun increase(product: Product) {
@@ -134,19 +96,63 @@ class ShoppingViewModel(
                 val newUiModels = mapToProductUiModels(newProducts)
                 val combineProducts = currentProducts + newUiModels
                 val totalSize = productRepo.getSize()
-                val hasNext = pager.canLoadMore(combineProducts.size, totalSize)
 
                 _uiState.update {
                     it.copy(
                         visibleCount = minOf(it.visibleCount + loadSize, totalSize),
                         visibleProducts = combineProducts,
-                        hasNext = hasNext,
+                        hasNext = pager.canLoadMore(combineProducts.size, totalSize),
                         sizeInRepo = totalSize,
                     )
                 }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
+        }
+    }
+
+    private fun initialize() {
+        viewModelScope.launch {
+            _uiState.value = ShoppingUiState(isLoading = true)
+            _uiState.value = loadInitialState()
+        }
+    }
+
+    private suspend fun loadInitialState(): ShoppingUiState {
+        val products = productRepo.getProducts(0, loadSize)
+        val uiModels = mapToProductUiModels(products)
+
+        return ShoppingUiState(
+            isLoading = false,
+            visibleProducts = uiModels,
+            hasNext = productRepo.hasNext(products.lastIndex),
+            sizeInRepo = productRepo.getSize(),
+            recentProducts = recentProductRepo.getRecentProducts()
+        )
+    }
+
+    private fun observeCart() {
+        cartRepo.observeQuantityMap()
+            .onEach { quantityMap -> applyCartUpdate(quantityMap) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeRecentProducts() {
+        recentProductRepo.observeRecent()
+            .onEach { products ->
+                _uiState.update { it.copy(recentProducts = Products(products)) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun applyCartUpdate(quantityMap: Map<UUID, Int>) {
+        _uiState.update { state ->
+            state.copy(
+                visibleProducts = state.visibleProducts.map { uiModel ->
+                    uiModel.copy(quantity = quantityMap[uiModel.product.id] ?: 0)
+                },
+                cartCount = quantityMap.values.sum()
+            )
         }
     }
 
