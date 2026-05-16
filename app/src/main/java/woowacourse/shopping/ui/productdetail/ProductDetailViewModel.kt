@@ -3,7 +3,9 @@ package woowacourse.shopping.ui.productdetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -11,6 +13,11 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import java.util.UUID
+
+sealed class AddToCartEvent {
+    object Success : AddToCartEvent()
+    object Failure: AddToCartEvent()
+}
 
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
@@ -20,9 +27,12 @@ class ProductDetailViewModel(
     private val productId: UUID,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<AddToCartEvent>()
     private val isFromBanner: Boolean =
         savedStateHandle[ProductDetailActivity.EXTRA_IS_FROM_BANNER] ?: false
+
+    val uiState = _uiState.asStateFlow()
+    val events = _events.asSharedFlow()
 
     init {
         loadProduct()
@@ -49,6 +59,9 @@ class ProductDetailViewModel(
             try {
                 val existingQuantity = cartRepo.getQuantity(product) ?: 0
                 cartRepo.setQuantity(product, existingQuantity + quantity)
+                _events.emit(AddToCartEvent.Success)
+            } catch (_: Exception) {
+                _events.emit(AddToCartEvent.Failure)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

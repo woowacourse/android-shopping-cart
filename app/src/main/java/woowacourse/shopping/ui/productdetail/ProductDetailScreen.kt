@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +27,17 @@ fun ProductDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                AddToCartEvent.Success -> onAddToCartClick()
+                AddToCartEvent.Failure -> {
+                    throw IllegalStateException("카트 상품 추가가 실패했습니다.")
+                }
+            }
+        }
+    }
+
     Box(modifier = modifier) {
         uiState.product?.let { product ->
             ProductDetailScreen(
@@ -33,10 +45,7 @@ fun ProductDetailScreen(
                 totalPrice = uiState.totalPrice.value,
                 count = uiState.quantity,
                 onCloseClick = onCloseClick,
-                onAddToCartClick = {
-                    viewModel.addToCart()
-                    onAddToCartClick()
-                },
+                onAddToCartClick = { viewModel.addToCart() },
                 onIncreaseClick = { viewModel.increase() },
                 onDecreaseClick = { viewModel.decrease() },
                 lastViewedProduct = uiState.lastViewedProduct,
