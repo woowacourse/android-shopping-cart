@@ -24,9 +24,10 @@ class CartActivity : ComponentActivity() {
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel: CartViewModel = viewModel(
-                        factory = CartViewModel.provideFactory(container.cartRepository, pageSize)
-                    )
+                    val viewModel: CartViewModel =
+                        viewModel(
+                            factory = CartViewModel.provideFactory(container.cartRepository, pageSize),
+                        )
 
                     CartScreen(
                         viewModel = viewModel,
@@ -37,6 +38,4 @@ class CartActivity : ComponentActivity() {
             }
         }
     }
-
-
 }

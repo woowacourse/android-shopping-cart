@@ -29,13 +29,14 @@ class ShoppingActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel: ShoppingViewModel =
                         viewModel(
-                            factory = ShoppingViewModel.provideFactory(
-                                applicationContext = this,
-                                productRepo = container.productRepository,
-                                cartRepo = container.cartRepository,
-                                recentProductRepo = container.recentProductRepository,
-                                loadSize = loadSize
-                            ),
+                            factory =
+                                ShoppingViewModel.provideFactory(
+                                    applicationContext = this,
+                                    productRepo = container.productRepository,
+                                    cartRepo = container.cartRepository,
+                                    recentProductRepo = container.recentProductRepository,
+                                    loadSize = loadSize,
+                                ),
                         )
 
                     ShoppingScreen(

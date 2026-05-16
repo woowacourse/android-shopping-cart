@@ -62,7 +62,6 @@ class ShoppingViewModel(
         }
     }
 
-
     fun decrease(product: Product) {
         val currentQuantity = currentQuantityOf(product.id) ?: return
         if (currentQuantity <= 0) return
@@ -73,8 +72,11 @@ class ShoppingViewModel(
 
         viewModelScope.launch {
             try {
-                if (newQuantity <= 0) cartRepo.delete(product)
-                else cartRepo.setQuantity(product, newQuantity)
+                if (newQuantity <= 0) {
+                    cartRepo.delete(product)
+                } else {
+                    cartRepo.setQuantity(product, newQuantity)
+                }
             } catch (_: Exception) {
                 rollBack(product, currentQuantity)
             }
@@ -129,31 +131,33 @@ class ShoppingViewModel(
             visibleProducts = uiModels,
             hasNext = productRepo.hasNext(products.lastIndex),
             sizeInRepo = productRepo.getSize(),
-            recentProducts = recentProductRepo.getRecentProducts()
+            recentProducts = recentProductRepo.getRecentProducts(),
         )
     }
 
     private fun observeCart() {
-        cartRepo.observeQuantityMap()
+        cartRepo
+            .observeQuantityMap()
             .onEach { quantityMap -> applyCartUpdate(quantityMap) }
             .launchIn(viewModelScope)
     }
 
     private fun observeRecentProducts() {
-        recentProductRepo.observeRecent()
+        recentProductRepo
+            .observeRecent()
             .onEach { products ->
                 _uiState.update { it.copy(recentProducts = Products(products)) }
-            }
-            .launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
     }
 
     private fun applyCartUpdate(quantityMap: Map<UUID, Int>) {
         _uiState.update { state ->
             state.copy(
-                visibleProducts = state.visibleProducts.map { uiModel ->
-                    uiModel.copy(quantity = quantityMap[uiModel.product.id] ?: 0)
-                },
-                cartCount = quantityMap.values.sum()
+                visibleProducts =
+                    state.visibleProducts.map { uiModel ->
+                        uiModel.copy(quantity = quantityMap[uiModel.product.id] ?: 0)
+                    },
+                cartCount = quantityMap.values.sum(),
             )
         }
     }
@@ -163,19 +167,30 @@ class ShoppingViewModel(
             .find { it.product.id == productId }
             ?.quantity
 
-    private fun updateQuantity(product: Product, oldQuantity: Int, newQuantity: Int) {
+    private fun updateQuantity(
+        product: Product,
+        oldQuantity: Int,
+        newQuantity: Int,
+    ) {
         _uiState.update { state ->
             state.copy(
-                visibleProducts = state.visibleProducts.map { uiModel ->
-                    if (uiModel.product.id == product.id) uiModel.copy(quantity = newQuantity)
-                    else uiModel
-                },
-                cartCount = state.cartCount + (newQuantity - oldQuantity)
+                visibleProducts =
+                    state.visibleProducts.map { uiModel ->
+                        if (uiModel.product.id == product.id) {
+                            uiModel.copy(quantity = newQuantity)
+                        } else {
+                            uiModel
+                        }
+                    },
+                cartCount = state.cartCount + (newQuantity - oldQuantity),
             )
         }
     }
 
-    private fun rollBack(product: Product, originalQuantity: Int) {
+    private fun rollBack(
+        product: Product,
+        originalQuantity: Int,
+    ) {
         val current = currentQuantityOf(product.id) ?: return
         updateQuantity(product, current, originalQuantity)
     }
@@ -200,17 +215,18 @@ class ShoppingViewModel(
             productRepo: ProductRepository,
             cartRepo: CartRepository,
             recentProductRepo: RecentProductRepository,
-            loadSize: Int
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                ShoppingViewModel(
-                    networkMonitor = NetworkMonitor(applicationContext),
-                    productRepo = productRepo,
-                    cartRepo = cartRepo,
-                    recentProductRepo = recentProductRepo,
-                    loadSize = loadSize,
-                ) as T
-        }
+            loadSize: Int,
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    ShoppingViewModel(
+                        networkMonitor = NetworkMonitor(applicationContext),
+                        productRepo = productRepo,
+                        cartRepo = cartRepo,
+                        recentProductRepo = recentProductRepo,
+                        loadSize = loadSize,
+                    ) as T
+            }
     }
 }

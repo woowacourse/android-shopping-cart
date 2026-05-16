@@ -11,14 +11,17 @@ import woowacourse.shopping.data.repository.remote.NetworkProductRepository
 import woowacourse.shopping.data.repository.room.RoomCartRepository
 import woowacourse.shopping.data.repository.room.RoomRecentProductRepository
 
-class AppContainer(context: Context) {
-    private val database = Room
-        .databaseBuilder(
-            context.applicationContext,
-            Database::class.java,
-            "shopping-db",
-        ).fallbackToDestructiveMigration(false)
-        .build()
+class AppContainer(
+    context: Context,
+) {
+    private val database =
+        Room
+            .databaseBuilder(
+                context.applicationContext,
+                Database::class.java,
+                "shopping-db",
+            ).fallbackToDestructiveMigration(false)
+            .build()
     private val networkClient = NetworkClient()
 
     val productRepository: ProductRepository =

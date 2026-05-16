@@ -29,7 +29,8 @@ class CartViewModel(
         viewModelScope.launch {
             try {
                 updateQuantity(product = product, quantity = currentQuantity + 1)
-            } finally { }
+            } finally {
+            }
         }
     }
 
@@ -40,9 +41,11 @@ class CartViewModel(
                 if (currentQuantity <= 1) {
                     cartRepo.delete(product)
                     refreshData()
+                } else {
+                    updateQuantity(product = product, quantity = currentQuantity - 1)
                 }
-                else updateQuantity(product = product, quantity = currentQuantity - 1)
-            } finally { }
+            } finally {
+            }
         }
     }
 
@@ -76,9 +79,14 @@ class CartViewModel(
     }
 
     private fun currentQuantityOf(productId: UUID): Int? =
-        _uiState.value.pagedItems.find { it.product.id == productId }?.quantity
+        _uiState.value.pagedItems
+            .find { it.product.id == productId }
+            ?.quantity
 
-    private suspend fun updateQuantity(product: Product, quantity: Int) {
+    private suspend fun updateQuantity(
+        product: Product,
+        quantity: Int,
+    ) {
         cartRepo.setQuantity(item = product, quantity = quantity)
         refreshData()
     }
@@ -118,14 +126,15 @@ class CartViewModel(
     companion object {
         fun provideFactory(
             cartRepo: CartRepository,
-            pageSize: Int
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                CartViewModel(
-                    cartRepo = cartRepo,
-                    pageSize = pageSize,
-                ) as T
-        }
+            pageSize: Int,
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    CartViewModel(
+                        cartRepo = cartRepo,
+                        pageSize = pageSize,
+                    ) as T
+            }
     }
 }

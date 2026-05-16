@@ -19,6 +19,7 @@ import java.util.UUID
 
 sealed class AddToCartEvent {
     object Success : AddToCartEvent()
+
     object Failure : AddToCartEvent()
 }
 
@@ -77,7 +78,8 @@ class ProductDetailViewModel(
             try {
                 val product = productRepo.findProduct(productId)
                 val bannerProduct =
-                    recentProductRepo.getLastViewedProduct()
+                    recentProductRepo
+                        .getLastViewedProduct()
                         ?.takeIf { !isFromBanner && it.id != productId }
 
                 _uiState.update {
@@ -100,22 +102,23 @@ class ProductDetailViewModel(
             cartRepo: CartRepository,
             recentProductRepo: RecentProductRepository,
             receivedProductId: String,
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras,
-            ): T {
-                val savedStateHandle = extras.createSavedStateHandle()
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val savedStateHandle = extras.createSavedStateHandle()
 
-                return ProductDetailViewModel(
-                    savedStateHandle = savedStateHandle,
-                    productRepo = productRepo,
-                    cartRepo = cartRepo,
-                    recentProductRepo = recentProductRepo,
-                    productId = UUID.fromString(receivedProductId),
-                ) as T
+                    return ProductDetailViewModel(
+                        savedStateHandle = savedStateHandle,
+                        productRepo = productRepo,
+                        cartRepo = cartRepo,
+                        recentProductRepo = recentProductRepo,
+                        productId = UUID.fromString(receivedProductId),
+                    ) as T
+                }
             }
-        }
     }
 }

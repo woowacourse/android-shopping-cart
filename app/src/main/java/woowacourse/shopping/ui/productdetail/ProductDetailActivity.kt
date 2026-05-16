@@ -31,12 +31,13 @@ class ProductDetailActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel: ProductDetailViewModel =
                         viewModel(
-                            factory = ProductDetailViewModel.provideFactory(
-                                productRepo = container.productRepository,
-                                cartRepo = container.cartRepository,
-                                recentProductRepo = container.recentProductRepository,
-                                receivedProductId = receivedProductId
-                            ),
+                            factory =
+                                ProductDetailViewModel.provideFactory(
+                                    productRepo = container.productRepository,
+                                    cartRepo = container.cartRepository,
+                                    recentProductRepo = container.recentProductRepository,
+                                    receivedProductId = receivedProductId,
+                                ),
                         )
 
                     ProductDetailScreen(

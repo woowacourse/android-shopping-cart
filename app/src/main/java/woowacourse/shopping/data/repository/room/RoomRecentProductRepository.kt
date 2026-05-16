@@ -31,8 +31,8 @@ class RoomRecentProductRepository(
         recentProductDao.insert(
             RecentProductEntity(
                 productId = productId,
-                viewedAt = System.currentTimeMillis()
-            )
+                viewedAt = System.currentTimeMillis(),
+            ),
         )
         recentProductDao.deleteOldItems()
     }
@@ -43,5 +43,4 @@ class RoomRecentProductRepository(
                 productRepo.findProduct(entity.productId)
             }
         }
-
 }

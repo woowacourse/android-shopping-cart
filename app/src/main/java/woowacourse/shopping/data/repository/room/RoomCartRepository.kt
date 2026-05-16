@@ -22,7 +22,7 @@ class RoomCartRepository(
 
     override suspend fun setQuantity(
         item: Product,
-        quantity: Int
+        quantity: Int,
     ) {
         cartDao.upsert(CartEntity(item.id, quantity))
     }
@@ -54,8 +54,7 @@ class RoomCartRepository(
 
     override suspend fun getSize(): Int = cartDao.getSize()
 
-    override suspend fun getQuantity(item: Product): Int? =
-        cartDao.getQuantity(item.id)
+    override suspend fun getQuantity(item: Product): Int? = cartDao.getQuantity(item.id)
 
     override fun observeQuantityMap(): Flow<Map<UUID, Int>> =
         cartDao.observeAll().map { entities ->

@@ -9,7 +9,10 @@ import java.util.UUID
 interface CartRepository {
     suspend fun getAllCartItems(): Cart
 
-    suspend fun setQuantity(item: Product, quantity: Int)
+    suspend fun setQuantity(
+        item: Product,
+        quantity: Int,
+    )
 
     suspend fun delete(item: Product)
 
