@@ -2,7 +2,10 @@ package woowacourse.shopping.ui.productdetail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,7 +19,7 @@ import java.util.UUID
 
 sealed class AddToCartEvent {
     object Success : AddToCartEvent()
-    object Failure: AddToCartEvent()
+    object Failure : AddToCartEvent()
 }
 
 class ProductDetailViewModel(
@@ -87,6 +90,31 @@ class ProductDetailViewModel(
                 recentProductRepo.add(productId)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    companion object {
+        fun provideFactory(
+            productRepo: ProductRepository,
+            cartRepo: CartRepository,
+            recentProductRepo: RecentProductRepository,
+            receivedProductId: String,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras,
+            ): T {
+                val savedStateHandle = extras.createSavedStateHandle()
+
+                return ProductDetailViewModel(
+                    savedStateHandle = savedStateHandle,
+                    productRepo = productRepo,
+                    cartRepo = cartRepo,
+                    recentProductRepo = recentProductRepo,
+                    productId = UUID.fromString(receivedProductId),
+                ) as T
             }
         }
     }

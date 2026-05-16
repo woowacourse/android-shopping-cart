@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.remote.NetworkMonitor
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.theme.ShoppingTheme
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -24,24 +21,21 @@ class ShoppingActivity : ComponentActivity() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val container = (application as ShoppingApplication).appContainer
+
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val container = (application as ShoppingApplication).appContainer
                     val viewModel: ShoppingViewModel =
                         viewModel(
-                            factory =
-                                object : ViewModelProvider.Factory {
-                                    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                                        ShoppingViewModel(
-                                            networkMonitor = NetworkMonitor(applicationContext),
-                                            productRepo = container.productRepository,
-                                            cartRepo = container.cartRepository,
-                                            recentProductRepo = container.recentProductRepository,
-                                            loadSize = loadSize,
-                                        ) as T
-                                },
+                            factory = ShoppingViewModel.provideFactory(
+                                applicationContext = this,
+                                productRepo = container.productRepository,
+                                cartRepo = container.cartRepository,
+                                recentProductRepo = container.recentProductRepository,
+                                loadSize = loadSize
+                            ),
                         )
 
                     ShoppingScreen(

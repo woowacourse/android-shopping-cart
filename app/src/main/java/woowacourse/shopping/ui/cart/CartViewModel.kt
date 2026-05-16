@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -111,6 +112,20 @@ class CartViewModel(
                 totalItemCount = totalCount,
                 pageSize = pageSize,
             )
+        }
+    }
+
+    companion object {
+        fun provideFactory(
+            cartRepo: CartRepository,
+            pageSize: Int
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                CartViewModel(
+                    cartRepo = cartRepo,
+                    pageSize = pageSize,
+                ) as T
         }
     }
 }

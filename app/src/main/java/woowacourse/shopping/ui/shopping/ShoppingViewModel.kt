@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui.shopping
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -189,6 +191,26 @@ class ShoppingViewModel(
                 product = product,
                 quantity = cartQuantityMap[product.id] ?: 0,
             )
+        }
+    }
+
+    companion object {
+        fun provideFactory(
+            applicationContext: Context,
+            productRepo: ProductRepository,
+            cartRepo: CartRepository,
+            recentProductRepo: RecentProductRepository,
+            loadSize: Int
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                ShoppingViewModel(
+                    networkMonitor = NetworkMonitor(applicationContext),
+                    productRepo = productRepo,
+                    cartRepo = cartRepo,
+                    recentProductRepo = recentProductRepo,
+                    loadSize = loadSize,
+                ) as T
         }
     }
 }
