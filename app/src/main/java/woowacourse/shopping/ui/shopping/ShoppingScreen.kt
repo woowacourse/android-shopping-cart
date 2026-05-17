@@ -1,62 +1,103 @@
 package woowacourse.shopping.ui.shopping
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Products
-import woowacourse.shopping.ui.component.ShoppingLoading
-import woowacourse.shopping.ui.shopping.component.ShoppingBody
+import woowacourse.shopping.ui.common.component.ShoppingLoading
+import woowacourse.shopping.ui.common.model.ProductUiModel
+import woowacourse.shopping.ui.shopping.component.ProductGroup
+import woowacourse.shopping.ui.shopping.component.RecentProductGroup
 import woowacourse.shopping.ui.shopping.component.ShoppingHeader
 
 @Composable
 fun ShoppingScreen(
-    state: ShoppingScreenState,
+    viewModel: ShoppingViewModel,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
+    onRecentProductClick: (Product) -> Unit,
 ) {
     val lazyGridState = rememberLazyGridState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val isConnected by viewModel.isNetworkConnected.collectAsStateWithLifecycle()
 
-    if (state.isLoading) {
-        ShoppingLoading()
+    if (!isConnected) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "인터넷 연결이 끊겼습니다. 오프라인 모드입니다. 😥")
+        }
     } else {
-        ShoppingScreen(
-            products = Products(state.visibleProducts),
-            hasNext = state.hasNext,
-            lazyGridState = lazyGridState,
-            modifier = modifier,
-            onCartClick = onCartClick,
-            onProductClick = onProductClick,
-            onMoreClick = { state.loadMore() },
-        )
+        Box(modifier = modifier) {
+            ShoppingScreen(
+                products = state.visibleProducts,
+                recentProducts = state.recentProducts,
+                cartCount = state.cartCount,
+                hasNext = state.hasNext,
+                lazyGridState = lazyGridState,
+                onCartClick = onCartClick,
+                onProductClick = onProductClick,
+                onMoreClick = { viewModel.loadMore() },
+                onIncreaseClick = { viewModel.increase(it) },
+                onDecreaseClick = { viewModel.decrease(it) },
+                onRecentProductClick = onRecentProductClick,
+            )
+
+            if (state.isLoading) ShoppingLoading()
+        }
     }
 }
 
 @Composable
 fun ShoppingScreen(
-    products: Products,
+    products: List<ProductUiModel>,
+    recentProducts: Products,
+    cartCount: Int,
     hasNext: Boolean,
     lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onMoreClick: () -> Unit,
+    onIncreaseClick: (Product) -> Unit,
+    onDecreaseClick: (Product) -> Unit,
+    onRecentProductClick: (Product) -> Unit,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ShoppingHeader(onCartClick = onCartClick)
+        ShoppingHeader(
+            cartCount = cartCount,
+            onCartClick = onCartClick,
+        )
 
-        ShoppingBody(
+        if (recentProducts.any()) {
+            RecentProductGroup(
+                products = recentProducts,
+                modifier = Modifier.fillMaxWidth(),
+                onRecentProductClick = onRecentProductClick,
+            )
+
+            HorizontalDivider(thickness = 7.dp, color = Color(0xFFEBEBEB))
+        }
+
+        ProductGroup(
             products = products,
             showMoreButton = hasNext,
             lazyGridState = lazyGridState,
@@ -66,6 +107,8 @@ fun ShoppingScreen(
                     .weight(1f),
             onProductClick = onProductClick,
             onMoreClick = onMoreClick,
+            onIncreaseClick = onIncreaseClick,
+            onDecreaseClick = onDecreaseClick,
         )
     }
 }
@@ -91,14 +134,21 @@ private fun ShoppingScreenPreview1() {
             price = Money(1000),
             imageUrl = "",
         )
+    val productUiModels = listOf(product1, product2, product3).map { ProductUiModel(it) }
 
     ShoppingScreen(
-        products = Products(listOf(product1, product2, product3)),
+        products = productUiModels,
+        recentProducts = Products(listOf(product1)),
+        cartCount = 1,
         hasNext = true,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
+        modifier = Modifier,
+        onRecentProductClick = {},
     )
 }
 
@@ -106,11 +156,17 @@ private fun ShoppingScreenPreview1() {
 @Composable
 private fun ShoppingScreenPreview2() {
     ShoppingScreen(
-        products = Products(emptyList()),
+        products = emptyList(),
+        recentProducts = Products(emptyList()),
+        cartCount = 0,
         hasNext = false,
         lazyGridState = rememberLazyGridState(),
         onCartClick = {},
         onProductClick = {},
         onMoreClick = {},
+        onIncreaseClick = {},
+        onDecreaseClick = {},
+        modifier = Modifier,
+        onRecentProductClick = {},
     )
 }

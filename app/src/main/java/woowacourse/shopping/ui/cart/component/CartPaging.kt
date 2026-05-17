@@ -20,7 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.common.theme.PrimaryColor
+import woowacourse.shopping.ui.common.theme.Typography
 
 @Composable
 fun CartPaging(
@@ -56,7 +57,7 @@ fun CartPaging(
         Text(
             text = "$currentPage",
             color = Color.Black,
-            style = ShoppingTypography.titleMedium,
+            style = Typography.titleMedium,
         )
 
         ArrowButton(
@@ -86,7 +87,7 @@ private fun ArrowButton(
                 .width(42.dp)
                 .height(42.dp)
                 .clip(roundedCornerShape)
-                .background(if (isEnabled) Color(0xFF04C09E) else Color.Gray)
+                .background(if (isEnabled) PrimaryColor else Color.Gray)
                 .clickable(enabled = isEnabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

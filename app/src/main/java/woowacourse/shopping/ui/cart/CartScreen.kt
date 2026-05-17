@@ -1,40 +1,46 @@
 package woowacourse.shopping.ui.cart
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Money
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.cart.component.CartBody
 import woowacourse.shopping.ui.cart.component.CartHeader
-import woowacourse.shopping.ui.component.ShoppingLoading
+import woowacourse.shopping.ui.common.component.ShoppingLoading
 
 @Composable
 fun CartScreen(
-    state: CartScreenState,
+    viewModel: CartViewModel,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    if (state.isLoading) {
-        ShoppingLoading()
-    } else {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    Box(modifier = modifier.fillMaxSize()) {
         CartScreen(
-            cart = Cart(state.pagedItems),
-            currentPage = state.currentPage,
-            totalPages = state.totalPages,
-            showPagination = state.showPagination,
-            modifier = modifier,
+            cart = Cart(uiState.pagedItems),
+            currentPage = uiState.currentPage,
+            totalPages = uiState.totalPages,
+            showPagination = uiState.showPagination,
             onBackClick = onBackClick,
-            onDeleteClick = { state.delete(it) },
-            onPreviousClick = { state.previousPage() },
-            onNextClick = { state.nextPage() },
+            onDeleteClick = { viewModel.delete(it.product) },
+            onPreviousClick = { viewModel.previousPage() },
+            onNextClick = { viewModel.nextPage() },
+            onAddClick = { viewModel.increase(it.product) },
+            onRemoveClick = { viewModel.decrease(it.product) },
         )
+
+        if (uiState.isLoading) ShoppingLoading()
     }
 }
 
@@ -46,9 +52,11 @@ fun CartScreen(
     showPagination: Boolean,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onDeleteClick: (Product) -> Unit,
+    onDeleteClick: (CartItem) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onAddClick: (CartItem) -> Unit,
+    onRemoveClick: (CartItem) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -67,6 +75,8 @@ fun CartScreen(
             onDeleteClick = onDeleteClick,
             onPreviousClick = onPreviousClick,
             onNextClick = onNextClick,
+            onAddClick = onAddClick,
+            onRemoveClick = onRemoveClick,
         )
     }
 }
@@ -94,6 +104,8 @@ private fun CartScreenPreview1() {
         modifier = Modifier,
         onPreviousClick = {},
         onNextClick = {},
+        onAddClick = {},
+        onRemoveClick = {},
     )
 }
 
@@ -112,5 +124,7 @@ private fun CartScreenPreview2() {
         modifier = Modifier,
         onPreviousClick = {},
         onNextClick = {},
+        onAddClick = {},
+        onRemoveClick = {},
     )
 }

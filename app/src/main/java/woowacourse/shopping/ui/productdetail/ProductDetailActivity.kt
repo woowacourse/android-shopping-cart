@@ -10,33 +10,49 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import woowacourse.shopping.di.AppContainer
-import woowacourse.shopping.ui.theme.ShoppingTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.ui.common.theme.ShoppingTheme
 import java.util.UUID
 
 class ProductDetailActivity : ComponentActivity() {
-    val productRepo = AppContainer.productRepository
-    val cartRepo = AppContainer.cartRepository
-
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val receivedProductId: String =
             intent.getStringExtra(EXTRA_PRODUCT_ID)
                 ?: error("ProductDetailActivity를 실행하려면 반드시 Intent에 Product ID 데이터가 포함되어야 합니다.")
+        val container = (application as ShoppingApplication).appContainer
 
         enableEdgeToEdge()
         setContent {
             ShoppingTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val state = rememberProductDetailScreenState(productRepo, cartRepo)
+                    val viewModel: ProductDetailViewModel =
+                        viewModel(
+                            factory =
+                                ProductDetailViewModel.provideFactory(
+                                    productRepo = container.productRepository,
+                                    cartRepo = container.cartRepository,
+                                    recentProductRepo = container.recentProductRepository,
+                                    receivedProductId = receivedProductId,
+                                ),
+                        )
 
                     ProductDetailScreen(
-                        productId = UUID.fromString(receivedProductId),
-                        state = state,
+                        viewModel = viewModel,
                         modifier = Modifier.padding(innerPadding),
-                        onCloseClick = ::finish,
+                        onCloseClick = {
+                            finish()
+                        },
                         onAddToCartClick = ::finish,
+                        onLastViewedProductClick = {
+                            val intent =
+                                newIntent(context = this, productId = it.id, isFromBanner = true)
+                            startActivity(intent)
+                            finish()
+                        },
                     )
                 }
             }
@@ -44,14 +60,17 @@ class ProductDetailActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT_ID = "com.woowacourse.shopping.PRODUCT.ID"
+        const val EXTRA_PRODUCT_ID = "com.woowacourse.shopping.PRODUCT_ID"
+        const val EXTRA_IS_FROM_BANNER = "com.woowacourse.shopping.IS_FROM_BANNER"
 
         fun newIntent(
             context: Context,
             productId: UUID,
+            isFromBanner: Boolean = false,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId.toString())
+                putExtra(EXTRA_IS_FROM_BANNER, isFromBanner)
             }
     }
 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,10 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.shopping.ui.ShoppingTypography
+import woowacourse.shopping.ui.common.theme.Gray5
+import woowacourse.shopping.ui.common.theme.PrimaryColor
+import woowacourse.shopping.ui.common.theme.Typography
 
 @Composable
 fun ShoppingHeader(
+    cartCount: Int,
     modifier: Modifier = Modifier,
     onCartClick: () -> Unit,
 ) {
@@ -29,7 +34,7 @@ fun ShoppingHeader(
             modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(color = Color.DarkGray)
+                .background(color = Gray5)
                 .padding(start = 26.dp, end = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -37,20 +42,33 @@ fun ShoppingHeader(
         Text(
             text = "Shopping",
             color = Color.White,
-            style = ShoppingTypography.titleMedium,
+            style = Typography.titleMedium,
         )
 
-        Icon(
-            imageVector = Icons.Default.ShoppingCart,
-            contentDescription = "장바구니",
-            modifier = Modifier.clickable(onClick = onCartClick),
-            tint = Color.White,
-        )
+        BadgedBox(
+            badge = {
+                if (cartCount > 0) {
+                    Badge(
+                        containerColor = PrimaryColor,
+                        contentColor = Color.White,
+                    ) {
+                        Text(text = cartCount.toString())
+                    }
+                }
+            },
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = "장바구니",
+                modifier = Modifier.clickable(onClick = onCartClick),
+                tint = Color.White,
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingHeaderPreview() {
-    ShoppingHeader(onCartClick = {})
+    ShoppingHeader(cartCount = 6, onCartClick = {})
 }

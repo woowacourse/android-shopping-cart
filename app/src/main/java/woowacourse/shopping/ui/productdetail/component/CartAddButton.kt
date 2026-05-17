@@ -14,19 +14,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.shopping.ui.common.theme.PrimaryColor
 
 @Composable
 fun CartAddButton(
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(if (enabled) Color(0xFF04C09E) else Color.Gray)
-                .clickable(enabled = enabled, onClick = onClick),
+                .background(PrimaryColor)
+                .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Text(
