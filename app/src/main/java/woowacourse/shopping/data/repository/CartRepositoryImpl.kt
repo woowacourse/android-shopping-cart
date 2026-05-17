@@ -1,6 +1,9 @@
 package woowacourse.shopping.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import woowacourse.shopping.data.source.CartDataSource
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
@@ -8,33 +11,67 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
-    private val cartItems
-        get() = cartDataSource.items
+    override suspend fun isLastPage(page: Int): Boolean = page * PAGE_SIZE >= cartDataSource.getTotalItemCount().first()
 
-    private val totalPage
-        get() = ((cartItems.size + PAGE_SIZE - 1) / PAGE_SIZE).coerceAtLeast(1)
-
-    override fun isLastPage(page: Int) = page == totalPage
-
-    override fun addItem(
-        product: Product,
+    override suspend fun addItem(
+        productId: String,
         amount: Int,
     ) {
-        cartDataSource.add(CartItem(product, amount))
+        val quantity =
+            (cartDataSource.getCartItemById(productId = productId)?.quantity ?: 0) + amount
+
+        cartDataSource.upsert(cartItem = CartItemEntity(productId = productId, quantity = quantity))
     }
 
-    override fun deleteItem(productId: String) {
+    override suspend fun deleteItem(productId: String) {
         cartDataSource.deleteItem(productId)
     }
 
     override suspend fun getCartItemByPage(page: Int): List<CartItem> {
-        require(page in 1..totalPage) { "페이지가 올바르지 않습니다." }
+        val cartItems =
+            cartDataSource.getCartItems(offset = (page - 1) * PAGE_SIZE, count = PAGE_SIZE)
 
-        val startIndex = (page - 1) * PAGE_SIZE
-        val endIndex = minOf(startIndex + PAGE_SIZE, cartItems.size)
-
-        return cartItems.subList(startIndex, endIndex)
+        return cartItems.map {
+            it.toDomain()
+        }
     }
+
+    override fun getCartItemCount(): Flow<Int> = cartDataSource.getTotalCount()
+
+    override suspend fun getItemCount(productId: String): Int =
+        cartDataSource
+            .getCartItemById(productId)
+            ?.quantity
+            ?: 0
+
+    override suspend fun plusItemCount(product: Product) {
+        val item = cartDataSource.getCartItemById(productId = product.id)
+
+        if (item == null) {
+            cartDataSource.upsert(CartItemEntity(productId = product.id, quantity = 1))
+
+            return
+        }
+
+        cartDataSource.upsert(cartItem = item.copy(quantity = item.quantity + 1))
+    }
+
+    override suspend fun minusItemCount(productId: String) {
+        val item = cartDataSource.getCartItemById(productId = productId) ?: return
+
+        if (item.quantity == 1) {
+            cartDataSource.deleteItem(productId = productId)
+            return
+        }
+
+        cartDataSource.upsert(cartItem = item.copy(quantity = item.quantity - 1))
+    }
+
+    fun CartItemEntity.toDomain(): CartItem =
+        CartItem(
+            productId = productId,
+            quantity = quantity,
+        )
 
     companion object {
         private const val PAGE_SIZE = 5

@@ -1,11 +1,21 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.domain.CartItem
+import kotlinx.coroutines.flow.Flow
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
 interface CartDataSource {
-    val items: List<CartItem>
+    suspend fun getCartItems(
+        offset: Int,
+        count: Int,
+    ): List<CartItemEntity>
 
-    fun add(cartItem: CartItem)
+    suspend fun upsert(cartItem: CartItemEntity)
 
-    fun deleteItem(productId: String)
+    suspend fun deleteItem(productId: String)
+
+    suspend fun getCartItemById(productId: String): CartItemEntity?
+
+    fun getTotalCount(): Flow<Int>
+
+    fun getTotalItemCount(): Flow<Int>
 }

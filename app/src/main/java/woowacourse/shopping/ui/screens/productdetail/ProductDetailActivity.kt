@@ -24,6 +24,12 @@ class ProductDetailActivity : ComponentActivity() {
                 ProductDetailScreen(
                     productId = productId,
                     onDismiss = { finish() },
+                    onLastViewProductClick = {
+                        val intent = getNewIntent(this, it)
+
+                        startActivity(intent)
+                        finish()
+                    },
                 )
             }
         }

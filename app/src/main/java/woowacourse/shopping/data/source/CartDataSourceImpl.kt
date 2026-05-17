@@ -1,23 +1,28 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.domain.CartItem
+import kotlinx.coroutines.flow.Flow
+import woowacourse.shopping.data.source.local.cart.CartItemDao
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 
-object CartDataSourceImpl : CartDataSource {
-    private val _items: MutableList<CartItem> = mutableListOf()
-    override val items get() = _items.toList()
+class CartDataSourceImpl(
+    private val dao: CartItemDao,
+) : CartDataSource {
+    override suspend fun getCartItems(
+        offset: Int,
+        count: Int,
+    ): List<CartItemEntity> = dao.getCartItems(offset = offset, count = count)
 
-    override fun add(cartItem: CartItem) {
-        val idx = _items.indexOfFirst { it.product.id == cartItem.product.id }
-
-        if (idx == -1) {
-            _items.add(cartItem)
-            return
-        }
-
-        _items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
+    override suspend fun upsert(cartItem: CartItemEntity) {
+        dao.upsert(cartItem = cartItem)
     }
 
-    override fun deleteItem(productId: String) {
-        _items.removeIf { it.product.id == productId }
+    override suspend fun deleteItem(productId: String) {
+        dao.delete(productId = productId)
     }
+
+    override suspend fun getCartItemById(productId: String): CartItemEntity? = dao.getCartItemById(productId = productId)
+
+    override fun getTotalCount(): Flow<Int> = dao.getTotalCount()
+
+    override fun getTotalItemCount(): Flow<Int> = dao.getTotalItemCount()
 }

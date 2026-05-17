@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ui.component.counter.QuantityCounter
 import woowacourse.shopping.ui.component.image.ShoppingImage
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
@@ -34,7 +35,10 @@ fun CartItemCard(
     imageUrl: String,
     name: String,
     price: Price,
+    quantity: Int,
     onDelete: () -> Unit,
+    onPlusClick: () -> Unit,
+    onMinusClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,11 +84,22 @@ fun CartItemCard(
                 contentScale = ContentScale.Crop,
             )
 
-            Text(
-                text = price.toFormattedPrice(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W400,
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                QuantityCounter(
+                    quantity = quantity,
+                    onPlusClick = onPlusClick,
+                    onMinusClick = onMinusClick,
+                )
+
+                Text(
+                    text = (price * quantity).toFormattedPrice(),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                )
+            }
         }
     }
 }
@@ -96,7 +111,10 @@ private fun CartItemCardPreview() {
         imageUrl = "",
         name = "우주선",
         price = Price(10_000_000),
+        quantity = 1,
         onDelete = { },
+        onPlusClick = { },
+        onMinusClick = { },
         modifier = Modifier.padding(5.dp),
     )
 }

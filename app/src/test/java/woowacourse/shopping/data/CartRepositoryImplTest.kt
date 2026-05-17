@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.source.CartDataSource
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.data.source.local.cart.CartItemEntity
 import woowacourse.shopping.fixture.ShoppingFixture
 
 class CartRepositoryImplTest {
@@ -14,7 +14,7 @@ class CartRepositoryImplTest {
     fun `장바구니에 아이템을 추가할 수 있다`() =
         runTest {
             val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
-            cartRepository.addItem(product = ShoppingFixture.getProduct(), amount = 1)
+            cartRepository.addItem(productId = ShoppingFixture.getProduct().id, amount = 1)
 
             cartRepository.getCartItemByPage(1).size shouldEqual 1
         }
@@ -26,12 +26,12 @@ class CartRepositoryImplTest {
 
             val product = ShoppingFixture.getProduct(id = "1")
 
-            cartRepository.addItem(product = product, amount = 1)
-            cartRepository.addItem(product = product, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
 
             cartRepository
                 .getCartItemByPage(1)
-                .first { it.product.id == "1" }
+                .first { it.productId == "1" }
                 .quantity shouldEqual 2
         }
 
@@ -42,28 +42,86 @@ class CartRepositoryImplTest {
 
             val product = ShoppingFixture.getProduct(id = "1")
 
-            cartRepository.addItem(product = product, amount = 1)
+            cartRepository.addItem(productId = product.id, amount = 1)
             cartRepository.deleteItem(productId = "1")
 
-            cartRepository.getCartItemByPage(1).firstOrNull { it.product == product } shouldBe null
+            cartRepository.getCartItemByPage(1).firstOrNull { it.productId == product.id } shouldBe null
+        }
+
+    @Test
+    fun `장바구니에 아이템 개수를 반환한다`() =
+        runTest {
+            val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
+
+            val product = ShoppingFixture.getProduct(id = "1")
+            cartRepository.addItem(productId = product.id, amount = 1)
+
+            cartRepository.getItemCount(product.id) shouldEqual 1
+        }
+
+    @Test
+    fun `장바구니에 아이템 개수를 증가시키면 1만큼 증가한다`() =
+        runTest {
+            val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
+
+            val product = ShoppingFixture.getProduct(id = "1")
+            cartRepository.addItem(productId = product.id, amount = 1)
+            cartRepository.plusItemCount(product = product)
+
+            cartRepository.getItemCount(product.id) shouldEqual 2
+        }
+
+    @Test
+    fun `장바구니에 아이템 개수를 감소시키면 1만큼 감소한다`() =
+        runTest {
+            val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
+
+            val product = ShoppingFixture.getProduct(id = "1")
+            cartRepository.addItem(productId = product.id, amount = 2)
+            cartRepository.minusItemCount(productId = product.id)
+
+            cartRepository.getItemCount(product.id) shouldEqual 1
+        }
+
+    @Test
+    fun `장바구니에 아이템 개수가 1개일 때 감소시키면 장바구니에서 제거된다`() =
+        runTest {
+            val cartRepository = CartRepositoryImpl(cartDataSource = FakeCartDataSource())
+
+            val product = ShoppingFixture.getProduct(id = "1")
+            cartRepository.addItem(productId = product.id, amount = 1)
+            cartRepository.minusItemCount(productId = product.id)
+
+            cartRepository.getItemCount(product.id) shouldEqual 0
         }
 }
 
 class FakeCartDataSource : CartDataSource {
-    override val items: MutableList<CartItem> = mutableListOf()
+    var items = mutableListOf<CartItemEntity>()
 
-    override fun add(cartItem: CartItem) {
-        val idx = items.indexOfFirst { it.product.id == cartItem.product.id }
+    override suspend fun upsert(cartItem: CartItemEntity) {
+        val idx = items.indexOfFirst { it.productId == cartItem.productId }
 
         if (idx == -1) {
             items.add(cartItem)
             return
         }
 
-        items[idx] = items[idx].addQuantity(amount = cartItem.quantity)
+        items[idx] = cartItem
     }
 
-    override fun deleteItem(productId: String) {
-        items.removeIf { it.product.id == productId }
+    override suspend fun deleteItem(productId: String) {
+        items.removeIf { it.productId == productId }
     }
+
+    override suspend fun getCartItems(
+        offset: Int,
+        count: Int,
+    ): List<CartItemEntity> = items
+
+    override suspend fun getCartItemById(productId: String): CartItemEntity? = items.firstOrNull { it.productId == productId }
+
+    override fun getTotalCount(): Int = items.size
+
+    override fun getTotalItemCount(): Int = items.sumOf { it.quantity }
 }

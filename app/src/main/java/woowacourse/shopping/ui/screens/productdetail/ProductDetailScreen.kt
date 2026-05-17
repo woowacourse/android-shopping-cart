@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.screens.productdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -24,69 +25,103 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.source.CartDataSourceImpl
-import woowacourse.shopping.data.source.ProductDataSourceImpl
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.domain.Price
+import woowacourse.shopping.ui.component.counter.QuantityCounter
 import woowacourse.shopping.ui.component.image.ShoppingImage
+import woowacourse.shopping.ui.component.network.NetworkErrorBar
 import woowacourse.shopping.ui.component.topbar.DismissTopBar
 import woowacourse.shopping.ui.extension.toFormattedPrice
 
 @Composable
 fun ProductDetailScreen(
     productId: String,
-    productDetailStateHolder: ProductDetailStateHolder = remember {
-        ProductDetailStateHolder(
-            cartRepository = CartRepositoryImpl(CartDataSourceImpl),
-            productRepository = ProductRepositoryImpl(ProductDataSourceImpl),
-            targetProductId = productId,
-        )
-    },
+    viewModel: ProductDetailViewModel = viewModel(
+        factory = ProductDetailViewModel.factory(
+            productId,
+        ),
+    ),
+    onLastViewProductClick: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val product = productDetailStateHolder.product
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val product = uiState.product ?: return
 
     Scaffold(
         topBar = {
-            DismissTopBar(
-                onDismiss = onDismiss,
-            )
+            Column {
+                if (!uiState.isNetworkConnected) {
+                    NetworkErrorBar()
+                }
+                DismissTopBar(
+                    onDismiss = onDismiss,
+                )
+            }
         },
         modifier = Modifier
             .systemBarsPadding(),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-        ) {
-            ShoppingImage(
-                imageUrl = product.imageUrl,
-                contentDescription = "${product.name} 이미지",
-                contentScale = ContentScale.Fit,
+        if (uiState.isError) {
+            Text(
+                text = "상품 불러오기를 실패했습니다.",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+            )
+
+            Text(
+                text = "재시도하기",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Blue,
+                modifier = Modifier.clickable { viewModel.loadProduct() },
+            )
+        } else {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-            )
+                    .padding(innerPadding)
+                    .fillMaxWidth(),
+            ) {
+                ShoppingImage(
+                    imageUrl = product.imageUrl,
+                    contentDescription = "${product.name} 이미지",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ProductInfoText(
-                name = product.name,
-                price = product.price,
-            )
+                ProductInfoText(
+                    name = product.name,
+                    price = product.price,
+                    quantity = uiState.quantity,
+                    onPlusClick = { viewModel.plusCartCount() },
+                    onMinusClick = { viewModel.minusCartCount() },
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(29.dp))
 
-            AddCartButton(
-                onClick = {
-                    productDetailStateHolder.addToCart(
-                        productId = product.id,
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
+                uiState.recentProduct?.let {
+                    if (productId != it.id) {
+                        LastViewProductCard(
+                            name = it.name,
+                            onClick = { onLastViewProductClick(it.id) },
+                            modifier = Modifier
+                                .padding(horizontal = 18.dp)
+                                .fillMaxWidth(),
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                AddCartButton(
+                    onClick = { viewModel.addToCart() },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }
@@ -95,6 +130,9 @@ fun ProductDetailScreen(
 private fun ProductInfoText(
     name: String,
     price: Price,
+    quantity: Int,
+    onPlusClick: () -> Unit,
+    onMinusClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -121,15 +159,15 @@ private fun ProductInfoText(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "가격",
+                text = (price * quantity).toFormattedPrice(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W400,
             )
 
-            Text(
-                text = price.toFormattedPrice(),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.W400,
+            QuantityCounter(
+                quantity = quantity,
+                onMinusClick = { onMinusClick() },
+                onPlusClick = { onPlusClick() },
             )
         }
     }
@@ -161,9 +199,10 @@ private fun AddCartButton(
 
 @Preview
 @Composable
-fun ProductDetailScreenPreview() {
+private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         productId = "",
         onDismiss = { },
+        onLastViewProductClick = { },
     )
 }

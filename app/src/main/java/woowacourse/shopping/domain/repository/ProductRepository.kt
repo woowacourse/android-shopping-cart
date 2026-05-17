@@ -3,9 +3,9 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.Product
 
 interface ProductRepository {
-    val productSize: Int
+    suspend fun getProductSize(): Int
 
-    fun getProductById(id: String): Product
+    suspend fun getProductById(id: String): Product
 
     suspend fun getProducts(
         startIndex: Int,

@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,49 +16,37 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.source.CartDataSourceImpl
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import woowacourse.shopping.ui.component.network.NetworkErrorBar
 import woowacourse.shopping.ui.component.topbar.NavigateUpTopBar
 
 @Composable
 fun CartScreen(
-    cartStateHolder: CartStateHolder = rememberSaveable(
-        saver = Saver(
-            save = { it.curPage },
-            restore = {
-                CartStateHolder(
-                    cartRepository = CartRepositoryImpl(CartDataSourceImpl),
-                    initialPage = it,
-                )
-            },
-        ),
-    ) { CartStateHolder(cartRepository = CartRepositoryImpl(CartDataSourceImpl)) },
+    viewModel: CartViewModel = viewModel(factory = CartViewModel.Factory),
     onNavigateUp: () -> Unit,
 ) {
-    val cartItems = cartStateHolder.cartItems
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        cartStateHolder.initCartItems()
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val cartItems = uiState.cartItems
 
     Scaffold(
         topBar = {
-            NavigateUpTopBar(
-                title = "Cart",
-                onNavigateUp = onNavigateUp,
-            )
+            Column {
+                if (!uiState.isNetworkConnected) {
+                    NetworkErrorBar()
+                }
+                NavigateUpTopBar(
+                    title = "Cart",
+                    onNavigateUp = onNavigateUp,
+                )
+            }
         },
         modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
@@ -76,28 +65,23 @@ fun CartScreen(
                     imageUrl = it.product.imageUrl,
                     name = it.product.name,
                     price = it.product.price,
-                    onDelete = {
-                        scope.launch {
-                            cartStateHolder.deleteCartItem(it.product.id)
-                        }
-                    },
+                    quantity = it.quantity,
+                    onPlusClick = { viewModel.plusCartCount(it.product) },
+                    onMinusClick = { viewModel.minusCartCount(it.product.id) },
+                    onDelete = { viewModel.deleteCartItem(it.product.id) },
                 )
             }
 
-            if (cartStateHolder.curPage != 1 || !cartStateHolder.isLast) {
+            if (uiState.curPage != 1 || !uiState.isLast) {
                 item {
                     CartPagination(
-                        curPage = cartStateHolder.curPage,
-                        isLastPage = cartStateHolder.isLast,
+                        curPage = uiState.curPage,
+                        isLastPage = uiState.isLast,
                         onPrevClick = {
-                            scope.launch {
-                                cartStateHolder.getPrevPage()
-                            }
+                            viewModel.loadPrevPage()
                         },
                         onNextClick = {
-                            scope.launch {
-                                cartStateHolder.getNextPage()
-                            }
+                            viewModel.loadNextPage()
                         },
                         modifier = Modifier
                             .fillMaxWidth()
