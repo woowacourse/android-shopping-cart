@@ -1,4 +1,4 @@
-package woowacourse.shopping.repository.product
+package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.product.Product
 
@@ -8,5 +8,5 @@ interface ProductRepository {
         pageSize: Int,
     ): List<Product>
 
-    suspend fun getProduct(id: String): Product?
+    suspend fun getProduct(id: Int): Product?
 }

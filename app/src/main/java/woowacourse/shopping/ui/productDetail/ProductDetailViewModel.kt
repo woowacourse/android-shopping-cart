@@ -9,14 +9,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import woowacourse.shopping.domain.cart.CartItem
-import woowacourse.shopping.repository.cart.CartRepository
-import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.domain.cart.Quantity
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModel(
-    val productId: String,
+    val productId: Int,
+    private val openedFromLastViewed: Boolean,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val uiState: StateFlow<ProductDetailUiState> = _uiState.asStateFlow()
@@ -27,11 +31,23 @@ class ProductDetailViewModel(
 
     private fun loadProduct() {
         viewModelScope.launch {
+            _uiState.value = ProductDetailUiState.Loading
             runCatching { productRepository.getProduct(productId) }
                 .onSuccess { product ->
                     _uiState.value =
                         if (product != null) {
-                            ProductDetailUiState.Success(product)
+                            val mostRecentProduct: Product? = recentProductRepository.getMostRecentProduct(product)
+                            val lastViewedProduct =
+                                if (openedFromLastViewed) {
+                                    null
+                                } else {
+                                    mostRecentProduct
+                                }
+                            recentProductRepository.save(product)
+                            ProductDetailUiState.Success(
+                                product = product,
+                                lastViewedProduct = lastViewedProduct,
+                            )
                         } else {
                             ProductDetailUiState.Error(
                                 NoSuchElementException("상품을 찾을 수 없습니다. id=$productId"),
@@ -43,25 +59,47 @@ class ProductDetailViewModel(
         }
     }
 
+    fun increaseSelected() {
+        val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        _uiState.value = current.copy(selectedQuantity = current.selectedQuantity + 1)
+    }
+
+    fun decreaseSelected() {
+        val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        if (current.selectedQuantity <= 1) return
+        _uiState.value = current.copy(selectedQuantity = current.selectedQuantity - 1)
+    }
+
     fun addToCart() {
         val current = _uiState.value as? ProductDetailUiState.Success ?: return
+        if(current.isAddingToCart)  return
         viewModelScope.launch {
-            cartRepository.addCartItem(CartItem(product = current.product))
+            _uiState.value = current.copy(isAddingToCart = true)
+
+            cartRepository.addProduct(current.product, Quantity(current.selectedQuantity))
+
+            val updated = _uiState.value as? ProductDetailUiState.Success ?: return@launch
+
+            _uiState.value = updated.copy(isAddingToCart = false)
         }
     }
 
     companion object {
         fun factory(
-            productId: String,
+            productId: Int,
+            openedFromLastViewed: Boolean,
             productRepository: ProductRepository,
             cartRepository: CartRepository,
+            recentProductRepository: RecentProductRepository,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
                     ProductDetailViewModel(
                         productId = productId,
+                        openedFromLastViewed = openedFromLastViewed,
                         productRepository = productRepository,
                         cartRepository = cartRepository,
+                        recentProductRepository = recentProductRepository,
                     )
                 }
             }

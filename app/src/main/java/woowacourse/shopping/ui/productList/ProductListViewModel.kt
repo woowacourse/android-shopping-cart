@@ -6,22 +6,44 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.repository.product.ProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
-    val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
+    private val pagingState = MutableStateFlow(PagingState())
+    private val recentProductsFlow = MutableStateFlow<List<Product>>(emptyList())
 
-    private var currentPage = 0
-    private val accumulatedProducts = mutableListOf<Product>()
+    val uiState: StateFlow<ProductListUiState> =
+        combine(
+            pagingState,
+            cartRepository.cartFlow,
+            recentProductsFlow,
+        ) { paging, cart, recents ->
+            paging.toUiState(cart, recents)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ProductListUiState.Loading,
+        )
 
     init {
+        observeRecentProducts()
         loadNextPage()
     }
 
@@ -29,19 +51,46 @@ class ProductListViewModel(
         loadNextPage()
     }
 
+    fun addProduct(product: Product) {
+        viewModelScope.launch { cartRepository.addProduct(product) }
+    }
+
+    fun increase(productId: Int) {
+        viewModelScope.launch { cartRepository.increase(productId) }
+    }
+
+    fun decrease(productId: Int) {
+        viewModelScope.launch { cartRepository.decrease(productId) }
+    }
+
+    private fun observeRecentProducts() {
+        recentProductRepository.getRecentProducts()
+            .onEach { recentProductsFlow.value = it }
+            .launchIn(viewModelScope)
+    }
+
     private fun loadNextPage() {
+        val current = pagingState.value
+        if (current.isLoading || !current.canLoadMore) return
+
         viewModelScope.launch {
-            runCatching { productRepository.getProducts(currentPage, PAGE_SIZE) }
+            pagingState.update { it.copy(isLoading = true) }
+            runCatching { productRepository.getProducts(current.currentPage, PAGE_SIZE) }
                 .onSuccess { newProducts ->
-                    accumulatedProducts.addAll(newProducts)
-                    currentPage++
-                    _uiState.value =
-                        ProductListUiState.Success(
-                            products = accumulatedProducts.toList(),
+                    pagingState.update {
+                        it.copy(
+                            products = it.products + newProducts,
+                            currentPage = it.currentPage + 1,
                             canLoadMore = newProducts.size == PAGE_SIZE,
+                            isLoading = false,
+                            loadError = null,
                         )
-                }.onFailure { throwable ->
-                    _uiState.value = ProductListUiState.Error(throwable)
+                    }
+                }
+                .onFailure { throwable ->
+                    pagingState.update {
+                        it.copy(isLoading = false, loadError = throwable)
+                    }
                 }
         }
     }
@@ -49,10 +98,14 @@ class ProductListViewModel(
     companion object {
         private const val PAGE_SIZE = 20
 
-        fun factory(productRepository: ProductRepository): ViewModelProvider.Factory =
+        fun factory(
+            productRepository: ProductRepository,
+            cartRepository: CartRepository,
+            recentProductRepository: RecentProductRepository,
+        ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    ProductListViewModel(productRepository)
+                    ProductListViewModel(productRepository, cartRepository, recentProductRepository)
                 }
             }
     }
