@@ -52,4 +52,28 @@ class CartProductTest {
 
         assertEquals(3, updatedCartProduct.amount)
     }
+
+    @Test
+    fun `addQuantity 에 양수가 아닌 수가 들어오면 IllegalArgumentException을 발생시킨다`() {
+        val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 1)
+
+        assertThrows<IllegalArgumentException> {
+            cartProduct.addQuantity(0)
+        }
+        assertThrows<IllegalArgumentException> {
+            cartProduct.addQuantity(-1)
+        }
+    }
+
+    @Test
+    fun `decreaseQuantity 에 양수가 아닌 수가 들어오면 IllegalArgumentException을 발생시킨다`() {
+        val cartProduct = CartProduct(product = Product(imageUri = "image", name = "name", price = 10000), amount = 1)
+
+        assertThrows<IllegalArgumentException> {
+            cartProduct.decreaseQuantity(0)
+        }
+        assertThrows<IllegalArgumentException> {
+            cartProduct.decreaseQuantity(-1)
+        }
+    }
 }

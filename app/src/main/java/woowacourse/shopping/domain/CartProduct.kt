@@ -15,11 +15,17 @@ data class CartProduct(
     }
 
     fun decreaseQuantity(minusAmount: Int): CartProduct {
+        require(minusAmount > 0) { "감소할 수량은 1 이상이어야 합니다." }
+
         val newAmount = (this.amount - minusAmount).coerceAtLeast(0)
         return this.copy(amount = newAmount)
     }
 
-    fun addQuantity(requestedAmount: Int) = copy(amount = amount + requestedAmount)
+    fun addQuantity(requestedAmount: Int): CartProduct {
+        require(requestedAmount > 0) { "추가할 수량은 1 이상이어야 합니다." }
+
+        return copy(amount = amount + requestedAmount)
+    }
 
     fun calculateTotalPrice() = product.price.toLong() * amount
 

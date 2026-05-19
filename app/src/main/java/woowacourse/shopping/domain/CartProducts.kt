@@ -15,6 +15,8 @@ class CartProducts(
     val totalQuantity = products.sumOf { it.amount }
 
     fun addQuantityOfCartProduct(product: Product, plusAmount: Int = 1): CartProducts {
+        require(plusAmount > 0) { "추가할 수량은 1 이상이어야 합니다." }
+
         val existingCartProduct = findSameProduct(product.productId)
 
         val updatedProducts = if (existingCartProduct != null) {
@@ -29,6 +31,8 @@ class CartProducts(
     }
 
     fun decreaseQuantityOfCartProduct(productId: UUID, minusAmount: Int = 1): CartProducts {
+        require(minusAmount > 0) { "감소할 수량은 1 이상이어야 합니다." }
+
         if (findSameProduct(productId) == null) return this
 
         val updatedProducts = products.map { cartProduct ->
