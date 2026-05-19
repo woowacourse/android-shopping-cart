@@ -35,13 +35,14 @@ class CartProducts(
 
         if (findSameProduct(productId) == null) return this
 
-        val updatedProducts = products.map { cartProduct ->
-            if (cartProduct.product.productId == productId) {
-                cartProduct.decreaseQuantity(minusAmount)
-            } else {
-                cartProduct
-            }
-        }
+        val updatedProducts = products
+            .map { cartProduct ->
+                if (cartProduct.product.productId == productId) {
+                    cartProduct.decreaseQuantity(minusAmount)
+                } else {
+                    cartProduct
+                }
+            }.filter { it.amount > 0 }
 
         return CartProducts(updatedProducts)
     }

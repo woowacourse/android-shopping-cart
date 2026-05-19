@@ -3,6 +3,7 @@ package woowacourse.shopping.domain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class CartProductsTest {
     @Test
@@ -202,7 +203,9 @@ class CartProductsTest {
         val cartProducts = CartProducts().addQuantityOfCartProduct(product, 1)
         val updatedCartProducts = cartProducts.decreaseQuantityOfCartProduct(product.productId, 2)
 
-        assertEquals(0, updatedCartProducts.findSameProduct(product.productId)?.amount)
+        assertEquals(null, updatedCartProducts.findSameProduct(product.productId))
+        assertEquals(0, updatedCartProducts.uniqueItemCount)
+        assertEquals(0, updatedCartProducts.totalQuantity)
     }
 
     @Test
