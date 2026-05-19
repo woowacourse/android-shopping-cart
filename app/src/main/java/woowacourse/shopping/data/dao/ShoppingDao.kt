@@ -19,7 +19,7 @@ interface ShoppingDao {
     suspend fun insertProduct(products: List<CatalogEntity>)
 
     @Query("SELECT * FROM products")
-    fun getAllProducts(): List<CatalogEntity>
+    suspend fun getAllProducts(): List<CatalogEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCartItem(cartItem: CartEntity)
