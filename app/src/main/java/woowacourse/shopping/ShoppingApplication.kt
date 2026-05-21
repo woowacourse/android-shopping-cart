@@ -10,10 +10,10 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.db.ShoppingDatabase
-import woowacourse.shopping.repository.cartRepository.RoomCartRepository
-import woowacourse.shopping.repository.productRepository.HttpProductRepository
-import woowacourse.shopping.repository.productRepository.ProductRepository
-import woowacourse.shopping.repository.productRepository.RoomRecentProductRepository
+import woowacourse.shopping.repository.cart.RoomCartRepository
+import woowacourse.shopping.repository.product.HttpProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.repository.recent_product.RoomRecentProductRepository
 import kotlin.concurrent.thread
 
 class ShoppingApplication : Application() {
