@@ -13,18 +13,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.domain.Product
-import java.util.UUID
 
 @Composable
 fun RecentItem(
     product: Product,
-    onClick: (UUID) -> Unit,
+    onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .width(80.dp) // 사진 비율에 맞게 적절한 너비 지정
-            .clickable { onClick(product.productId) },
+            .clickable { onClick(product) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProductImage(

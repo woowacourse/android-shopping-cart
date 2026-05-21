@@ -28,7 +28,7 @@ fun ShoppingItem(
     quantity: Int,
     onIncrease: (UUID) -> Unit,
     onDecrease: (UUID) -> Unit,
-    onClick: (UUID) -> Unit,
+    onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -38,7 +38,7 @@ fun ShoppingItem(
                 .height(206.dp)
                 .clickable(
                     onClick = {
-                        onClick(product.productId)
+                        onClick(product)
                     },
                 ),
         verticalArrangement = Arrangement.SpaceBetween,

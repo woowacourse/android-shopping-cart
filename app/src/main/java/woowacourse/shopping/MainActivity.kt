@@ -68,9 +68,9 @@ class MainActivity : ComponentActivity() {
 
                     MainScreen(
                         viewModel = viewModel,
-                        onItemClick = { id ->
+                        onItemClick = { product ->
                             val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                                putExtra("id", id.toString())
+                                putExtra(ProductDetailActivity.EXTRA_PRODUCT, product)
                             }
                             startActivity(intent)
                         },

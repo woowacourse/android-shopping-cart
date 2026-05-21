@@ -41,7 +41,7 @@ import java.util.UUID
 @Composable
 fun MainScreen(
     viewModel: CatalogViewModel,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -70,7 +70,7 @@ fun CatalogScreen(
     catalog: List<CatalogItemUiState>,
     recentProducts: List<Product>,
     cartTotalAmount: Int,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onIncrease: (UUID) -> Unit,
     onDecrease: (UUID) -> Unit,
@@ -158,7 +158,7 @@ private fun CatalogHeader(
 private fun CatalogBody(
     catalog: List<CatalogItemUiState>,
     recentProducts: List<Product>,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     onIncrease: (UUID) -> Unit,
     onDecrease: (UUID) -> Unit,
     onLoadClick: () -> Unit,

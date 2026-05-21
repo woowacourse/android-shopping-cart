@@ -16,12 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.shopping.domain.Product
-import java.util.UUID
 
 @Composable
 fun RecentlyViewedSection(
     recentProducts: List<Product>,
-    onItemClick: (UUID) -> Unit,
+    onItemClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (recentProducts.isEmpty()) return
