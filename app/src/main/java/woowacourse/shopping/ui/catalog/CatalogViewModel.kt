@@ -67,16 +67,6 @@ class CatalogViewModel(
         }
     }
 
-    fun removeProductFromCart(productId: UUID) {
-        viewModelScope.launch {
-            cartRepository.removeProduct(productId)
-        }
-    }
-
-    fun getQuantity(id: UUID): Int {
-        return cart.value.cartProducts.findSameProduct(id)?.amount ?: 0
-    }
-
     companion object {
         private const val PAGE_SIZE = 20
 

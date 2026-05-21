@@ -26,6 +26,4 @@ class Cart(
         return Cart(product)
     }
 
-    fun calculateTotalPrice(): Long = cartProducts.calculateTotalPrice()
-
 }

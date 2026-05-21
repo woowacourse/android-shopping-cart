@@ -38,7 +38,7 @@ class RoomCartRepository(
         amount: Int,
     ) {
         dao.insertProduct(listOf(product.toEntity()))
-        // DB에서 직접 수량을 확인하여 레이스 컨디션 방지
+
         val currentAmount = dao.getCartItemAmount(product.productId)
         if (currentAmount != null) {
             dao.updateCartQuantity(product.productId, currentAmount + amount)

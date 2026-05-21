@@ -62,8 +62,5 @@ class CartProducts(
         return totalPrice
     }
 
-    private fun findOrCreateCartProduct(product: Product): CartProduct =
-        findSameProduct(product.productId) ?: CartProduct(product = product, amount = 0)
-
     fun findSameProduct(id: UUID) = products.find { it.product.productId == id }
 }
