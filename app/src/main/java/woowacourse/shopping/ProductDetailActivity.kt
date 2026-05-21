@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -16,22 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.component.screen.ProductDetailScreen
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
-import java.util.UUID
 
 class ProductDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val productId = runCatching { UUID.fromString(intent.getStringExtra("id")) }.getOrNull()
-        if (productId == null) {
+        val product = intent.getProductExtra()
+        if (product == null) {
             finish()
             return
         }
+        val productId = product.productId
         val app = application as ShoppingApplication
-        val productRepository = app.productRepository
-        val product = productRepository.getProductById(productId) ?: return finish()
         val cartRepository = app.cartRepository
         val recentProductRepository = app.recentProductRepository
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
@@ -71,5 +72,18 @@ class ProductDetailActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun Intent.getProductExtra(): Product? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getParcelableExtra(EXTRA_PRODUCT, Product::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            getParcelableExtra(EXTRA_PRODUCT)
+        }
+    }
+
+    companion object {
+        const val EXTRA_PRODUCT = "product"
     }
 }

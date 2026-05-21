@@ -1,7 +1,6 @@
 package woowacourse.shopping.repository.productRepository
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -36,7 +35,6 @@ class HttpProductRepository(
             }
         }
 
-    override fun getProductById(id: UUID): Product? = runBlocking {
+    override suspend fun getProductById(id: UUID): Product? =
         getProducts(0, 20).find { it.productId == id }
-    }
 }
