@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.NetworkMonitor
-import woowacourse.shopping.ui.product_detail.ProductDetailActivity
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.catalog.component.MainScreen
+import woowacourse.shopping.ui.product_detail.ProductDetailActivity
 import woowacourse.shopping.ui.theme.AndroidshoppingTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,20 +33,14 @@ class MainActivity : ComponentActivity() {
             AndroidshoppingTheme {
                 val app = application as ShoppingApplication
                 val viewModel: CatalogViewModel = viewModel(
-                    factory = object : ViewModelProvider.Factory {
-                        @Suppress("UNCHECKED_CAST")
-                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return CatalogViewModel(
-                                productRepository = app.productRepository,
-                                cartRepository = app.cartRepository,
-                                recentProductRepository = app.recentProductRepository
-                            ) as T
-                        }
-
-                    }
+                    factory = CatalogViewModel.provideFactory(
+                        app.productRepository,
+                        app.cartRepository,
+                        app.recentProductRepository
+                    )
                 )
 
-                Scaffold(modifier = Modifier.Companion.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LaunchedEffect(Unit) {
                         var isInitial = true
                         networkMonitor.isConnected.collect { connected ->
@@ -82,7 +76,7 @@ class MainActivity : ComponentActivity() {
                             val intent = Intent(this, CartActivity::class.java)
                             startActivity(intent)
                         },
-                        modifier = Modifier.Companion.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }

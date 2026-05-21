@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.catalog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -78,5 +79,20 @@ class CatalogViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
+
+        fun provideFactory(
+            productRepository: ProductRepository,
+            cartRepository: CartRepository,
+            recentProductRepository: RecentProductRepository,
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T: ViewModel> create(modelClass: Class<T>): T {
+                    return CatalogViewModel(
+                        productRepository,
+                        cartRepository,
+                        recentProductRepository
+                    ) as T
+                }
+            }
     }
 }
