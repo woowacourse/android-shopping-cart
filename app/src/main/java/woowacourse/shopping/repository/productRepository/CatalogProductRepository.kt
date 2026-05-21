@@ -13,5 +13,5 @@ object CatalogProductRepository : ProductRepository {
         return catalog.loadProducts(page, pageSize).await()
     }
 
-    override fun getProductById(id: UUID): Product = catalog.findProductById(id)
+    override suspend fun getProductById(id: UUID): Product = catalog.findProductById(id)
 }
