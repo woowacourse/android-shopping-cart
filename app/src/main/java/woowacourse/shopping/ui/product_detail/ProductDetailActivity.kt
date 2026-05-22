@@ -11,13 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.product_detail.component.ProductDetailScreen
@@ -32,43 +28,37 @@ class ProductDetailActivity : ComponentActivity() {
             finish()
             return
         }
-        val productId = product.productId
-        val app = application as ShoppingApplication
-        val cartRepository = app.cartRepository
-        val recentProductRepository = app.recentProductRepository
-        val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
 
-        lifecycleScope.launch {
-            recentProductRepository.addRecentProduct(product)
-        }
+        val app = application as ShoppingApplication
+        val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
 
         enableEdgeToEdge()
         setContent {
-            var amount by rememberSaveable { mutableIntStateOf(1) }
-            val recentProducts by recentProductRepository.recentProducts.collectAsStateWithLifecycle(
-                initialValue = emptyList()
+            val viewModel: ProductDetailViewModel = viewModel(
+                factory = ProductDetailViewModel.provideFactory(
+                    product,
+                    app.cartRepository,
+                    app.recentProductRepository
+                )
             )
-            val lastViewedProduct = recentProducts.firstOrNull { it.productId != productId }
-
             AndroidshoppingTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 Scaffold(
-                    modifier = Modifier.Companion.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     ProductDetailScreen(
                         product = product,
-                        amount = amount,
-                        lastViewedProduct = lastViewedProduct,
+                        amount = uiState.amount,
+                        lastViewedProduct = uiState.lastViewedProduct,
                         onAddRequest = {
-                            lifecycleScope.launch {
-                                cartRepository.addProduct(product, amount)
-                                toast.show()
-                                finish()
-                            }
+                            viewModel.addProductToCart()
+                            toast.show()
+                            finish()
                         },
                         onClose = { finish() },
-                        onIncrease = { amount++ },
-                        onDecrease = { if (amount > 1) amount-- },
-                        modifier = Modifier.Companion.padding(innerPadding),
+                        onIncrease = { viewModel.onIncrease() },
+                        onDecrease = { viewModel.onDecrease() },
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
