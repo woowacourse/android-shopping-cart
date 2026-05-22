@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
@@ -16,6 +19,10 @@ class CartStateHolder(
     val coroutineScope: CoroutineScope,
     initialPage: Int = 0,
 ) {
+    private val _uiState = MutableStateFlow(CartUiState(cartRepository.cart, initialPage))
+
+    val uiState = _uiState.asStateFlow()
+
     var cart by mutableStateOf(cartRepository.cart)
         private set
 
@@ -33,11 +40,11 @@ class CartStateHolder(
     }
 
     fun onPrevious() {
-        if (hasPreviousPage()) currentPage--
+        if (_uiState.value.hasPreviousPage) currentPage--
     }
 
     fun onNext() {
-        if (hasNextPage()) currentPage++
+        if (_uiState.value.hasNextPage) currentPage++
     }
 
     fun onIncreaseProduct(id: UUID) {
@@ -79,7 +86,7 @@ class CartStateHolder(
 
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, cart.getUniqueItemCount())
-        if (fromIndex >= toIndex || cart.getUniqueItemCount() == 0) return emptyList()
+        if (fromIndex >= toIndex || _uiState.value.isCartEmpty) return emptyList()
         return cart.cartProducts.items.subList(fromIndex, toIndex)
     }
 
