@@ -36,10 +36,10 @@ class CatalogViewModel(
                     quantity = cart.cartProducts.findSameProduct(product.productId)?.amount ?: 0
                 )
             }
-        }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), emptyList())
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val recentProducts: StateFlow<List<Product>> = recentProductRepository.recentProducts
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private var currentPage = 0
 
