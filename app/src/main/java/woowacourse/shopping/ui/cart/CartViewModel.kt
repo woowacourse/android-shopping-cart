@@ -84,7 +84,7 @@ class CartViewModel(
 
         fun provideFactory(
             cartRepository: CartRepository,
-            restoredPage: Int = ONE_PAGE_ITEM_COUNT,
+            restoredPage: Int = 0,
         ) : ViewModelProvider.Factory =
             object: ViewModelProvider.Factory {
                 override fun <T: ViewModel> create(modelClass: Class<T>): T {

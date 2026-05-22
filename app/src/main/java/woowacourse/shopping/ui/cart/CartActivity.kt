@@ -23,12 +23,11 @@ class CartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val restoredPage = savedInstanceState?.getInt("CURRENT_PAGE") ?: 0
         val app = application as ShoppingApplication
         viewModel =
             ViewModelProvider(
                 this,
-                CartViewModel.provideFactory(app.cartRepository, restoredPage),
+                CartViewModel.provideFactory(app.cartRepository),
             )[CartViewModel::class.java]
 
         onBackPressedDispatcher.addCallback(this) {
@@ -62,10 +61,5 @@ class CartActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("CURRENT_PAGE", viewModel.uiState.value.currentPage)
     }
 }
