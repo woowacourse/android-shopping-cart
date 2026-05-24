@@ -66,6 +66,7 @@ class ProductDetailActivity : ComponentActivity() {
                                 putExtra(EXTRA_SHOW_LAST_VIEWED_PRODUCT, false)
                             }
                             startActivity(intent)
+                            finish()
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
