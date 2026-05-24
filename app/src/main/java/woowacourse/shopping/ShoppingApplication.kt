@@ -114,11 +114,23 @@ class ShoppingApplication : Application() {
         }
         mockWebServer.dispatcher = dispatcher
 
-        thread {
-            mockWebServer.start(12345)
-        }
-
+        // Initialize with default to avoid UninitializedPropertyAccessException
         productRepository = HttpProductRepository("http://localhost:12345/")
+
+        thread {
+            try {
+                mockWebServer.start(12345)
+            } catch (e: Exception) {
+                android.util.Log.e("ShoppingApplication", "Port 12345 is in use, trying a random port", e)
+                try {
+                    mockWebServer.start(0)
+                    val actualUrl = mockWebServer.url("/").toString()
+                    productRepository = HttpProductRepository(actualUrl)
+                } catch (e2: Exception) {
+                    android.util.Log.e("ShoppingApplication", "MockWebServer failed to start completely", e2)
+                }
+            }
+        }
     }
 
     override fun onTerminate() {

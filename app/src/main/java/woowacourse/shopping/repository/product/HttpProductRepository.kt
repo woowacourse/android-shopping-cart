@@ -20,19 +20,24 @@ class HttpProductRepository(
 
     override suspend fun getProducts(page: Int, pageSize: Int): List<Product> =
         withContext(Dispatchers.IO) {
-            val request = Request.Builder()
-                .url("${baseUrl.removeSuffix("/")}/products")
-                .build()
+            try {
+                val request = Request.Builder()
+                    .url("${baseUrl.removeSuffix("/")}/products")
+                    .build()
 
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return@withContext emptyList()
-                val body = response.body?.string() ?: return@withContext emptyList()
-                val productDtos = json.decodeFromString<List<ProductDto>>(body)
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) return@withContext emptyList()
+                    val body = response.body?.string() ?: return@withContext emptyList()
+                    val productDtos = json.decodeFromString<List<ProductDto>>(body)
 
-                val fromIndex = (page * pageSize).coerceAtMost(productDtos.size)
-                val toIndex = (fromIndex + pageSize).coerceAtMost(productDtos.size)
+                    val fromIndex = (page * pageSize).coerceAtMost(productDtos.size)
+                    val toIndex = (fromIndex + pageSize).coerceAtMost(productDtos.size)
 
-                productDtos.subList(fromIndex, toIndex).map { it.toDomain() }
+                    productDtos.subList(fromIndex, toIndex).map { it.toDomain() }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("HttpProductRepository", "Failed to fetch products", e)
+                emptyList()
             }
         }
 
