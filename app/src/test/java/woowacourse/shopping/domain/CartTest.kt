@@ -10,7 +10,8 @@ class CartTest {
         val cart =
             Cart(CartProducts(listOf()))
 
-        val newProduct = CartProduct(product = Product(imageUri = "image", name = "TwoHander", price = 10000))
+        val newProduct =
+            CartProduct(product = Product(imageUri = "image", name = "TwoHander", price = 10000))
         val newCart = cart.addProduct(newProduct.product)
 
         assertTrue(newCart.cartProducts.items.first().product == newProduct.product)
@@ -18,7 +19,8 @@ class CartTest {
 
     @Test
     fun `사용자가 선택한 상품을 제거할 수 있다`() {
-        val newProduct = CartProduct(product = Product(imageUri = "image", name = "twohander", price = 10000))
+        val newProduct =
+            CartProduct(product = Product(imageUri = "image", name = "twohander", price = 10000))
         val cart =
             Cart(CartProducts(listOf(newProduct)))
 
@@ -34,7 +36,8 @@ class CartTest {
     @Test
     fun `사용자가 새로운 상품을 원하는 개수만큼 추가한다`() {
         val cart = Cart(CartProducts(listOf()))
-        val newProduct = CartProduct(product = Product(imageUri = "image", name = "twohander", price = 10000))
+        val newProduct =
+            CartProduct(product = Product(imageUri = "image", name = "twohander", price = 10000))
         val newCart = cart.addProduct(newProduct.product, 5)
 
         assertTrue(newCart.cartProducts.items.first().amount == 5)
@@ -42,7 +45,19 @@ class CartTest {
 
     @Test
     fun `겹치는 상품을 추가하면 전체 개수가 증가한다`() {
-        val cart = Cart(CartProducts(listOf(CartProduct(product = Product(imageUri = "image", name = "Samuel", price = 8000)))))
+        val cart = Cart(
+            CartProducts(
+                listOf(
+                    CartProduct(
+                        product = Product(
+                            imageUri = "image",
+                            name = "Samuel",
+                            price = 8000
+                        )
+                    )
+                )
+            )
+        )
         val newProduct = Product(imageUri = "image", name = "twohander", price = 10000)
         val newCart = cart.addProduct(newProduct, 5)
 

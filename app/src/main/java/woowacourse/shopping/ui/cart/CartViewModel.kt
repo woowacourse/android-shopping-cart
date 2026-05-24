@@ -15,7 +15,7 @@ import kotlin.math.min
 class CartViewModel(
     private val cartRepository: CartRepository,
     initialPage: Int = 0,
-): ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState(cartRepository.cart, initialPage))
 
     val uiState = _uiState.asStateFlow()
@@ -52,7 +52,7 @@ class CartViewModel(
     fun onDecreaseProduct(id: UUID) {
         val cartProduct = _uiState.value.cart.cartProducts.findSameProduct(id) ?: return
         viewModelScope.launch {
-            if(cartProduct.amount > 1) {
+            if (cartProduct.amount > 1) {
                 cartRepository.decreaseProduct(id, 1)
             } else {
                 cartRepository.removeProduct(id)
@@ -75,7 +75,7 @@ class CartViewModel(
 
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, _uiState.value.cart.getUniqueItemCount())
-        if(fromIndex >= toIndex || _uiState.value.isCartEmpty) return emptyList()
+        if (fromIndex >= toIndex || _uiState.value.isCartEmpty) return emptyList()
         return _uiState.value.cart.cartProducts.items.subList(fromIndex, toIndex)
     }
 
@@ -85,9 +85,9 @@ class CartViewModel(
         fun provideFactory(
             cartRepository: CartRepository,
             restoredPage: Int = 0,
-        ) : ViewModelProvider.Factory =
-            object: ViewModelProvider.Factory {
-                override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return CartViewModel(
                         cartRepository,
                         restoredPage,

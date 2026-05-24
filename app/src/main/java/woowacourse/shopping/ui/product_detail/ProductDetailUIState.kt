@@ -6,6 +6,6 @@ data class ProductDetailUIState(
     val amount: Int,
     val recentProducts: List<Product>,
 ) {
-    val lastViewedProduct get() = if(recentProducts.isEmpty()) null else recentProducts.first()
+    val lastViewedProduct get() = if (recentProducts.isEmpty()) null else recentProducts.first()
     val isDecreaseEnable: Boolean get() = amount > 1
 }

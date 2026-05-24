@@ -56,6 +56,7 @@ class HttpProductRepositoryTest {
                             .setResponseCode(200)
                             .setBody(productsJson)
                     }
+
                     else -> MockResponse().setResponseCode(404)
                 }
             }
@@ -93,7 +94,7 @@ class HttpProductRepositoryTest {
 
         // when
         val page0 = repository.getProducts(0, 2)
-        
+
         // then
         assertEquals(2, page0.size)
         assertEquals("상품1", page0[0].name)

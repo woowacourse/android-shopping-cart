@@ -17,10 +17,12 @@ class ProductDetailViewModel(
     private val recentProductRepository: RecentProductRepository,
     private val showLastViewedProduct: Boolean,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ProductDetailUIState(
-        amount = 1,
-        recentProducts = emptyList(),
-    ))
+    private val _uiState = MutableStateFlow(
+        ProductDetailUIState(
+            amount = 1,
+            recentProducts = emptyList(),
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -55,7 +57,7 @@ class ProductDetailViewModel(
     }
 
     fun onDecrease() {
-        if(_uiState.value.isDecreaseEnable) _uiState.update { it.copy(amount = it.amount - 1) }
+        if (_uiState.value.isDecreaseEnable) _uiState.update { it.copy(amount = it.amount - 1) }
     }
 
     companion object {

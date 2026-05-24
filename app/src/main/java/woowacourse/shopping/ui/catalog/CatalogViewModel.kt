@@ -76,7 +76,7 @@ class CatalogViewModel(
             recentProductRepository: RecentProductRepository,
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
-                override fun <T: ViewModel> create(modelClass: Class<T>): T {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return CatalogViewModel(
                         productRepository,
                         cartRepository,
