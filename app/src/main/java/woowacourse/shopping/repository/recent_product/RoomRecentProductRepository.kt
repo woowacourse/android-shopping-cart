@@ -15,6 +15,8 @@ class RoomRecentProductRepository(
     override val recentProducts: Flow<List<Product>> =
         dao.getRecentProductsWithDetail().map { entities ->
             entities.map { it.toDomain() }
+                .toSet()
+                .toList()
         }
 
     override suspend fun addRecentProduct(product: Product) {
