@@ -30,6 +30,7 @@ class ProductDetailActivity : ComponentActivity() {
         }
 
         val app = application as ShoppingApplication
+        val showLastViewedProduct = intent.getBooleanExtra(EXTRA_SHOW_LAST_VIEWED_PRODUCT, true)
         val toast = Toast.makeText(this, "장바구니에 담았습니다", Toast.LENGTH_SHORT)
 
         enableEdgeToEdge()
@@ -38,7 +39,8 @@ class ProductDetailActivity : ComponentActivity() {
                 factory = ProductDetailViewModel.provideFactory(
                     product,
                     app.cartRepository,
-                    app.recentProductRepository
+                    app.recentProductRepository,
+                    showLastViewedProduct,
                 )
             )
             AndroidshoppingTheme {
@@ -58,6 +60,13 @@ class ProductDetailActivity : ComponentActivity() {
                         onClose = { finish() },
                         onIncrease = { viewModel.onIncrease() },
                         onDecrease = { viewModel.onDecrease() },
+                        onLastViewedProductClick = { lastViewedProduct ->
+                            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                                putExtra(EXTRA_PRODUCT, lastViewedProduct)
+                                putExtra(EXTRA_SHOW_LAST_VIEWED_PRODUCT, false)
+                            }
+                            startActivity(intent)
+                        },
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
@@ -76,5 +85,6 @@ class ProductDetailActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_PRODUCT = "product"
+        const val EXTRA_SHOW_LAST_VIEWED_PRODUCT = "showLastViewedProduct"
     }
 }

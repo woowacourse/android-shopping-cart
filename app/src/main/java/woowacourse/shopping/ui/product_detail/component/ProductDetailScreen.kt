@@ -42,6 +42,7 @@ fun ProductDetailScreen(
     onClose: () -> Unit,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
+    onLastViewedProductClick: (Product) -> Unit,
     product: Product,
     amount: Int,
     modifier: Modifier = Modifier,
@@ -56,6 +57,7 @@ fun ProductDetailScreen(
                 onIncrease = onIncrease,
                 onDecrease = onDecrease,
                 lastViewedProduct = lastViewedProduct,
+                onLastViewedProductClick = onLastViewedProductClick,
                 amount = amount,
             )
         },
@@ -94,6 +96,7 @@ private fun ProductDetailBody(
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
     lastViewedProduct: Product?,
+    onLastViewedProductClick: (Product) -> Unit,
     amount: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -110,7 +113,10 @@ private fun ProductDetailBody(
             amount = amount,
         )
 
-        LastViewedProductBox(lastViewedProduct = lastViewedProduct)
+        LastViewedProductBox(
+            lastViewedProduct = lastViewedProduct,
+            onClick = onLastViewedProductClick,
+        )
 
         TextButton(
             onClick = onAddRequest,
@@ -133,6 +139,7 @@ private fun ProductDetailBody(
 @Composable
 private fun LastViewedProductBox(
     lastViewedProduct: Product?,
+    onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (lastViewedProduct == null) return
@@ -141,6 +148,7 @@ private fun LastViewedProductBox(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 18.dp)
+            .clickable { onClick(lastViewedProduct) }
             .border(
                 width = 1.dp,
                 color = Color.LightGray,
@@ -221,6 +229,7 @@ private fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         onAddRequest = {},
         onClose = {},
+        onLastViewedProductClick = {},
         product =
             Product(
                 imageUri = "emptyUri",

@@ -14,7 +14,8 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 class ProductDetailViewModel(
     private val product: Product,
     private val cartRepository: CartRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val showLastViewedProduct: Boolean,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailUIState(
         amount = 1,
@@ -23,6 +24,20 @@ class ProductDetailViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
+        if (showLastViewedProduct) {
+            viewModelScope.launch {
+                recentProductRepository.recentProducts.collect { recentProducts ->
+                    _uiState.update {
+                        it.copy(
+                            recentProducts = recentProducts.filterNot { recentProduct ->
+                                recentProduct.productId == product.productId
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
         viewModelScope.launch {
             recentProductRepository.addRecentProduct(product)
         }
@@ -47,14 +62,16 @@ class ProductDetailViewModel(
         fun provideFactory(
             product: Product,
             cartRepository: CartRepository,
-            recentProductRepository: RecentProductRepository
+            recentProductRepository: RecentProductRepository,
+            showLastViewedProduct: Boolean,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ProductDetailViewModel(
                         product,
                         cartRepository,
-                        recentProductRepository
+                        recentProductRepository,
+                        showLastViewedProduct
                     ) as T
                 }
             }
