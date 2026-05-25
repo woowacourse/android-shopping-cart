@@ -1,0 +1,148 @@
+package woowacourse.shopping.ui.common.item
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import woowacourse.shopping.R
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Product
+import java.util.UUID
+
+@Composable
+fun CartItem(
+    cartProduct: CartProduct,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    onDelete: (UUID) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedCard(
+        modifier =
+            modifier
+                .width(324.dp)
+                .height(152.dp),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .padding(18.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ProductName(cartProduct.product.name)
+                CloseBtn(
+                    product = cartProduct.product,
+                    onClick = onDelete,
+                )
+            }
+
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                ProductImage(
+                    cartProduct.product.imageUri,
+                    modifier = Modifier.size(width = 136.dp, height = 72.dp),
+                )
+                Column() {
+                    AmountModifyButton(
+                        onIncrease = onIncrease,
+                        onDecrease = onDecrease,
+                        amount = cartProduct.amount
+                    )
+                    ProductPrice(cartProduct.product.price)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProductName(
+    name: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = name,
+        fontWeight = FontWeight(700),
+        fontSize = 18.sp,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun CloseBtn(
+    product: Product,
+    onClick: (UUID) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Icon(
+        painter = painterResource(R.drawable.ic_close),
+        contentDescription = "삭제 버튼",
+        modifier =
+            modifier
+                .size(16.dp)
+                .clickable(
+                    onClick = { onClick(product.productId) },
+                ),
+    )
+}
+
+@Composable
+private fun ProductPrice(
+    price: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = price.toPriceString(),
+        fontSize = 16.sp,
+        color = Color(0xFF555555),
+        modifier = modifier,
+    )
+}
+
+@Preview
+@Composable
+private fun CartItemPreview() {
+    CartItem(
+        CartProduct(
+            product = Product(
+                imageUri = "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSTq_oHsJxH8irFUpd2k-08we8FWjRQDVdEMDZTiKOtpF6lNFNEzushq-1JWB8nLGhlQBOd3j3pUPMGrNTeW60sbz21lGA-j6PqZAWhfz97cyh2nAop8j3NkrbexhWkSgCpNwzMt54&usqp=CAc",
+                name = "매우매우긴상품명입니다",
+                price = 1000000000,
+            ),
+        ),
+        {},
+        {},
+        {}
+    )
+}

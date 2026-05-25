@@ -6,19 +6,61 @@ import java.util.UUID
 
 @Parcelize
 class CartProducts(
-    val products: List<Product> = emptyList(),
+    private val products: List<CartProduct> = emptyList(),
 ) : Parcelable {
-    val items: List<Product>
+    val items: List<CartProduct>
         get() = products.toList()
 
-    fun size() = products.size
+    val uniqueItemCount = products.size
+    val totalQuantity = products.sumOf { it.amount }
 
-    fun add(product: Product) = CartProducts(products + product)
+    fun addQuantityOfCartProduct(product: Product, plusAmount: Int = 1): CartProducts {
+        require(plusAmount > 0) { "추가할 수량은 1 이상이어야 합니다." }
 
-    fun remove(id: UUID): CartProducts {
-        val product = findWithId(id) ?: return this
+        val existingCartProduct = findSameProduct(product.productId)
+
+        val updatedProducts = if (existingCartProduct != null) {
+            products.map {
+                if (it.product.productId == product.productId) it.addQuantity(plusAmount) else it
+            }
+        } else {
+            products + CartProduct(product = product, amount = plusAmount)
+        }
+
+        return CartProducts(updatedProducts)
+    }
+
+    fun decreaseQuantityOfCartProduct(productId: UUID, minusAmount: Int = 1): CartProducts {
+        require(minusAmount > 0) { "감소할 수량은 1 이상이어야 합니다." }
+
+        if (findSameProduct(productId) == null) return this
+
+        val updatedProducts = products
+            .map { cartProduct ->
+                if (cartProduct.product.productId == productId) {
+                    cartProduct.decreaseQuantity(minusAmount)
+                } else {
+                    cartProduct
+                }
+            }.filter { it.amount > 0 }
+
+        return CartProducts(updatedProducts)
+    }
+
+
+    fun remove(productId: UUID): CartProducts {
+        val product = findSameProduct(productId) ?: return this
         return CartProducts(products - product)
     }
 
-    fun findWithId(id: UUID) = products.find { it.uuid == id }
+    fun calculateTotalPrice(): Long {
+        var totalPrice = 0L
+        for (product in products) {
+            totalPrice += product.calculateTotalPrice()
+        }
+
+        return totalPrice
+    }
+
+    fun findSameProduct(id: UUID) = products.find { it.product.productId == id }
 }

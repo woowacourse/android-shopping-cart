@@ -266,11 +266,6 @@ object MockCatalog {
                 price = 1000,
             ),
             Product(
-                imageUri = "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSMZrtQytDKeuZGZEvtKR3Sw3cGtHJsSeEtQq5hDAf4SI0YphsQxzzpNcgHcKzyBlAMj2UNOrz3RaArEjG40cscQe6oO0Nvw4l5Pab87SDNZp3IcwD8HFjg3iAQD3WpUWfThCszN8FJUA&usqp=CAc",
-                name = "무엘사",
-                price = 1005,
-            ),
-            Product(
                 imageUri = "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSlsRMhSbGSFqVwVHoDWavYlbAQk_nzok7g3up6n_W13ePJAzAlxbpJLWp8sKbdFnPQb5dMDfsJ0jEs0knG0dYcmtNElFV9K5N5dUdetBwVaJPvZOkiRX-l6SC95Muq4iysT0hdOg&usqp=CAc",
                 name = "딸기주스 12개입",
                 price = 1000055,
@@ -319,21 +314,6 @@ object MockCatalog {
             price = 1,
         )
 
-    fun loadMoreProducts(
-        page: Int,
-        pageSize: Int,
-    ): Deferred<List<Product>> =
-        runBlocking {
-            async {
-                require(page >= 0) { "현재 페이지는 0 이상이여야 합니다" }
-                require(pageSize > 0) { "한 페이지에 보여질 상품의 개수는 0보다 커야 합니다" }
-                val fromIndex =
-                    if (page * pageSize > catalog.size) catalog.size else page * pageSize
-                val toIndex = min(fromIndex + pageSize, catalog.size)
-                catalog.subList(0, toIndex)
-            }
-        }
-
     fun loadProducts(
         page: Int,
         pageSize: Int,
@@ -349,5 +329,5 @@ object MockCatalog {
             }
         }
 
-    fun findProductById(id: UUID): Product = catalog.find { it.uuid == id } ?: unFoundedProduct
+    fun findProductById(id: UUID): Product = catalog.find { it.productId == id } ?: unFoundedProduct
 }
